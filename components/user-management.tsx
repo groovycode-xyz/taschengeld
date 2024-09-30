@@ -25,7 +25,6 @@ export function UserManagement() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -51,12 +50,11 @@ export function UserManagement() {
     setIsDeleteModalOpen(true);
   };
 
-  const onDeleteUser = async () => {
-    if (selectedUser) {
-      await fetch(`/api/users?id=${selectedUser.id}`, { method: 'DELETE' });
-      await fetchUsers();
-    }
+  const onDeleteUser = async (userId: string) => {
+    await fetch(`/api/users?id=${userId}`, { method: 'DELETE' });
+    await fetchUsers();
     setIsDeleteModalOpen(false);
+    setIsEditModalOpen(false); // Close the edit modal after deletion
   };
 
   const onAddUser = async (newUser: Omit<User, 'id'>) => {
@@ -121,15 +119,15 @@ export function UserManagement() {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onEditUser={onEditUser}
+        onDeleteUser={onDeleteUser}
         user={selectedUser}
       />
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={onDeleteUser}
+        onConfirm={() => selectedUser && onDeleteUser(selectedUser.id)}
         userName={selectedUser?.name || ''}
       />
-      {/* TODO: Implement DeleteConfirmationModal component */}
     </div>
   );
 }
