@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Task } from '@/app/types/task';
+import { IconSelector } from './icon-selector';
 
 interface EditTaskModalProps {
   isOpen: boolean;
@@ -13,18 +18,18 @@ interface EditTaskModalProps {
 export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [iconUrl, setIconUrl] = useState('');
+  const [iconName, setIconName] = useState('beaker');
   const [soundUrl, setSoundUrl] = useState('');
-  const [payoutValue, setPayoutValue] = useState(0);
+  const [payoutValue, setPayoutValue] = useState('0.00');
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setIconUrl(task.iconUrl);
+      setIconName(task.iconName);
       setSoundUrl(task.soundUrl);
-      setPayoutValue(task.payoutValue);
+      setPayoutValue(task.payoutValue.toString());
       setIsActive(task.isActive);
     }
   }, [task]);
@@ -35,9 +40,9 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskMod
       onEditTask(task.id, {
         title,
         description,
-        iconUrl,
+        iconName,
         soundUrl,
-        payoutValue,
+        payoutValue: parseFloat(payoutValue),
         isActive,
       });
     }
@@ -47,62 +52,69 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskMod
   if (!isOpen || !task) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-96">
-        <h2 className="text-xl font-bold mb-4">Edit Task</h2>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Task</DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="mb-2"
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="mb-2"
-          />
-          <Input
-            type="text"
-            placeholder="Icon URL"
-            value={iconUrl}
-            onChange={(e) => setIconUrl(e.target.value)}
-            className="mb-2"
-          />
-          <Input
-            type="text"
-            placeholder="Sound URL"
-            value={soundUrl}
-            onChange={(e) => setSoundUrl(e.target.value)}
-            className="mb-2"
-          />
-          <Input
-            type="number"
-            placeholder="Payout Value"
-            value={payoutValue}
-            onChange={(e) => setPayoutValue(Number(e.target.value))}
-            className="mb-2"
-            required
-          />
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              checked={isActive}
-              onChange={(e) => setIsActive(e.target.checked)}
-              className="mr-2"
-            />
-            <label>Active</label>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="iconName">Task Icon</Label>
+              <IconSelector selectedIcon={iconName} onSelectIcon={setIconName} />
+            </div>
+            <div>
+              <Label htmlFor="soundUrl">Sound URL</Label>
+              <Input
+                id="soundUrl"
+                value={soundUrl}
+                onChange={(e) => setSoundUrl(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="payoutValue">Payout Value</Label>
+              <Input
+                id="payoutValue"
+                type="number"
+                value={payoutValue}
+                onChange={(e) => setPayoutValue(e.target.value)}
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="isActive"
+                checked={isActive}
+                onCheckedChange={setIsActive}
+              />
+              <Label htmlFor="isActive">Active</Label>
+            </div>
           </div>
-          <div className="flex justify-end">
-            <Button type="button" onClick={onClose} className="mr-2">Cancel</Button>
+          <DialogFooter className="mt-6">
+            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
             <Button type="submit">Save Changes</Button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

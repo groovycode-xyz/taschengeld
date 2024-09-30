@@ -5,9 +5,9 @@ const tasks: Task[] = [
     id: '1',
     title: 'Clean Room',
     description: 'Tidy up your bedroom',
-    iconUrl: '/icons/clean-room.png',
+    iconName: 'beaker', // Changed from iconUrl to iconName
     soundUrl: '/sounds/clean-room.mp3',
-    payoutValue: 5,
+    payoutValue: 5.00,  // Now using a decimal value
     isActive: true,
     createdAt: new Date('2023-01-01'),
     updatedAt: new Date('2023-01-01'),

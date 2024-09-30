@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Task } from '@/app/types/task';
+import { IconSelector } from './icon-selector';
 
 interface AddTaskModalProps {
   isOpen: boolean;
@@ -16,23 +17,40 @@ interface AddTaskModalProps {
 export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [iconUrl, setIconUrl] = useState('');
+  const [iconName, setIconName] = useState('beaker'); // Default icon
   const [soundUrl, setSoundUrl] = useState('');
-  const [payoutValue, setPayoutValue] = useState(0);
+  const [payoutValue, setPayoutValue] = useState<string>('0.00');
   const [isActive, setIsActive] = useState(true);
+
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setIconName('beaker');
+    setSoundUrl('');
+    setPayoutValue('0.00');
+    setIsActive(true);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onAddTask({
       title,
       description,
-      iconUrl,
+      iconName, // Changed from iconUrl
       soundUrl,
-      payoutValue,
+      payoutValue: parseFloat(payoutValue),
       isActive,
     });
+    resetForm();
     onClose();
   };
+
+  // Reset form when modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -60,12 +78,8 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
               />
             </div>
             <div>
-              <Label htmlFor="iconUrl">Icon URL</Label>
-              <Input
-                id="iconUrl"
-                value={iconUrl}
-                onChange={(e) => setIconUrl(e.target.value)}
-              />
+              <Label htmlFor="iconName">Task Icon</Label>
+              <IconSelector selectedIcon={iconName} onSelectIcon={setIconName} />
             </div>
             <div>
               <Label htmlFor="soundUrl">Sound URL</Label>
@@ -81,7 +95,9 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 id="payoutValue"
                 type="number"
                 value={payoutValue}
-                onChange={(e) => setPayoutValue(Number(e.target.value))}
+                onChange={(e) => setPayoutValue(e.target.value)}
+                step="0.01"
+                min="0"
                 required
               />
             </div>

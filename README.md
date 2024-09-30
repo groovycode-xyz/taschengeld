@@ -34,3 +34,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Task Icons
+
+The application uses a set of predefined icons for tasks. These icons are stored in the `/public/icons/` directory. To add more icons:
+
+1. Download SVG icons from sources like [Heroicons](https://heroicons.com/), [Feather Icons](https://feathericons.com/), or [Lucide](https://lucide.dev/).
+2. Place the new SVG files in the `/public/icons/` directory.
+3. Update the `icons` array in the `components/icon-selector.tsx` file to include the new icons.
+
+Example of adding a new icon:
