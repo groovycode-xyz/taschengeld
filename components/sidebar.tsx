@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import { CheckSquareIcon, PiggyBankIcon, BanknoteIcon, ClipboardListIcon, UsersIcon } from 'lucide-react'
+import { Switch } from './ui/switch'
+import { useState } from 'react'
 
 export function Sidebar() {
+  const [isParentMode, setIsParentMode] = useState(true)
+
   return (
-    <aside className="w-64 bg-gray-100 h-full flex-shrink-0">
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-4">Features</h2>
-      </div>
-      <nav className="mt-2">
+    <aside className="w-64 bg-gray-100 h-full flex-shrink-0 flex flex-col">
+      <nav className="mt-4 flex-grow">
         <Link href="/task-completion" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200">
           <CheckSquareIcon className="mr-3 h-5 w-5" />
           <span>Task Completion</span>
@@ -29,6 +30,18 @@ export function Sidebar() {
           <span>User Management</span>
         </Link>
       </nav>
+      <div className="p-4 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-700">
+            {isParentMode ? 'Parent' : 'Child'} Mode
+          </span>
+          <Switch
+            checked={isParentMode}
+            onCheckedChange={setIsParentMode}
+            className="data-[state=checked]:bg-blue-600"
+          />
+        </div>
+      </div>
     </aside>
   )
 }

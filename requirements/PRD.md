@@ -154,6 +154,29 @@ The application utilizes a modern, open-source, and free technology stack to ens
   - **Animations and Sounds:** Celebrate task completion with animations and sound effects.
   - **Ease of Use:** Designed for children as young as 5, with large touch targets and minimal text.
 
+  ### **6.1.6 Global App Settings**
+- **Purpose:** Allows the first user of the app to make global setting decisions.
+- **Priority:** 1
+- **User Story:** The parent will define the global settings for the app.
+- **Features:**
+ -	**Enforce Parent / Children role distinctions** (Yes or No toggle) (default is No)
+	-	**Hint text:**  This is for those people who do not want to "mess" with toggling between Parent mode and verifying they are a Parent.
+		-	If **No**
+			-	Then Role Based Access and any related configurations or restrictions will be lifted and everything will operate in Parent mode at all times.
+			-	Then the Toggle Switch to Enable Parent Mode (found at the bottom of the sidebar.tsx on the Overall Application Interface) will be greyed out on the Overall Application Interface (since it will serve no purpose with this No setting).
+		-	If **Yes**, then all Role Based Access configurations, restrictions, functionality, et al, will be enforced.
+			-	This includes if someone wants to enter the these global settings under the Application Configuration Icon
+			-	Field appears, "Global PIN:" (4 digits) (default value is empty)
+				-	**Hint text:**  Use this PIN to enter Global Settings.  This PIN may also be used anytime user is required to verify they are a Parent when using the Parent toggle switch within the application.
+	-	**Reset Settings**
+		-	**Hint text:**  "Warning, these options will have irreversible consequences.  Do not use unless you are aware that you will need to recreate any data that is deleted by taking these actions."
+		-	**Reset and erase all Users of the app**
+			-	**Hint text:**  Will delete all users. Not reversible.  You will need to create new users.  The default built-in Parent User will be recreated automatically just like a new installation of the app.
+		-	**Reset and erase all defined Tasks**
+			-	**Hint text:**  Will delete all currently defined Tasks, as well as all Task completion history.  Not reversible.  You will need to create new Tasks.
+		-	**Reset and erase all Piggy Bank Account Balances**
+			-	**Hint text:**  Will delete all Bank Accounts of all users.  Will delete all transactions and history.  Not reversable.
+
 ### **6.2 Nice-to-Have Features**
 
 - **Audio Message Attachments:** Allow children to record and attach audio messages when marking tasks as completed.

@@ -2,10 +2,13 @@
 
 import Link from 'next/link'
 import { Sidebar } from "@/components/sidebar"
-import { MainContent } from "@/components/main-content"
-import { SearchIcon, UserCircle } from 'lucide-react'
+import { SearchIcon, Settings } from 'lucide-react'
 
-export function AppShell() {
+interface AppShellProps {
+  children: React.ReactNode;
+}
+
+export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="bg-black text-white p-4 flex justify-between items-center">
@@ -21,12 +24,16 @@ export function AppShell() {
             />
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          <UserCircle className="h-8 w-8" />
+          <Link href="/global-settings" className="mr-4">
+            <Settings className="h-6 w-6 text-white hover:text-gray-300 transition-colors" />
+          </Link>
         </div>
       </header>
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <MainContent />
+        <main className="flex-1 overflow-auto p-8 bg-white">
+          {children}
+        </main>
       </div>
     </div>
   )

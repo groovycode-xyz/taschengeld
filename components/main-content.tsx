@@ -6,6 +6,7 @@ import { PiggyBank } from './piggy-bank'
 import { Payday } from './payday'
 import { TaskManagement } from './task-management'
 import { UserManagement } from './user-management'
+import { GlobalAppSettings } from './global-app-settings'
 
 export function MainContent() {
   const pathname = usePathname()
@@ -22,6 +23,8 @@ export function MainContent() {
         return <TaskManagement />
       case '/user-management':
         return <UserManagement />
+      case '/global-settings':
+        return <GlobalAppSettings />
       default:
         return (
           <>
