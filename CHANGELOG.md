@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Global App Settings component with role enforcement toggle and reset options
 - Settings icon in the navbar for quick access to Global App Settings
 - New page for Global App Settings (/global-settings)
+- Implemented toast component for notifications
+- Created useToast hook for easier toast management
 
 ### Changed
 - Updated theme toggle in sidebar to switch between "Parent" and "Child" modes
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reset form fields in AddUserModal when opened
 - Ensured 'Role' field is mandatory in user forms
 - Set default icon to 'user' for new users
+- Resolved linter errors related to missing toast component
 
 ### Changed
 - Updated routing structure to use consistent AppShell component across all pages
@@ -46,6 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Removed user icon from the navbar in the AppShell component
+
+### Changed
+- Improved visual design of Global App Settings page
+  - Added Card components for better organization
+  - Incorporated icons for visual interest
+  - Enhanced layout and spacing for improved readability
 
 ## [0.1.0] - 2023-05-XX
 
