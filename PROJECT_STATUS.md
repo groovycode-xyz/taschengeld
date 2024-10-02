@@ -53,6 +53,8 @@ We have implemented the basic functionality of the Task Completion page, includi
 - Begin with implementing sound effects for task completion
 - Focus on refining animations and visual feedback
 - Start planning the cooldown system implementation
+- New home page route has been added, accessible via the "Taschengeld" logo in the header
+- Added a welcome image and message to the home page
 
 ## Resources and Libraries to Consider
 - Howler.js for audio playback: https://howlerjs.com/

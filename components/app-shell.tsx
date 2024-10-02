@@ -12,7 +12,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="bg-black text-white p-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold hover:text-gray-300 transition-colors">
+        <Link href="/home" className="text-2xl font-bold hover:text-gray-300 transition-colors">
           Taschengeld
         </Link>
         <div className="flex items-center">
