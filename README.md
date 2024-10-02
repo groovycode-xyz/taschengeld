@@ -11,7 +11,21 @@ Tascheged is a kid-friendly, intuitive application designed for families to mana
 
 ## Getting Started
 
-(Include instructions on how to set up and run the project locally)
+To set up and run the project locally:
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+4. Open your browser and navigate to `http://localhost:3000`
+
+## Launch
+
+To launch the development environment:
+
+1. Open a terminal in the project's root directory
+2. Run the command: `npm run dev`
+3. The server will start, typically on `http://localhost:3000`
+4. Open this URL in your web browser to view the application
 
 ## Contributing
 
@@ -20,3 +34,4 @@ Tascheged is a kid-friendly, intuitive application designed for families to mana
 ## License
 
 (Include license information)
+

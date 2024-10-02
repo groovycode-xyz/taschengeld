@@ -1,10 +1,10 @@
-import { AppShell } from '@/components/app-shell'
-import { MainContent } from '@/components/main-content'
+import { TaskCompletionPage } from '@/components/TaskCompletion/TaskCompletionPage';
+import { AppShell } from '@/components/app-shell';
 
-export default function TaskCompletionPage() {
+export default function TaskCompletionRoute() {
   return (
     <AppShell>
-      <MainContent />
+      <TaskCompletionPage />
     </AppShell>
-  )
+  );
 }
