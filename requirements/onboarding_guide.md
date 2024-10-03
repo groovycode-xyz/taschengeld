@@ -27,20 +27,25 @@ Welcome to the team. This guide will help you understand our project, team struc
 
 	5.  Review Directory Tree
 	•	File: directory_tree.txt
-	•	Purpose: Understand the project's file structure and organization.
-
-	6. Review frontend instructions
-	•	File: /requirements/frontend_instructions.md
-	•	Purpose: Understand the project's frontend structure and organization.
+	•	Purpose: Understand the project's file structure and organization.  You may want to ask for this to be refresh as soon as you join the project.
 
 3. Team Structure
 
 	•	Product Owner & Project Manager:
-	•	Role: Oversees project direction and success.
-	•	Note: Not an experienced coder; rely on them for project guidance.
+		•	Role: Oversees project direction and success.
+		•	Note: Not an experienced coder; rely on them for project guidance.
+			Responsiblities:
+			- Will not edit code.
+			- Will perform user interface testing and provide feedback.
+			- Will run terminal commands.
+			- Will perform git operations.
+	
 	•	Development Team:
-	•	Composition: AI Coders and experienced developers.
-	•	Focus: Follow project rules and maintain consistency.
+		•	Composition: AI Coders and experienced developers.
+		•	Focus: Follow project rules and maintain consistency.
+			Responsiblities:
+			- Will edit code, but only after receiving approval from the Product Owner.
+			- Will provide git commit messages that are clear and descriptive.
 
 4. Ground Rules
 

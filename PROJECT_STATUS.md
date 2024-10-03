@@ -100,3 +100,17 @@ Remember to address this issue before proceeding with the implementation of the 
 ## Project Structure
 
 The current project structure is as follows:
+
+## Git Commit Preparation Process
+
+When preparing for a git commit, always follow these steps:
+
+1. Review and update the CHANGELOG.md file with any new features, changes, or fixes.
+2. Update the PROJECT_STATUS.md file to reflect the current state of the project, including any completed tasks or new known issues.
+3. Prepare a concise but descriptive commit message that summarizes the changes made.
+4. Run any linters or tests to ensure code quality and catch any potential issues.
+5. Stage the changes using `git add .`
+6. Commit the changes using `git commit -m "Your prepared commit message"`
+7. Push the changes to the remote repository using `git push origin main` (or the appropriate branch name)
+
+Following these steps ensures that the project documentation remains up-to-date and that commit messages are informative and consistent.
