@@ -4,10 +4,9 @@ Tascheged is a kid-friendly, intuitive application designed for families to mana
 
 ## Features
 
-- Task Management: Create, edit, delete, and view tasks with customizable payout values.
-- User Management: Add and manage family members with different roles (parent/child).
-- Task Completion: Allow children to mark tasks as completed.
-- Home Page: A new landing page accessible by clicking on the "Taschengeld" logo.
+- Task Management: Create, edit, delete, and view tasks with customizable payout values, icons, and sounds.
+- User Management: Add and manage family members with different roles (parent/child), including customizable icons and sounds.
+- Home Page: A landing page accessible by clicking on the "Taschengeld" logo.
 - (More features to be added)
 
 ## Getting Started

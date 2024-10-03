@@ -5,18 +5,20 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- Implemented SelectSoundModal for choosing task sounds
-- Added sound playback functionality in task modals
-- Integrated actual sound file listing from the server
+- Implemented Task Management interface with responsive design
+- Added Add Task and Edit Task modals with icon and sound selection
+- Integrated sound selection functionality for tasks
+- Implemented User Management interface with similar design to Task Management
+- Added Add User and Edit User modals with icon and sound selection
 
 ### Changed
-- Improved UI for sound selection in Add and Edit Task modals
-- Enhanced visual feedback for selected sounds in SelectSoundModal
-- Updated AddTaskModal to reset fields to default values on open
+- Updated Task card layout with improved visual distinction for active/inactive tasks
+- Enhanced User card layout and responsiveness
+- Improved icon selection modal with a wider range of task-specific icons
 
 ### Fixed
-- Resolved issue with icon not defaulting to 'box' in AddTaskModal
-- Fixed sound selection and display in task modals
+- Resolved issues with task status toggling and form field population
+- Fixed inconsistencies in User type definition
 
 ## [0.1.0] - 2024-XX-XX
 - Initial release

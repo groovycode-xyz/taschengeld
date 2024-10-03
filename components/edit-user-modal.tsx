@@ -1,43 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { User } from '@/app/types/user';
 import { IconSelectorModal } from './icon-selector-modal';
-import { DeleteConfirmationModal } from './delete-confirmation-modal';
-import { Baby, Laugh, Smile, Star, Heart, Flower, User, Users, Bird, Bug, Cat, Dog, Egg, Rabbit, Snail, Squirrel, Turtle, Save, Trash2, X } from 'lucide-react';
-
-type User = {
-  id: string;
-  name: string;
-  icon: string;
-  sound: string | null;
-  birthday: string;
-  role: 'parent' | 'child';
-};
+import { SelectUserSoundModal } from './select-user-sound-modal';
+import { Baby, Laugh, Smile, Star, Heart, Flower, User as UserIcon, Users, Bird, Bug, Cat, Dog, Egg, Rabbit, Snail, Squirrel, Turtle, Save, X, Play } from 'lucide-react';
 
 type EditUserModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onEditUser: (user: User) => void;
-  onDeleteUser: (userId: string) => void;
+  onEditUser: (userId: string, updatedUser: Partial<User>) => void;
   user: User | null;
 };
 
-export function EditUserModal({ isOpen, onClose, onEditUser, onDeleteUser, user }: EditUserModalProps) {
+export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserModalProps) {
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('user');
   const [sound, setSound] = useState<string | null>(null);
   const [birthday, setBirthday] = useState('');
   const [role, setRole] = useState<'parent' | 'child'>('child');
-  const [isIconSelectorOpen, setIsIconSelectorOpen] = useState(false);
-  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [isIconModalOpen, setIsIconModalOpen] = useState(false);
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
       setName(user.name);
-      setIcon(user.icon || 'user');
+      setIcon(user.icon);
       setSound(user.sound);
       setBirthday(user.birthday);
       setRole(user.role);
@@ -47,30 +38,20 @@ export function EditUserModal({ isOpen, onClose, onEditUser, onDeleteUser, user 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      onEditUser({ ...user, name, icon, sound, birthday, role });
+      onEditUser(user.id, { name, icon, sound, birthday, role });
     }
     onClose();
   };
 
-  const handleDelete = () => {
-    setIsDeleteConfirmationOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (user) {
-      onDeleteUser(user.id);
-      setIsDeleteConfirmationOpen(false);
-      onClose();
-    }
-  };
-
   const getIconComponent = (iconName: string) => {
     const IconComponent = {
-      baby: Baby, laugh: Laugh, smile: Smile, star: Star, heart: Heart, flower: Flower, user: User, users: Users,
+      baby: Baby, laugh: Laugh, smile: Smile, star: Star, heart: Heart, flower: Flower, user: UserIcon, users: Users,
       bird: Bird, bug: Bug, cat: Cat, dog: Dog, egg: Egg, rabbit: Rabbit, snail: Snail, squirrel: Squirrel, turtle: Turtle
-    }[iconName] || User;
+    }[iconName] || UserIcon;
     return <IconComponent className="h-6 w-6" />;
   };
+
+  if (!isOpen || !user) return null;
 
   return (
     <>
@@ -80,7 +61,7 @@ export function EditUserModal({ isOpen, onClose, onEditUser, onDeleteUser, user 
             <DialogTitle>Edit User</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
+            <div className="space-y-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
                   Name
@@ -108,7 +89,7 @@ export function EditUserModal({ isOpen, onClose, onEditUser, onDeleteUser, user 
                 <Label htmlFor="role" className="text-right">
                   Role
                 </Label>
-                <Select onValueChange={(value: 'parent' | 'child') => setRole(value)} value={role} required>
+                <Select onValueChange={(value: 'parent' | 'child') => setRole(value)} value={role}>
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
@@ -118,38 +99,49 @@ export function EditUserModal({ isOpen, onClose, onEditUser, onDeleteUser, user 
                   </SelectContent>
                 </Select>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="sound" className="text-right">
-                  Sound
-                </Label>
-                <Select onValueChange={(value) => setSound(value === 'none' ? null : value)} value={sound || 'none'}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a sound" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">No Sound</SelectItem>
-                    <SelectItem value="chime">Chime</SelectItem>
-                    <SelectItem value="bell">Bell</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div>
+                <Label>User Sound</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={sound ? sound.toUpperCase() : 'NO SOUND'}
+                    readOnly
+                    placeholder="No sound selected"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsSoundModalOpen(true)}
+                  >
+                    Select Sound
+                  </Button>
+                  {sound && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const audio = new Audio(`/sounds/users/${sound}.mp3`);
+                        audio.play();
+                      }}
+                    >
+                      <Play className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
               <div className="flex justify-center">
                 <Button
                   type="button"
                   variant="outline"
                   className="p-2 h-16 w-16 flex justify-center items-center"
-                  onClick={() => setIsIconSelectorOpen(true)}
+                  onClick={() => setIsIconModalOpen(true)}
                 >
                   {getIconComponent(icon)}
                 </Button>
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="mt-6">
               <Button type="button" variant="outline" onClick={onClose}>
                 <X className="h-4 w-4" />
-              </Button>
-              <Button type="button" variant="destructive" onClick={handleDelete}>
-                <Trash2 className="h-4 w-4" />
               </Button>
               <Button type="submit">
                 <Save className="h-4 w-4" />
@@ -159,15 +151,15 @@ export function EditUserModal({ isOpen, onClose, onEditUser, onDeleteUser, user 
         </DialogContent>
       </Dialog>
       <IconSelectorModal
-        isOpen={isIconSelectorOpen}
-        onClose={() => setIsIconSelectorOpen(false)}
+        isOpen={isIconModalOpen}
+        onClose={() => setIsIconModalOpen(false)}
         onSelectIcon={setIcon}
       />
-      <DeleteConfirmationModal
-        isOpen={isDeleteConfirmationOpen}
-        onClose={() => setIsDeleteConfirmationOpen(false)}
-        onConfirm={confirmDelete}
-        userName={user?.name || ''}
+      <SelectUserSoundModal
+        isOpen={isSoundModalOpen}
+        onClose={() => setIsSoundModalOpen(false)}
+        onSelectSound={setSound}
+        currentSound={sound}
       />
     </>
   );

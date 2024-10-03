@@ -4,9 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Pencil, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Switch } from "@/components/ui/switch";
 import { AddTaskModal } from "./add-task-modal";
 import { EditTaskModal } from "./edit-task-modal";
 import { Task } from "@/app/types/task";
@@ -44,7 +43,7 @@ export function TaskManagement() {
         icon: "book",
         sound: null,
         payoutValue: 3.50,
-        activeStatus: true,
+        activeStatus: false,
         createdAt: new Date()
       }
     ];
@@ -65,17 +64,12 @@ export function TaskManagement() {
     setTasks(prevTasks => prevTasks.map(task => 
       task.taskId === taskId ? { ...task, ...updatedTask } : task
     ));
+    setIsEditModalOpen(false);
   };
 
   const handleDeleteTask = (taskId: number) => {
     setTasks(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
     setIsEditModalOpen(false);
-  };
-
-  const handleToggleStatus = (taskId: number) => {
-    setTasks(prevTasks => prevTasks.map(task => 
-      task.taskId === taskId ? { ...task, activeStatus: !task.activeStatus } : task
-    ));
   };
 
   const filteredAndSortedTasks = tasks
@@ -93,8 +87,8 @@ export function TaskManagement() {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Task Management</h1>
-        <Button onClick={() => setIsAddModalOpen(true)} className="px-4 py-2 text-lg">
-          <Plus className="mr-2 h-5 w-5" /> Add Task
+        <Button onClick={() => setIsAddModalOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Add Task
         </Button>
       </div>
 
@@ -122,34 +116,41 @@ export function TaskManagement() {
       </div>
 
       <ScrollArea className="h-[calc(100vh-200px)]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredAndSortedTasks.map((task) => (
             <Card 
               key={task.taskId} 
-              className={`transition-all duration-300 ${task.activeStatus ? 'bg-white' : 'bg-gray-100 opacity-60'}`}
+              className={`cursor-pointer transition-all duration-300 ${
+                task.activeStatus 
+                  ? 'bg-blue-100 hover:bg-blue-200' 
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+              onClick={() => {
+                setEditingTask(task);
+                setIsEditModalOpen(true);
+              }}
             >
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center mb-4">
-                  <IconComponent icon={task.icon} className="w-16 h-16 mb-2" />
-                  <h3 className="text-xl font-semibold text-center">{task.title}</h3>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-lg font-medium">{task.payoutValue.toFixed(2)}</p>
-                  <Switch
-                    checked={task.activeStatus}
-                    onCheckedChange={() => handleToggleStatus(task.taskId)}
+              <CardContent className="p-4 flex items-center space-x-4">
+                <div className="h-16 w-16 flex-shrink-0">
+                  <IconComponent 
+                    icon={task.icon} 
+                    className={`h-full w-full ${
+                      task.activeStatus 
+                        ? 'text-blue-600' 
+                        : 'text-gray-400'
+                    }`} 
                   />
                 </div>
-                <Button
-                  className="w-full mt-4 py-2"
-                  variant="outline"
-                  onClick={() => {
-                    setEditingTask(task);
-                    setIsEditModalOpen(true);
-                  }}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
+                <div className={`flex-grow flex justify-between items-center ${
+                  task.activeStatus 
+                    ? 'text-black' 
+                    : 'text-gray-500'
+                }`}>
+                  <h3 className={`text-lg font-bold ${
+                    task.activeStatus ? '' : 'italic'
+                  }`}>{task.title}</h3>
+                  <p className="text-lg font-bold">{task.payoutValue.toFixed(2)}</p>
+                </div>
               </CardContent>
             </Card>
           ))}

@@ -2,131 +2,85 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pencil, Trash2, Plus, User } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { AddUserModal } from "./add-user-modal";
-import { EditUserModal } from "./edit-user-modal";
-import { DeleteConfirmationModal } from "./delete-confirmation-modal";
-
-// Update the User type
-type User = {
-  id: string;
-  name: string;
-  icon: string;
-  sound: string | null; // Allow null for no sound
-  birthday: string;
-  role: 'parent' | 'child';
-};
+import { UserCard } from './user-card';
+import { AddUserModal } from './add-user-modal';
+import { EditUserModal } from './edit-user-modal';
+import { User } from '@/app/types/user';
+import { Plus } from 'lucide-react';
 
 export function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
-    const response = await fetch('/api/users');
-    const data = await response.json();
-    setUsers(data);
+    // Mock data for now. Replace with actual API call later.
+    const mockUsers: User[] = [
+      { id: '1', name: 'John Doe', icon: 'user', sound: null, birthday: '1990-01-01', role: 'parent' },
+      { id: '2', name: 'Jane Doe', icon: 'smile', sound: 'chime', birthday: '2010-05-15', role: 'child' },
+      { id: '3', name: 'Alice Smith', icon: 'heart', sound: null, birthday: '1985-03-20', role: 'parent' },
+      { id: '4', name: 'Bob Johnson', icon: 'star', sound: 'bell', birthday: '2012-11-30', role: 'child' },
+    ];
+    setUsers(mockUsers);
   };
 
-  const handleAddUser = () => {
-    setIsAddModalOpen(true);
-  };
-
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setIsEditModalOpen(true);
-  };
-
-  const handleDeleteUser = (user: User) => {
-    setSelectedUser(user);
-    setIsDeleteModalOpen(true);
-  };
-
-  const onDeleteUser = async (userId: string) => {
-    await fetch(`/api/users?id=${userId}`, { method: 'DELETE' });
-    await fetchUsers();
-    setIsDeleteModalOpen(false);
-    setIsEditModalOpen(false); // Close the edit modal after deletion
-  };
-
-  const onAddUser = async (newUser: Omit<User, 'id'>) => {
-    await fetch('/api/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newUser),
-    });
-    await fetchUsers();
+  const handleAddUser = (newUser: Omit<User, 'id'>) => {
+    const user: User = {
+      ...newUser,
+      id: (users.length + 1).toString(),
+    };
+    setUsers(prevUsers => [...prevUsers, user]);
     setIsAddModalOpen(false);
   };
 
-  const onEditUser = async (editedUser: User) => {
-    await fetch('/api/users', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editedUser),
-    });
-    await fetchUsers();
+  const handleEditUser = (userId: string, updatedUser: Partial<User>) => {
+    setUsers(prevUsers => prevUsers.map(user => 
+      user.id === userId ? { ...user, ...updatedUser } : user
+    ));
     setIsEditModalOpen(false);
   };
 
+  const sortedUsers = [...users].sort((a, b) => {
+    return new Date(a.birthday).getTime() - new Date(b.birthday).getTime();
+  });
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">User Management</h2>
-        <Button onClick={handleAddUser}>
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">User Management</h1>
+        <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Add User
         </Button>
       </div>
-      <ScrollArea className="h-[calc(100vh-200px)]">
-        {users.map((user) => (
-          <Card key={user.id} className="mb-4">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {user.name} ({user.role})
-              </CardTitle>
-              <div>
-                <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)}>
-                  <Pencil className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" onClick={() => handleDeleteUser(user)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4 text-sm">
-                <User className="h-4 w-4" />
-                <span>Birthday: {user.birthday}</span>
-              </div>
-            </CardContent>
-          </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {sortedUsers.map((user) => (
+          <UserCard
+            key={user.id}
+            user={user}
+            onClick={() => {
+              setEditingUser(user);
+              setIsEditModalOpen(true);
+            }}
+          />
         ))}
-      </ScrollArea>
+      </div>
+
       <AddUserModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddUser={onAddUser}
+        onAddUser={handleAddUser}
       />
       <EditUserModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onEditUser={onEditUser}
-        onDeleteUser={onDeleteUser}
-        user={selectedUser}
-      />
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => selectedUser && onDeleteUser(selectedUser.id)}
-        userName={selectedUser?.name || ''}
+        onEditUser={handleEditUser}
+        user={editingUser}
       />
     </div>
   );

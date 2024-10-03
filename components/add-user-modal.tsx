@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { IconSelectorModal } from './icon-selector-modal';
-import { Baby, Laugh, Smile, Star, Heart, Flower, User, Users, Bird, Bug, Cat, Dog, Egg, Rabbit, Snail, Squirrel, Turtle, Save, X } from 'lucide-react';
+import { Baby, Laugh, Smile, Star, Heart, Flower, User, Users, Bird, Bug, Cat, Dog, Egg, Rabbit, Snail, Squirrel, Turtle, Save, X, Play } from 'lucide-react';
+import { SelectUserSoundModal } from './select-user-sound-modal';
 
 type User = {
   id: string;
@@ -22,28 +23,28 @@ type AddUserModalProps = {
   onAddUser: (user: Omit<User, 'id'>) => void;
 };
 
-export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) {
-  const [name, setName] = useState('');
-  const [icon, setIcon] = useState('user'); // Default icon
-  const [sound, setSound] = useState<string | null>(null); // Default sound, can be null
-  const [birthday, setBirthday] = useState('');
-  const [role, setRole] = useState<'parent' | 'child'>('child');
-  const [isIconSelectorOpen, setIsIconSelectorOpen] = useState(false);
+const defaultUserState = {
+  name: '',
+  icon: 'user',
+  sound: null as string | null,
+  birthday: '',
+  role: 'child' as 'parent' | 'child',
+};
 
-  // Reset fields when modal opens
+export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) {
+  const [userState, setUserState] = useState(defaultUserState);
+  const [isIconModalOpen, setIsIconModalOpen] = useState(false);
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
-      setName('');
-      setIcon('user');
-      setSound(null);
-      setBirthday('');
-      setRole('child');
+      setUserState(defaultUserState);
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddUser({ name, icon, sound, birthday, role });
+    onAddUser(userState);
     onClose();
   };
 
@@ -56,91 +57,113 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add New User</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="col-span-3"
-              />
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New User</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  value={userState.name}
+                  onChange={(e) => setUserState(prev => ({ ...prev, name: e.target.value }))}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="birthday" className="text-right">
+                  Birthday
+                </Label>
+                <Input
+                  id="birthday"
+                  type="date"
+                  value={userState.birthday}
+                  onChange={(e) => setUserState(prev => ({ ...prev, birthday: e.target.value }))}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="role" className="text-right">
+                  Role
+                </Label>
+                <Select onValueChange={(value: 'parent' | 'child') => setUserState(prev => ({ ...prev, role: value }))} value={userState.role} required>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="parent">Parent</SelectItem>
+                    <SelectItem value="child">Child</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>User Sound</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={userState.sound ? userState.sound.toUpperCase() : 'NO SOUND'}
+                    readOnly
+                    placeholder="No sound selected"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsSoundModalOpen(true)}
+                  >
+                    Select Sound
+                  </Button>
+                  {userState.sound && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const audio = new Audio(`/sounds/users/${userState.sound}.mp3`);
+                        audio.play();
+                      }}
+                    >
+                      <Play className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="p-2 h-16 w-16 flex justify-center items-center"
+                  onClick={() => setIsIconModalOpen(true)}
+                >
+                  {getIconComponent(userState.icon)}
+                </Button>
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="birthday" className="text-right">
-                Birthday
-              </Label>
-              <Input
-                id="birthday"
-                type="date"
-                value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="role" className="text-right">
-                Role
-              </Label>
-              <Select onValueChange={(value: 'parent' | 'child') => setRole(value)} value={role} required>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="parent">Parent</SelectItem>
-                  <SelectItem value="child">Child</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="sound" className="text-right">
-                Sound
-              </Label>
-              <Select onValueChange={(value) => setSound(value === 'none' ? null : value)} defaultValue={sound || 'none'}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a sound" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No Sound</SelectItem>
-                  <SelectItem value="chime">Chime</SelectItem>
-                  <SelectItem value="bell">Bell</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex justify-center">
-              <Button
-                type="button"
-                variant="outline"
-                className="p-2 h-16 w-16 flex justify-center items-center"
-                onClick={() => setIsIconSelectorOpen(true)}
-              >
-                {getIconComponent(icon)}
+            <DialogFooter className="mt-6">
+              <Button type="button" variant="outline" onClick={onClose}>
+                <X className="h-4 w-4" />
               </Button>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
-            <Button type="submit">
-              <Save className="h-4 w-4" />
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
+              <Button type="submit">
+                <Save className="h-4 w-4" />
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
       <IconSelectorModal
-        isOpen={isIconSelectorOpen}
-        onClose={() => setIsIconSelectorOpen(false)}
-        onSelectIcon={setIcon}
+        isOpen={isIconModalOpen}
+        onClose={() => setIsIconModalOpen(false)}
+        onSelectIcon={(selectedIcon) => setUserState(prev => ({ ...prev, icon: selectedIcon }))}
       />
-    </Dialog>
+      <SelectUserSoundModal
+        isOpen={isSoundModalOpen}
+        onClose={() => setIsSoundModalOpen(false)}
+        onSelectSound={(selectedSound) => setUserState(prev => ({ ...prev, sound: selectedSound }))}
+        currentSound={userState.sound}
+      />
+    </>
   );
 }
