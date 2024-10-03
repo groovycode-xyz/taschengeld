@@ -5,19 +5,18 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- Icon-based buttons for task actions (add, edit, delete, save, cancel)
-- Hint text for task title input suggesting 3 or fewer words
-- Visual cues for active/inactive tasks in the task list
+- Implemented SelectSoundModal for choosing task sounds
+- Added sound playback functionality in task modals
+- Integrated actual sound file listing from the server
 
 ### Changed
-- Improved layout of Edit Task modal with repositioned delete button
-- Updated task card design in Task Management interface
-- Replaced text buttons with icon buttons across task-related components
-- Changed default task icon from 'cuboid' to 'box'
+- Improved UI for sound selection in Add and Edit Task modals
+- Enhanced visual feedback for selected sounds in SelectSoundModal
+- Updated AddTaskModal to reset fields to default values on open
 
 ### Fixed
-- Issue with toggling task active status
-- Pre-population of fields in Add Task modal
+- Resolved issue with icon not defaulting to 'box' in AddTaskModal
+- Fixed sound selection and display in task modals
 
 ## [0.1.0] - 2024-XX-XX
 - Initial release

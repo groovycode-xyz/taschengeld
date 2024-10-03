@@ -4,12 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
 import { DeleteConfirmationModal } from './delete-confirmation-modal';
-import { Trash2, Save, X, Pencil } from 'lucide-react';
+import { Trash2, Save, X, Play } from 'lucide-react';
+import { SelectSoundModal } from './select-sound-modal';
 
 type EditTaskModalProps = {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
   const [activeStatus, setActiveStatus] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
 
   useEffect(() => {
     if (task) {
@@ -112,12 +114,33 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
                 </div>
               </div>
               <div>
-                <Label htmlFor="soundUrl">Sound URL</Label>
-                <Input
-                  id="soundUrl"
-                  value={sound || ''}
-                  onChange={(e) => setSound(e.target.value)}
-                />
+                <Label>Task Sound</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={sound ? sound.toUpperCase() : 'NO SOUND'}
+                    readOnly
+                    placeholder="No sound selected"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsSoundModalOpen(true)}
+                  >
+                    Select Sound
+                  </Button>
+                  {sound && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const audio = new Audio(`/sounds/tasks/${sound}.mp3`);
+                        audio.play();
+                      }}
+                    >
+                      <Play className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
               <div>
                 <Label htmlFor="payoutValue">Payout Value</Label>
@@ -160,6 +183,12 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
         onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
+      />
+      <SelectSoundModal
+        isOpen={isSoundModalOpen}
+        onClose={() => setIsSoundModalOpen(false)}
+        onSelectSound={(selectedSound) => setSound(selectedSound)}
+        currentSound={sound}
       />
       <DeleteConfirmationModal
         isOpen={isDeleteConfirmationOpen}

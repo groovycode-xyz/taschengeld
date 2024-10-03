@@ -8,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
-import { Save, X } from 'lucide-react';
+import { SelectSoundModal } from './select-sound-modal';
+import { Save, X, Play } from 'lucide-react';
 
 type AddTaskModalProps = {
   isOpen: boolean;
@@ -19,8 +20,8 @@ type AddTaskModalProps = {
 const defaultTaskState = {
   title: '',
   description: '',
-  icon: 'box', // Changed from 'cuboid' to 'box'
-  sound: '',
+  icon: 'box',  // Ensure this is set to 'box'
+  sound: null as string | null,
   payoutValue: '0.00',
   activeStatus: true,
 };
@@ -28,6 +29,7 @@ const defaultTaskState = {
 export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) {
   const [taskState, setTaskState] = useState(defaultTaskState);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -87,12 +89,33 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 </div>
               </div>
               <div>
-                <Label htmlFor="soundUrl">Sound URL</Label>
-                <Input
-                  id="soundUrl"
-                  value={taskState.sound}
-                  onChange={(e) => setTaskState(prev => ({ ...prev, sound: e.target.value }))}
-                />
+                <Label>Task Sound</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={taskState.sound ? taskState.sound.toUpperCase() : 'NO SOUND'}
+                    readOnly
+                    placeholder="No sound selected"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsSoundModalOpen(true)}
+                  >
+                    Select Sound
+                  </Button>
+                  {taskState.sound && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const audio = new Audio(`/sounds/tasks/${taskState.sound}.mp3`);
+                        audio.play();
+                      }}
+                    >
+                      <Play className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
               <div>
                 <Label htmlFor="payoutValue">Payout Value</Label>
@@ -116,14 +139,12 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
               </div>
             </div>
             <DialogFooter className="mt-6">
-              <div className="mt-6 flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={onClose}>
-                  <X className="h-4 w-4" />
-                </Button>
-                <Button type="submit">
-                  <Save className="h-4 w-4" />
-                </Button>
-              </div>
+              <Button type="button" variant="outline" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+              <Button type="submit">
+                <Save className="h-4 w-4" />
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -132,6 +153,12 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
         onSelectIcon={(selectedIcon) => setTaskState(prev => ({ ...prev, icon: selectedIcon }))}
+      />
+      <SelectSoundModal
+        isOpen={isSoundModalOpen}
+        onClose={() => setIsSoundModalOpen(false)}
+        onSelectSound={(selectedSound) => setTaskState(prev => ({ ...prev, sound: selectedSound }))}
+        currentSound={taskState.sound}
       />
     </>
   );
