@@ -8,28 +8,32 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
+import { DeleteConfirmationModal } from './delete-confirmation-modal';
+import { Trash2, Save, X, Pencil } from 'lucide-react';
 
 type EditTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onEditTask: (taskId: number, updatedTask: Partial<Task>) => void;
+  onDeleteTask: (taskId: number) => void;
   task: Task | null;
 };
 
-export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskModalProps) {
+export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task }: EditTaskModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [icon, setIcon] = useState('');
+  const [icon, setIcon] = useState('box'); // Changed from 'cuboid' to 'box'
   const [sound, setSound] = useState<string | null>('');
   const [payoutValue, setPayoutValue] = useState('0.00');
   const [activeStatus, setActiveStatus] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setIcon(task.icon);
+      setIcon(task.icon || 'box'); // Changed from 'cuboid' to 'box'
       setSound(task.sound);
       setPayoutValue(task.payoutValue.toString());
       setActiveStatus(task.activeStatus);
@@ -51,6 +55,18 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskMod
     onClose();
   };
 
+  const handleDelete = () => {
+    setIsDeleteConfirmationOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (task) {
+      onDeleteTask(task.taskId);
+      setIsDeleteConfirmationOpen(false);
+      onClose();
+    }
+  };
+
   if (!isOpen || !task) return null;
 
   return (
@@ -70,6 +86,7 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskMod
                   onChange={(e) => setTitle(e.target.value)}
                   required
                 />
+                <p className="text-sm text-gray-500 mt-1">Recommend using 3 or fewer words</p>
               </div>
               <div>
                 <Label htmlFor="description">Description</Label>
@@ -123,10 +140,19 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskMod
                 <Label htmlFor="isActive">Active</Label>
               </div>
             </div>
-            <DialogFooter className="mt-6">
-              <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-              <Button type="submit">Save Changes</Button>
-            </DialogFooter>
+            <div className="mt-6 flex justify-between items-center">
+              <Button type="button" variant="destructive" onClick={handleDelete}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <div className="space-x-2">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  <X className="h-4 w-4" />
+                </Button>
+                <Button type="submit">
+                  <Save className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </form>
         </DialogContent>
       </Dialog>
@@ -134,6 +160,12 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, task }: EditTaskMod
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
         onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
+      />
+      <DeleteConfirmationModal
+        isOpen={isDeleteConfirmationOpen}
+        onClose={() => setIsDeleteConfirmationOpen(false)}
+        onConfirmDelete={confirmDelete}
+        taskTitle={task.title}
       />
     </>
   );

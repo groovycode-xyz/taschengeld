@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Pencil, Plus } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
 import { AddTaskModal } from "./add-task-modal";
 import { EditTaskModal } from "./edit-task-modal";
-import { DeleteConfirmationModal } from "./delete-confirmation-modal";
 import { Task } from "@/app/types/task";
-import { IconComponent } from './icon-component'; // We'll create this component
+import { IconComponent } from './icon-component';
 
 export function TaskManagement() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -18,13 +18,11 @@ export function TaskManagement() {
   const [sortBy, setSortBy] = useState('title');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [deletingTask, setDeletingTask] = useState<Task | null>(null);
 
   useEffect(() => {
     fetchTasks();
-  }, []); // Remove statusFilter and sortBy from dependencies
+  }, []);
 
   const fetchTasks = async () => {
     // Mock data for testing
@@ -71,7 +69,13 @@ export function TaskManagement() {
 
   const handleDeleteTask = (taskId: number) => {
     setTasks(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
-    setIsDeleteModalOpen(false);
+    setIsEditModalOpen(false);
+  };
+
+  const handleToggleStatus = (taskId: number) => {
+    setTasks(prevTasks => prevTasks.map(task => 
+      task.taskId === taskId ? { ...task, activeStatus: !task.activeStatus } : task
+    ));
   };
 
   const filteredAndSortedTasks = tasks
@@ -89,15 +93,15 @@ export function TaskManagement() {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Task Management</h1>
-        <Button onClick={() => setIsAddModalOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add Task
+        <Button onClick={() => setIsAddModalOpen(true)} className="px-4 py-2 text-lg">
+          <Plus className="mr-2 h-5 w-5" /> Add Task
         </Button>
       </div>
 
       <div className="flex space-x-4 mb-4">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Filter by status" />
+            <SelectValue placeholder="Filter tasks" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Tasks</SelectItem>
@@ -107,7 +111,7 @@ export function TaskManagement() {
         </Select>
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Sort by" />
+            <SelectValue placeholder="Sort tasks" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="title">Sort by Title</SelectItem>
@@ -118,45 +122,34 @@ export function TaskManagement() {
       </div>
 
       <ScrollArea className="h-[calc(100vh-200px)]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredAndSortedTasks.map((task) => (
-            <Card key={task.taskId}>
-              <CardHeader>
-                <CardTitle className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <div className="bg-gray-100 p-1 rounded">
-                      <IconComponent icon={task.icon} className="w-6 h-6" />
-                    </div>
-                    <span>{task.title}</span>
-                  </div>
-                  <div className="space-x-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingTask(task);
-                        setIsEditModalOpen(true);
-                      }}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setDeletingTask(task);
-                        setIsDeleteModalOpen(true);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{task.description}</p>
-                <p>Payout: ${task.payoutValue.toFixed(2)}</p>
-                <p>Status: {task.activeStatus ? 'Active' : 'Inactive'}</p>
+            <Card 
+              key={task.taskId} 
+              className={`transition-all duration-300 ${task.activeStatus ? 'bg-white' : 'bg-gray-100 opacity-60'}`}
+            >
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center mb-4">
+                  <IconComponent icon={task.icon} className="w-16 h-16 mb-2" />
+                  <h3 className="text-xl font-semibold text-center">{task.title}</h3>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-medium">{task.payoutValue.toFixed(2)}</p>
+                  <Switch
+                    checked={task.activeStatus}
+                    onCheckedChange={() => handleToggleStatus(task.taskId)}
+                  />
+                </div>
+                <Button
+                  className="w-full mt-4 py-2"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingTask(task);
+                    setIsEditModalOpen(true);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
               </CardContent>
             </Card>
           ))}
@@ -172,16 +165,8 @@ export function TaskManagement() {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onEditTask={handleEditTask}
+        onDeleteTask={handleDeleteTask}
         task={editingTask}
-      />
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirmDelete={() => {
-          if (deletingTask) handleDeleteTask(deletingTask.taskId);
-          setIsDeleteModalOpen(false);
-        }}
-        taskTitle={deletingTask?.title || ''}
       />
     </div>
   );

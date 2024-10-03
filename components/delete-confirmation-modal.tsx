@@ -1,6 +1,7 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Trash2, X } from 'lucide-react';
 
 type DeleteConfirmationModalProps = {
   isOpen: boolean;
@@ -17,10 +18,14 @@ export function DeleteConfirmationModal({ isOpen, onClose, onConfirmDelete, task
           <DialogTitle>Delete Task</DialogTitle>
         </DialogHeader>
         <p>{`Are you sure you want to delete the task "${taskTitle}"?`}</p>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button variant="destructive" onClick={onConfirmDelete}>Delete</Button>
-        </DialogFooter>
+        <div className="mt-4 flex justify-end space-x-2">
+          <Button variant="outline" onClick={onClose}>
+            <X className="h-4 w-4" />
+          </Button>
+          <Button variant="destructive" onClick={onConfirmDelete}>
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

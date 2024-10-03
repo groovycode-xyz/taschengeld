@@ -5,19 +5,19 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- Implemented Task Completion page with drag-and-drop functionality
-- Created TouchTaskGrid and TouchUserRow components for touch devices
-- Implemented custom touch-based drag-and-drop for mobile devices
-- Added visual feedback for dragging tasks
-- Implemented responsive design for various screen sizes
+- Icon-based buttons for task actions (add, edit, delete, save, cancel)
+- Hint text for task title input suggesting 3 or fewer words
+- Visual cues for active/inactive tasks in the task list
 
 ### Changed
-- Optimized performance with React hooks and createPortal
-- Updated CSS for better responsiveness and visual appeal
+- Improved layout of Edit Task modal with repositioned delete button
+- Updated task card design in Task Management interface
+- Replaced text buttons with icon buttons across task-related components
+- Changed default task icon from 'cuboid' to 'box'
 
 ### Fixed
-- Resolved issues with drag-and-drop functionality on touch devices
-- Fixed linter errors and improved code organization
+- Issue with toggling task active status
+- Pre-population of fields in Add Task modal
 
 ## [0.1.0] - 2024-XX-XX
 - Initial release
