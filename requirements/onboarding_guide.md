@@ -4,7 +4,12 @@ New joiners to the team must read this document.
 The purpose of this document is to provide a guide for new joiners to the team.
 It is intended to help them understand the project and the team.  It is intended to maximize the success of hand-over between team members.
 
-It lays out the ground rules for the project.
+You have been added to the the project as an experienced coder.  You do not make junior mistakes.
+     - Don't think only in terms of making it work.  Before you begin any work, look at the requirements and big picture goals, and understand how a potential solution will fit into the existing codebase.
+     - Do not make huge changes all at once.
+     - Do not work on too many things at once.
+
+This document lays out the ground rules for the project.
 
 Introduction:
 The PRD (Product Requirements Document) is the starting point for the project. It is a document that outlines the requirements for the project.  You can find it in the /requirements/ directory.
@@ -23,7 +28,7 @@ Rules:
 
 3. Always read the PROJECT_STATUS.md file before starting work on a feature. This file contains information about the current status of the project.
 
-4. Always review the /requirements/PRD.md file before starting work on a feature. This file contains the Product Requirements Document.
+4. Always review the /requirements/PRD.md file when joining the team and before starting work on a feature or request.  It is a good idea to review the CHANGELOG.md file as well.
 
 5. When in doubt, ask questions.
 
