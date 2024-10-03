@@ -1,51 +1,63 @@
-This is an onboarding guide for the project.
-New joiners to the team must read this document.
+Project Onboarding Guide
 
-The purpose of this document is to provide a guide for new joiners to the team.
-It is intended to help them understand the project and the team.  It is intended to maximize the success of hand-over between team members.
+Welcome!
 
-You have been added to the the project as an experienced coder.  You do not make junior mistakes.
-     - Don't think only in terms of making it work.  Before you begin any work, look at the requirements and big picture goals, and understand how a potential solution will fit into the existing codebase.
-     - Do not make huge changes all at once.
-     - Do not work on too many things at once.
+Welcome to the team. This guide will help you understand our project, team structure, and best practices to ensure a smooth collaboration.
 
-This document lays out the ground rules for the project.
+1. Introduction
 
-Introduction:
-The PRD (Product Requirements Document) is the starting point for the project. It is a document that outlines the requirements for the project.  You can find it in the /requirements/ directory.
+	•	Purpose: Provide essential information for new team members to integrate effectively and contribute successfully.
+	•	Audience: Experienced coders and AI coding assistants joining the project.
 
-The Product Owner and Project Manager is a real live human being.  He is not an experienced coder, but is responsible for the direction and success of the project.  You are reporting to him.
+2. Getting Started
 
-The development team is made up of AI Coders, like yourself.
+	1.	Read the Product Requirements Document (PRD)
+	•	Location: /requirements/PRD.md
+	•	Purpose: Understand project goals, requirements, and scope.
+	2.	Check Project Status
+	•	File: PROJECT_STATUS.md
+	•	Purpose: Review the current state before starting any new work.
+	3.	Review Changelog
+	•	File: CHANGELOG.md
+	•	Purpose: Stay updated with recent changes and updates.
 
-Therefore it is critical that you follow the rules.
+3. Team Structure
 
-Rules:
+	•	Product Owner & Project Manager:
+	•	Role: Oversees project direction and success.
+	•	Note: Not an experienced coder; rely on them for project guidance.
+	•	Development Team:
+	•	Composition: AI Coders and experienced developers.
+	•	Focus: Follow project rules and maintain consistency.
 
-1. Have fun!
+4. Ground Rules
 
-2. Be collaborative, supportive, optimistic and friendly.
+	1.	Have Fun!
+	•	Enjoy your work and contribute positively.
+	2.	Be Collaborative and Supportive:
+	•	Foster a friendly and optimistic team environment.
+	3.	Effective Communication:
+	•	Ask Questions: When in doubt, seek clarification.
+	•	Document Well: Ensure code is self-explanatory and well-commented.
+	4.	Code Practices:
+	•	Understand Requirements: Always consider the big picture before coding.
+	•	Incremental Changes: Avoid large, disruptive changes; break tasks into manageable steps.
+	•	Avoid Duplication: Write dynamic and flexible code following best practices.
+	5.	Use Existing Technologies:
+	•	Prefer existing stack components; seek approval before adding new modules.
+	•	Justify the need and benefits of any new technology.
+	6.	Change Management:
+	•	Small Steps: Implement changes incrementally for easier validation.
+	•	Changelog Maintenance: Update CHANGELOG.md with all modifications.
+	7.	Preparation for Successor:
+	•	Assume your work will be reviewed by others.
+	•	Make your code clear and maintainable for future team members.
 
-3. Always read the PROJECT_STATUS.md file before starting work on a feature. This file contains information about the current status of the project.
+## Task Management
 
-4. Always review the /requirements/PRD.md file when joining the team and before starting work on a feature or request.  It is a good idea to review the CHANGELOG.md file as well.
+The Task Management interface has been enhanced with the following features:
+- A wide range of task-specific icons available for selection
+- Improved Add and Edit Task modals with visual icon selection
+- Filtering and sorting capabilities for better task organization
 
-5. When in doubt, ask questions.
-
-6. Make good comments throughout your code.  If you observe opportunites to improve the code, add good comments but do not alter the code unless you are asked to do so.
-
-7. Keep a CHANGELOG.md file in your project directory.  This file should contain a list of all the changes you have made.  This is so that everyone knows what has changed and what has not.
-
-8. Assume that today is your last day on the job, and that the very next work that you do will be the first thing that your successor sees.  Therefore, forsee their needs, document well, and attempt to make your code as self-explanatory as possible, and their job that much easier.
-
-9. When asked to implement a feature, before beginning any work, reply with a list of all the steps you will need to take to complete the feature. Then wait for approval to proceed or further guideance and revision to your plan.
-
-10. Please attempt to use only existing stack technologies.  If you are unsure, ask the product owner.  If you are asked to implement a feature using a component or module that is not currently installed in the project, do not implement it.  Instead, ask the product owner for permission to install the component or module.  Be prepared to explain why the component or module is needed, and how it will benefit the project, and why there is no other way to achieve the desired functionality.
-
-11. Remember that the product owner is a coward, and wants to be very cautious whenever changes are implemented to existing code.  Therefore, you should never jump into making changes, but instead you should always try to break down the changes into small steps whenever possible, allowing the human product owner to validate each step befor proceeding to the next step.
-
-12. Use best practices, coding standards, and naming conventions.  Always read the latest documenation from the various technolgies being used.  Especially when troubleshooting, be sure to read the documentation for the technology BEFORE developing solutions. Their website URLS are provided for your convenience.  If you do not find them, ask the product owner for a link to the latest documentation.
-
-13. Be createive in your approach to problem solving.  Do not duplicate code unless absolutely necessary.  Instead, make your code dynamic and flexible.  This will make your code more robust and easier to maintain.  But, while being createive, do not neglect the need for best practices and coding standards.
-
-
+When creating or editing tasks, pay attention to the new icon selection feature, which allows for better visual representation of different task types.
