@@ -20,6 +20,18 @@ Welcome to the team. This guide will help you understand our project, team struc
 	3.	Review Changelog
 	•	File: CHANGELOG.md
 	•	Purpose: Stay updated with recent changes and updates.
+	
+	4.  Review Overview drawing
+	•	File: /requirements/overview1.jpg
+	•	Purpose: Understand the project's overall structure and flow.
+
+	5.  Review Directory Tree
+	•	File: directory_tree.txt
+	•	Purpose: Understand the project's file structure and organization.
+
+	6. Review frontend instructions
+	•	File: /requirements/frontend_instructions.md
+	•	Purpose: Understand the project's frontend structure and organization.
 
 3. Team Structure
 
@@ -61,3 +73,64 @@ The Task Management interface has been enhanced with the following features:
 - Filtering and sorting capabilities for better task organization
 
 When creating or editing tasks, pay attention to the new icon selection feature, which allows for better visual representation of different task types.
+
+
+##
+
+/Users/jamespace/Projects/tgeld
+├── .git (hidden)
+├── .next (hidden)
+├── app
+│ ├── fonts
+│ ├── types
+│ │ └── user.ts
+│ ├── favicon.ico
+│ ├── globals.css
+│ ├── layout.tsx
+│ └── page.tsx
+├── components
+│ ├── ui
+│ │ └── button.tsx
+│ ├── add-task-modal.tsx
+│ ├── add-user-modal.tsx
+│ ├── delete-confirmation-modal.tsx
+│ ├── edit-task-modal.tsx
+│ ├── edit-user-modal.tsx
+│ ├── icon-component.tsx
+│ ├── icon-selector.tsx
+│ ├── payday-interface.tsx
+│ ├── payday.tsx
+│ ├── select-icon-modal.tsx
+│ ├── select-sound-modal.tsx
+│ ├── select-user-sound-modal.tsx
+│ ├── task-management.tsx
+│ ├── user-card.tsx
+│ └── user-management.tsx
+├── lib
+│ └── utils.ts
+├── pages
+│ └── api
+│ ├── sounds.ts
+│ └── user-sounds.ts
+├── public
+│ ├── icons
+│ ├── images
+│ └── sounds
+│ ├── tasks
+│ └── users
+├── requirements
+│ ├── frontend_instructions.md
+│ ├── PRD.md
+│ └── tree.txt
+├── CHANGELOG.md
+├── components.json
+├── next.config.mjs
+├── package.json
+├── PROJECT_STATUS.md
+├── README.md
+├── tailwind.config.ts
+└── tsconfig.json
+
+This structure reflects the current state of the project, including the recently implemented Payday interface and User Management components.
+
+You can also also run the python script in the root of the project to generate a tree of the project (directory_tree.py) which will output a new directory_tree.txt file every time you run it.
