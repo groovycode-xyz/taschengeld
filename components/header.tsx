@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Menu, Search, User, Cog } from "lucide-react"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Menu, Search, User, Cog } from 'lucide-react';
 
 export function Header({ onMenuClick }: { onMenuClick: () => void }) {
   return (
@@ -14,7 +14,11 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
       <div className="flex items-center space-x-4">
         <div className="relative hidden md:block">
           <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input type="search" placeholder="Search..." className="pl-8 w-[200px] bg-primary-foreground text-primary" />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="pl-8 w-[200px] bg-primary-foreground text-primary"
+          />
         </div>
         <Button variant="ghost" size="icon">
           <User className="h-5 w-5" />
@@ -24,5 +28,5 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
         </Button>
       </div>
     </header>
-  )
+  );
 }

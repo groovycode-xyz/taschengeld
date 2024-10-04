@@ -1,16 +1,55 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { IconComponent } from './icon-component';
 
 const taskIcons = [
-  'baby', 'glasses', 'book-user', 'clipboard-pen-line', 'house', 'inbox', 'bird', 'bone', 
-  'cat', 'dog', 'egg', 'fish', 'paw-print', 'rabbit', 'turtle', 'graduation-cap', 
-  'warehouse', 'cuboid', 'palette', 'box', 'biceps-flexed', 'leafy-green', 'salad', 
-  'star', 'music', 'music-2', 'music-4', 'paperclip', 'cooking-pot', 'soup', 'utensils', 
-  'utensils-crossed', 'wheat', 'armchair', 'bed', 'fence', 'calculator', 'guitar', 
-  'piano', 'flower', 'flower-2', 'sprout', 'shovel', 'shirt', 'shopping-basket', 
-  'shopping-cart'
+  'baby',
+  'glasses',
+  'book-user',
+  'clipboard-pen-line',
+  'house',
+  'inbox',
+  'bird',
+  'bone',
+  'cat',
+  'dog',
+  'egg',
+  'fish',
+  'paw-print',
+  'rabbit',
+  'turtle',
+  'graduation-cap',
+  'warehouse',
+  'cuboid',
+  'palette',
+  'box',
+  'biceps-flexed',
+  'leafy-green',
+  'salad',
+  'star',
+  'music',
+  'music-2',
+  'music-4',
+  'paperclip',
+  'cooking-pot',
+  'soup',
+  'utensils',
+  'utensils-crossed',
+  'wheat',
+  'armchair',
+  'bed',
+  'fence',
+  'calculator',
+  'guitar',
+  'piano',
+  'flower',
+  'flower-2',
+  'sprout',
+  'shovel',
+  'shirt',
+  'shopping-basket',
+  'shopping-cart',
 ];
 
 type SelectIconModalProps = {

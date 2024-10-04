@@ -34,4 +34,3 @@ To launch the development environment:
 ## License
 
 (Include license information)
-

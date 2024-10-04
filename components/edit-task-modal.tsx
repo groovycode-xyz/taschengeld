@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
@@ -15,12 +15,20 @@ import { SelectSoundModal } from './select-sound-modal';
 type EditTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onEditTask: (taskId: number, updatedTask: Partial<Task>) => void;
-  onDeleteTask: (taskId: number) => void;
+  onEditTask: (taskId: string, updatedTask: Partial<Task>) => void;
+  onDeleteTask: (taskId: string) => void;
   task: Task | null;
+  // Add users to props if you intend to use handleAssignUser
+  // users: User[];
 };
 
-export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task }: EditTaskModalProps) {
+export function EditTaskModal({
+  isOpen,
+  onClose,
+  onEditTask,
+  onDeleteTask,
+  task /* users */,
+}: EditTaskModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [icon, setIcon] = useState('box'); // Changed from 'cuboid' to 'box'
@@ -29,42 +37,56 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
   const [activeStatus, setActiveStatus] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
+  // {{ Remove the following line }}
+  // const [assignedUser, setAssignedUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setIcon(task.icon || 'box'); // Changed from 'cuboid' to 'box'
-      setSound(task.sound);
+      setIcon(task.iconName || 'box'); // Changed from 'cuboid' to 'box'
+      setSound(task.soundUrl);
       setPayoutValue(task.payoutValue.toString());
-      setActiveStatus(task.activeStatus);
+      setActiveStatus(task.isActive);
+      // {{ If using assignedUser, set it here }}
+      // setAssignedUser(task.assignedUser);
     }
   }, [task]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (task) {
-      onEditTask(task.taskId, {
+      onEditTask(task.id, {
         title,
         description,
-        icon,
-        sound,
+        iconName: icon,
+        soundUrl: sound,
         payoutValue: parseFloat(payoutValue),
-        activeStatus,
+        isActive: activeStatus,
+        updatedAt: new Date(),
       });
     }
     onClose();
   };
 
+  // {{ Remove the handleAssignUser function if it's not used }}
+  /*
+  const handleAssignUser = (userId: string) => {
+    const user = users.find((u: User) => u.id === userId) || null;
+    setAssignedUser(user);
+    onEditTask(task.taskId, { assignedUserId: userId });
+  };
+  */
+
+  // Add handleDelete function to open the delete confirmation modal
   const handleDelete = () => {
     setIsDeleteConfirmationOpen(true);
   };
 
+  // Add confirmDelete function to handle the actual deletion
   const confirmDelete = () => {
     if (task) {
-      onDeleteTask(task.taskId);
-      setIsDeleteConfirmationOpen(false);
+      onDeleteTask(task.id);
       onClose();
     }
   };
@@ -104,11 +126,7 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
                   <div className="w-12 h-12 flex items-center justify-center border rounded">
                     <IconComponent icon={icon} className="h-6 w-6" />
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsIconModalOpen(true)}
-                  >
+                  <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
                     Select Icon
                   </Button>
                 </div>
@@ -121,11 +139,7 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
                     readOnly
                     placeholder="No sound selected"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsSoundModalOpen(true)}
-                  >
+                  <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
                     Select Sound
                   </Button>
                   {sound && (
@@ -155,11 +169,7 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
                 />
               </div>
               <div className="flex items-center space-x-2">
-                <Switch
-                  id="isActive"
-                  checked={activeStatus}
-                  onCheckedChange={setActiveStatus}
-                />
+                <Switch id="isActive" checked={activeStatus} onCheckedChange={setActiveStatus} />
                 <Label htmlFor="isActive">Active</Label>
               </div>
             </div>
@@ -185,8 +195,8 @@ export function EditTaskModal({ isOpen, onClose, onEditTask, onDeleteTask, task 
         onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
       />
       <SelectSoundModal
-        isOpen={isSoundModalOpen}
-        onClose={() => setIsSoundModalOpen(false)}
+        isOpen={isIconModalOpen}
+        onClose={() => setIsIconModalOpen(false)}
         onSelectSound={(selectedSound) => setSound(selectedSound)}
         currentSound={sound}
       />

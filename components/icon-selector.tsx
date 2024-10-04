@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import { IconComponent } from './icon-component';
 
 // We'll update this list later with the task-specific icons you provide
@@ -17,7 +17,7 @@ export function IconSelector({ selectedIcon, onSelectIcon }: IconSelectorProps) 
         <Button
           key={icon}
           type="button"
-          variant={selectedIcon === icon ? "default" : "outline"}
+          variant={selectedIcon === icon ? 'default' : 'outline'}
           className="p-2 h-10 w-10"
           onClick={() => onSelectIcon(icon)}
         >

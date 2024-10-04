@@ -11,8 +11,22 @@ type User = {
 
 // Mock database
 let users: User[] = [
-  { id: '1', name: 'Parent User', icon: 'user', sound: 'chime', birthday: '1980-01-01', role: 'parent' },
-  { id: '2', name: 'Child User', icon: 'child', sound: 'bell', birthday: '2010-01-01', role: 'child' },
+  {
+    id: '1',
+    name: 'Parent User',
+    icon: 'user',
+    sound: 'chime',
+    birthday: '1980-01-01',
+    role: 'parent',
+  },
+  {
+    id: '2',
+    name: 'Child User',
+    icon: 'child',
+    sound: 'bell',
+    birthday: '2010-01-01',
+    role: 'child',
+  },
 ];
 
 export async function GET() {
@@ -28,13 +42,13 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const updatedUser: User = await request.json();
-  users = users.map(user => user.id === updatedUser.id ? updatedUser : user);
+  users = users.map((user) => (user.id === updatedUser.id ? updatedUser : user));
   return NextResponse.json(updatedUser);
 }
 
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
-  users = users.filter(user => user.id !== id);
+  users = users.filter((user) => user.id !== id);
   return NextResponse.json({ message: 'User deleted successfully' });
 }

@@ -17,7 +17,12 @@ interface TaskGridProps {
   draggedTaskId: string | null;
 }
 
-export const TaskGrid: React.FC<TaskGridProps> = ({ tasks, onDragStart, onDragEnd, draggedTaskId }) => {
+export const TaskGrid: React.FC<TaskGridProps> = ({
+  tasks,
+  onDragStart,
+  onDragEnd,
+  draggedTaskId,
+}) => {
   return (
     <div className="task-grid">
       {tasks.map((task) => (

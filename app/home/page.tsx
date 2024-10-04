@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import { AppShell } from '@/components/app-shell'
+import Image from 'next/image';
+import { AppShell } from '@/components/app-shell';
 
 export default function HomePage() {
   return (
@@ -18,5 +18,5 @@ export default function HomePage() {
         <p className="text-xl mt-4">Your family&apos;s allowance and task management app</p>
       </div>
     </AppShell>
-  )
+  );
 }

@@ -1,10 +1,20 @@
 export type Task = {
-  taskId: number;
+  id: string;
   title: string;
   description: string;
-  icon: string;
-  sound: string | null;
+  iconName: string;
+  soundUrl: string | null;
   payoutValue: number;
-  activeStatus: boolean;
+  isActive: boolean;
   createdAt: Date;
+  updatedAt: Date;
+  taskId: string; // {{ Made 'taskId' required }}
+};
+
+export type CompletedTask = Task & {
+  userId: string;
+  userName: string;
+  userIcon: string;
+  completedAt: Date;
+  status: 'pending' | 'approved' | 'rejected';
 };

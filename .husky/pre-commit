@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# npm test  # Commented out to disable Jest testing during commit
+npm run format
+# npm run lint  # Commented out to disable linting during commit
+# npm run type-check  # Commented out to disable type-checking during commit

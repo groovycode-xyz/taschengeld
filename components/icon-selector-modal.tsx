@@ -1,7 +1,25 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Baby, Laugh, Smile, Star, Heart, Flower, User, Users, Bird, Bug, Cat, Dog, Egg, Rabbit, Snail, Squirrel, Turtle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import {
+  Baby,
+  Laugh,
+  Smile,
+  Star,
+  Heart,
+  Flower,
+  User,
+  Users,
+  Bird,
+  Bug,
+  Cat,
+  Dog,
+  Egg,
+  Rabbit,
+  Snail,
+  Squirrel,
+  Turtle,
+} from 'lucide-react';
 
 type IconOption = {
   name: string;

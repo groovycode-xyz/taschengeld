@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
@@ -20,7 +26,7 @@ type AddTaskModalProps = {
 const defaultTaskState = {
   title: '',
   description: '',
-  icon: 'box',  // Ensure this is set to 'box'
+  icon: 'box', // Ensure this is set to 'box'
   sound: null as string | null,
   payoutValue: '0.00',
   activeStatus: true,
@@ -40,8 +46,13 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onAddTask({
-      ...taskState,
+      title: taskState.title,
+      description: taskState.description,
+      iconName: taskState.icon,
+      soundUrl: taskState.sound,
       payoutValue: parseFloat(taskState.payoutValue),
+      isActive: taskState.activeStatus,
+      updatedAt: new Date(),
     });
     onClose();
   };
@@ -60,7 +71,7 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 <Input
                   id="title"
                   value={taskState.title}
-                  onChange={(e) => setTaskState(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) => setTaskState((prev) => ({ ...prev, title: e.target.value }))}
                   required
                 />
                 <p className="text-sm text-gray-500 mt-1">Recommend using 3 or fewer words</p>
@@ -70,7 +81,9 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 <Textarea
                   id="description"
                   value={taskState.description}
-                  onChange={(e) => setTaskState(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setTaskState((prev) => ({ ...prev, description: e.target.value }))
+                  }
                 />
               </div>
               <div>
@@ -79,11 +92,7 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                   <div className="w-12 h-12 flex items-center justify-center border rounded">
                     <IconComponent icon={taskState.icon} className="h-6 w-6" />
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsIconModalOpen(true)}
-                  >
+                  <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
                     Select Icon
                   </Button>
                 </div>
@@ -96,11 +105,7 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                     readOnly
                     placeholder="No sound selected"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsSoundModalOpen(true)}
-                  >
+                  <Button type="button" variant="outline" onClick={() => setIsSoundModalOpen(true)}>
                     Select Sound
                   </Button>
                   {taskState.sound && (
@@ -123,7 +128,9 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                   id="payoutValue"
                   type="number"
                   value={taskState.payoutValue}
-                  onChange={(e) => setTaskState(prev => ({ ...prev, payoutValue: e.target.value }))}
+                  onChange={(e) =>
+                    setTaskState((prev) => ({ ...prev, payoutValue: e.target.value }))
+                  }
                   step="0.01"
                   min="0"
                   required
@@ -133,7 +140,9 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 <Switch
                   id="isActive"
                   checked={taskState.activeStatus}
-                  onCheckedChange={(checked) => setTaskState(prev => ({ ...prev, activeStatus: checked }))}
+                  onCheckedChange={(checked) =>
+                    setTaskState((prev) => ({ ...prev, activeStatus: checked }))
+                  }
                 />
                 <Label htmlFor="isActive">Active</Label>
               </div>
@@ -152,12 +161,14 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
       <SelectIconModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelectIcon={(selectedIcon) => setTaskState(prev => ({ ...prev, icon: selectedIcon }))}
+        onSelectIcon={(selectedIcon) => setTaskState((prev) => ({ ...prev, icon: selectedIcon }))}
       />
       <SelectSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setTaskState(prev => ({ ...prev, sound: selectedSound }))}
+        onSelectSound={(selectedSound) =>
+          setTaskState((prev) => ({ ...prev, sound: selectedSound }))
+        }
         currentSound={taskState.sound}
       />
     </>

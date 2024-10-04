@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
 
 type SelectUserSoundModalProps = {
@@ -10,7 +16,12 @@ type SelectUserSoundModalProps = {
   currentSound: string | null;
 };
 
-export function SelectUserSoundModal({ isOpen, onClose, onSelectSound, currentSound }: SelectUserSoundModalProps) {
+export function SelectUserSoundModal({
+  isOpen,
+  onClose,
+  onSelectSound,
+  currentSound,
+}: SelectUserSoundModalProps) {
   const [sounds, setSounds] = useState<string[]>([]);
   const [selectedSound, setSelectedSound] = useState<string | null>(currentSound);
 
@@ -52,7 +63,7 @@ export function SelectUserSoundModal({ isOpen, onClose, onSelectSound, currentSo
         </DialogHeader>
         <div className="space-y-2">
           <Button
-            variant={selectedSound === null ? "default" : "outline"}
+            variant={selectedSound === null ? 'default' : 'outline'}
             className="w-full justify-between"
             onClick={() => setSelectedSound(null)}
           >
@@ -61,14 +72,14 @@ export function SelectUserSoundModal({ isOpen, onClose, onSelectSound, currentSo
           {sounds.map((sound) => (
             <Button
               key={sound}
-              variant={selectedSound === sound ? "default" : "outline"}
+              variant={selectedSound === sound ? 'default' : 'outline'}
               className="w-full justify-between"
               onClick={() => setSelectedSound(sound)}
             >
               {sound.toUpperCase()}
-              <Button 
-                size="sm" 
-                variant="ghost" 
+              <Button
+                size="sm"
+                variant="ghost"
                 onClick={(e) => {
                   e.stopPropagation();
                   playSound(sound);

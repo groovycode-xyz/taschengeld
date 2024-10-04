@@ -1,6 +1,6 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { Trash2, X } from 'lucide-react';
 
 type DeleteConfirmationModalProps = {
@@ -10,7 +10,12 @@ type DeleteConfirmationModalProps = {
   taskTitle: string;
 };
 
-export function DeleteConfirmationModal({ isOpen, onClose, onConfirmDelete, taskTitle }: DeleteConfirmationModalProps) {
+export function DeleteConfirmationModal({
+  isOpen,
+  onClose,
+  onConfirmDelete,
+  taskTitle,
+}: DeleteConfirmationModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>

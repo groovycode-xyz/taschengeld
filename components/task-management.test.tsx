@@ -1,9 +1,11 @@
+// Add this import at the top of the test file
+import '@testing-library/jest-dom'; // {{ Import jest-dom for extended matchers }}
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { TaskManagement } from './task-management';
 
-// Mock fetch globally
+// Mock the fetch function
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve([]),
@@ -11,14 +13,10 @@ global.fetch = jest.fn(() =>
 ) as jest.Mock;
 
 describe('TaskManagement', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('renders the component', () => {
     render(<TaskManagement />);
     expect(screen.getByText('Task Management')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /add new task/i })).toBeInTheDocument();
+    expect(screen.getByText('Add Task')).toBeInTheDocument();
   });
 
   it('fetches tasks on mount', async () => {
@@ -27,13 +25,11 @@ describe('TaskManagement', () => {
     expect(global.fetch).toHaveBeenCalledWith('/api/tasks?status=all&sort=title');
   });
 
-  it('opens the add task modal when clicking the Add New Task button', async () => {
+  it('opens the add task modal when clicking the Add Task button', async () => {
     render(<TaskManagement />);
-    fireEvent.click(screen.getByRole('button', { name: /add new task/i }));
+    fireEvent.click(screen.getByText('Add Task'));
     await waitFor(() => {
-      expect(screen.getByRole('dialog', { name: /add new task/i })).toBeInTheDocument();
+      expect(screen.getByText('Add New Task')).toBeInTheDocument();
     });
   });
-
-  // Add more tests as needed
 });

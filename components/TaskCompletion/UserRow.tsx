@@ -11,7 +11,12 @@ interface UserRowProps {
   completedTaskUserId: string | null;
 }
 
-export const UserRow: React.FC<UserRowProps> = ({ users, onDragOver, onDrop, completedTaskUserId }) => {
+export const UserRow: React.FC<UserRowProps> = ({
+  users,
+  onDragOver,
+  onDrop,
+  completedTaskUserId,
+}) => {
   return (
     <div className="user-row w-full">
       {users.map((user) => (

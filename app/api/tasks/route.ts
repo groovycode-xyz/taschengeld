@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   let tasks = db.tasks.getAll();
 
   if (status && status !== 'all') {
-    tasks = tasks.filter(task => task.isActive === (status === 'active'));
+    tasks = tasks.filter((task) => task.isActive === (status === 'active'));
   }
 
   if (sort) {

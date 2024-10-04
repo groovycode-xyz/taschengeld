@@ -1,23 +1,89 @@
-'use client';  // Add this line at the top of the file
+'use client'; // Add this line at the top of the file
 
 import React, { useState, useEffect } from 'react';
 import { TaskGrid } from '@/components/TaskCompletion/TaskGrid';
 import { TouchTaskGrid } from '@/components/TaskCompletion/TouchTaskGrid';
 import { UserRow } from '@/components/TaskCompletion/UserRow';
 import { TouchUserRow } from '@/components/TaskCompletion/TouchUserRow';
-import { Task } from '@/app/types/task';
-import { User } from '@/app/types/user';
+import { Task } from '@/types/task';
+import { User } from '@/app/types/user'; // {{ Corrected import path }}
 import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
 
+// Update mock data to match the Task type
 const mockTasks: Task[] = [
-  { id: '1', title: 'Clean Room', iconName: 'broom', soundUrl: '/sounds/clean.mp3', payoutValue: 5 },
-  { id: '2', title: 'Do Homework', iconName: 'book', soundUrl: '/sounds/homework.mp3', payoutValue: 3 },
-  { id: '3', title: 'Walk Dog', iconName: 'paw', soundUrl: '/sounds/dog.mp3', payoutValue: 4 },
+  {
+    id: '1',
+    title: 'Clean Room',
+    description: 'Tidy up and organize your bedroom',
+    iconName: 'broom',
+    soundUrl: '/sounds/clean.mp3',
+    payoutValue: 5,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: '2',
+    title: 'Do Homework',
+    description: 'Complete all assigned homework',
+    iconName: 'book',
+    soundUrl: '/sounds/homework.mp3',
+    payoutValue: 3,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: '3',
+    title: 'Walk Dog',
+    description: 'Take the dog for a 30-minute walk',
+    iconName: 'paw',
+    soundUrl: '/sounds/dog.mp3',
+    payoutValue: 4,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
 ];
 
+// Update mock users to match the new data
 const mockUsers: User[] = [
-  { id: '1', name: 'Alice', iconName: 'girl', soundUrl: '/sounds/alice.mp3', role: 'child' },
-  { id: '2', name: 'Bob', iconName: 'boy', soundUrl: '/sounds/bob.mp3', role: 'child' },
+  {
+    id: '1',
+    name: 'James',
+    sound: null,
+    birthday: '1971-11-03',
+    role: 'parent',
+    icon: 'user-icon',
+    iconName: 'user-icon',
+  },
+  {
+    id: '2',
+    name: 'Rebekka',
+    sound: null,
+    birthday: '1985-10-12',
+    role: 'parent',
+    icon: 'user-icon',
+    iconName: 'user-icon',
+  },
+  {
+    id: '3',
+    name: 'Eliana',
+    sound: null,
+    birthday: '2015-03-26',
+    role: 'child',
+    icon: 'user-icon',
+    iconName: 'user-icon',
+  },
+  {
+    id: '4',
+    name: 'Ariel',
+    sound: null,
+    birthday: '2016-12-01',
+    role: 'child',
+    icon: 'user-icon',
+    iconName: 'user-icon',
+  },
 ];
 
 export const TaskCompletionPage: React.FC = () => {
@@ -88,14 +154,14 @@ export const TaskCompletionPage: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4">Task Completion</h2>
       <div className="flex-1 overflow-auto mb-4">
         {isTouchDevice ? (
-          <TouchTaskGrid 
-            tasks={tasks} 
+          <TouchTaskGrid
+            tasks={tasks}
             onTaskSelect={handleTaskSelect}
             draggedTaskId={draggedTaskId}
           />
         ) : (
-          <TaskGrid 
-            tasks={tasks} 
+          <TaskGrid
+            tasks={tasks}
             onDragStart={(e, taskId) => {
               setDraggedTaskId(taskId);
               e.dataTransfer.setData('text/plain', taskId);
@@ -106,13 +172,13 @@ export const TaskCompletionPage: React.FC = () => {
         )}
       </div>
       {isTouchDevice ? (
-        <TouchUserRow 
+        <TouchUserRow
           users={users}
           onTaskDrop={handleTaskDrop}
           completedTaskUserId={completedTaskUserId}
         />
       ) : (
-        <UserRow 
+        <UserRow
           users={users}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e, userId) => {

@@ -1,58 +1,99 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { IconSelectorModal } from './icon-selector-modal';
-import { Baby, Laugh, Smile, Star, Heart, Flower, User, Users, Bird, Bug, Cat, Dog, Egg, Rabbit, Snail, Squirrel, Turtle, Save, X, Play } from 'lucide-react';
+import {
+  Baby,
+  Laugh,
+  Smile,
+  Star,
+  Heart,
+  Flower,
+  User as LucideUser,
+  Users,
+  Bird,
+  Bug,
+  Cat,
+  Dog,
+  Egg,
+  Rabbit,
+  Snail,
+  Squirrel,
+  Turtle,
+  Save,
+  X,
+  Play,
+} from 'lucide-react';
 import { SelectUserSoundModal } from './select-user-sound-modal';
+import { User } from '@/types/user';
 
-type User = {
-  id: string;
-  name: string;
-  icon: string;
-  sound: string | null;
-  birthday: string;
-  role: 'parent' | 'child';
-};
-
-type AddUserModalProps = {
+interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddUser: (user: Omit<User, 'id'>) => void;
-};
-
-const defaultUserState = {
-  name: '',
-  icon: 'user',
-  sound: null as string | null,
-  birthday: '',
-  role: 'child' as 'parent' | 'child',
-};
+}
 
 export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) {
-  const [userState, setUserState] = useState(defaultUserState);
+  const [name, setName] = useState('');
+  const [icon, setIcon] = useState('');
+  const [sound, setSound] = useState<string | null>(null);
+  const [birthday, setBirthday] = useState('');
+  const [role, setRole] = useState<'parent' | 'child'>('child');
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setUserState(defaultUserState);
+      setName('');
+      setIcon('');
+      setSound(null);
+      setBirthday('');
+      setRole('child');
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddUser(userState);
+    onAddUser({ name, icon, sound, birthday, role });
     onClose();
   };
 
   const getIconComponent = (iconName: string) => {
-    const IconComponent = {
-      baby: Baby, laugh: Laugh, smile: Smile, star: Star, heart: Heart, flower: Flower, user: User, users: Users,
-      bird: Bird, bug: Bug, cat: Cat, dog: Dog, egg: Egg, rabbit: Rabbit, snail: Snail, squirrel: Squirrel, turtle: Turtle
-    }[iconName] || User;
+    const IconComponent =
+      {
+        baby: Baby,
+        laugh: Laugh,
+        smile: Smile,
+        star: Star,
+        heart: Heart,
+        flower: Flower,
+        user: LucideUser,
+        users: Users,
+        bird: Bird,
+        bug: Bug,
+        cat: Cat,
+        dog: Dog,
+        egg: Egg,
+        rabbit: Rabbit,
+        snail: Snail,
+        squirrel: Squirrel,
+        turtle: Turtle,
+      }[iconName] || LucideUser;
     return <IconComponent className="h-6 w-6" />;
   };
 
@@ -71,8 +112,8 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 </Label>
                 <Input
                   id="name"
-                  value={userState.name}
-                  onChange={(e) => setUserState(prev => ({ ...prev, name: e.target.value }))}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="col-span-3"
                 />
               </div>
@@ -83,8 +124,8 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 <Input
                   id="birthday"
                   type="date"
-                  value={userState.birthday}
-                  onChange={(e) => setUserState(prev => ({ ...prev, birthday: e.target.value }))}
+                  value={birthday}
+                  onChange={(e) => setBirthday(e.target.value)}
                   className="col-span-3"
                 />
               </div>
@@ -92,7 +133,11 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 <Label htmlFor="role" className="text-right">
                   Role
                 </Label>
-                <Select onValueChange={(value: 'parent' | 'child') => setUserState(prev => ({ ...prev, role: value }))} value={userState.role} required>
+                <Select
+                  onValueChange={(value: 'parent' | 'child') => setRole(value)}
+                  value={role}
+                  required
+                >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
@@ -106,7 +151,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 <Label>User Sound</Label>
                 <div className="flex items-center space-x-2">
                   <Input
-                    value={userState.sound ? userState.sound.toUpperCase() : 'NO SOUND'}
+                    value={sound ? sound.toUpperCase() : 'NO SOUND'}
                     readOnly
                     placeholder="No sound selected"
                   />
@@ -114,17 +159,19 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                     type="button"
                     variant="outline"
                     onClick={() => setIsSoundModalOpen(true)}
+                    aria-label="Select Sound"
                   >
                     Select Sound
                   </Button>
-                  {userState.sound && (
+                  {sound && (
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(`/sounds/users/${userState.sound}.mp3`);
+                        const audio = new Audio(`/sounds/users/${sound}.mp3`);
                         audio.play();
                       }}
+                      aria-label="Play Sound"
                     >
                       <Play className="h-4 w-4" />
                     </Button>
@@ -137,8 +184,9 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                   variant="outline"
                   className="p-2 h-16 w-16 flex justify-center items-center"
                   onClick={() => setIsIconModalOpen(true)}
+                  aria-label="Select Icon"
                 >
-                  {getIconComponent(userState.icon)}
+                  {getIconComponent(icon)}
                 </Button>
               </div>
             </div>
@@ -156,13 +204,13 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
       <IconSelectorModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelectIcon={(selectedIcon) => setUserState(prev => ({ ...prev, icon: selectedIcon }))}
+        onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
       />
       <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setUserState(prev => ({ ...prev, sound: selectedSound }))}
-        currentSound={userState.sound}
+        onSelectSound={(selectedSound) => setSound(selectedSound)}
+        currentSound={sound}
       />
     </>
   );

@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import Link from 'next/link'
-import { Sidebar } from "@/components/sidebar"
-import { SearchIcon, Settings } from 'lucide-react'
+import Link from 'next/link';
+import { Sidebar } from '@/components/sidebar';
+import { SearchIcon, Settings } from 'lucide-react';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -31,10 +31,8 @@ export function AppShell({ children }: AppShellProps) {
       </header>
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-auto p-8 bg-white">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto p-8 bg-white">{children}</main>
       </div>
     </div>
-  )
+  );
 }

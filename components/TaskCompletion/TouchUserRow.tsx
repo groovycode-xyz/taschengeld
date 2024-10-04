@@ -10,7 +10,11 @@ interface TouchUserRowProps {
   completedTaskUserId: string | null;
 }
 
-export const TouchUserRow: React.FC<TouchUserRowProps> = ({ users, onTaskDrop, completedTaskUserId }) => {
+export const TouchUserRow: React.FC<TouchUserRowProps> = ({
+  users,
+  onTaskDrop,
+  completedTaskUserId,
+}) => {
   return (
     <div className="user-row touch-user-row w-full">
       {users.map((user) => (

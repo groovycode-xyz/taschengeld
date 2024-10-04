@@ -1,14 +1,20 @@
-"use client"
+'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Plus } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { AddTaskModal } from "./add-task-modal";
-import { EditTaskModal } from "./edit-task-modal";
-import { Task } from "@/app/types/task";
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import { Plus } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AddTaskModal } from './add-task-modal';
+import { EditTaskModal } from './edit-task-modal';
+import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 
 export function TaskManagement() {
@@ -27,55 +33,61 @@ export function TaskManagement() {
     // Mock data for testing
     const mockTasks: Task[] = [
       {
-        taskId: 1,
-        title: "Clean Room",
-        description: "Tidy up and organize your bedroom",
-        icon: "broom",
-        sound: "chime.mp3",
-        payoutValue: 5.00,
-        activeStatus: true,
-        createdAt: new Date()
+        id: '1',
+        title: 'Clean Room',
+        description: 'Tidy up the bedroom',
+        iconName: 'broom',
+        soundUrl: '/sounds/clean.mp3',
+        payoutValue: 5,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        taskId: 2,
-        title: "Do Homework",
-        description: "Complete all assigned homework",
-        icon: "book",
-        sound: null,
-        payoutValue: 3.50,
-        activeStatus: false,
-        createdAt: new Date()
-      }
+        id: '2',
+        title: 'Do Homework',
+        description: 'Complete all assigned homework',
+        iconName: 'book',
+        soundUrl: null,
+        payoutValue: 3.5,
+        isActive: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ];
     setTasks(mockTasks);
   };
 
-  const handleAddTask = (newTask: Omit<Task, 'taskId' | 'createdAt'>) => {
+  const handleAddTask = (newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
     const task: Task = {
       ...newTask,
-      taskId: tasks.length + 1,
-      createdAt: new Date()
+      id: Date.now().toString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    setTasks(prevTasks => [...prevTasks, task]);
+    setTasks((prevTasks) => [...prevTasks, task]);
     setIsAddModalOpen(false);
   };
 
-  const handleEditTask = (taskId: number, updatedTask: Partial<Task>) => {
-    setTasks(prevTasks => prevTasks.map(task => 
-      task.taskId === taskId ? { ...task, ...updatedTask } : task
-    ));
+  const handleEditTask = (taskId: string, updatedTask: Partial<Task>) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === taskId ? { ...task, ...updatedTask } : task))
+    );
     setIsEditModalOpen(false);
   };
 
-  const handleDeleteTask = (taskId: number) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
+  const handleDeleteTask = (taskId: string) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     setIsEditModalOpen(false);
   };
 
   const filteredAndSortedTasks = tasks
-    .filter(task => statusFilter === 'all' || 
-      (statusFilter === 'active' && task.activeStatus) || 
-      (statusFilter === 'inactive' && !task.activeStatus))
+    .filter(
+      (task) =>
+        statusFilter === 'all' ||
+        (statusFilter === 'active' && task.isActive) ||
+        (statusFilter === 'inactive' && !task.isActive)
+    )
     .sort((a, b) => {
       if (sortBy === 'title') return a.title.localeCompare(b.title);
       if (sortBy === 'payoutValue') return b.payoutValue - a.payoutValue;
@@ -118,12 +130,10 @@ export function TaskManagement() {
       <ScrollArea className="h-[calc(100vh-200px)]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredAndSortedTasks.map((task) => (
-            <Card 
-              key={task.taskId} 
+            <Card
+              key={task.id}
               className={`cursor-pointer transition-all duration-300 ${
-                task.activeStatus 
-                  ? 'bg-blue-100 hover:bg-blue-200' 
-                  : 'bg-gray-100 hover:bg-gray-200'
+                task.isActive ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
               }`}
               onClick={() => {
                 setEditingTask(task);
@@ -132,23 +142,19 @@ export function TaskManagement() {
             >
               <CardContent className="p-4 flex items-center space-x-4">
                 <div className="h-16 w-16 flex-shrink-0">
-                  <IconComponent 
-                    icon={task.icon} 
-                    className={`h-full w-full ${
-                      task.activeStatus 
-                        ? 'text-blue-600' 
-                        : 'text-gray-400'
-                    }`} 
+                  <IconComponent
+                    icon={task.iconName}
+                    className={`h-full w-full ${task.isActive ? 'text-blue-600' : 'text-gray-400'}`}
                   />
                 </div>
-                <div className={`flex-grow flex justify-between items-center ${
-                  task.activeStatus 
-                    ? 'text-black' 
-                    : 'text-gray-500'
-                }`}>
-                  <h3 className={`text-lg font-bold ${
-                    task.activeStatus ? '' : 'italic'
-                  }`}>{task.title}</h3>
+                <div
+                  className={`flex-grow flex justify-between items-center ${
+                    task.isActive ? 'text-black' : 'text-gray-500'
+                  }`}
+                >
+                  <h3 className={`text-lg font-bold ${task.isActive ? '' : 'italic'}`}>
+                    {task.title}
+                  </h3>
                   <p className="text-lg font-bold">{task.payoutValue.toFixed(2)}</p>
                 </div>
               </CardContent>
