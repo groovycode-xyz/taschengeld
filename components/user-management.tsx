@@ -9,6 +9,8 @@ import { User, NewUser } from '@/app/types/user';
 import { mockDb } from '@/app/lib/mockDb';
 import { Plus } from 'lucide-react';
 
+// UserManagement component: Handles user profile management
+// Allows creating, editing, and deleting user profiles
 export function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -24,7 +26,7 @@ export function UserManagement() {
     setUsers(fetchedUsers);
   };
 
-  const handleAddUser = (newUser: NewUser) => {
+  const handleAddUser = (newUser: Omit<User, 'id'>) => {
     const user: User = { ...newUser, id: Date.now().toString() };
     setUsers((prevUsers) => [...prevUsers, user]);
     setIsAddModalOpen(false);

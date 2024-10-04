@@ -50,3 +50,36 @@
 
 - All new components should go into the /components/ui folder in the format of: example-component.tsx unless otherwise specified
 - All new pages should go into the /app folder
+
+# Frontend Implementation Instructions
+
+## Piggy Bank Component
+
+The Piggy Bank feature is implemented in `components/piggy-bank.tsx`. It consists of the following key elements:
+
+- Main PiggyBank component
+- AddFundsModal component
+- WithdrawFundsModal component
+- TransactionsModal component
+
+### PiggyBank Component
+
+- Displays a grid of user balances
+- Manages state for user balances and transactions
+- Handles opening and closing of modals
+
+### AddFundsModal and WithdrawFundsModal
+
+- Allow users to add or withdraw funds from their piggy bank
+- Implement form validation for input amounts
+
+### TransactionsModal
+
+- Displays a list of transactions for a selected user
+
+## Architectural Changes
+
+- The Piggy Bank feature introduces a new pattern for managing modals and state within a single component.
+- We've implemented a mock database (`mockDb`) for development purposes, which should be replaced with actual API calls in production.
+
+## Component Structure

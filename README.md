@@ -1,35 +1,59 @@
-# Tascheged - Allowance Tracker
+# Taschengeld - Allowance Tracker
 
-Tascheged is a kid-friendly, intuitive application designed for families to manage and track chore/task completions within the household.
+## Project Overview
 
-## Features
+Taschengeld is an allowance tracker application designed to help families manage chores, tasks, and allowances for children. It features a user-friendly interface for both parents and children to interact with.
 
-- Task Management: Create, edit, delete, and view tasks with customizable payout values, icons, and sounds.
-- User Management: Add and manage family members with different roles (parent/child), including customizable icons and sounds.
-- Home Page: A landing page accessible by clicking on the "Taschengeld" logo.
-- (More features to be added)
+## ⚠️ IMPORTANT RULE FOR ALL DEVELOPERS ⚠️
 
-## Getting Started
+**DO NOT ATTEMPT TO FIX LINTER ERRORS UNDER ANY CIRCUMSTANCES**
 
-To set up and run the project locally:
+**NEVER NEVER NEVER NEVER attempt to fix linter errors from now on!!!!!**
+
+This rule is crucial for maintaining the current development workflow. Linter errors are to be ignored and left as-is.
+
+## New Features
+
+### Piggy Bank Interface
+
+We've recently implemented a Piggy Bank feature that allows children to manage their savings. Key functionalities include:
+
+- Viewing current balance for each child
+- Adding funds to the piggy bank
+- Withdrawing funds from the piggy bank
+- Viewing transaction history
+
+## Project Structure
+
+The project follows a component-based architecture using Next.js and React. Key directories and files include:
+
+- `/app`: Next.js app directory
+- `/components`: React components
+- `/public`: Static assets
+- `/types`: TypeScript type definitions
+- `/requirements`: Project requirements and documentation
+
+## Setup Instructions
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
-4. Open your browser and navigate to `http://localhost:3000`
+3. Run the development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Launch
+## Development Workflow
 
-To launch the development environment:
+- The project uses Husky for pre-commit hooks
+- Prettier is used for code formatting
+- ESLint is used for linting (currently disabled in pre-commit hook)
+- TypeScript is used for type checking (currently disabled in pre-commit hook)
 
-1. Open a terminal in the project's root directory
-2. Run the command: `npm run dev`
-3. The server will start, typically on `http://localhost:3000`
-4. Open this URL in your web browser to view the application
+## Testing
+
+- Jest is used for unit testing (currently disabled in pre-commit hook)
 
 ## Contributing
 
-(Include guidelines for contributing to the project)
+Please refer to `CONTRIBUTING.md` for guidelines on contributing to this project.
 
 ## License
 

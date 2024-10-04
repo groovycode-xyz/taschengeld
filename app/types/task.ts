@@ -1,5 +1,6 @@
-export type Task = {
+export interface Task {
   id: string;
+  taskId: string; // Add this line
   title: string;
   description: string;
   iconName: string;
@@ -8,8 +9,7 @@ export type Task = {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  taskId: string; // {{ Made 'taskId' required }}
-};
+}
 
 export type CompletedTask = Task & {
   userId: string;

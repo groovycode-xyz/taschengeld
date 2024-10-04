@@ -17,6 +17,8 @@ import { EditTaskModal } from './edit-task-modal';
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 
+// TaskManagement component: Manages tasks/chores for the application
+// Allows creating, editing, and toggling visibility of tasks
 export function TaskManagement() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -34,6 +36,7 @@ export function TaskManagement() {
     const mockTasks: Task[] = [
       {
         id: '1',
+        taskId: '1', // Add taskId
         title: 'Clean Room',
         description: 'Tidy up the bedroom',
         iconName: 'broom',
@@ -45,6 +48,7 @@ export function TaskManagement() {
       },
       {
         id: '2',
+        taskId: '2', // Add taskId
         title: 'Do Homework',
         description: 'Complete all assigned homework',
         iconName: 'book',
@@ -58,10 +62,11 @@ export function TaskManagement() {
     setTasks(mockTasks);
   };
 
-  const handleAddTask = (newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleAddTask = (newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'taskId'>) => {
     const task: Task = {
       ...newTask,
       id: Date.now().toString(),
+      taskId: Date.now().toString(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

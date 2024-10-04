@@ -24,6 +24,8 @@ interface UserBalance {
   transactions: Transaction[];
 }
 
+// PiggyBank component: Manages the piggy bank interface for child users
+// Displays balances, allows adding/withdrawing funds, and shows transaction history
 export function PiggyBank() {
   const [userBalances, setUserBalances] = useState<UserBalance[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);

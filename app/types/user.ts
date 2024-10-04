@@ -8,5 +8,4 @@ export interface User {
   soundUrl: string;
 }
 
-// Modify the NewUser type to include 'iconName'
 export type NewUser = Omit<User, 'id'>;

@@ -1,133 +1,61 @@
-Project Onboarding Guide
+# Onboarding Guide for Taschengeld
 
-Welcome!
+Welcome to the Taschengeld project! This guide will help you get started with development.
 
-Welcome to the team. We are happy to have such an experienced developer onboard to our team! This guide will help you understand our project, team structure, and best practices to ensure a smooth collaboration.
+## Project Overview
 
-1. Introduction
+Taschengeld is an allowance tracker application built with Next.js, React, and TypeScript. It includes features for task management, user management, and a new Piggy Bank interface for savings management.
 
-   • Purpose: Provide essential information for new team members to integrate effectively and contribute successfully.
-   • Audience: Experienced coders and AI coding assistants joining the project.
+## Getting Started
 
-2. Getting Started
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run the development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-   1. Read the Product Requirements Document (PRD)
-      • Location: /requirements/PRD.md
-      • Purpose: Understand project goals, requirements, and scope.
-   2. Check Project Status
-      • File: PROJECT_STATUS.md
-      • Purpose: Review the current state before starting any new work.
-   3. Review Changelog
-      • File: CHANGELOG.md
-      • Purpose: Stay updated with recent changes and updates.
-   4. Review Overview drawing
-      • File: /requirements/overview1.jpg
-      • Purpose: Understand the project's overall structure and flow.
+## Key Features
 
-   5. Review Directory Tree
-      • File: directory_tree.txt
-      • Purpose: Understand the project's file structure and organization. You may want to ask for this to be refresh as soon as you join the project.
+- Task Management
+- User Management
+- Piggy Bank Interface (New)
 
-3. Team Structure
+## Project Structure
 
-   • Product Owner & Project Manager:
-   • Role: Oversees project direction and success.
-   • Note: Not an experienced coder; rely on them for project guidance.
-   Responsiblities: - Will not edit code. - Will perform user interface testing and provide feedback. - Will run terminal commands. - Will perform git operations.
+- `/app`: Next.js app directory
+- `/components`: React components
+- `/public`: Static assets
+- `/types`: TypeScript type definitions
+- `/requirements`: Project requirements and documentation
 
-   • Development Team:
-   • Composition: AI Coders and experienced developers.
-   • Focus: Follow project rules and maintain consistency.
-   Responsiblities: - Will edit code, but only after receiving approval from the Product Owner. - Will provide git commit messages that are clear and descriptive.
+## Development Tools
 
-4. Ground Rules
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
+- Prettier for formatting
+- ESLint for linting (currently disabled in pre-commit hook)
+- Jest for testing (currently disabled in pre-commit hook)
 
-   1. Have Fun!
-      • Enjoy your work and contribute positively.
-   2. Be Collaborative and Supportive:
-      • Foster a friendly and optimistic team environment.
-   3. Effective Communication:
-      • Ask Questions: When in doubt, seek clarification.
-      • Document Well: Ensure code is self-explanatory and well-commented.
-   4. Code Practices:
-      • Understand Requirements: Always consider the big picture before coding.
-      • Incremental Changes: Avoid large, disruptive changes; break tasks into manageable steps.
-      • Avoid Duplication: Write dynamic and flexible code following best practices.
-   5. Use Existing Technologies:
-      • Prefer existing stack components; seek approval before adding new modules.
-      • Justify the need and benefits of any new technology.
-   6. Change Management:
-      • Small Steps: Implement changes incrementally for easier validation.
-      • Changelog Maintenance: Update CHANGELOG.md with all modifications.
-   7. Preparation for Successor:
-      • Assume your work will be reviewed by others.
-      • Make your code clear and maintainable for future team members.
+## Piggy Bank Feature
 
-## Task Management
+The new Piggy Bank feature allows children to manage their savings. Key components:
 
-The Task Management interface has been enhanced with the following features:
+- `components/piggy-bank.tsx`: Main component for the Piggy Bank interface
+- `components/add-funds-modal.tsx`: Modal for adding funds
+- `components/withdraw-funds-modal.tsx`: Modal for withdrawing funds
+- `components/transactions-modal.tsx`: Modal for viewing transaction history
 
-- A wide range of task-specific icons available for selection
-- Improved Add and Edit Task modals with visual icon selection
-- Filtering and sorting capabilities for better task organization
+## Current Development Notes
 
-When creating or editing tasks, pay attention to the new icon selection feature, which allows for better visual representation of different task types.
+- The pre-commit hook currently only runs Prettier formatting
+- ESLint, TypeScript checking, and Jest tests are disabled in the pre-commit hook
+- Refer to `CONTRIBUTING.md` for more details on the development workflow
 
-##
+## Additional Resources
 
-/Users/jamespace/Projects/tgeld
-├── .git (hidden)
-├── .next (hidden)
-├── app
-│ ├── fonts
-│ ├── types
-│ │ └── user.ts
-│ ├── favicon.ico
-│ ├── globals.css
-│ ├── layout.tsx
-│ └── page.tsx
-├── components
-│ ├── ui
-│ │ └── button.tsx
-│ ├── add-task-modal.tsx
-│ ├── add-user-modal.tsx
-│ ├── delete-confirmation-modal.tsx
-│ ├── edit-task-modal.tsx
-│ ├── edit-user-modal.tsx
-│ ├── icon-component.tsx
-│ ├── icon-selector.tsx
-│ ├── payday-interface.tsx
-│ ├── payday.tsx
-│ ├── select-icon-modal.tsx
-│ ├── select-sound-modal.tsx
-│ ├── select-user-sound-modal.tsx
-│ ├── task-management.tsx
-│ ├── user-card.tsx
-│ └── user-management.tsx
-├── lib
-│ └── utils.ts
-├── pages
-│ └── api
-│ ├── sounds.ts
-│ └── user-sounds.ts
-├── public
-│ ├── icons
-│ ├── images
-│ └── sounds
-│ ├── tasks
-│ └── users
-├── requirements
-│ ├── PRD.md
-│ └── tree.txt
-├── CHANGELOG.md
-├── components.json
-├── next.config.mjs
-├── package.json
-├── PROJECT_STATUS.md
-├── README.md
-├── tailwind.config.ts
-└── tsconfig.json
-
-This structure reflects the current state of the project, including the recently implemented Payday interface and User Management components.
-
-You can also also run the python script in the root of the project to generate a tree of the project (directory_tree.py) which will output a new directory_tree.txt file every time you run it.
+- Next.js Documentation: [https://nextjs.org/docs](https://nextjs.org/docs)
+- React Documentation: [https://reactjs.org/docs](https://reactjs.org/docs)
+- TypeScript Documentation: [https://www.typescriptlang.org/docs](https://www.typescriptlang.org/docs)
+- Tailwind CSS Documentation: [https://tailwindcss.com/docs](https://tailwindcss.com/docs)

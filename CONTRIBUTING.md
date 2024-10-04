@@ -1,45 +1,38 @@
-# Contributing to Tascheged
+# Contributing to Taschengeld
 
-Thank you for your interest in contributing to Tascheged! To ensure consistency and maintainability, please adhere to the following guidelines:
+We welcome contributions to the Taschengeld project! This document outlines the process for contributing and some guidelines to follow.
 
-## Code Style and Best Practices
+## Development Workflow
 
-1. Use TypeScript for all new files and components.
-2. Utilize centralized type definitions from `@/types/` for shared types like User and Task.
-3. Avoid redefining types that are already defined in the centralized type files.
-4. Use consistent naming conventions across the project (e.g., PascalCase for components, camelCase for functions and variables).
-5. Keep components focused and modular. Extract reusable logic into custom hooks or utility functions.
-6. Use meaningful variable and function names that describe their purpose.
-7. Comment complex logic or non-obvious code sections.
-8. Write unit tests for new components and functions.
+1. Fork the repository and create your branch from `main`.
+2. Install dependencies using `npm install`.
+3. Make your changes and ensure they are properly formatted using Prettier.
+4. Write or update tests for your changes if applicable.
+5. Run the test suite to ensure all tests pass.
+6. Create a pull request with a clear title and description.
 
-## File Structure
+## Code Style
 
-1. Place new components in the appropriate subdirectory within the `components/` folder.
-2. Keep pages in the `app/` directory, following Next.js 13+ conventions.
-3. Store shared types in the `types/` directory.
-4. Place utility functions and custom hooks in the `utils/` and `hooks/` directories, respectively.
+- We use Prettier for code formatting. Run `npm run format` before committing.
+- Follow the existing code style and patterns in the project.
 
-## Git Workflow
+## Commit Messages
 
-1. Create a new branch for each feature or bug fix.
-2. Write clear, concise commit messages describing the changes made.
-3. Keep pull requests focused on a single feature or bug fix.
-4. Update the `CHANGELOG.md` file with any significant changes.
+- Use clear and descriptive commit messages.
+- Start the commit message with a verb in the imperative mood (e.g., "Add feature" not "Added feature").
 
-## Before Committing
+## Pull Requests
 
-1. Run `npm run format` to ensure your code is properly formatted.
-2. Ensure all linter errors are resolved by running `npm run lint`.
-3. Run `npm run type-check` to catch any type errors.
-4. Verify that all tests pass by running `npm test`.
+- Provide a clear description of the changes in your pull request.
+- Link any relevant issues in the pull request description.
+- Ensure all tests pass and there are no linting errors.
 
-## Updating Types
+## Current Development Notes
 
-When updating or adding new types:
+- ESLint and TypeScript checking are currently disabled in the pre-commit hook.
+- Jest tests are also disabled in the pre-commit hook.
+- Only Prettier formatting is run automatically before commits.
 
-1. Modify the appropriate file in the `types/` directory.
-2. Update all relevant components and functions to use the new or modified type.
-3. Run the TypeScript compiler to catch any type mismatches across the project.
+## Questions
 
-By following these guidelines, we can maintain a consistent, high-quality codebase and minimize the occurrence of type-related issues.
+If you have any questions or need further clarification, please open an issue or contact the project maintainers.
