@@ -23,6 +23,14 @@ We've recently implemented a Piggy Bank feature that allows children to manage t
 - Withdrawing funds from the piggy bank
 - Viewing transaction history
 
+## Features
+
+- ...
+- Parent/Child mode toggle for controlling access to certain features
+- Dynamic PiggyBank interface that adapts to Parent/Child mode
+- Global state management using React Context
+- ...
+
 ## Project Structure
 
 The project follows a component-based architecture using Next.js and React. Key directories and files include:
@@ -50,6 +58,18 @@ The project follows a component-based architecture using Next.js and React. Key 
 ## Testing
 
 - Jest is used for unit testing (currently disabled in pre-commit hook)
+
+## Usage
+
+To switch between Parent and Child modes, use the toggle switch in the sidebar. This will affect the visibility of certain features, such as the ability to add or withdraw funds in the PiggyBank interface.
+
+## Development
+
+This project uses Next.js 13+ with the App Router. Some components and hooks use the 'use client' directive for client-side rendering. Make sure to follow this pattern when creating new interactive components.
+
+## Known Issues
+
+There are currently some TypeScript and linter errors in certain components. These do not prevent the application from functioning but should be addressed in future updates. See `PROJECT_STATUS.md` for more details.
 
 ## Contributing
 

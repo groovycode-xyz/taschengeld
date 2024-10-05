@@ -1,3 +1,9 @@
 Read the /requirements/onboarding_guide.md file.
 
 Project is under rapid development and using a lot of mock data.  Therefore DO NOT EVER ATTEMPT TO RESOLVE LINTER ERRORS.
+
+To clarify and reinforce the rule:
+
+1. We will not fix any linter errors.
+2. We will not modify any code to address TypeScript type issues.
+3. We will leave all existing code as-is, regardless of any warnings or errors it may produce.

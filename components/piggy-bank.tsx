@@ -8,7 +8,7 @@ import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionsModal } from './transactions-modal';
 import { User } from '@/app/types/user';
 import { mockDb } from '@/app/lib/mockDb';
-import { IconComponent } from './icon-component';
+import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this import
 
 interface Transaction {
   id: string;
@@ -28,10 +28,11 @@ interface UserBalance {
 // Displays balances, allows adding/withdrawing funds, and shows transaction history
 export function PiggyBank() {
   const [userBalances, setUserBalances] = useState<UserBalance[]>([]);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
+  const { isParentMode } = useParentChildMode(); // Add this line
 
   useEffect(() => {
     // Fetch users and their balances
@@ -44,114 +45,132 @@ export function PiggyBank() {
     setUserBalances(balances);
   }, []);
 
-  const handleAddFunds = (userId: string, amount: number) => {
-    setUserBalances((prevBalances) =>
-      prevBalances.map((balance) =>
-        balance.user.id === userId
-          ? {
-              ...balance,
-              balance: balance.balance + amount,
-              transactions: [
-                { id: Date.now().toString(), userId, amount, type: 'deposit', date: new Date() },
-                ...balance.transactions,
-              ],
-            }
-          : balance
-      )
-    );
+  const handleAddFunds = (user: User) => {
+    setSelectedUser(user);
+    setIsAddModalOpen(true);
   };
 
-  const handleWithdrawFunds = (userId: string, amount: number) => {
-    setUserBalances((prevBalances) =>
-      prevBalances.map((balance) =>
-        balance.user.id === userId
-          ? {
-              ...balance,
-              balance: balance.balance - amount,
-              transactions: [
-                { id: Date.now().toString(), userId, amount, type: 'withdrawal', date: new Date() },
-                ...balance.transactions,
-              ],
-            }
-          : balance
-      )
-    );
+  const handleWithdrawFunds = (user: User) => {
+    setSelectedUser(user);
+    setIsWithdrawModalOpen(true);
+  };
+
+  const handleViewTransactions = (userBalance: UserBalance) => {
+    setSelectedUser(userBalance.user);
+    setIsTransactionsModalOpen(true);
+  };
+
+  const handleAddFundsConfirm = (amount: number) => {
+    if (selectedUser) {
+      setUserBalances((prevBalances) =>
+        prevBalances.map((balance) =>
+          balance.user.id === selectedUser.id
+            ? {
+                ...balance,
+                balance: balance.balance + amount,
+                transactions: [
+                  {
+                    id: Date.now().toString(),
+                    userId: selectedUser.id,
+                    amount,
+                    type: 'deposit',
+                    date: new Date(),
+                  },
+                  ...balance.transactions,
+                ],
+              }
+            : balance
+        )
+      );
+      setIsAddModalOpen(false);
+    }
+  };
+
+  const handleWithdrawFundsConfirm = (amount: number) => {
+    if (selectedUser) {
+      setUserBalances((prevBalances) =>
+        prevBalances.map((balance) =>
+          balance.user.id === selectedUser.id
+            ? {
+                ...balance,
+                balance: balance.balance - amount,
+                transactions: [
+                  {
+                    id: Date.now().toString(),
+                    userId: selectedUser.id,
+                    amount,
+                    type: 'withdrawal',
+                    date: new Date(),
+                  },
+                  ...balance.transactions,
+                ],
+              }
+            : balance
+        )
+      );
+      setIsWithdrawModalOpen(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Piggy Bank</h1>
-
-      {/* User Balances Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {userBalances.map(({ user, balance }) => (
-          <Card key={user.id}>
-            <CardHeader className="flex flex-row items-center space-x-4">
-              <IconComponent icon={user.iconName} className="w-12 h-12" />
-              <CardTitle>{user.name}</CardTitle>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Piggy Bank</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {userBalances.map((userBalance) => (
+          <Card key={userBalance.user.id} className="flex flex-col">
+            <CardHeader>
+              <CardTitle>{userBalance.user.name}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold mb-4">${balance.toFixed(2)}</p>
-              <div className="flex space-x-2">
-                <Button
-                  onClick={() => {
-                    setSelectedUser(user.id);
-                    setIsAddModalOpen(true);
-                  }}
-                >
-                  Add Funds
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSelectedUser(user.id);
-                    setIsWithdrawModalOpen(true);
-                  }}
-                >
-                  Withdraw Funds
+            <CardContent className="flex-grow flex flex-col justify-between">
+              <div>
+                <p className="text-2xl font-bold">${userBalance.balance.toFixed(2)}</p>
+                <p className="text-sm text-gray-500">
+                  {userBalance.transactions.length} transactions
+                </p>
+              </div>
+              <div className="flex flex-col space-y-2 mt-4">
+                {isParentMode && (
+                  <>
+                    <Button onClick={() => handleAddFunds(userBalance.user)}>Add Funds</Button>
+                    <Button onClick={() => handleWithdrawFunds(userBalance.user)}>
+                      Withdraw Funds
+                    </Button>
+                  </>
+                )}
+                <Button onClick={() => handleViewTransactions(userBalance)}>
+                  View Transactions
                 </Button>
               </div>
-              <Button
-                variant="link"
-                onClick={() => {
-                  setSelectedUser(user.id);
-                  setIsTransactionsModalOpen(true);
-                }}
-                className="mt-2"
-              >
-                View Transactions
-              </Button>
             </CardContent>
           </Card>
         ))}
       </div>
-
       {selectedUser && (
         <>
           <AddFundsModal
             isOpen={isAddModalOpen}
             onClose={() => setIsAddModalOpen(false)}
-            onAddFunds={(amount) => handleAddFunds(selectedUser, amount)}
+            onAddFunds={handleAddFundsConfirm}
+            user={selectedUser}
           />
           <WithdrawFundsModal
             isOpen={isWithdrawModalOpen}
             onClose={() => setIsWithdrawModalOpen(false)}
-            onWithdrawFunds={(amount) => handleWithdrawFunds(selectedUser, amount)}
-            currentBalance={
-              userBalances.find((balance) => balance.user.id === selectedUser)?.balance || 0
-            }
-          />
-          <TransactionsModal
-            isOpen={isTransactionsModalOpen}
-            onClose={() => setIsTransactionsModalOpen(false)}
-            transactions={
-              userBalances.find((balance) => balance.user.id === selectedUser)?.transactions || []
-            }
-            userName={
-              userBalances.find((balance) => balance.user.id === selectedUser)?.user.name || ''
-            }
+            onWithdrawFunds={handleWithdrawFundsConfirm}
+            user={selectedUser}
+            balance={userBalances.find((ub) => ub.user.id === selectedUser.id)?.balance || 0}
           />
         </>
+      )}
+      {selectedUser && (
+        <TransactionsModal
+          isOpen={isTransactionsModalOpen}
+          onClose={() => setIsTransactionsModalOpen(false)}
+          transactions={
+            userBalances.find((ub) => ub.user.id === selectedUser.id)?.transactions || []
+          }
+          user={selectedUser}
+        />
       )}
     </div>
   );

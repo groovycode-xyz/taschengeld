@@ -7,10 +7,10 @@ import {
   UsersIcon,
 } from 'lucide-react';
 import { Switch } from './ui/switch';
-import { useState } from 'react';
+import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this import
 
 export function Sidebar() {
-  const [isParentMode, setIsParentMode] = useState(true);
+  const { isParentMode, toggleMode } = useParentChildMode(); // Use the hook here
 
   return (
     <aside className="w-64 bg-gray-100 h-full flex-shrink-0 flex flex-col">
@@ -58,7 +58,7 @@ export function Sidebar() {
           </span>
           <Switch
             checked={isParentMode}
-            onCheckedChange={setIsParentMode}
+            onCheckedChange={toggleMode} // Use toggleMode here
             className="data-[state=checked]:bg-blue-600"
           />
         </div>
