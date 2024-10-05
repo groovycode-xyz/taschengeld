@@ -9,6 +9,8 @@ import { TransactionsModal } from './transactions-modal';
 import { User } from '@/app/types/user';
 import { mockDb } from '@/app/lib/mockDb';
 import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this import
+import Image from 'next/image';
+import { IconComponent } from './icon-component'; // Add this import
 
 interface Transaction {
   id: string;
@@ -113,52 +115,66 @@ export function PiggyBank() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Piggy Bank</h1>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Piggy Bank</h1>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {userBalances.map((userBalance) => (
-          <Card key={userBalance.user.id} className="flex flex-col">
-            <CardHeader>
-              <CardTitle>{userBalance.user.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-grow flex flex-col justify-between">
-              <div>
-                <p className="text-2xl font-bold">${userBalance.balance.toFixed(2)}</p>
-                <p className="text-sm text-gray-500">
-                  {userBalance.transactions.length} transactions
-                </p>
-              </div>
-              <div className="flex flex-col space-y-2 mt-4">
-                {isParentMode && (
-                  <>
-                    <Button onClick={() => handleAddFunds(userBalance.user)}>Add Funds</Button>
-                    <Button onClick={() => handleWithdrawFunds(userBalance.user)}>
-                      Withdraw Funds
-                    </Button>
-                  </>
-                )}
-                <Button onClick={() => handleViewTransactions(userBalance)}>
-                  View Transactions
-                </Button>
-              </div>
-            </CardContent>
+          <Card key={userBalance.user.id} className="flex flex-col items-center p-4">
+            <div className="w-20 h-20 mb-2">
+              <IconComponent icon={userBalance.user.iconName} className="w-full h-full" />
+            </div>
+            <CardTitle className="text-xl mb-3">{userBalance.user.name}</CardTitle>
+            <div className="bg-blue-100 rounded-lg shadow-md p-3 mb-4 w-full text-center">
+              <p className="text-3xl font-bold text-blue-600">
+                ${userBalance.balance.toFixed(2)}
+              </p>
+            </div>
+            <div className="w-full h-px bg-gray-200 mb-4"></div> {/* Add this line for the separator */}
+            <div className="w-full space-y-2">
+              {isParentMode && (
+                <>
+                  <Button
+                    onClick={() => handleAddFunds(userBalance.user)}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white"
+                  >
+                    Add Funds
+                  </Button>
+                  <Button
+                    onClick={() => handleWithdrawFunds(userBalance.user)}
+                    className="w-full bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    Withdraw Funds
+                  </Button>
+                </>
+              )}
+              <Button
+                onClick={() => handleViewTransactions(userBalance)}
+                className="w-full"
+              >
+                View Transactions
+              </Button>
+            </div>
           </Card>
         ))}
       </div>
+
       {selectedUser && (
         <>
           <AddFundsModal
             isOpen={isAddModalOpen}
             onClose={() => setIsAddModalOpen(false)}
             onAddFunds={handleAddFundsConfirm}
-            user={selectedUser}
+            userName={selectedUser.name}
           />
           <WithdrawFundsModal
             isOpen={isWithdrawModalOpen}
             onClose={() => setIsWithdrawModalOpen(false)}
             onWithdrawFunds={handleWithdrawFundsConfirm}
-            user={selectedUser}
             balance={userBalances.find((ub) => ub.user.id === selectedUser.id)?.balance || 0}
+            userName={selectedUser.name}
           />
         </>
       )}

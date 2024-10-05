@@ -14,14 +14,16 @@ interface WithdrawFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onWithdrawFunds: (amount: number) => void;
-  currentBalance: number;
+  balance: number;
+  userName: string;
 }
 
 export function WithdrawFundsModal({
   isOpen,
   onClose,
   onWithdrawFunds,
-  currentBalance,
+  balance,
+  userName,
 }: WithdrawFundsModalProps) {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
@@ -29,13 +31,15 @@ export function WithdrawFundsModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
-    if (numAmount > 0 && numAmount <= currentBalance) {
+    if (!isNaN(numAmount) && numAmount > 0 && numAmount <= balance) {
       onWithdrawFunds(numAmount);
       setAmount('');
       setError('');
       onClose();
-    } else if (numAmount > currentBalance) {
+    } else if (numAmount > balance) {
       setError('Insufficient funds');
+    } else {
+      setError('Please enter a valid amount');
     }
   };
 
@@ -43,29 +47,37 @@ export function WithdrawFundsModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Withdraw Funds</DialogTitle>
+          <DialogTitle>Withdraw Funds for {userName}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="amount" className="text-right">
-                Amount
-              </Label>
-              <Input
-                id="amount"
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="col-span-3"
-                min="0.01"
-                max={currentBalance}
-                step="0.01"
-                required
-              />
-            </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+          <div className="mb-4">
+            <Label htmlFor="balance" className="block text-sm font-medium text-gray-700">
+              Current Balance
+            </Label>
+            <div className="mt-1 text-lg font-semibold">${balance.toFixed(2)}</div>
+          </div>
+          <div className="mb-4">
+            <Label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+              Amount
+            </Label>
+            <Input
+              type="number"
+              id="amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="Enter amount"
+              min="0.01"
+              step="0.01"
+              max={balance}
+              required
+              className="mt-1"
+            />
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
           </div>
           <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
             <Button type="submit">Withdraw Funds</Button>
           </DialogFooter>
         </form>

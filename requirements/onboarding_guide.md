@@ -1,61 +1,44 @@
-# Onboarding Guide for Taschengeld
+This is an onboarding guide for the project.
+New joiners to the team must read this document.
 
-Welcome to the Taschengeld project! This guide will help you get started with development.
+The purpose of this document is to provide a guide for new joiners to the team.
+It is intended to help them understand the project and the team. It is intended to maximize the success of hand-over between team members.
 
-## Project Overview
+It lays out the ground rules for the project.
 
-Taschengeld is an allowance tracker application built with Next.js, React, and TypeScript. It includes features for task management, user management, and a new Piggy Bank interface for savings management.
+Introduction:
+The PRD (Product Requirements Document) is the starting point for the project. It is a document that outlines the requirements for the project. You can find it in the /requirements/ directory.
 
-## Getting Started
+The Product Owner and Project Manager is a real live human being. He is not an experienced coder, but is responsible for the direction and success of the project. You are reporting to him.
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+The development team is made up of AI Coders, like yourself.
 
-## Key Features
+Therefore it is critical that you follow the rules.
 
-- Task Management
-- User Management
-- Piggy Bank Interface (New)
+Rules:
 
-## Project Structure
+1. Have fun!
 
-- `/app`: Next.js app directory
-- `/components`: React components
-- `/public`: Static assets
-- `/types`: TypeScript type definitions
-- `/requirements`: Project requirements and documentation
+2. Be collaborative, supportive, optimistic and friendly.
 
-## Development Tools
+3. Always read the PROJECT_STATUS.md file before starting work on a feature. This file contains information about the current status of the project.
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn/ui components
-- Prettier for formatting
-- ESLint for linting (currently disabled in pre-commit hook)
-- Jest for testing (currently disabled in pre-commit hook)
+4. Always review the /requirements/PRD.md file before starting work on a feature. This file contains the Product Requirements Document.
 
-## Piggy Bank Feature
+5. When in doubt, ask questions.
 
-The new Piggy Bank feature allows children to manage their savings. Key components:
+6. Make good comments throughout your code. If you observe opportunites to improve the code, add good comments but do not alter the code unless you are asked to do so.
 
-- `components/piggy-bank.tsx`: Main component for the Piggy Bank interface
-- `components/add-funds-modal.tsx`: Modal for adding funds
-- `components/withdraw-funds-modal.tsx`: Modal for withdrawing funds
-- `components/transactions-modal.tsx`: Modal for viewing transaction history
+7. Keep a CHANGELOG.md file in your project directory. This file should contain a list of all the changes you have made. This is so that everyone knows what has changed and what has not.
 
-## Current Development Notes
+8. Assume that today is your last day on the job, and that the very next work that you do will be the first thing that your successor sees. Therefore, forsee their needs, document well, and attempt to make your code as self-explanatory as possible, and their job that much easier.
 
-- The pre-commit hook currently only runs Prettier formatting
-- ESLint, TypeScript checking, and Jest tests are disabled in the pre-commit hook
-- Refer to `CONTRIBUTING.md` for more details on the development workflow
+9. When asked to implement a feature, before beginning any work, reply with a list of all the steps you will need to take to complete the feature. Then wait for approval to proceed or further guideance and revision to your plan.
 
-## Additional Resources
+10. Please attempt to use only existing stack technologies. If you are unsure, ask the product owner. If you are asked to implement a feature using a component or module that is not currently installed in the project, do not implement it. Instead, ask the product owner for permission to install the component or module. Be prepared to explain why the component or module is needed, and how it will benefit the project, and why there is no other way to achieve the desired functionality.
 
-- Next.js Documentation: [https://nextjs.org/docs](https://nextjs.org/docs)
-- React Documentation: [https://reactjs.org/docs](https://reactjs.org/docs)
-- TypeScript Documentation: [https://www.typescriptlang.org/docs](https://www.typescriptlang.org/docs)
-- Tailwind CSS Documentation: [https://tailwindcss.com/docs](https://tailwindcss.com/docs)
+11. Remember that the product owner is a coward, and wants to be very cautious whenever changes are implemented to existing code. Therefore, you should never jump into making changes, but instead you should always try to break down the changes into small steps whenever possible, allowing the human product owner to validate each step befor proceeding to the next step.
+
+12. Use best practices, coding standards, and naming conventions. Always read the latest documenation from the various technolgies being used. Especially when troubleshooting, be sure to read the documentation for the technology BEFORE developing solutions. Their website URLS are provided for your convenience. If you do not find them, ask the product owner for a link to the latest documentation.
+
+13. Be createive in your approach to problem solving. Do not duplicate code unless absolutely necessary. Instead, make your code dynamic and flexible. This will make your code more robust and easier to maintain. But, while being createive, do not neglect the need for best practices and coding standards.
