@@ -10,7 +10,7 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
+import { Plus, ClipboardListIcon } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddTaskModal } from './add-task-modal';
 import { EditTaskModal } from './edit-task-modal';
@@ -101,9 +101,12 @@ export function TaskManagement() {
     });
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Task Management</h1>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold flex items-center">
+          <ClipboardListIcon className="mr-3 h-10 w-10" />
+          Task Management
+        </h1>
         <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Add Task
         </Button>

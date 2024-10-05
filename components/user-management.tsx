@@ -8,6 +8,7 @@ import { EditUserModal } from './edit-user-modal';
 import { User, NewUser } from '@/app/types/user';
 import { mockDb } from '@/app/lib/mockDb';
 import { Plus } from 'lucide-react';
+import { UsersIcon } from 'lucide-react';
 
 // UserManagement component: Handles user profile management
 // Allows creating, editing, and deleting user profiles
@@ -49,7 +50,10 @@ export function UserManagement() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">User Management</h1>
+        <h1 className="text-3xl font-bold flex items-center">
+          <UsersIcon className="mr-3 h-10 w-10" />
+          User Management
+        </h1>
         <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Add User
         </Button>

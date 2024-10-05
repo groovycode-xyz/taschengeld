@@ -11,6 +11,7 @@ import { mockDb } from '@/app/lib/mockDb';
 import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this import
 import Image from 'next/image';
 import { IconComponent } from './icon-component'; // Add this import
+import { PiggyBankIcon } from 'lucide-react'; // Add this import
 
 interface Transaction {
   id: string;
@@ -117,7 +118,10 @@ export function PiggyBank() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Piggy Bank</h1>
+        <h1 className="text-3xl font-bold flex items-center">
+          <PiggyBankIcon className="mr-3 h-10 w-10" /> {/* Increased size here */}
+          Piggy Bank
+        </h1>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

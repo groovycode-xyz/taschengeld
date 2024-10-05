@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - User icons displayed on Piggy Bank cards for child users
 - Integration with mockDb for fetching user data in Piggy Bank component
 - Display current balance in the Withdraw Funds modal
+- PiggyBankIcon to the Piggy Bank interface header, matching the sidebar icon
+- Added corresponding icons to the headers of Task Completion, Payday, Task Management, and User Management interfaces, matching the style of the Piggy Bank interface
 
 ### Changed
 
@@ -45,6 +47,9 @@ All notable changes to this project will be documented in this file.
   - Adjusted spacing for improved visual hierarchy
 - Added a visual separator between the balance and action buttons in Piggy Bank cards
   - Improves visual hierarchy and distinguishes between information and actions
+- Increased the size of the PiggyBankIcon in the Piggy Bank interface header for better visibility
+- Updated Task Completion, Payday, Task Management, and User Management components to include large icons in their headers for consistent styling across the application
+- Updated TaskCompletionPage to include the CheckSquareIcon in the header, matching the style of other interfaces
 
 ### Fixed
 
@@ -52,6 +57,7 @@ All notable changes to this project will be documented in this file.
 - Eliminated pre-commit hook errors by removing Husky
 - Resolved build error related to missing Table components
 - Fixed icon display issues in Piggy Bank interface
+- Added missing icons to Task Completion and Task Management interface headers
 
 ### Known Issues
 

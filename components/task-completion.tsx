@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, CheckSquareIcon } from 'lucide-react';
 
 export function TaskCompletion() {
   const [tasks, setTasks] = useState([
@@ -18,8 +18,13 @@ export function TaskCompletion() {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Task Completion</h2>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold flex items-center">
+          <CheckSquareIcon className="mr-3 h-10 w-10" />
+          Task Completion
+        </h1>
+      </div>
       <ul>
         {tasks.map((task) => (
           <li key={task.id} className="flex items-center mb-2">

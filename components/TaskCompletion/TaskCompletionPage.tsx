@@ -8,6 +8,7 @@ import { TouchUserRow } from '@/components/TaskCompletion/TouchUserRow';
 import { Task } from '@/types/task';
 import { User } from '@/app/types/user'; // {{ Corrected import path }}
 import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
+import { CheckSquareIcon } from 'lucide-react'; // Add this import
 
 // Update mock data to match the Task type
 const mockTasks: Task[] = [
@@ -151,7 +152,10 @@ export const TaskCompletionPage: React.FC = () => {
 
   return (
     <div className="task-completion-page">
-      <h2 className="text-2xl font-bold mb-4">Task Completion</h2>
+      <h2 className="text-3xl font-bold mb-4 flex items-center">
+        <CheckSquareIcon className="mr-3 h-10 w-10" />
+        Task Completion
+      </h2>
       <div className="flex-1 overflow-auto mb-4">
         {isTouchDevice ? (
           <TouchTaskGrid
