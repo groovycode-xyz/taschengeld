@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -32,16 +32,37 @@ export function AddFundsModal({
   const [comments, setComments] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      audioRef.current?.load();
+    }
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
     if (!isNaN(numAmount) && numAmount > 0) {
-      onAddFunds(numAmount, comments, photo);
-      setAmount('');
-      setComments('');
-      setPhoto(null);
-      onClose();
+      console.log('Attempting to play sound');
+      const audioElement = audioRef.current;
+      if (audioElement) {
+        audioElement.currentTime = 0; // Reset to start
+        audioElement
+          .play()
+          .then(() => {
+            console.log('Sound played successfully');
+            // Wait for the sound to finish playing before closing the modal
+            setTimeout(() => {
+              onAddFunds(numAmount, comments, photo);
+              setAmount('');
+              setComments('');
+              setPhoto(null);
+              onClose();
+            }, audioElement.duration * 1000); // Convert duration to milliseconds
+          })
+          .catch((error) => console.error('Error playing audio:', error));
+      }
     }
   };
 
@@ -136,6 +157,7 @@ export function AddFundsModal({
             <Button type="submit">Add Funds</Button>
           </DialogFooter>
         </form>
+        <audio ref={audioRef} src="/sounds/cheer1.wav" preload="auto" />
       </DialogContent>
     </Dialog>
   );

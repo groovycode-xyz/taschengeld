@@ -11,6 +11,7 @@ interface Transaction {
   date: Date;
   comments?: string;
   photo?: string | null;
+  balance: number; // Add this line
 }
 
 interface TransactionsModalProps {
@@ -45,6 +46,9 @@ export function TransactionsModal({ isOpen, onClose, transactions, user }: Trans
                 <span className="text-sm text-gray-500">
                   {new Date(transaction.date).toLocaleDateString()}
                 </span>
+              </div>
+              <div className="mt-2 text-sm text-gray-600">
+                Balance: {transaction.balance.toFixed(2)}
               </div>
               {transaction.comments && (
                 <p className="mt-2 text-sm text-gray-600">{transaction.comments}</p>

@@ -9,17 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- User icons to Add Funds, Withdraw Funds, and Transactions modals in the Piggy Bank feature
-- Improved file upload UI with custom styled button and preview in Add Funds and Withdraw Funds modals
+- Sound effects for Add Funds and Withdraw Funds actions in the Piggy Bank feature
+- Balance calculation and display for each transaction in the Transactions modal
+- User icons displayed in Add Funds, Withdraw Funds, and Transactions modals
 
 ### Changed
 
-- Removed currency indicators ($) from all modals and main Piggy Bank interface
-- Refactored Add Funds, Withdraw Funds, and Transactions modals for consistency and improved user experience
+- Updated Transaction interface to include a balance field
+- Refactored AddFundsModal and WithdrawFundsModal for consistent sound playback
+- Improved TransactionsModal to show balance for each transaction
+- Adjusted timing to ensure sound plays fully before modal closes
+- Updated PiggyBank component to handle new balance calculations
 
 ### Fixed
 
-- Improved visual consistency across all Piggy Bank related modals
+- Resolved issues with file paths for sound effects
+- Improved error handling for audio playback
 
 ## [0.1.0] - 2024-XX-XX
 

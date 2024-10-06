@@ -1,18 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionsModal } from './transactions-modal';
 import { User } from '@/app/types/user';
 import { mockDb } from '@/app/lib/mockDb';
-import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this import
-import Image from 'next/image';
-import { IconComponent } from './icon-component'; // Add this import
-import { PiggyBankIcon } from 'lucide-react'; // Add this import
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useParentChildMode } from '@/hooks/useParentChildMode';
+import { IconComponent } from './icon-component';
+import { PiggyBankIcon } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -22,6 +20,7 @@ interface Transaction {
   date: Date;
   comments?: string;
   photo?: string | null;
+  balance: number;
 }
 
 interface UserBalance {
@@ -30,26 +29,53 @@ interface UserBalance {
   transactions: Transaction[];
 }
 
-// PiggyBank component: Manages the piggy bank interface for child users
-// Displays balances, allows adding/withdrawing funds, and shows transaction history
 export function PiggyBank() {
-  const [userBalances, setUserBalances] = useLocalStorage<UserBalance[]>('userBalances', []);
+  const [userBalances, setUserBalances] = useState<UserBalance[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
-  const { isParentMode } = useParentChildMode(); // Add this line
+  const { isParentMode } = useParentChildMode();
 
   useEffect(() => {
-    // Fetch users and their balances
-    const childUsers = mockDb.users.getAll().filter((user) => user.role === 'child');
-    const balances = childUsers.map((user) => ({
-      user,
-      balance: 0, // You'd fetch the actual balance from your backend
-      transactions: [], // You'd fetch transactions from your backend
-    }));
-    setUserBalances(balances);
+    const loadUserBalances = () => {
+      const childUsers = mockDb.users.getAll().filter((user) => user.role === 'child');
+      const storedBalances = localStorage.getItem('userBalances');
+      if (storedBalances) {
+        const parsedBalances = JSON.parse(storedBalances);
+        // Check if stored balances match current child users
+        if (parsedBalances.length === childUsers.length) {
+          setUserBalances(parsedBalances);
+        } else {
+          // If not, create new balances for all child users
+          const initialBalances = childUsers.map((user) => ({
+            user,
+            balance: 0,
+            transactions: [],
+          }));
+          setUserBalances(initialBalances);
+        }
+      } else {
+        // If no stored balances, create new balances for all child users
+        const initialBalances = childUsers.map((user) => ({
+          user,
+          balance: 0,
+          transactions: [],
+        }));
+        setUserBalances(initialBalances);
+      }
+      setIsLoading(false);
+    };
+
+    loadUserBalances();
   }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem('userBalances', JSON.stringify(userBalances));
+    }
+  }, [userBalances, isLoading]);
 
   const handleAddFunds = (user: User) => {
     setSelectedUser(user);
@@ -68,14 +94,17 @@ export function PiggyBank() {
 
   const handleAddFundsConfirm = (amount: number, comments: string, photo: string | null) => {
     if (selectedUser) {
+      const userBalance = userBalances.find((ub) => ub.user.id === selectedUser.id);
+      const newBalance = (userBalance?.balance || 0) + amount;
       const newTransaction = {
         id: Date.now().toString(),
         userId: selectedUser.id,
-        type: 'deposit',
+        type: 'deposit' as const,
         amount,
         date: new Date(),
         comments,
         photo,
+        balance: newBalance,
       };
 
       setUserBalances((prevBalances) =>
@@ -83,7 +112,7 @@ export function PiggyBank() {
           ub.user.id === selectedUser.id
             ? {
                 ...ub,
-                balance: ub.balance + amount,
+                balance: newBalance,
                 transactions: [newTransaction, ...ub.transactions],
               }
             : ub
@@ -95,14 +124,17 @@ export function PiggyBank() {
 
   const handleWithdrawFundsConfirm = (amount: number, comments: string, photo: string | null) => {
     if (selectedUser) {
+      const userBalance = userBalances.find((ub) => ub.user.id === selectedUser.id);
+      const newBalance = (userBalance?.balance || 0) - amount;
       const newTransaction = {
         id: Date.now().toString(),
         userId: selectedUser.id,
-        type: 'withdrawal',
+        type: 'withdrawal' as const,
         amount,
         date: new Date(),
         comments,
         photo,
+        balance: newBalance,
       };
 
       setUserBalances((prevBalances) =>
@@ -110,7 +142,7 @@ export function PiggyBank() {
           ub.user.id === selectedUser.id
             ? {
                 ...ub,
-                balance: ub.balance - amount,
+                balance: newBalance,
                 transactions: [newTransaction, ...ub.transactions],
               }
             : ub
@@ -119,6 +151,19 @@ export function PiggyBank() {
     }
     setIsWithdrawModalOpen(false);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (userBalances.length === 0) {
+    return (
+      <div>
+        No child users found. Please add child users in the User Management interface to use the
+        Piggy Bank feature.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
