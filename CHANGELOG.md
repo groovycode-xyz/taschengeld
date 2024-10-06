@@ -2,66 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ## [Unreleased]
 
 ### Added
 
-- Implemented Parent/Child mode toggle functionality
-- Created `useParentChildMode` hook for managing global Parent/Child mode state
-- Added `ParentChildModeProvider` to wrap the application and provide mode state
-- Updated Sidebar component to use the new hook for toggling the mode
-- Modified PiggyBank component to conditionally render buttons based on the current mode
-- Created ClientLayout component to ensure ParentChildModeProvider is used on the client side
-- Created Table components for use in the TransactionsModal
-- User icons displayed on Piggy Bank cards for child users
-- Integration with mockDb for fetching user data in Piggy Bank component
-- Display current balance in the Withdraw Funds modal
-- PiggyBankIcon to the Piggy Bank interface header, matching the sidebar icon
-- Added corresponding icons to the headers of Task Completion, Payday, Task Management, and User Management interfaces, matching the style of the Piggy Bank interface
+- User icons to Add Funds, Withdraw Funds, and Transactions modals in the Piggy Bank feature
+- Improved file upload UI with custom styled button and preview in Add Funds and Withdraw Funds modals
 
 ### Changed
 
-- Updated Piggy Bank interface styling to match User Management interface
-- Adjusted icon sizes and text styling in Piggy Bank component for consistency
-- Refactored app/layout.tsx to use ClientLayout for wrapping the application with ParentChildModeProvider
-- Updated components to use 'use client' directive for client-side rendering in Next.js 13+
-- Removed Husky and Prettier from the project to simplify the development workflow
-- Removed all pre-commit hooks and automatic code formatting
-- Deleted the .husky folder to complete the removal of Husky from the project
-- Uninstalled npm packages related to Prettier, Husky, and testing (husky, prettier, jest, etc.)
-- Updated Piggy Bank component to show user icons alongside names
-- Improved icon rendering in Piggy Bank component using IconComponent for consistency
-- Changed colors of "Add Funds" (green) and "Withdraw Funds" (red) buttons in Piggy Bank interface
-- Updated WithdrawFundsModal to prominently display the current balance before the withdrawal amount input
-- Improved error handling in WithdrawFundsModal for better user feedback
-- Increased icon size in Piggy Bank interface to match User Management interface
-- Rearranged Piggy Bank card layout for improved readability and consistency
-  - Icon placed at the top of the card
-  - User name, balance, and buttons stacked vertically
-  - Removed transaction count display
-  - Centered content within each card
-- Adjusted button styling in Piggy Bank cards for full-width display
-- Enhanced the visual presentation of the balance in Piggy Bank cards
-  - Added a light blue background with rounded corners and shadow
-  - Increased font size and changed color to blue for better emphasis
-  - Adjusted spacing for improved visual hierarchy
-- Added a visual separator between the balance and action buttons in Piggy Bank cards
-  - Improves visual hierarchy and distinguishes between information and actions
-- Increased the size of the PiggyBankIcon in the Piggy Bank interface header for better visibility
-- Updated Task Completion, Payday, Task Management, and User Management components to include large icons in their headers for consistent styling across the application
-- Updated TaskCompletionPage to include the CheckSquareIcon in the header, matching the style of other interfaces
+- Removed currency indicators ($) from all modals and main Piggy Bank interface
+- Refactored Add Funds, Withdraw Funds, and Transactions modals for consistency and improved user experience
 
 ### Fixed
 
-- Resolved build issues related to client-side rendering in Next.js 13+
-- Eliminated pre-commit hook errors by removing Husky
-- Resolved build error related to missing Table components
-- Fixed icon display issues in Piggy Bank interface
-- Added missing icons to Task Completion and Task Management interface headers
-
-### Known Issues
-
-- TypeScript and linter errors in some components need to be addressed
+- Improved visual consistency across all Piggy Bank related modals
 
 ## [0.1.0] - 2024-XX-XX
 

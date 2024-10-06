@@ -137,7 +137,7 @@ export function PiggyBank() {
             </div>
             <CardTitle className="text-xl mb-3">{userBalance.user.name}</CardTitle>
             <div className="bg-blue-100 rounded-lg shadow-md p-3 mb-4 w-full text-center">
-              <p className="text-3xl font-bold text-blue-600">${userBalance.balance.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-blue-600">{userBalance.balance.toFixed(2)}</p>
             </div>
             <div className="w-full h-px bg-gray-200 mb-4"></div>{' '}
             {/* Add this line for the separator */}
@@ -172,26 +172,26 @@ export function PiggyBank() {
             isOpen={isAddModalOpen}
             onClose={() => setIsAddModalOpen(false)}
             onAddFunds={handleAddFundsConfirm}
-            userName={selectedUser?.name || ''}
+            userName={selectedUser.name}
+            userIcon={selectedUser.iconName}
           />
           <WithdrawFundsModal
             isOpen={isWithdrawModalOpen}
             onClose={() => setIsWithdrawModalOpen(false)}
             onWithdrawFunds={handleWithdrawFundsConfirm}
             balance={userBalances.find((ub) => ub.user.id === selectedUser?.id)?.balance || 0}
-            userName={selectedUser?.name || ''}
+            userName={selectedUser.name}
+            userIcon={selectedUser.iconName}
+          />
+          <TransactionsModal
+            isOpen={isTransactionsModalOpen}
+            onClose={() => setIsTransactionsModalOpen(false)}
+            transactions={
+              userBalances.find((ub) => ub.user.id === selectedUser.id)?.transactions || []
+            }
+            user={selectedUser} // Pass the entire user object
           />
         </>
-      )}
-      {selectedUser && (
-        <TransactionsModal
-          isOpen={isTransactionsModalOpen}
-          onClose={() => setIsTransactionsModalOpen(false)}
-          transactions={
-            userBalances.find((ub) => ub.user.id === selectedUser.id)?.transactions || []
-          }
-          user={selectedUser}
-        />
       )}
     </div>
   );

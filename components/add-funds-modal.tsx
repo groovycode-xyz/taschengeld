@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -10,18 +10,28 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { IconComponent } from './icon-component';
+import { Camera } from 'lucide-react'; // Import the Camera icon
 
 interface AddFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddFunds: (amount: number, comments: string, photo: string | null) => void;
   userName: string;
+  userIcon: string;
 }
 
-export function AddFundsModal({ isOpen, onClose, onAddFunds, userName }: AddFundsModalProps) {
+export function AddFundsModal({
+  isOpen,
+  onClose,
+  onAddFunds,
+  userName,
+  userIcon,
+}: AddFundsModalProps) {
   const [amount, setAmount] = useState('');
   const [comments, setComments] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,11 +56,17 @@ export function AddFundsModal({ isOpen, onClose, onAddFunds, userName }: AddFund
     }
   };
 
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Funds for {userName}</DialogTitle>
+          <DialogTitle className="flex items-center">
+            Add Funds for {userName} <IconComponent icon={userIcon} className="ml-2 h-6 w-6" />
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -78,9 +94,41 @@ export function AddFundsModal({ isOpen, onClose, onAddFunds, userName }: AddFund
             </div>
             <div>
               <Label htmlFor="photo">Attach Photo</Label>
-              <Input id="photo" type="file" accept="image/*" onChange={handlePhotoUpload} />
+              <div className="flex items-center space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={triggerFileInput}
+                  className="w-full"
+                >
+                  <Camera className="mr-2 h-4 w-4" />
+                  {photo ? 'Change Photo' : 'Choose File'}
+                </Button>
+                {photo && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setPhoto(null)}
+                    className="text-red-500"
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
+              <Input
+                id="photo"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+                ref={fileInputRef}
+              />
               {photo && (
-                <img src={photo} alt="Attached" className="mt-2 max-w-full h-32 object-cover" />
+                <img
+                  src={photo}
+                  alt="Attached"
+                  className="mt-2 max-w-full h-32 object-cover rounded"
+                />
               )}
             </div>
           </div>
