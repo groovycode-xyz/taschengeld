@@ -12,6 +12,7 @@ import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this imp
 import Image from 'next/image';
 import { IconComponent } from './icon-component'; // Add this import
 import { PiggyBankIcon } from 'lucide-react'; // Add this import
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface Transaction {
   id: string;
@@ -19,6 +20,8 @@ interface Transaction {
   amount: number;
   type: 'deposit' | 'withdrawal';
   date: Date;
+  comments?: string;
+  photo?: string | null;
 }
 
 interface UserBalance {
@@ -30,7 +33,7 @@ interface UserBalance {
 // PiggyBank component: Manages the piggy bank interface for child users
 // Displays balances, allows adding/withdrawing funds, and shows transaction history
 export function PiggyBank() {
-  const [userBalances, setUserBalances] = useState<UserBalance[]>([]);
+  const [userBalances, setUserBalances] = useLocalStorage<UserBalance[]>('userBalances', []);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -63,56 +66,58 @@ export function PiggyBank() {
     setIsTransactionsModalOpen(true);
   };
 
-  const handleAddFundsConfirm = (amount: number) => {
+  const handleAddFundsConfirm = (amount: number, comments: string, photo: string | null) => {
     if (selectedUser) {
+      const newTransaction = {
+        id: Date.now().toString(),
+        userId: selectedUser.id,
+        type: 'deposit',
+        amount,
+        date: new Date(),
+        comments,
+        photo,
+      };
+
       setUserBalances((prevBalances) =>
-        prevBalances.map((balance) =>
-          balance.user.id === selectedUser.id
+        prevBalances.map((ub) =>
+          ub.user.id === selectedUser.id
             ? {
-                ...balance,
-                balance: balance.balance + amount,
-                transactions: [
-                  {
-                    id: Date.now().toString(),
-                    userId: selectedUser.id,
-                    amount,
-                    type: 'deposit',
-                    date: new Date(),
-                  },
-                  ...balance.transactions,
-                ],
+                ...ub,
+                balance: ub.balance + amount,
+                transactions: [newTransaction, ...ub.transactions],
               }
-            : balance
+            : ub
         )
       );
-      setIsAddModalOpen(false);
     }
+    setIsAddModalOpen(false);
   };
 
-  const handleWithdrawFundsConfirm = (amount: number) => {
+  const handleWithdrawFundsConfirm = (amount: number, comments: string, photo: string | null) => {
     if (selectedUser) {
+      const newTransaction = {
+        id: Date.now().toString(),
+        userId: selectedUser.id,
+        type: 'withdrawal',
+        amount,
+        date: new Date(),
+        comments,
+        photo,
+      };
+
       setUserBalances((prevBalances) =>
-        prevBalances.map((balance) =>
-          balance.user.id === selectedUser.id
+        prevBalances.map((ub) =>
+          ub.user.id === selectedUser.id
             ? {
-                ...balance,
-                balance: balance.balance - amount,
-                transactions: [
-                  {
-                    id: Date.now().toString(),
-                    userId: selectedUser.id,
-                    amount,
-                    type: 'withdrawal',
-                    date: new Date(),
-                  },
-                  ...balance.transactions,
-                ],
+                ...ub,
+                balance: ub.balance - amount,
+                transactions: [newTransaction, ...ub.transactions],
               }
-            : balance
+            : ub
         )
       );
-      setIsWithdrawModalOpen(false);
     }
+    setIsWithdrawModalOpen(false);
   };
 
   return (
@@ -132,11 +137,10 @@ export function PiggyBank() {
             </div>
             <CardTitle className="text-xl mb-3">{userBalance.user.name}</CardTitle>
             <div className="bg-blue-100 rounded-lg shadow-md p-3 mb-4 w-full text-center">
-              <p className="text-3xl font-bold text-blue-600">
-                ${userBalance.balance.toFixed(2)}
-              </p>
+              <p className="text-3xl font-bold text-blue-600">${userBalance.balance.toFixed(2)}</p>
             </div>
-            <div className="w-full h-px bg-gray-200 mb-4"></div> {/* Add this line for the separator */}
+            <div className="w-full h-px bg-gray-200 mb-4"></div>{' '}
+            {/* Add this line for the separator */}
             <div className="w-full space-y-2">
               {isParentMode && (
                 <>
@@ -154,10 +158,7 @@ export function PiggyBank() {
                   </Button>
                 </>
               )}
-              <Button
-                onClick={() => handleViewTransactions(userBalance)}
-                className="w-full"
-              >
+              <Button onClick={() => handleViewTransactions(userBalance)} className="w-full">
                 View Transactions
               </Button>
             </div>
@@ -171,14 +172,14 @@ export function PiggyBank() {
             isOpen={isAddModalOpen}
             onClose={() => setIsAddModalOpen(false)}
             onAddFunds={handleAddFundsConfirm}
-            userName={selectedUser.name}
+            userName={selectedUser?.name || ''}
           />
           <WithdrawFundsModal
             isOpen={isWithdrawModalOpen}
             onClose={() => setIsWithdrawModalOpen(false)}
             onWithdrawFunds={handleWithdrawFundsConfirm}
-            balance={userBalances.find((ub) => ub.user.id === selectedUser.id)?.balance || 0}
-            userName={selectedUser.name}
+            balance={userBalances.find((ub) => ub.user.id === selectedUser?.id)?.balance || 0}
+            userName={selectedUser?.name || ''}
           />
         </>
       )}

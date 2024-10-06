@@ -1,25 +1,48 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface AddFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddFunds: (amount: number) => void;
+  onAddFunds: (amount: number, comments: string, photo: string | null) => void;
   userName: string;
 }
 
 export function AddFundsModal({ isOpen, onClose, onAddFunds, userName }: AddFundsModalProps) {
   const [amount, setAmount] = useState('');
+  const [comments, setComments] = useState('');
+  const [photo, setPhoto] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
     if (!isNaN(numAmount) && numAmount > 0) {
-      onAddFunds(numAmount);
+      onAddFunds(numAmount, comments, photo);
       setAmount('');
+      setComments('');
+      setPhoto(null);
       onClose();
+    }
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -30,27 +53,40 @@ export function AddFundsModal({ isOpen, onClose, onAddFunds, userName }: AddFund
           <DialogTitle>Add Funds for {userName}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center mb-4">
-            <label htmlFor="amount" className="mr-2 text-sm font-medium text-gray-700">
-              Amount
-            </label>
-            <Input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-              min="0.01"
-              step="0.01"
-              required
-            />
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="amount">Amount</Label>
+              <Input
+                id="amount"
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="comments">Comments</Label>
+              <Textarea
+                id="comments"
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                placeholder="Add any comments..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="photo">Attach Photo</Label>
+              <Input id="photo" type="file" accept="image/*" onChange={handlePhotoUpload} />
+              {photo && (
+                <img src={photo} alt="Attached" className="mt-2 max-w-full h-32 object-cover" />
+              )}
+            </div>
           </div>
-          <div className="flex justify-end">
-            <Button type="button" variant="outline" onClick={onClose} className="mr-2">
-              Cancel
-            </Button>
+          <DialogFooter>
             <Button type="submit">Add Funds</Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

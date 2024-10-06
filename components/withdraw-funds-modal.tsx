@@ -9,11 +9,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface WithdrawFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onWithdrawFunds: (amount: number) => void;
+  onWithdrawFunds: (amount: number, comments: string, photo: string | null) => void;
   balance: number;
   userName: string;
 }
@@ -26,20 +27,29 @@ export function WithdrawFundsModal({
   userName,
 }: WithdrawFundsModalProps) {
   const [amount, setAmount] = useState('');
-  const [error, setError] = useState('');
+  const [comments, setComments] = useState('');
+  const [photo, setPhoto] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
     if (!isNaN(numAmount) && numAmount > 0 && numAmount <= balance) {
-      onWithdrawFunds(numAmount);
+      onWithdrawFunds(numAmount, comments, photo);
       setAmount('');
-      setError('');
+      setComments('');
+      setPhoto(null);
       onClose();
-    } else if (numAmount > balance) {
-      setError('Insufficient funds');
-    } else {
-      setError('Please enter a valid amount');
+    }
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -50,34 +60,39 @@ export function WithdrawFundsModal({
           <DialogTitle>Withdraw Funds for {userName}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <Label htmlFor="balance" className="block text-sm font-medium text-gray-700">
-              Current Balance
-            </Label>
-            <div className="mt-1 text-lg font-semibold">${balance.toFixed(2)}</div>
-          </div>
-          <div className="mb-4">
-            <Label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-              Amount
-            </Label>
-            <Input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-              min="0.01"
-              step="0.01"
-              max={balance}
-              required
-              className="mt-1"
-            />
-            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="amount">Amount (Max: ${balance.toFixed(2)})</Label>
+              <Input
+                id="amount"
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount"
+                step="0.01"
+                min="0"
+                max={balance}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="comments">Comments</Label>
+              <Textarea
+                id="comments"
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                placeholder="Add any comments..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="photo">Attach Photo</Label>
+              <Input id="photo" type="file" accept="image/*" onChange={handlePhotoUpload} />
+              {photo && (
+                <img src={photo} alt="Attached" className="mt-2 max-w-full h-32 object-cover" />
+              )}
+            </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
             <Button type="submit">Withdraw Funds</Button>
           </DialogFooter>
         </form>
