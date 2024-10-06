@@ -121,6 +121,15 @@ export const mockDb = {
         iconName: 'squirrel',
         soundUrl: '/tgeld/public/sounds/users/laugh1.mp3',
       },
+      {
+        id: '5',
+        name: 'Valentina',
+        sound: null,
+        birthday: '2010-03-03',
+        role: 'child' as const,
+        iconName: 'cat',
+        soundUrl: '/tgeld/public/sounds/users/laugh1.mp3',
+      },
     ],
   },
 
@@ -264,3 +273,6 @@ const transactions: Transaction[] = [
   },
   // ... (add more mock transactions as needed)
 ];
+
+// At the end of the file, add this export:
+export const getMockDb = () => mockDb;

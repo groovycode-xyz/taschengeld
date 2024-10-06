@@ -34,6 +34,7 @@
 │   │   ├── 04
 │   │   │   ├── 152c334e4dfb853e805a18295c9cbb8a493ae1
 │   │   │   ├── 6a082612a8e02f06df174b297fce69d4f9d741
+│   │   │   ├── 7d3fa7ea34045b9f6469c26a36ac0bd0184284
 │   │   │   └── c8991ba87275b0c11db14b3054060d876722d5
 │   │   ├── 05
 │   │   │   ├── 17582114fe9474382b2f920e3c37c06d21c6de
@@ -41,7 +42,8 @@
 │   │   │   └── 8f51bd793606c5f701d419d76392dd73b2a37a
 │   │   ├── 07
 │   │   │   ├── bb0e4512d5bfe6de4a277c1bf784e569af05d9
-│   │   │   └── da3dc2fa4ca6e90f3bea562347e96d1c319ca5
+│   │   │   ├── da3dc2fa4ca6e90f3bea562347e96d1c319ca5
+│   │   │   └── e8998f5b68623316f2fbe1a43853803f5d6216
 │   │   ├── 08
 │   │   │   └── 685ba549851345d908160a90bcd56ec0ff4e1a
 │   │   ├── 09
@@ -50,7 +52,9 @@
 │   │   ├── 0a
 │   │   │   └── 85cf3dbfd2160eb4bebf17d6c5659cfe9002d2
 │   │   ├── 0b
-│   │   │   └── 79288c53079a2c8547ea66bebf1cf1480f8f91
+│   │   │   ├── 1bd0bc8ce471971bd2c69a71f49e2ad2d9cdaf
+│   │   │   ├── 79288c53079a2c8547ea66bebf1cf1480f8f91
+│   │   │   └── f5f66421993c60b200d45cccbac322586bfe5a
 │   │   ├── 0c
 │   │   │   ├── 1ff77477b6ecb723784beaa7aa871a5bdf665c
 │   │   │   ├── 5c975d166ce0b5d64c670b41a0bfc01234e9fc
@@ -63,6 +67,8 @@
 │   │   │   └── a643179565bb90c4ffa00aa37e1bc3c29825fd
 │   │   ├── 10
 │   │   │   └── 3954028f5d787908457617122de9b501a02849
+│   │   ├── 11
+│   │   │   └── 82ec531a142ddb4f9b31dbd48b3862351ea88d
 │   │   ├── 12
 │   │   │   ├── 55688b988938abedc1b59a868d53e38c7f8b1b
 │   │   │   ├── 64bb02939d5b42a90cabe0ba7080faf58a1b90
@@ -140,13 +146,17 @@
 │   │   │   ├── 8286ba35b8e6dd3dd3f592b402810bce09b89a
 │   │   │   └── d311a9bb49f9c99d63062f2375afe52322d474
 │   │   ├── 31
-│   │   │   └── 8f55610555e0960d74d75b3256f0df2a8b687e
+│   │   │   ├── 8f55610555e0960d74d75b3256f0df2a8b687e
+│   │   │   └── a72c741ea9921ba73631a5409188afcdcd4d90
 │   │   ├── 33
 │   │   │   └── cf17176bd0e479be5b5670426e1192e84f3217
 │   │   ├── 36
 │   │   │   └── 0c067033a66f29d69427f4da0d01d5a7b3a7dc
 │   │   ├── 38
-│   │   │   └── d6133cf0c5533cccd13a9d4f665516cfbd0f16
+│   │   │   ├── d6133cf0c5533cccd13a9d4f665516cfbd0f16
+│   │   │   └── f476ff17abec1621f5983d6126c09cf8874cad
+│   │   ├── 39
+│   │   │   └── 0e13127697599107b8cd782b4e5dc2cc05b086
 │   │   ├── 3a
 │   │   │   ├── c7a8a50c1fceb1af9ea398be6aec5dd14b35cb
 │   │   │   └── ea23ff7076adc7ee7310a5292f73a600d140b6
@@ -165,6 +175,8 @@
 │   │   │   └── d4434c5c5237fee2b93b285502bf10d896da70
 │   │   ├── 44
 │   │   │   └── 503579990ab2e94a11dc3372f5f3f63613e75c
+│   │   ├── 45
+│   │   │   └── 381d0b498a52c0c9253d9cd950179bd7bf9e2a
 │   │   ├── 46
 │   │   │   ├── bda72d549f50eed99c28255c46fb86d5209847
 │   │   │   └── f2bbcea87471fb6cc1ee3c50e21996a84f6388
@@ -174,25 +186,30 @@
 │   │   │   └── 9b3f1a991999b9d71474a59b46fdfb15d83d30
 │   │   ├── 48
 │   │   │   └── 7b967344f679da208d070f3d52dc7932a8af26
+│   │   ├── 4a
+│   │   │   └── 93cf5cfcf348c888dc5f5378f174774d3c5767
 │   │   ├── 4b
 │   │   │   ├── 281c53f6c1b739a20c2e092f701057192018b3
 │   │   │   └── 78889f5916e08d9cbee56236567e17d9719cb0
 │   │   ├── 4d
 │   │   │   ├── 3735b16ebe1611c4742aadf7344e6942aa25f6
+│   │   │   ├── 4855f06470a23a0d5cf2ea25e2da82a1540cfd
 │   │   │   └── 8eee1e8ef7152579fc90f2409c9c429510b545
 │   │   ├── 4e
 │   │   │   └── 3c8e95ba4172c5670ac531042b2ac8e0382447
 │   │   ├── 4f
 │   │   │   ├── 08a0a84f8b01e42efffef38f8bfdf21874c497
 │   │   │   ├── 0d6ccadccc423861c73ebfd2963fb0965b003d
-│   │   │   └── 2f63f42ad6690bcbf9b4281e25be48081c7cc5
+│   │   │   ├── 2f63f42ad6690bcbf9b4281e25be48081c7cc5
+│   │   │   └── 6cc4bc9ef5bcbba0d940d34c668267e4db9c87
 │   │   ├── 50
 │   │   │   ├── 05bf1d2e9e382f619315555ed1471c015fd61e
 │   │   │   └── b95eb62d320ee71daf5fee0c3916cab51acb26
 │   │   ├── 51
 │   │   │   └── f253e1dae253eb96e901662c69e8102f760b7b
 │   │   ├── 52
-│   │   │   └── 7f28042999386955b9cf85a64822ecba38168c
+│   │   │   ├── 7f28042999386955b9cf85a64822ecba38168c
+│   │   │   └── 8d8316b1050e2017b84121e2235e99d5a9ae5b
 │   │   ├── 53
 │   │   │   ├── 57a0a32ab59ce19dd14d6c63613557a3e59031
 │   │   │   ├── 71e2b763c86a89a4f046bcd1af54fe99d3419e
@@ -200,6 +217,7 @@
 │   │   ├── 54
 │   │   │   └── 537d3713861493a92c6f4af7efa71c98f15ae0
 │   │   ├── 55
+│   │   │   ├── 29a86aeb11ec30ecb15954093fc50050239dc5
 │   │   │   └── 5dde98259bff883fce4044927b0f7648bcd08f
 │   │   ├── 56
 │   │   │   ├── 14c5391c41db11816748e5e4113914b134bacf
@@ -228,6 +246,8 @@
 │   │   │   └── 834bb4ddcbb680a8a3c2032d5dcaace23455d7
 │   │   ├── 5f
 │   │   │   └── 720ea2ecdec5e8d2be4b9d170936b7c40509a9
+│   │   ├── 60
+│   │   │   └── 9f7c9e2531f53bb1f9dbae830af6dd4eec0a82
 │   │   ├── 62
 │   │   │   ├── 5517ff4a4edc74b0047e2592ac60b8105ed852
 │   │   │   ├── b04545752f1f1219b10aa390896054c84696c5
@@ -270,6 +290,7 @@
 │   │   │   ├── 1ac57c7472c79339812f81ddc800344cc3ad5b
 │   │   │   └── d5610f66fa369ae93a789de7ff79053e87ffaf
 │   │   ├── 71
+│   │   │   ├── 02a02b984fe10d29aabd2cc197358c3120f769
 │   │   │   ├── 31468ed3c4b5a571f9401e41269c35e69550c3
 │   │   │   └── 818a6e6f7594bf0b7d91db2e7dc00610761aa4
 │   │   ├── 72
@@ -294,6 +315,8 @@
 │   │   │   └── 0afc13b3e8e0ae735642eaa01c4cccbac76d41
 │   │   ├── 7a
 │   │   │   └── f61b7ed8d18c0b2119a1e180af607a570cd842
+│   │   ├── 7b
+│   │   │   └── 1820d77a4f02da36d56047ed626fda6e1f6866
 │   │   ├── 7c
 │   │   │   ├── 7dc805409ea7bac298241967f5754ee3358950
 │   │   │   └── e91cf7361d75b14dc9e2d3a6b3189e82cd8671
@@ -305,13 +328,15 @@
 │   │   │   └── 5d13412de6dbed643e7c32ab3a986f7fd6cda6
 │   │   ├── 7f
 │   │   │   ├── 8913d7644c959a1f4e55c4255b238bceefd72c
-│   │   │   └── 92459a6dd3c5f8d0c123c652ef353655a439ac
+│   │   │   ├── 92459a6dd3c5f8d0c123c652ef353655a439ac
+│   │   │   └── c31bf03eda4c71ec44c574892c233eaab7cf8c
 │   │   ├── 80
 │   │   │   ├── b6ec03420aa5c471ccbc976bdd6f9951e72de5
 │   │   │   ├── c9bc641396032c6c1bf59ce5528a9cfb316af4
 │   │   │   └── da435861b2fd7405093514423f3a02b3ad3a02
 │   │   ├── 82
 │   │   │   ├── c596e87ebb17cb22f2e93b0c4c36255af045ce
+│   │   │   ├── eaef2c2a886ad7d817fd812ad5137dd3388c91
 │   │   │   └── ed1dd5056e3d0c2a028fd29f46a2b56a3cc1a5
 │   │   ├── 83
 │   │   │   ├── 40eb8ad1b9db621627cd831a41a0d1e61644a5
@@ -327,6 +352,7 @@
 │   │   │   └── 5cfa1b9c227c1a157fa601071431122710bcd8
 │   │   ├── 86
 │   │   │   ├── 116f2624039387a6f9f479c271733d5bbf5995
+│   │   │   ├── 2eb8c4150d6be0f8a006c04adf70a404c0e1a9
 │   │   │   └── fe85eecbac5e64bce44d9ee428bff113d73489
 │   │   ├── 87
 │   │   │   └── 9a8b12ed0120a801d8e77cae2ba30e145ca0fb
@@ -337,6 +363,7 @@
 │   │   ├── 89
 │   │   │   ├── 28d087c58f96a1cf04e740f6a697f447bb3ed8
 │   │   │   ├── 342ee988c865c518b55b256a4ea4e5ac1bbb50
+│   │   │   ├── 5dcd13c4f4271d20fc801cd58f56679b241997
 │   │   │   └── a8fb1c17d4f760c514a892ae318f85d8a6f709
 │   │   ├── 8b
 │   │   │   └── a13dcb5707d3624425c5dfda7b7efa46d6ddc1
@@ -353,7 +380,8 @@
 │   │   │   └── 3efaf09cbb3fbc14ffc5382a29d00a7665f2d5
 │   │   ├── 92
 │   │   │   ├── 2386e6753f8c6142771d173cd3ae31da878253
-│   │   │   └── 268f3c0a81385fc10661d70405001bdfe6be4d
+│   │   │   ├── 268f3c0a81385fc10661d70405001bdfe6be4d
+│   │   │   └── 6db5ba22c4cc4de858b37f1eee65d4fc79f5ae
 │   │   ├── 93
 │   │   │   ├── 4af1d163c76eb8c1a1718aecb7917d5b1f6caf
 │   │   │   ├── 7210ce792098cf8db5e1c1b0f0db99f99c2774
@@ -366,6 +394,9 @@
 │   │   │   ├── 2987ccc82e3a8287c4e08b469ca4e506ce7ed1
 │   │   │   ├── b24e5d7372c34121edfcad2b48cc8413f7a3a6
 │   │   │   └── f5a40989342e1d483f4c713ba06a8e5e62c6e1
+│   │   ├── 97
+│   │   │   ├── 29e96f0cf029e644288ae24431f3f1ba151c6f
+│   │   │   └── 6ad5a03e3c28adc722407dec8cc766ece20ea7
 │   │   ├── 98
 │   │   │   └── aa476285a7f4995cdcdfb877e9115480105692
 │   │   ├── 99
@@ -378,7 +409,9 @@
 │   │   │   └── eec1c24709d12e24d0b76bf40e1a7d88c2acff
 │   │   ├── 9b
 │   │   │   ├── 0995a8091bf7b3a4589819a5604c17b137f679
+│   │   │   ├── 23fc9418736aff6760ca212ec4ae84ad0c448d
 │   │   │   ├── 31ae48d4e9959a59d7241131dbded9e69ea6b3
+│   │   │   ├── 5c5f327d19795eff0fa2762436c9b4868794fb
 │   │   │   ├── 60be31d9e96c87bca6033fa302feaacd5a3361
 │   │   │   └── b5826d9fc5df8c5e9e0cf36bd0e459d74c6f2e
 │   │   ├── 9c
@@ -388,11 +421,14 @@
 │   │   │   ├── 1357d232d5fa5908d1fa84584f2757162d8183
 │   │   │   └── 3e656beacd5a2ba55668333aa37e007689a892
 │   │   ├── 9e
+│   │   │   ├── 3a36e540d8e015fced2c9b730cd454e7782ea7
 │   │   │   └── 4111bd9e7547d11448f2b65b7426490d59fd83
 │   │   ├── 9f
 │   │   │   └── 807f6b99467a7b408e82a65dd099483465c17d
 │   │   ├── a0
 │   │   │   └── 29f1e1433761df62dd965d9ddd168a5806037a
+│   │   ├── a1
+│   │   │   └── 44d493e4cfe3ce2b5e2278b366fef8a00d73e7
 │   │   ├── a3
 │   │   │   ├── 2912158231e2153de449fac334b8d0265fed53
 │   │   │   ├── b7f55b39aefaf32ba8ffda622bbfd66fd8518d
@@ -421,6 +457,8 @@
 │   │   │   └── a49fa4e9cc185efeb248213e77542dcbb96b67
 │   │   ├── ab
 │   │   │   ├── 6566d591611a866b65753f89b7f74bcba51bff
+│   │   │   ├── b917e18f37edd4edaf4f39eb7338abff8a584e
+│   │   │   ├── eb8f4ed0d4ecaf159509c942072eccb70f60cd
 │   │   │   └── fd03edd96aea3e6982fbe77f8ed24b55d28811
 │   │   ├── ac
 │   │   │   └── b64304c89eb52f5989de24da53dbcd7d2761b6
@@ -434,6 +472,7 @@
 │   │   │   ├── 0a7663afcbe2e2e7025795979fee55d923f88a
 │   │   │   ├── 0e587aa2dc5f10832f03f2b637aa0a4ba4c4f1
 │   │   │   ├── 2679609d02184fa9143f948d084a23d603a4f9
+│   │   │   ├── da7f364a8e886871853ac98c53202cdfc54516
 │   │   │   ├── f5a872bea4f6a4c9388be7c421d817be363220
 │   │   │   └── f5e5f3691516d64792bebaa9f646786109ef7a
 │   │   ├── b0
@@ -441,6 +480,7 @@
 │   │   │   ├── 9d5f2bd1ab4363f8d25f02d8fd804b7a9b27d4
 │   │   │   └── ff61e30bbc4a2fd946fcb1f27ff97c7e6d57e6
 │   │   ├── b1
+│   │   │   ├── 24c21b5efbb883ee2ff4cf802a8bf1422f8d9f
 │   │   │   ├── a1fe20c083f438f308eed658727d65c736c39d
 │   │   │   └── fa35145753a3f786a6c8ac6acd26a993c07b1b
 │   │   ├── b2
@@ -454,7 +494,8 @@
 │   │   │   └── aaabe5397b8d64afdeb2ff1b5d6a0287c9b90a
 │   │   ├── b6
 │   │   │   ├── 9a2e8dda3012b5ac310edb7e998a5891939e30
-│   │   │   └── d2be18167cea9506e9a5e918d6eb94b38f6353
+│   │   │   ├── d2be18167cea9506e9a5e918d6eb94b38f6353
+│   │   │   └── f0653326e90197a45d31ecfc67635e14c9e0db
 │   │   ├── b7
 │   │   │   └── c602cda94e2b639028ea11c35f40cdf91e933f
 │   │   ├── b8
@@ -478,6 +519,8 @@
 │   │   ├── bd
 │   │   │   ├── 079601bd71f2a14977691c035350ab410ab8c2
 │   │   │   └── dc7f4f3f292c13431a801b4a084a4eec988dfe
+│   │   ├── be
+│   │   │   └── 2f2aa75fc79f9f04c3bae9269a60cd29ba02db
 │   │   ├── c0
 │   │   │   ├── 0b6248555ad4f07622bc10077609992a97ce2f
 │   │   │   ├── 1b3af24786240b5cf4db61a9259e15125d4007
@@ -486,6 +529,7 @@
 │   │   │   ├── 26c70e9ec0989f897f40ad2f869e78aa766dae
 │   │   │   └── b500c38ce5376da247171d2c21252e5226074a
 │   │   ├── c2
+│   │   │   ├── 295b7c839d14565c09316ae77f22c062359592
 │   │   │   └── 33e49c60a08f2837fb3b2523247325a3d243cf
 │   │   ├── c3
 │   │   │   ├── 5c12eb0af9e79ffe613344185d7f30c1156959
@@ -508,13 +552,15 @@
 │   │   │   └── f82c32bc51f7e1a93b033476b1c99310dd07ea
 │   │   ├── c7
 │   │   │   ├── 19c5ef4d7fed90ddf69fe7b107a25495adbf2f
+│   │   │   ├── 690baba92b91323e30f2ddd827f03a6e8c779c
 │   │   │   └── 81ad6b7f52358f1cbd512c8426ab486e1a1a05
 │   │   ├── c8
 │   │   │   ├── 0b99b97bd8a2e417d16c933fabd5cf6bd59431
 │   │   │   ├── 35758184cbc97b27c44189e6ee61d2458842a8
 │   │   │   └── e6592b20e0335b5b47a6c9ee10d1a010c72c21
 │   │   ├── c9
-│   │   │   └── 2bfd46a790eced54f205d8b985669fc52f589a
+│   │   │   ├── 2bfd46a790eced54f205d8b985669fc52f589a
+│   │   │   └── aaf10499d408cf3de806946d302009d9f9559a
 │   │   ├── ca
 │   │   │   ├── 19045fa50f71d7376be581793cc587c1569c35
 │   │   │   └── eee767bedcb7c6cce69aa93c6d4472d53dcf5d
@@ -559,6 +605,7 @@
 │   │   │   ├── 6b26fd749a4b3f32d9983063aac065f64924bd
 │   │   │   └── cfa71a6ccc750e8637dee1a3a5d1c67d4b5b4c
 │   │   ├── d9
+│   │   │   ├── 35f8fb6ab16d03eef72c5cdd8b9df675d99d0b
 │   │   │   └── 69d8b3dcb315dd27004051a0f6b1b2ccd33cb5
 │   │   ├── da
 │   │   │   ├── 54ef729292bb556477b4cd4882a741eae0800f
@@ -581,11 +628,13 @@
 │   │   │   ├── 5b3b1b1f5c48500495e28f685cbb5c2d51e1ad
 │   │   │   └── 6a4454ab0627b0a0cc46229eaf4bac8379deb2
 │   │   ├── e1
+│   │   │   ├── a4c1670738f54c66751013f79ce6e739c2fb68
 │   │   │   ├── ae5582e1aa56e42b3310369dc68377be4d8786
 │   │   │   └── f1bd2c6bd7509034b37d3baec4d97de5124fa9
 │   │   ├── e2
 │   │   │   └── c92dbf09695b3903b07c1ba0491e44406f3108
 │   │   ├── e3
+│   │   │   ├── 03746c38e642a170cb1acefaa73cff93c449dd
 │   │   │   ├── 385212e2a8d05b9678ab09bc47e7b1393c2005
 │   │   │   ├── 3e0514aab3c527de71388286546d91615bb5cf
 │   │   │   ├── 7b9c5faa7e835d22a707e266c607bdb029b11d
@@ -602,6 +651,8 @@
 │   │   ├── e9
 │   │   │   ├── c58dd6f0d6e5d77150de4bfaaa64c3b1e4c80a
 │   │   │   └── f146f84ca686709155db3bee8be10934db48ee
+│   │   ├── ea
+│   │   │   └── b2dc25e4fc208670c4cedb38602534cae151cc
 │   │   ├── ec
 │   │   │   ├── 702df349eaac9fb29df6042b2ae63dc0869854
 │   │   │   └── cbad4eea4ca7b2e361a8d21d0c7c5feed00bed
@@ -656,6 +707,7 @@
 │   │   ├── fe
 │   │   │   ├── 0d4bf51130ec9303f5ef557ba33c157f1bb6c6
 │   │   │   ├── 60f81a337ef1847c763c67514ed1e343529045
+│   │   │   ├── 83635c609e230a3469ceba8860be7a73d0305d
 │   │   │   └── 9678b5e37736f9e54502e99a45a6e594b7be82
 │   │   ├── ff
 │   │   │   ├── 2d788eb435223edfb7e994eee450fe787161ef
@@ -692,7 +744,7 @@
 │   │   │   ├── mcrmPMMFbAngXWBBHSg7ll8OpXPyRGdPJP9GAkqUW7M=
 │   │   │   │   └── 60.1727902922450.cKW4mWxkCd4byZ63cEOrPXv5DKMf7AqeyYh1T1BfcmY=.webp
 │   │   │   ├── Ui7DBF75XFtBHm4FS8Hrw+TgWdYpGWHSWnWMEInFtMg=
-│   │   │   │   └── 60.1728110002139.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
+│   │   │   │   └── 60.1728210268591.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   │   ├── uLE19DzZg-yhKgjDZlDHqExJdgsogyPmzEVIkfb7v3Y=
 │   │   │   │   └── 60.1727956215498.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   │   └── ySj6MQo4QLmdgwg19Tb6pElfW6ELUM+Z0YcEg9LO5d8=
@@ -772,6 +824,9 @@
 │   │   │   ├── _not-found
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
+│   │   │   ├── home
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
 │   │   │   ├── payday
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
@@ -784,9 +839,11 @@
 │   │   │   ├── task-management
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
-│   │   │   └── user-management
-│   │   │       ├── page.js
-│   │   │       └── page_client-reference-manifest.js
+│   │   │   ├── user-management
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
+│   │   │   ├── page.js
+│   │   │   └── page_client-reference-manifest.js
 │   │   ├── vendor-chunks
 │   │   │   ├── @floating-ui.js
 │   │   │   ├── @radix-ui.js
@@ -820,6 +877,8 @@
 │   │   │   ├── app
 │   │   │   │   ├── _not-found
 │   │   │   │   │   └── page.js
+│   │   │   │   ├── home
+│   │   │   │   │   └── page.js
 │   │   │   │   ├── payday
 │   │   │   │   │   └── page.js
 │   │   │   │   ├── piggy-bank
@@ -830,7 +889,8 @@
 │   │   │   │   │   └── page.js
 │   │   │   │   ├── user-management
 │   │   │   │   │   └── page.js
-│   │   │   │   └── layout.js
+│   │   │   │   ├── layout.js
+│   │   │   │   └── page.js
 │   │   │   ├── app-pages-internals.js
 │   │   │   ├── main-app.js
 │   │   │   ├── polyfills.js
@@ -851,106 +911,80 @@
 │   │   │   └── df0a9ae256c0569c-s.woff2
 │   │   └── webpack
 │   │       ├── app
+│   │       │   ├── payday
+│   │       │   │   ├── page.5582863922ae8709.hot-update.js
+│   │       │   │   ├── page.60d7f4c153cc9e90.hot-update.js
+│   │       │   │   └── page.a043465e23dc74b4.hot-update.js
 │   │       │   ├── piggy-bank
-│   │       │   │   ├── page.1f1761f595f437fe.hot-update.js
-│   │       │   │   ├── page.2d8d5edfd5dd2b91.hot-update.js
-│   │       │   │   ├── page.3ebec5cd151c17e2.hot-update.js
-│   │       │   │   ├── page.45b989f03d4352e7.hot-update.js
-│   │       │   │   ├── page.51217ff73f0f39af.hot-update.js
-│   │       │   │   ├── page.5be04751e1a2e553.hot-update.js
-│   │       │   │   ├── page.8f472e1db03db03d.hot-update.js
-│   │       │   │   ├── page.97b7920fff341a13.hot-update.js
-│   │       │   │   ├── page.99700d4ddea191ff.hot-update.js
-│   │       │   │   ├── page.a46f74ab66006dc4.hot-update.js
-│   │       │   │   ├── page.b1fd33d018f2346e.hot-update.js
-│   │       │   │   ├── page.bc629a63e570bc84.hot-update.js
-│   │       │   │   ├── page.ca17b89bffc9f9a0.hot-update.js
-│   │       │   │   ├── page.d411fd231712f6cb.hot-update.js
-│   │       │   │   └── page.d4794d29d9e76623.hot-update.js
-│   │       │   ├── task-completion
-│   │       │   │   └── page.88136e23ed8a929d.hot-update.js
-│   │       │   ├── task-management
-│   │       │   │   ├── page.581c48e909a66082.hot-update.js
-│   │       │   │   └── page.ef93bd3144482258.hot-update.js
+│   │       │   │   ├── page.c3639dba1cb7b6df.hot-update.js
+│   │       │   │   └── page.f69b3c9a33aade47.hot-update.js
 │   │       │   ├── user-management
-│   │       │   │   └── page.581c48e909a66082.hot-update.js
-│   │       │   ├── layout.1f1761f595f437fe.hot-update.js
-│   │       │   ├── layout.2d8d5edfd5dd2b91.hot-update.js
-│   │       │   ├── layout.2fd0c05f1b28751b.hot-update.js
-│   │       │   ├── layout.3ebec5cd151c17e2.hot-update.js
-│   │       │   ├── layout.45b989f03d4352e7.hot-update.js
-│   │       │   ├── layout.51217ff73f0f39af.hot-update.js
-│   │       │   ├── layout.52710395db79493f.hot-update.js
-│   │       │   ├── layout.581c48e909a66082.hot-update.js
-│   │       │   ├── layout.5be04751e1a2e553.hot-update.js
-│   │       │   ├── layout.88136e23ed8a929d.hot-update.js
-│   │       │   ├── layout.8f472e1db03db03d.hot-update.js
-│   │       │   ├── layout.9346e8437f9454d5.hot-update.js
-│   │       │   ├── layout.97b7920fff341a13.hot-update.js
-│   │       │   ├── layout.99700d4ddea191ff.hot-update.js
-│   │       │   ├── layout.a46f74ab66006dc4.hot-update.js
-│   │       │   ├── layout.b1fd33d018f2346e.hot-update.js
-│   │       │   ├── layout.bc629a63e570bc84.hot-update.js
-│   │       │   ├── layout.ca17b89bffc9f9a0.hot-update.js
-│   │       │   ├── layout.d411fd231712f6cb.hot-update.js
-│   │       │   ├── layout.d4794d29d9e76623.hot-update.js
-│   │       │   ├── layout.ef93bd3144482258.hot-update.js
-│   │       │   └── layout.fa2a00dd354b8984.hot-update.js
-│   │       ├── 1f1761f595f437fe.webpack.hot-update.json
-│   │       ├── 2d8d5edfd5dd2b91.webpack.hot-update.json
-│   │       ├── 2fd0c05f1b28751b.webpack.hot-update.json
-│   │       ├── 3ebec5cd151c17e2.webpack.hot-update.json
-│   │       ├── 45b989f03d4352e7.webpack.hot-update.json
-│   │       ├── 51217ff73f0f39af.webpack.hot-update.json
-│   │       ├── 52710395db79493f.webpack.hot-update.json
-│   │       ├── 581c48e909a66082.webpack.hot-update.json
-│   │       ├── 5be04751e1a2e553.webpack.hot-update.json
+│   │       │   │   ├── page.c3639dba1cb7b6df.hot-update.js
+│   │       │   │   └── page.f69b3c9a33aade47.hot-update.js
+│   │       │   ├── layout.25d426480ac73963.hot-update.js
+│   │       │   ├── layout.4f5c479f1fc72e9e.hot-update.js
+│   │       │   ├── layout.5582863922ae8709.hot-update.js
+│   │       │   ├── layout.5ab9ba78183c4f35.hot-update.js
+│   │       │   ├── layout.5f143cddf3cd476c.hot-update.js
+│   │       │   ├── layout.60d7f4c153cc9e90.hot-update.js
+│   │       │   ├── layout.7609261a653b80e2.hot-update.js
+│   │       │   ├── layout.8a61ec153d5f5493.hot-update.js
+│   │       │   ├── layout.a043465e23dc74b4.hot-update.js
+│   │       │   ├── layout.a86c06a2ad6ae79b.hot-update.js
+│   │       │   ├── layout.bed81d76648a7abc.hot-update.js
+│   │       │   ├── layout.c3639dba1cb7b6df.hot-update.js
+│   │       │   └── layout.f69b3c9a33aade47.hot-update.js
+│   │       ├── 0e2336ceac247f1e.webpack.hot-update.json
+│   │       ├── 16a65b9a4e230eac.webpack.hot-update.json
+│   │       ├── 1d8592cb2dacf017.webpack.hot-update.json
+│   │       ├── 25d426480ac73963.webpack.hot-update.json
+│   │       ├── 452a43446be8c6b0.webpack.hot-update.json
+│   │       ├── 4f5c479f1fc72e9e.webpack.hot-update.json
+│   │       ├── 5582863922ae8709.webpack.hot-update.json
+│   │       ├── 56c892018c6ecaaa.webpack.hot-update.json
+│   │       ├── 5ab9ba78183c4f35.webpack.hot-update.json
+│   │       ├── 5f143cddf3cd476c.webpack.hot-update.json
+│   │       ├── 60d7f4c153cc9e90.webpack.hot-update.json
 │   │       ├── 633457081244afec._.hot-update.json
-│   │       ├── 88136e23ed8a929d.webpack.hot-update.json
-│   │       ├── 888e8cbd2dbab77f.webpack.hot-update.json
-│   │       ├── 8f472e1db03db03d.webpack.hot-update.json
-│   │       ├── 9346e8437f9454d5.webpack.hot-update.json
-│   │       ├── 97b7920fff341a13.webpack.hot-update.json
-│   │       ├── 99700d4ddea191ff.webpack.hot-update.json
-│   │       ├── a46f74ab66006dc4.webpack.hot-update.json
-│   │       ├── ab1237894890affa.webpack.hot-update.json
-│   │       ├── b11eeee3620f0019.webpack.hot-update.json
-│   │       ├── b1fd33d018f2346e.webpack.hot-update.json
-│   │       ├── bc629a63e570bc84.webpack.hot-update.json
-│   │       ├── c573baf4a5a52272.webpack.hot-update.json
-│   │       ├── ca17b89bffc9f9a0.webpack.hot-update.json
-│   │       ├── d411fd231712f6cb.webpack.hot-update.json
-│   │       ├── d4794d29d9e76623.webpack.hot-update.json
-│   │       ├── ef93bd3144482258.webpack.hot-update.json
-│   │       ├── fa2a00dd354b8984.webpack.hot-update.json
-│   │       ├── webpack.1f1761f595f437fe.hot-update.js
-│   │       ├── webpack.2d8d5edfd5dd2b91.hot-update.js
-│   │       ├── webpack.2fd0c05f1b28751b.hot-update.js
-│   │       ├── webpack.3ebec5cd151c17e2.hot-update.js
-│   │       ├── webpack.45b989f03d4352e7.hot-update.js
-│   │       ├── webpack.51217ff73f0f39af.hot-update.js
-│   │       ├── webpack.52710395db79493f.hot-update.js
-│   │       ├── webpack.581c48e909a66082.hot-update.js
-│   │       ├── webpack.5be04751e1a2e553.hot-update.js
-│   │       ├── webpack.88136e23ed8a929d.hot-update.js
-│   │       ├── webpack.888e8cbd2dbab77f.hot-update.js
-│   │       ├── webpack.8f472e1db03db03d.hot-update.js
-│   │       ├── webpack.9346e8437f9454d5.hot-update.js
-│   │       ├── webpack.97b7920fff341a13.hot-update.js
-│   │       ├── webpack.99700d4ddea191ff.hot-update.js
-│   │       ├── webpack.a46f74ab66006dc4.hot-update.js
-│   │       ├── webpack.ab1237894890affa.hot-update.js
-│   │       ├── webpack.b11eeee3620f0019.hot-update.js
-│   │       ├── webpack.b1fd33d018f2346e.hot-update.js
-│   │       ├── webpack.bc629a63e570bc84.hot-update.js
-│   │       ├── webpack.c573baf4a5a52272.hot-update.js
-│   │       ├── webpack.ca17b89bffc9f9a0.hot-update.js
-│   │       ├── webpack.d411fd231712f6cb.hot-update.js
-│   │       ├── webpack.d4794d29d9e76623.hot-update.js
-│   │       ├── webpack.ef93bd3144482258.hot-update.js
-│   │       └── webpack.fa2a00dd354b8984.hot-update.js
+│   │       ├── 7609261a653b80e2.webpack.hot-update.json
+│   │       ├── 8a61ec153d5f5493.webpack.hot-update.json
+│   │       ├── 8acfad38a1ee0186.webpack.hot-update.json
+│   │       ├── a043465e23dc74b4.webpack.hot-update.json
+│   │       ├── a86c06a2ad6ae79b.webpack.hot-update.json
+│   │       ├── b2081c36a66a36e8.webpack.hot-update.json
+│   │       ├── bd9953acb6191f0c.webpack.hot-update.json
+│   │       ├── bed81d76648a7abc.webpack.hot-update.json
+│   │       ├── c3639dba1cb7b6df.webpack.hot-update.json
+│   │       ├── c7b6ec4487fbe527.webpack.hot-update.json
+│   │       ├── e67fb8d8dc5240b4.webpack.hot-update.json
+│   │       ├── f69b3c9a33aade47.webpack.hot-update.json
+│   │       ├── webpack.0e2336ceac247f1e.hot-update.js
+│   │       ├── webpack.16a65b9a4e230eac.hot-update.js
+│   │       ├── webpack.1d8592cb2dacf017.hot-update.js
+│   │       ├── webpack.25d426480ac73963.hot-update.js
+│   │       ├── webpack.452a43446be8c6b0.hot-update.js
+│   │       ├── webpack.4f5c479f1fc72e9e.hot-update.js
+│   │       ├── webpack.5582863922ae8709.hot-update.js
+│   │       ├── webpack.56c892018c6ecaaa.hot-update.js
+│   │       ├── webpack.5ab9ba78183c4f35.hot-update.js
+│   │       ├── webpack.5f143cddf3cd476c.hot-update.js
+│   │       ├── webpack.60d7f4c153cc9e90.hot-update.js
+│   │       ├── webpack.7609261a653b80e2.hot-update.js
+│   │       ├── webpack.8a61ec153d5f5493.hot-update.js
+│   │       ├── webpack.8acfad38a1ee0186.hot-update.js
+│   │       ├── webpack.a043465e23dc74b4.hot-update.js
+│   │       ├── webpack.a86c06a2ad6ae79b.hot-update.js
+│   │       ├── webpack.b2081c36a66a36e8.hot-update.js
+│   │       ├── webpack.bd9953acb6191f0c.hot-update.js
+│   │       ├── webpack.bed81d76648a7abc.hot-update.js
+│   │       ├── webpack.c3639dba1cb7b6df.hot-update.js
+│   │       ├── webpack.c7b6ec4487fbe527.hot-update.js
+│   │       ├── webpack.e67fb8d8dc5240b4.hot-update.js
+│   │       └── webpack.f69b3c9a33aade47.hot-update.js
 │   ├── types
 │   │   ├── app
+│   │   │   ├── home
+│   │   │   │   └── page.ts
 │   │   │   ├── payday
 │   │   │   │   └── page.ts
 │   │   │   ├── piggy-bank
@@ -961,7 +995,8 @@
 │   │   │   │   └── page.ts
 │   │   │   ├── user-management
 │   │   │   │   └── page.ts
-│   │   │   └── layout.ts
+│   │   │   ├── layout.ts
+│   │   │   └── page.ts
 │   │   └── package.json
 │   ├── app-build-manifest.json
 │   ├── build-manifest.json
@@ -980,7 +1015,6 @@
 │   │   │   └── route.ts
 │   │   └── users
 │   │       └── route.ts
-│   ├── components
 │   ├── fonts
 │   │   ├── GeistMonoVF.woff
 │   │   └── GeistVF.woff
@@ -1001,6 +1035,7 @@
 │   │   └── page.tsx
 │   ├── types
 │   │   ├── task.ts
+│   │   ├── transaction.ts
 │   │   └── user.ts
 │   ├── user-management
 │   │   └── page.tsx
@@ -1065,6 +1100,7 @@
 │   └── withdraw-funds-modal.tsx
 ├── hooks
 │   ├── useIsTouchDevice.ts
+│   ├── useLocalStorage.ts
 │   ├── useParentChildMode.ts
 │   └── useParentChildMode.tsx
 ├── lib
@@ -31860,18 +31896,23 @@
 │   │   ├── cash-register1.mp3
 │   │   ├── cheer1.wav
 │   │   ├── fireworks1.wav
+│   │   ├── lose1.wav
+│   │   ├── lose2.wav
+│   │   ├── losebuzz1.wav
 │   │   ├── poof1.mp3
 │   │   ├── trumpet1.mp3
+│   │   ├── win1.wav
 │   │   ├── woohoo1.mp3
 │   │   └── woosh1.mp3
 │   └── .DS_Store (hidden)
 ├── requirements
-│   ├── directory_tree.txt
+│   ├── _planDB.md
 │   ├── frontend_instructions.md
 │   ├── frontend_wf_task_mgt_intf.md
 │   ├── fundamental_workflow.jpg
 │   ├── onboarding_guide.md
 │   ├── overview1.jpg
+│   ├── overview2.jpg
 │   ├── piggy-bank.md
 │   ├── PRD.md
 │   ├── TG-Wireframe-1.jpg

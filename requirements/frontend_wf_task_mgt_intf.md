@@ -4,15 +4,21 @@ This document describes the wireframe layout for the Task Management Interface o
 
 ## 1. Header (Existing)
 
+Component: `components/app-shell.tsx`
+
 - App name "Taschengeld" on the left
 - Search bar in the center
 - User icon on the right
 
 ## 2. Sidebar (Existing)
 
+Component: `components/app-shell.tsx`
+
 - Navigation links including "Task Management"
 
 ## 3. Main Content Area: Task Management
+
+Component: `components/task-management.tsx`
 
 ### a. Top Section:
 
@@ -37,6 +43,8 @@ This document describes the wireframe layout for the Task Management Interface o
 
 ### c. Task Details/Edit Modal:
 
+Component: `components/task-management.tsx` (AddTaskModal and EditTaskModal)
+
 - Opens when "Add New Task" is clicked or when editing an existing task
 - Fields:
   - Title (input)
@@ -49,11 +57,15 @@ This document describes the wireframe layout for the Task Management Interface o
 
 ### d. Confirmation Modal:
 
+Component: `components/task-management.tsx`
+
 - Opens when trying to delete a task
 - Displays warning message
 - "Confirm" and "Cancel" buttons
 
 ## 4. Responsive Design Considerations:
+
+Implemented in: `components/app-shell.tsx` and `components/task-management.tsx`
 
 - On smaller screens, the sidebar collapses to a hamburger menu
 - Task list switches to a single column layout on mobile
@@ -61,8 +73,12 @@ This document describes the wireframe layout for the Task Management Interface o
 
 ## 5. Accessibility Features:
 
+Implemented across all components
+
 - High contrast between text and background
 - Clear, descriptive labels for all interactive elements
 - Keyboard navigation support
 
 This wireframe layout provides a comprehensive view of the Task Management Interface, incorporating all the necessary features mentioned in the PRD while maintaining a user-friendly and intuitive design. It allows parents to easily create, view, edit, and manage tasks, with considerations for both desktop and mobile users.
+
+Note: The actual implementation of these components may be split into smaller, more specific components. The main files mentioned here serve as the primary entry points for each section.
