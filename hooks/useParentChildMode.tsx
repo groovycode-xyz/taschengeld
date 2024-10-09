@@ -9,7 +9,7 @@ interface ParentChildModeContextType {
 
 const ParentChildModeContext = createContext<ParentChildModeContextType | undefined>(undefined);
 
-export function ParentChildModeProvider({ children }: { children: ReactNode }) {
+export const ParentChildModeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isParentMode, setIsParentMode] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export function ParentChildModeProvider({ children }: { children: ReactNode }) {
       {children}
     </ParentChildModeContext.Provider>
   );
-}
+};
 
 export function useParentChildMode() {
   const context = useContext(ParentChildModeContext);

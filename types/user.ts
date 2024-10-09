@@ -1,7 +1,7 @@
 /**
  * Represents a user in the Tascheged system.
  */
-export type User = {
+export interface User {
   /** Unique identifier for the user */
   id: string;
 
@@ -22,4 +22,10 @@ export type User = {
 
   /** User's role in the system */
   role: 'parent' | 'child';
-};
+}
+
+export interface ExtendedUser extends User {
+  // ... additional properties ...
+}
+
+export type CreateUserInput = Omit<User, 'id'>;

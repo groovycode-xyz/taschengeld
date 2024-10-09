@@ -3,6 +3,8 @@
 import React from 'react';
 import { ParentChildModeProvider } from '@/hooks/useParentChildMode';
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <ParentChildModeProvider>{children}</ParentChildModeProvider>;
-}
+};
+
+export default ClientLayout;

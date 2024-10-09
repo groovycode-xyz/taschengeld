@@ -243,36 +243,8 @@ export const mockDb = {
   },
 };
 
-// Add these type definitions at the end of the file
-type PiggyBankTransaction = {
-  transaction_id: string;
-  account_id: string;
-  transaction_date: Date;
-  title: string;
-  amount: number;
-  transaction_type: 'Credit' | 'Debit';
-};
-
-interface Transaction {
-  id: string;
-  type: 'deposit' | 'withdrawal';
-  amount: number;
-  date: Date;
-  comments?: string;
-  photo?: string | null;
-}
-
-const transactions: Transaction[] = [
-  {
-    id: '1',
-    type: 'deposit',
-    amount: 10,
-    date: new Date('2024-03-01'),
-    comments: 'Birthday money',
-    photo: null,
-  },
-  // ... (add more mock transactions as needed)
-];
+// Remove unused PiggyBankTransaction type and transactions variable
+// (around lines 247 and 265)
 
 // At the end of the file, add this export:
 export const getMockDb = () => mockDb;

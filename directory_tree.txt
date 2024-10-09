@@ -61,6 +61,7 @@
 │   │   │   ├── 7bb204a93a00bb4d1279c6b2ef3eee96685470
 │   │   │   └── ca1dc1c49e503f176f33b33cac7a606c22cf62
 │   │   ├── 0e
+│   │   │   ├── 3475a855db93380334c8840c9180e3824b2b10
 │   │   │   ├── 619a254f5c21e94cfb36d762d59a9b20948c77
 │   │   │   └── f8ca44aeac1b9223d788546ea782517df1ca46
 │   │   ├── 0f
@@ -98,6 +99,7 @@
 │   │   │   └── 46a9d8db7b2ca2850462936983e253df24e6d1
 │   │   ├── 1b
 │   │   │   ├── 32c23f8d4b10ff4f03afb1c9279e0eeb154869
+│   │   │   ├── 379ef1429d8004c27581d7943fe7887924d821
 │   │   │   └── e6ce77b3670af6a07285abb9c064c87794e33d
 │   │   ├── 1c
 │   │   │   ├── 286b81480410ad234eed0507256f0bb9bf620c
@@ -119,7 +121,9 @@
 │   │   │   ├── 43092283c06b6299dc0dfd55221be35b550088
 │   │   │   └── 47a7afff76709e629f40be5531d0e7e79716f2
 │   │   ├── 23
-│   │   │   └── cf565b79e2bb5c5a9aeb69bdb41f9b6edb7eac
+│   │   │   ├── 7ca57af077bf80a5717b535a0e076aa105672e
+│   │   │   ├── cf565b79e2bb5c5a9aeb69bdb41f9b6edb7eac
+│   │   │   └── dea7d620a482c827cb0519f6cacf0b87737cc8
 │   │   ├── 24
 │   │   │   └── deb80b7b19ceace3c00f3fa8531168eb0a92db
 │   │   ├── 25
@@ -133,6 +137,8 @@
 │   │   │   └── f4e7859e72bbb77305fcba7153b444b10f7740
 │   │   ├── 2b
 │   │   │   └── 3e0280eb7a147dd431991f81b7dce9664eee71
+│   │   ├── 2c
+│   │   │   └── d5e0b14d0fe3e209afc30dc21d16a5772f4a24
 │   │   ├── 2d
 │   │   │   └── 247fb970fb8e8021881fc25cc6fff0afa901a2
 │   │   ├── 2e
@@ -149,6 +155,7 @@
 │   │   │   ├── 8f55610555e0960d74d75b3256f0df2a8b687e
 │   │   │   └── a72c741ea9921ba73631a5409188afcdcd4d90
 │   │   ├── 33
+│   │   │   ├── 4c1a7d9561efd4560e15e2aab3484aad5246a8
 │   │   │   └── cf17176bd0e479be5b5670426e1192e84f3217
 │   │   ├── 36
 │   │   │   └── 0c067033a66f29d69427f4da0d01d5a7b3a7dc
@@ -196,7 +203,8 @@
 │   │   │   ├── 4855f06470a23a0d5cf2ea25e2da82a1540cfd
 │   │   │   └── 8eee1e8ef7152579fc90f2409c9c429510b545
 │   │   ├── 4e
-│   │   │   └── 3c8e95ba4172c5670ac531042b2ac8e0382447
+│   │   │   ├── 3c8e95ba4172c5670ac531042b2ac8e0382447
+│   │   │   └── c81a82df998eae1ba6b5591d1ae842340fe27e
 │   │   ├── 4f
 │   │   │   ├── 08a0a84f8b01e42efffef38f8bfdf21874c497
 │   │   │   ├── 0d6ccadccc423861c73ebfd2963fb0965b003d
@@ -213,7 +221,8 @@
 │   │   ├── 53
 │   │   │   ├── 57a0a32ab59ce19dd14d6c63613557a3e59031
 │   │   │   ├── 71e2b763c86a89a4f046bcd1af54fe99d3419e
-│   │   │   └── c110d62cb0711f2b687fb443f9981ad2559a62
+│   │   │   ├── c110d62cb0711f2b687fb443f9981ad2559a62
+│   │   │   └── f962a75366c127c5e8581c0873d1ba0f4bdd8b
 │   │   ├── 54
 │   │   │   └── 537d3713861493a92c6f4af7efa71c98f15ae0
 │   │   ├── 55
@@ -301,6 +310,7 @@
 │   │   │   └── 65fc753eeac913bb641df0a6f69a850f3e138d
 │   │   ├── 74
 │   │   │   ├── 1019cb8f1191138c79e8dcb33638be644252fa
+│   │   │   ├── 2fb3220b24a8fba6f66668c72b1f58822a4f69
 │   │   │   └── f09b8761bd3d626e75f49d412368f3b150d8a7
 │   │   ├── 76
 │   │   │   ├── 117269875ad900dacbe35277d054f6953f1c01
@@ -308,7 +318,8 @@
 │   │   │   ├── d08418847da2079bb4c69c9ea948a68853a7f9
 │   │   │   └── e95fb4b6e4c5654be111513dc0d8c177c18f9a
 │   │   ├── 77
-│   │   │   └── be27b11c41804f9fbc55e670575e63e6d9987e
+│   │   │   ├── be27b11c41804f9fbc55e670575e63e6d9987e
+│   │   │   └── f2c863931de3315fd10112fba277debb597ddc
 │   │   ├── 78
 │   │   │   └── 2055e28d04329924347ba4e556c1c0a3ee2428
 │   │   ├── 79
@@ -355,7 +366,8 @@
 │   │   │   ├── 2eb8c4150d6be0f8a006c04adf70a404c0e1a9
 │   │   │   └── fe85eecbac5e64bce44d9ee428bff113d73489
 │   │   ├── 87
-│   │   │   └── 9a8b12ed0120a801d8e77cae2ba30e145ca0fb
+│   │   │   ├── 9a8b12ed0120a801d8e77cae2ba30e145ca0fb
+│   │   │   └── cdb521cfacbbb5378b3dbe1461a15e41efae89
 │   │   ├── 88
 │   │   │   ├── 713b7f07649b6749464768b227322b23fc76c5
 │   │   │   ├── a8fd1a1e48ac9f97a39ed8c91c8e421ee38461
@@ -385,6 +397,7 @@
 │   │   ├── 93
 │   │   │   ├── 4af1d163c76eb8c1a1718aecb7917d5b1f6caf
 │   │   │   ├── 7210ce792098cf8db5e1c1b0f0db99f99c2774
+│   │   │   ├── 83973d44d8e883abfc9eab9274140c9a521647
 │   │   │   └── b4fcddd5dbe909c0766ba983013da2d8d0a8a5
 │   │   ├── 94
 │   │   │   └── f509958225fdf03c68f34dcda2c96cbf38c464
@@ -419,7 +432,8 @@
 │   │   │   └── ceac36f4438627b7af5b7ba5cc0e8b7a39f490
 │   │   ├── 9d
 │   │   │   ├── 1357d232d5fa5908d1fa84584f2757162d8183
-│   │   │   └── 3e656beacd5a2ba55668333aa37e007689a892
+│   │   │   ├── 3e656beacd5a2ba55668333aa37e007689a892
+│   │   │   └── 609201210e803b0cdd1a3fa95824e3e318cc58
 │   │   ├── 9e
 │   │   │   ├── 3a36e540d8e015fced2c9b730cd454e7782ea7
 │   │   │   └── 4111bd9e7547d11448f2b65b7426490d59fd83
@@ -429,6 +443,8 @@
 │   │   │   └── 29f1e1433761df62dd965d9ddd168a5806037a
 │   │   ├── a1
 │   │   │   └── 44d493e4cfe3ce2b5e2278b366fef8a00d73e7
+│   │   ├── a2
+│   │   │   └── 1ec15242041737c1b66b564cfec7cfee5d695d
 │   │   ├── a3
 │   │   │   ├── 2912158231e2153de449fac334b8d0265fed53
 │   │   │   ├── b7f55b39aefaf32ba8ffda622bbfd66fd8518d
@@ -452,6 +468,7 @@
 │   │   │   ├── b4d028271d1c88e0a581027f19805694f30e71
 │   │   │   └── e985d944d29a2f900d1077e0874b5894be6d6f
 │   │   ├── aa
+│   │   │   ├── 3c91758440d033649308c349569e06e70a8c5c
 │   │   │   ├── 568005e9d3f8298bcc9330abc7f9a2f2016621
 │   │   │   ├── 6b0dc7c51fc6b63693117309126eae134c9b5d
 │   │   │   └── a49fa4e9cc185efeb248213e77542dcbb96b67
@@ -499,7 +516,8 @@
 │   │   ├── b7
 │   │   │   └── c602cda94e2b639028ea11c35f40cdf91e933f
 │   │   ├── b8
-│   │   │   └── 0e8481c7b4344b1dd74f4cb05bb6c3a9fee0b8
+│   │   │   ├── 0e8481c7b4344b1dd74f4cb05bb6c3a9fee0b8
+│   │   │   └── ccf7f5bad6c30be08aa078b9c03a241219056e
 │   │   ├── b9
 │   │   │   ├── 33ed3b74545daca441beec9c8ca840b58c5053
 │   │   │   ├── 56ca5ba4012f7d36d9c20c8a2ce2ab60490328
@@ -560,9 +578,11 @@
 │   │   │   └── e6592b20e0335b5b47a6c9ee10d1a010c72c21
 │   │   ├── c9
 │   │   │   ├── 2bfd46a790eced54f205d8b985669fc52f589a
+│   │   │   ├── 368109791eaec29ce1f8eb8465a8fa3fb2997f
 │   │   │   └── aaf10499d408cf3de806946d302009d9f9559a
 │   │   ├── ca
 │   │   │   ├── 19045fa50f71d7376be581793cc587c1569c35
+│   │   │   ├── 4efae95c60183cbb5e35324bb06934ebcf8ea0
 │   │   │   └── eee767bedcb7c6cce69aa93c6d4472d53dcf5d
 │   │   ├── cb
 │   │   │   └── f3cb43a82373407d52fa6f7a4c73fd76f54730
@@ -576,6 +596,7 @@
 │   │   │   └── b31bbb9542d37e2c0ef60b3a7ef7408abe2aff
 │   │   ├── cf
 │   │   │   ├── 35dee52c83da6c0a29a7815c30eb9d7f698344
+│   │   │   ├── 94e9a6c89985bed7efd9730ac8378091abfc73
 │   │   │   ├── 95c61e9512069a6913da2f4a62c2929442d3a7
 │   │   │   └── e0355d3f19e53690d711f2c96ca31eba5ba12b
 │   │   ├── d0
@@ -692,7 +713,10 @@
 │   │   ├── f8
 │   │   │   └── df8d9d82b336d1297e3c19c2b8d6150b811ffe
 │   │   ├── f9
-│   │   │   └── 01d7fd3be28d3d12d9bf3d7426dfc7d515f554
+│   │   │   ├── 01d7fd3be28d3d12d9bf3d7426dfc7d515f554
+│   │   │   └── 1bf9294e7f4825b450f8d8c08844898812343b
+│   │   ├── fa
+│   │   │   └── 3e55efc29f79378672ddcf84c598a936aba715
 │   │   ├── fb
 │   │   │   └── ce24d812ad0324d818e3292ca62710c5edfa74
 │   │   ├── fc
@@ -739,16 +763,8 @@
 │   │   ├── eslint
 │   │   │   └── .cache_eifgds (hidden)
 │   │   ├── images
-│   │   │   ├── G8pJRlJo2mOe6n494FZoZezoiRwvcBa8B2h206dKxDU=
-│   │   │   │   └── 60.1727955424483.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
-│   │   │   ├── mcrmPMMFbAngXWBBHSg7ll8OpXPyRGdPJP9GAkqUW7M=
-│   │   │   │   └── 60.1727902922450.cKW4mWxkCd4byZ63cEOrPXv5DKMf7AqeyYh1T1BfcmY=.webp
-│   │   │   ├── Ui7DBF75XFtBHm4FS8Hrw+TgWdYpGWHSWnWMEInFtMg=
-│   │   │   │   └── 60.1728210268591.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
-│   │   │   ├── uLE19DzZg-yhKgjDZlDHqExJdgsogyPmzEVIkfb7v3Y=
-│   │   │   │   └── 60.1727956215498.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
-│   │   │   └── ySj6MQo4QLmdgwg19Tb6pElfW6ELUM+Z0YcEg9LO5d8=
-│   │   │       └── 60.1727951420066.Y2ork9ezUQ8gnQy8CssW3jTPK1t4GK935TsNWsaNDXU=.webp
+│   │   │   └── Ui7DBF75XFtBHm4FS8Hrw+TgWdYpGWHSWnWMEInFtMg=
+│   │   │       └── 60.1728486482813.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   ├── swc
 │   │   │   └── plugins
 │   │   │       └── v7_macos_aarch64_0.106.15
@@ -763,8 +779,6 @@
 │   │   │   │   ├── 14.pack.gz
 │   │   │   │   ├── 15.pack.gz
 │   │   │   │   ├── 16.pack.gz
-│   │   │   │   ├── 17.pack.gz
-│   │   │   │   ├── 18.pack.gz
 │   │   │   │   ├── 2.pack.gz
 │   │   │   │   ├── 3.pack.gz
 │   │   │   │   ├── 4.pack.gz
@@ -777,14 +791,19 @@
 │   │   │   │   └── index.pack.gz.old
 │   │   │   ├── client-development-fallback
 │   │   │   │   ├── 0.pack.gz
-│   │   │   │   ├── 1.pack.gz
-│   │   │   │   ├── 1.pack.gz_
 │   │   │   │   ├── index.pack.gz
 │   │   │   │   └── index.pack.gz.old
 │   │   │   ├── client-production
 │   │   │   │   ├── 0.pack
 │   │   │   │   ├── 1.pack
 │   │   │   │   ├── 2.pack
+│   │   │   │   ├── 3.pack
+│   │   │   │   ├── 4.pack
+│   │   │   │   ├── 5.pack
+│   │   │   │   ├── 6.pack
+│   │   │   │   ├── 7.pack
+│   │   │   │   ├── 8.pack
+│   │   │   │   ├── 9.pack
 │   │   │   │   ├── index.pack
 │   │   │   │   └── index.pack.old
 │   │   │   ├── edge-server-production
@@ -800,12 +819,7 @@
 │   │   │   │   ├── 14.pack.gz
 │   │   │   │   ├── 15.pack.gz
 │   │   │   │   ├── 16.pack.gz
-│   │   │   │   ├── 17.pack.gz
-│   │   │   │   ├── 18.pack.gz
-│   │   │   │   ├── 19.pack.gz
 │   │   │   │   ├── 2.pack.gz
-│   │   │   │   ├── 20.pack.gz
-│   │   │   │   ├── 21.pack.gz
 │   │   │   │   ├── 3.pack.gz
 │   │   │   │   ├── 4.pack.gz
 │   │   │   │   ├── 5.pack.gz
@@ -817,17 +831,17 @@
 │   │   │   │   └── index.pack.gz.old
 │   │   │   └── server-production
 │   │   │       ├── 0.pack
-│   │   │       └── index.pack
+│   │   │       ├── 1.pack
+│   │   │       ├── 2.pack
+│   │   │       ├── 3.pack
+│   │   │       ├── 4.pack
+│   │   │       ├── 5.pack
+│   │   │       ├── index.pack
+│   │   │       └── index.pack.old
 │   │   └── .tsbuildinfo (hidden)
 │   ├── server
 │   │   ├── app
-│   │   │   ├── _not-found
-│   │   │   │   ├── page.js
-│   │   │   │   └── page_client-reference-manifest.js
 │   │   │   ├── home
-│   │   │   │   ├── page.js
-│   │   │   │   └── page_client-reference-manifest.js
-│   │   │   ├── payday
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
 │   │   │   ├── piggy-bank
@@ -839,11 +853,9 @@
 │   │   │   ├── task-management
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
-│   │   │   ├── user-management
-│   │   │   │   ├── page.js
-│   │   │   │   └── page_client-reference-manifest.js
-│   │   │   ├── page.js
-│   │   │   └── page_client-reference-manifest.js
+│   │   │   └── user-management
+│   │   │       ├── page.js
+│   │   │       └── page_client-reference-manifest.js
 │   │   ├── vendor-chunks
 │   │   │   ├── @floating-ui.js
 │   │   │   ├── @radix-ui.js
@@ -875,11 +887,7 @@
 │   ├── static
 │   │   ├── chunks
 │   │   │   ├── app
-│   │   │   │   ├── _not-found
-│   │   │   │   │   └── page.js
 │   │   │   │   ├── home
-│   │   │   │   │   └── page.js
-│   │   │   │   ├── payday
 │   │   │   │   │   └── page.js
 │   │   │   │   ├── piggy-bank
 │   │   │   │   │   └── page.js
@@ -889,8 +897,7 @@
 │   │   │   │   │   └── page.js
 │   │   │   │   ├── user-management
 │   │   │   │   │   └── page.js
-│   │   │   │   ├── layout.js
-│   │   │   │   └── page.js
+│   │   │   │   └── layout.js
 │   │   │   ├── app-pages-internals.js
 │   │   │   ├── main-app.js
 │   │   │   ├── polyfills.js
@@ -911,81 +918,36 @@
 │   │   │   └── df0a9ae256c0569c-s.woff2
 │   │   └── webpack
 │   │       ├── app
-│   │       │   ├── payday
-│   │       │   │   ├── page.5582863922ae8709.hot-update.js
-│   │       │   │   ├── page.60d7f4c153cc9e90.hot-update.js
-│   │       │   │   └── page.a043465e23dc74b4.hot-update.js
 │   │       │   ├── piggy-bank
-│   │       │   │   ├── page.c3639dba1cb7b6df.hot-update.js
-│   │       │   │   └── page.f69b3c9a33aade47.hot-update.js
+│   │       │   │   ├── page.8e89f99da16ce556.hot-update.js
+│   │       │   │   └── page.b3fbd239a8944b57.hot-update.js
 │   │       │   ├── user-management
-│   │       │   │   ├── page.c3639dba1cb7b6df.hot-update.js
-│   │       │   │   └── page.f69b3c9a33aade47.hot-update.js
-│   │       │   ├── layout.25d426480ac73963.hot-update.js
-│   │       │   ├── layout.4f5c479f1fc72e9e.hot-update.js
-│   │       │   ├── layout.5582863922ae8709.hot-update.js
-│   │       │   ├── layout.5ab9ba78183c4f35.hot-update.js
-│   │       │   ├── layout.5f143cddf3cd476c.hot-update.js
-│   │       │   ├── layout.60d7f4c153cc9e90.hot-update.js
-│   │       │   ├── layout.7609261a653b80e2.hot-update.js
-│   │       │   ├── layout.8a61ec153d5f5493.hot-update.js
-│   │       │   ├── layout.a043465e23dc74b4.hot-update.js
-│   │       │   ├── layout.a86c06a2ad6ae79b.hot-update.js
-│   │       │   ├── layout.bed81d76648a7abc.hot-update.js
-│   │       │   ├── layout.c3639dba1cb7b6df.hot-update.js
-│   │       │   └── layout.f69b3c9a33aade47.hot-update.js
-│   │       ├── 0e2336ceac247f1e.webpack.hot-update.json
-│   │       ├── 16a65b9a4e230eac.webpack.hot-update.json
-│   │       ├── 1d8592cb2dacf017.webpack.hot-update.json
-│   │       ├── 25d426480ac73963.webpack.hot-update.json
-│   │       ├── 452a43446be8c6b0.webpack.hot-update.json
-│   │       ├── 4f5c479f1fc72e9e.webpack.hot-update.json
-│   │       ├── 5582863922ae8709.webpack.hot-update.json
-│   │       ├── 56c892018c6ecaaa.webpack.hot-update.json
-│   │       ├── 5ab9ba78183c4f35.webpack.hot-update.json
-│   │       ├── 5f143cddf3cd476c.webpack.hot-update.json
-│   │       ├── 60d7f4c153cc9e90.webpack.hot-update.json
+│   │       │   │   └── page.8e89f99da16ce556.hot-update.js
+│   │       │   ├── layout.71dfb67c82230727.hot-update.js
+│   │       │   ├── layout.8e89f99da16ce556.hot-update.js
+│   │       │   ├── layout.b3fbd239a8944b57.hot-update.js
+│   │       │   ├── layout.c028bf6480e2c40c.hot-update.js
+│   │       │   └── layout.d85b33aa38f72f5e.hot-update.js
+│   │       ├── 344841eb222267a3.webpack.hot-update.json
 │   │       ├── 633457081244afec._.hot-update.json
-│   │       ├── 7609261a653b80e2.webpack.hot-update.json
-│   │       ├── 8a61ec153d5f5493.webpack.hot-update.json
-│   │       ├── 8acfad38a1ee0186.webpack.hot-update.json
-│   │       ├── a043465e23dc74b4.webpack.hot-update.json
-│   │       ├── a86c06a2ad6ae79b.webpack.hot-update.json
-│   │       ├── b2081c36a66a36e8.webpack.hot-update.json
-│   │       ├── bd9953acb6191f0c.webpack.hot-update.json
-│   │       ├── bed81d76648a7abc.webpack.hot-update.json
-│   │       ├── c3639dba1cb7b6df.webpack.hot-update.json
-│   │       ├── c7b6ec4487fbe527.webpack.hot-update.json
-│   │       ├── e67fb8d8dc5240b4.webpack.hot-update.json
-│   │       ├── f69b3c9a33aade47.webpack.hot-update.json
-│   │       ├── webpack.0e2336ceac247f1e.hot-update.js
-│   │       ├── webpack.16a65b9a4e230eac.hot-update.js
-│   │       ├── webpack.1d8592cb2dacf017.hot-update.js
-│   │       ├── webpack.25d426480ac73963.hot-update.js
-│   │       ├── webpack.452a43446be8c6b0.hot-update.js
-│   │       ├── webpack.4f5c479f1fc72e9e.hot-update.js
-│   │       ├── webpack.5582863922ae8709.hot-update.js
-│   │       ├── webpack.56c892018c6ecaaa.hot-update.js
-│   │       ├── webpack.5ab9ba78183c4f35.hot-update.js
-│   │       ├── webpack.5f143cddf3cd476c.hot-update.js
-│   │       ├── webpack.60d7f4c153cc9e90.hot-update.js
-│   │       ├── webpack.7609261a653b80e2.hot-update.js
-│   │       ├── webpack.8a61ec153d5f5493.hot-update.js
-│   │       ├── webpack.8acfad38a1ee0186.hot-update.js
-│   │       ├── webpack.a043465e23dc74b4.hot-update.js
-│   │       ├── webpack.a86c06a2ad6ae79b.hot-update.js
-│   │       ├── webpack.b2081c36a66a36e8.hot-update.js
-│   │       ├── webpack.bd9953acb6191f0c.hot-update.js
-│   │       ├── webpack.bed81d76648a7abc.hot-update.js
-│   │       ├── webpack.c3639dba1cb7b6df.hot-update.js
-│   │       ├── webpack.c7b6ec4487fbe527.hot-update.js
-│   │       ├── webpack.e67fb8d8dc5240b4.hot-update.js
-│   │       └── webpack.f69b3c9a33aade47.hot-update.js
+│   │       ├── 71dfb67c82230727.webpack.hot-update.json
+│   │       ├── 8e89f99da16ce556.webpack.hot-update.json
+│   │       ├── b3fbd239a8944b57.webpack.hot-update.json
+│   │       ├── c028bf6480e2c40c.webpack.hot-update.json
+│   │       ├── d85b33aa38f72f5e.webpack.hot-update.json
+│   │       ├── e039a9ce8c17c3e3.webpack.hot-update.json
+│   │       ├── e50bfedd71bbb5b0.webpack.hot-update.json
+│   │       ├── webpack.344841eb222267a3.hot-update.js
+│   │       ├── webpack.71dfb67c82230727.hot-update.js
+│   │       ├── webpack.8e89f99da16ce556.hot-update.js
+│   │       ├── webpack.b3fbd239a8944b57.hot-update.js
+│   │       ├── webpack.c028bf6480e2c40c.hot-update.js
+│   │       ├── webpack.d85b33aa38f72f5e.hot-update.js
+│   │       ├── webpack.e039a9ce8c17c3e3.hot-update.js
+│   │       └── webpack.e50bfedd71bbb5b0.hot-update.js
 │   ├── types
 │   │   ├── app
 │   │   │   ├── home
-│   │   │   │   └── page.ts
-│   │   │   ├── payday
 │   │   │   │   └── page.ts
 │   │   │   ├── piggy-bank
 │   │   │   │   └── page.ts
@@ -995,8 +957,7 @@
 │   │   │   │   └── page.ts
 │   │   │   ├── user-management
 │   │   │   │   └── page.ts
-│   │   │   ├── layout.ts
-│   │   │   └── page.ts
+│   │   │   └── layout.ts
 │   │   └── package.json
 │   ├── app-build-manifest.json
 │   ├── build-manifest.json
@@ -1005,8 +966,16 @@
 │   └── trace
 ├── .vscode (hidden)
 │   └── extensions.json
+├── __mocks__
 ├── app
 │   ├── api
+│   │   ├── __tests__
+│   │   ├── completed-tasks
+│   │   ├── payday
+│   │   │   ├── [userId]
+│   │   │   └── transactions
+│   │   ├── piggybank-accounts
+│   │   ├── piggybank-transactions
 │   │   ├── tasks
 │   │   │   ├── [id]
 │   │   │   │   ├── toggle
@@ -1015,6 +984,7 @@
 │   │   │   └── route.ts
 │   │   └── users
 │   │       └── route.ts
+│   ├── completed-tasks
 │   ├── fonts
 │   │   ├── GeistMonoVF.woff
 │   │   └── GeistVF.woff
@@ -1024,7 +994,6 @@
 │   │   └── page.tsx
 │   ├── lib
 │   │   └── mockDb.ts
-│   ├── pages
 │   ├── payday
 │   │   └── page.tsx
 │   ├── piggy-bank
@@ -1044,12 +1013,12 @@
 │   ├── layout.tsx
 │   └── page.tsx
 ├── components
-│   ├── TaskCompletion
-│   │   ├── TaskCompletionPage.tsx
-│   │   ├── TaskGrid.tsx
-│   │   ├── TouchTaskGrid.tsx
-│   │   ├── TouchUserRow.tsx
-│   │   └── UserRow.tsx
+│   ├── task-completion
+│   │   ├── task-completion-page.tsx
+│   │   ├── task-grid.tsx
+│   │   ├── touch-task-grid.tsx
+│   │   ├── touch-user-row.tsx
+│   │   └── user-row.tsx
 │   ├── ui
 │   │   ├── button.tsx
 │   │   ├── card.tsx
@@ -1071,7 +1040,7 @@
 │   ├── add-task-modal.tsx
 │   ├── add-user-modal.tsx
 │   ├── app-shell.tsx
-│   ├── ClientLayout.tsx
+│   ├── client-layout.tsx
 │   ├── completed-task-card.tsx
 │   ├── delete-confirmation-modal.tsx
 │   ├── edit-task-modal.tsx
@@ -1081,17 +1050,15 @@
 │   ├── icon-component.tsx
 │   ├── icon-selector-modal.tsx
 │   ├── icon-selector.tsx
-│   ├── Layout.tsx
+│   ├── layout.tsx
 │   ├── main-content.tsx
-│   ├── Navigation.tsx
-│   ├── payday-interface.tsx
+│   ├── navigation.tsx
 │   ├── payday.tsx
 │   ├── piggy-bank.tsx
 │   ├── select-icon-modal.tsx
 │   ├── select-sound-modal.tsx
 │   ├── select-user-sound-modal.tsx
 │   ├── sidebar.tsx
-│   ├── task-completion.tsx
 │   ├── task-management.test.tsx
 │   ├── task-management.tsx
 │   ├── transactions-modal.tsx
@@ -1105,6 +1072,8 @@
 │   └── useParentChildMode.tsx
 ├── lib
 │   └── utils.ts
+├── mocks
+│   └── taskCompletionData.ts
 ├── node_modules
 │   ├── .bin (hidden)
 │   │   ├── acorn
@@ -1130,6 +1099,20 @@
 │   │   └── yaml
 │   ├── .cache (hidden)
 │   │   └── prettier
+│   ├── .prisma (hidden)
+│   │   └── client
+│   │       ├── default.d.ts
+│   │       ├── default.js
+│   │       ├── edge.d.ts
+│   │       ├── edge.js
+│   │       ├── index-browser.js
+│   │       ├── index.d.ts
+│   │       ├── index.js
+│   │       ├── libquery_engine-darwin-arm64.dylib.node
+│   │       ├── package.json
+│   │       ├── schema.prisma
+│   │       ├── wasm.d.ts
+│   │       └── wasm.js
 │   ├── @adobe
 │   ├── @alloc
 │   │   └── quick-lru
@@ -6866,8 +6849,6 @@
 │   │   │   │   │   ├── node-attributes.js
 │   │   │   │   │   └── url.js
 │   │   │   │   └── index.js
-│   │   │   ├── node_modules
-│   │   │   │   └── .bin (hidden)
 │   │   │   ├── package.json
 │   │   │   └── README.md
 │   │   └── swc-darwin-arm64
@@ -6981,6 +6962,7 @@
 │   │       ├── package.json
 │   │       ├── README.md
 │   │       └── utils.js
+│   ├── @prisma
 │   ├── @radix-ui
 │   │   ├── number
 │   │   │   ├── dist
@@ -7052,6 +7034,8 @@
 │   │   │   │   ├── index.js.map
 │   │   │   │   ├── index.mjs
 │   │   │   │   └── index.mjs.map
+│   │   │   ├── node_modules
+│   │   │   │   └── @radix-ui
 │   │   │   ├── package.json
 │   │   │   └── README.md
 │   │   ├── react-compose-refs
@@ -7486,6 +7470,8 @@
 │   │   │   │   ├── index.js.map
 │   │   │   │   ├── index.mjs
 │   │   │   │   └── index.mjs.map
+│   │   │   ├── node_modules
+│   │   │   │   └── @radix-ui
 │   │   │   ├── package.json
 │   │   │   └── README.md
 │   │   ├── react-portal
@@ -15068,11 +15054,6 @@
 │   │   ├── package.json
 │   │   └── README.md
 │   ├── eslint-config-next
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       ├── eslint
-│   │   │       ├── tsc
-│   │   │       └── tsserver
 │   │   ├── core-web-vitals.js
 │   │   ├── index.js
 │   │   ├── package.json
@@ -16698,9 +16679,6 @@
 │   │   ├── package.json
 │   │   └── README.md
 │   ├── invariant
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       └── loose-envify
 │   │   ├── browser.js
 │   │   ├── CHANGELOG.md
 │   │   ├── invariant.js
@@ -28399,9 +28377,6 @@
 │   │   │   ├── warn-once.js
 │   │   │   ├── warning.d.ts
 │   │   │   └── warning.js
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       └── nanoid
 │   │   ├── LICENSE
 │   │   ├── package.json
 │   │   └── README.md
@@ -28415,9 +28390,6 @@
 │   │   │   ├── parse-statements.js
 │   │   │   ├── process-content.js
 │   │   │   └── resolve-id.js
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       └── resolve
 │   │   ├── index.js
 │   │   ├── LICENSE
 │   │   ├── package.json
@@ -28435,8 +28407,6 @@
 │   │   └── sync.js
 │   ├── postcss-load-config
 │   │   ├── node_modules
-│   │   │   ├── .bin (hidden)
-│   │   │   │   └── yaml
 │   │   │   └── lilconfig
 │   │   │       ├── src
 │   │   │       │   ├── index.d.ts
@@ -28493,9 +28463,6 @@
 │   │   │   ├── sortAscending.js
 │   │   │   ├── tokenize.js
 │   │   │   └── tokenTypes.js
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       └── cssesc
 │   │   ├── API.md
 │   │   ├── CHANGELOG.md
 │   │   ├── LICENSE-MIT
@@ -30110,8 +30077,6 @@
 │   │   │   ├── Options.js
 │   │   │   ├── register.js
 │   │   │   └── TokenProcessor.js
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
 │   │   ├── register
 │   │   │   ├── index.js
 │   │   │   ├── js.js
@@ -30295,12 +30260,6 @@
 │   │   ├── nesting
 │   │   │   ├── index.d.ts
 │   │   │   └── index.js
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       ├── jiti
-│   │   │       ├── resolve
-│   │   │       ├── sucrase
-│   │   │       └── sucrase-node
 │   │   ├── peers
 │   │   │   └── index.js
 │   │   ├── scripts
@@ -30425,7 +30384,7 @@
 │   │   │   ├── plugin.js
 │   │   │   └── processTailwindFeatures.js
 │   │   ├── stubs
-│   │   │   ├── .gitignore (hidden)
+│   │   │   ├── .npmignore (hidden)
 │   │   │   ├── .prettierrc.json (hidden)
 │   │   │   ├── config.full.js
 │   │   │   ├── config.simple.js
@@ -30466,10 +30425,6 @@
 │   │   ├── utilities.css
 │   │   └── variants.css
 │   ├── tailwindcss-animate
-│   │   ├── node_modules
-│   │   │   └── .bin (hidden)
-│   │   │       ├── tailwind
-│   │   │       └── tailwindcss
 │   │   ├── index.d.ts
 │   │   ├── index.js
 │   │   ├── LICENSE
@@ -31568,6 +31523,9 @@
 │   └── api
 │       ├── sounds.ts
 │       └── user-sounds.ts
+├── prisma
+│   └── migrations
+│       └── 20241007135006_init
 ├── public
 │   ├── icons
 │   │   ├── activity.svg
@@ -31906,7 +31864,9 @@
 │   │   └── woosh1.mp3
 │   └── .DS_Store (hidden)
 ├── requirements
+│   ├── 2024_1009-cleanUp.md
 │   ├── _planDB.md
+│   ├── codingPrinciples.md
 │   ├── frontend_instructions.md
 │   ├── frontend_wf_task_mgt_intf.md
 │   ├── fundamental_workflow.jpg
@@ -31940,8 +31900,8 @@
 ├── postcss.config.mjs
 ├── PROJECT_STATUS.md
 ├── README.md
+├── tailwind.config.js
 ├── tailwind.config.ts
 ├── tsconfig.jest.json
 ├── tsconfig.json
-├── tsconfig.tsbuildinfo
-└── user-management.tsx
+└── tsconfig.tsbuildinfo

@@ -3,9 +3,9 @@ export interface User {
   name: string;
   role: 'parent' | 'child';
   sound: string | null;
+  soundUrl: string | null;
   birthday: string;
-  iconName: string;
-  soundUrl: string;
+  icon: string;
 }
 
-export type NewUser = Omit<User, 'id'>;
+export type CreateUserInput = Omit<User, 'id'>;

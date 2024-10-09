@@ -32,7 +32,7 @@ We welcome contributions to the Taschengeld project! This document outlines the 
 ## Project Structure
 
 - `hooks/useParentChildMode.tsx`: Contains the ParentChildModeProvider and useParentChildMode hook for managing the global Parent/Child mode state.
-- `components/ClientLayout.tsx`: A client-side wrapper component that applies the ParentChildModeProvider to the application.
+- `components/client-layout.tsx`: A client-side wrapper component that applies the ParentChildModeProvider to the application.
 
 ## Development Guidelines
 
@@ -44,7 +44,7 @@ We welcome contributions to the Taschengeld project! This document outlines the 
 
 ## Current Challenges
 
-- There are TypeScript and linter errors in some components (e.g., piggy-bank.tsx, ClientLayout.tsx) that need to be addressed.
+- There are TypeScript and linter errors in some components (e.g., piggy-bank.tsx, client-layout.tsx) that need to be addressed.
 - Type definitions for some modal components (AddFundsModal, WithdrawFundsModal, TransactionsModal) may need to be reviewed and updated.
 
 ## Questions

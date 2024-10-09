@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { UserCard } from './user-card';
 import { AddUserModal } from './add-user-modal';
 import { EditUserModal } from './edit-user-modal';
-import { User, NewUser } from '@/app/types/user';
+import { User } from '@/app/types/user';
 import { mockDb } from '@/app/lib/mockDb';
 import { Plus } from 'lucide-react';
 import { UsersIcon } from 'lucide-react';

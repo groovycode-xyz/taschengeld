@@ -105,7 +105,8 @@ body {
   gap: 1.5rem; /* Add this line to create space between user icons */
 }
 
-.task-icon, .user-icon {
+.task-icon,
+.user-icon {
   width: 120px;
   height: 120px;
   display: flex;
@@ -146,7 +147,8 @@ body {
   cursor: grabbing;
 }
 
-.task-icon:hover, .user-icon:hover {
+.task-icon:hover,
+.user-icon:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
@@ -165,8 +167,13 @@ body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .task-icon {

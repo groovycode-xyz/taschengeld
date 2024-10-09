@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { User } from '@/app/types/user';
-import { User as UserIcon } from 'lucide-react';
+import { User } from '@/types/user';
 
 interface UserRowProps {
   users: User[];
@@ -18,17 +17,18 @@ export const UserRow: React.FC<UserRowProps> = ({
   completedTaskUserId,
 }) => {
   return (
-    <div className="user-row w-full">
+    <div className="flex justify-around mt-4">
       {users.map((user) => (
         <div
           key={user.id}
-          className={`user-icon ${completedTaskUserId === user.id ? 'task-completed' : ''}`}
-          data-user-id={user.id}
           onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, user.id)}
+          className={`p-4 border rounded transition-all duration-200 ${
+            completedTaskUserId === user.id ? 'bg-green-200 scale-105' : 'hover:bg-gray-100'
+          }`}
         >
-          <UserIcon size={48} className="text-red-500" />
-          <span className="sr-only">{user.name}</span>
+          <h3 className="font-bold">{user.name}</h3>
+          <p className="text-sm">{user.role}</p>
         </div>
       ))}
     </div>

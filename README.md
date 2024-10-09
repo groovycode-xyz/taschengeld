@@ -4,14 +4,6 @@
 
 Taschengeld is an allowance tracker application designed to help families manage chores, tasks, and allowances for children. It features a user-friendly interface for both parents and children to interact with.
 
-## ⚠️ IMPORTANT RULE FOR ALL DEVELOPERS ⚠️
-
-**DO NOT ATTEMPT TO FIX LINTER ERRORS UNDER ANY CIRCUMSTANCES**
-
-**NEVER NEVER NEVER NEVER attempt to fix linter errors from now on!!!!!**
-
-This rule is crucial for maintaining the current development workflow. Linter errors are to be ignored and left as-is.
-
 ## New Features
 
 ### Piggy Bank Interface

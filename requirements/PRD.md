@@ -210,7 +210,8 @@ The application utilizes a modern, open-source, and free technology stack to ens
 - **Compatibility:** Must support touch-based interfaces (iPads, tablets) and mouse inputs.
 - **Self-Hosting:** Designed to run on a home server, homelab, or Docker container.
 - **Web-Based Application:** Accessible via web browsers with touch support.
-- **Database:** Utilize PostgreSQL for data management.
+- **Database:** Utilize PostgreSQL for robust data management and storage.
+- **ORM:** Use Prisma for database interactions and migrations.
 - **Coding Language:** Primarily JavaScript/TypeScript with Next.js and React for the frontend and backend.
 
 #### **6.3.2 Performance Requirements**
@@ -276,7 +277,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 - **Parent Mode Toggle:** Switch between Parent and Child modes with secure PIN verification.
 - **Task Creation:** Parents define tasks with details and payout values.
 - **Task Completion:** Children interact with task buttons to mark tasks as done, triggering animations and sounds.
-- **Allowance Approval:** Parents review and approve tasks, allocating funds to children’s accounts.
+- **Allowance Approval:** Parents review and approve tasks, allocating funds to children's accounts.
 - **Transaction Management:** Parents add, edit, or delete transactions as needed.
 
 ---
@@ -512,8 +513,8 @@ The application utilizes a modern, open-source, and free technology stack to ens
 ### **16.2 Backend Integration**
 
 - **Next.js API Routes:** Develop backend functionalities within the Next.js framework for seamless integration.
-- **Prisma ORM with PostgreSQL:** Manage database interactions and ensure data integrity.
-- **NextAuth.js & JWT:** Implement secure authentication mechanisms and role-based access control.
+- **PostgreSQL:** Use as the primary database for storing all application data.
+- **Prisma ORM:** Utilize for database schema management, migrations, and querying.
 
 ### **16.3 Deployment Integration**
 
@@ -561,6 +562,12 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 - Continuously gather feedback from users (family members) and implement improvements.
 - Plan for future enhancements based on user needs and project progress.
+
+### **17.8 Implement PostgreSQL Database**
+
+- Set up PostgreSQL database and update all database interactions to use Prisma ORM.
+- Migrate existing mock data to the new PostgreSQL database.
+- Update and test all API routes to ensure they work correctly with the new database setup.
 
 ---
 

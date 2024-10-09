@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { User } from '@/app/types/user';
-import { User as UserIcon } from 'lucide-react';
+import { User } from '@/types/user';
 
 interface TouchUserRowProps {
   users: User[];
@@ -16,15 +15,15 @@ export const TouchUserRow: React.FC<TouchUserRowProps> = ({
   completedTaskUserId,
 }) => {
   return (
-    <div className="user-row touch-user-row w-full">
+    <div className="flex justify-around mt-4">
       {users.map((user) => (
         <div
           key={user.id}
-          className={`user-icon ${completedTaskUserId === user.id ? 'task-completed' : ''}`}
           onTouchEnd={() => onTaskDrop(user.id)}
+          className={`p-4 border rounded ${completedTaskUserId === user.id ? 'bg-green-200' : ''}`}
         >
-          <UserIcon size={48} className="text-red-500" />
-          <span className="sr-only">{user.name}</span>
+          <h3>{user.name}</h3>
+          <p>{user.role}</p>
         </div>
       ))}
     </div>

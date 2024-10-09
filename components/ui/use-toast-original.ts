@@ -36,3 +36,14 @@ export const toast = {
   },
   // Add other toast methods as needed
 };
+
+// Replace 'any' with a more specific type
+const TOAST_LIMIT = 1 as const;
+const TOAST_REMOVE_DELAY = 1000000 as const;
+
+type ToastT = {
+  id: string;
+  title?: string;
+  description?: string;
+  action?: React.ReactNode;
+};
