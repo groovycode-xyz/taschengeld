@@ -40,18 +40,18 @@ import {
   Play,
 } from 'lucide-react';
 import { SelectUserSoundModal } from './select-user-sound-modal';
-import { User } from '@/types/user';
+import { CreateUserInput } from '@/app/types/user';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddUser: (user: Omit<User, 'id'>) => void;
+  onAddUser: (user: CreateUserInput) => void;
 }
 
 export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) {
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('');
-  const [sound, setSound] = useState<string | null>(null);
+  const [soundUrl, setSoundUrl] = useState('');
   const [birthday, setBirthday] = useState('');
   const [role, setRole] = useState<'parent' | 'child'>('child');
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
@@ -61,7 +61,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
     if (isOpen) {
       setName('');
       setIcon('');
-      setSound(null);
+      setSoundUrl('');
       setBirthday('');
       setRole('child');
     }
@@ -69,7 +69,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddUser({ name, icon, sound, birthday, role });
+    onAddUser({ name, icon, soundurl: soundUrl, birthday, role });
     onClose();
   };
 
@@ -151,7 +151,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 <Label>User Sound</Label>
                 <div className="flex items-center space-x-2">
                   <Input
-                    value={sound ? sound.toUpperCase() : 'NO SOUND'}
+                    value={soundUrl ? soundUrl.toUpperCase() : 'NO SOUND'}
                     readOnly
                     placeholder="No sound selected"
                   />
@@ -163,12 +163,12 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                   >
                     Select Sound
                   </Button>
-                  {sound && (
+                  {soundUrl && (
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(`/sounds/users/${sound}.mp3`);
+                        const audio = new Audio(`/sounds/users/${soundUrl}.mp3`);
                         audio.play();
                       }}
                       aria-label="Play Sound"
@@ -188,6 +188,15 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 >
                   {getIconComponent(icon)}
                 </Button>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="soundUrl">Sound URL</Label>
+                <Input
+                  id="soundUrl"
+                  value={soundUrl}
+                  onChange={(e) => setSoundUrl(e.target.value)}
+                  required
+                />
               </div>
             </div>
             <DialogFooter className="mt-6">
@@ -209,8 +218,8 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
       <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setSound(selectedSound)}
-        currentSound={sound}
+        onSelectSound={(selectedSound) => setSoundUrl(selectedSound || '')}
+        currentSound={soundUrl}
       />
     </>
   );

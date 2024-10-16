@@ -1,7 +1,8 @@
 import React from 'react';
+import Image from 'next/image'; // Add this import
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { IconComponent } from './icon-component'; // Add this import
+import { IconComponent } from './icon-component';
 import { User } from '@/app/types/user';
 
 interface Transaction {
@@ -54,11 +55,15 @@ export function TransactionsModal({ isOpen, onClose, transactions, user }: Trans
                 <p className="mt-2 text-sm text-gray-600">{transaction.comments}</p>
               )}
               {transaction.photo && (
-                <img
-                  src={transaction.photo}
-                  alt="Transaction"
-                  className="mt-2 max-w-full h-32 object-cover rounded"
-                />
+                <div className="mt-2 relative w-full h-32">
+                  <Image
+                    src={transaction.photo}
+                    alt="Transaction"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded"
+                  />
+                </div>
               )}
             </div>
           ))}

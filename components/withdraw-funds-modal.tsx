@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { IconComponent } from './icon-component';
 import { Camera } from 'lucide-react'; // Import the Camera icon
+import Image from 'next/image'; // Add this import
 
 interface WithdrawFundsModalProps {
   isOpen: boolean;
@@ -149,11 +150,15 @@ export function WithdrawFundsModal({
                 ref={fileInputRef}
               />
               {photo && (
-                <img
-                  src={photo}
-                  alt="Attached"
-                  className="mt-2 max-w-full h-32 object-cover rounded"
-                />
+                <div className="mt-2 relative w-full h-32">
+                  <Image
+                    src={photo}
+                    alt="Attached"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded"
+                  />
+                </div>
               )}
             </div>
           </div>

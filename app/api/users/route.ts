@@ -1,54 +1,57 @@
 import { NextResponse } from 'next/server';
-
-type User = {
-  id: string;
-  name: string;
-  icon: string;
-  sound: string | null;
-  birthday: string;
-  role: 'parent' | 'child';
-};
-
-// Mock database
-let users: User[] = [
-  {
-    id: '1',
-    name: 'Parent User',
-    icon: 'user',
-    sound: 'chime',
-    birthday: '1980-01-01',
-    role: 'parent',
-  },
-  {
-    id: '2',
-    name: 'Child User',
-    icon: 'child',
-    sound: 'bell',
-    birthday: '2010-01-01',
-    role: 'child',
-  },
-];
+import { userRepository } from '@/app/lib/userRepository';
+import { CreateUserInput } from '@/app/types/user';
 
 export async function GET() {
-  return NextResponse.json(users);
+  try {
+    const users = await userRepository.getAll();
+    return NextResponse.json(users);
+  } catch (error) {
+    console.error('Failed to fetch users:', error);
+    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
-  const newUser: Omit<User, 'id'> = await request.json();
-  const user: User = { ...newUser, id: Date.now().toString() };
-  users.push(user);
-  return NextResponse.json(user, { status: 201 });
+  try {
+    const body: CreateUserInput = await request.json();
+    console.log('Received user data:', body); // Add this line
+    const user = await userRepository.create(body);
+    return NextResponse.json(user, { status: 201 });
+  } catch (error) {
+    console.error('Failed to create user:', error);
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
+  }
 }
 
 export async function PUT(request: Request) {
-  const updatedUser: User = await request.json();
-  users = users.map((user) => (user.id === updatedUser.id ? updatedUser : user));
-  return NextResponse.json(updatedUser);
+  try {
+    const { id, ...updatedUser } = await request.json();
+    const user = await userRepository.update(id, updatedUser);
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+  }
 }
 
 export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-  users = users.filter((user) => user.id !== id);
-  return NextResponse.json({ message: 'User deleted successfully' });
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+    }
+    const success = await userRepository.delete(id);
+    if (!success) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+    return NextResponse.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Failed to delete user:', error);
+    return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
+  }
 }

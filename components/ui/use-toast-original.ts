@@ -5,7 +5,8 @@ export interface ToastProps {
   title?: string;
   description?: string;
   action?: ReactNode;
-  [key: string]: any;
+  // Use a more specific type instead of 'any'
+  [key: string]: unknown;
 }
 
 export const useToastOriginal = () => {
@@ -28,22 +29,22 @@ export const useToastOriginal = () => {
 };
 
 export const toast = {
-  success: (message: string) => {
+  success: (title: string, description?: string) => {
     // Implement success toast
+    console.log('Success toast:', title, description);
+    // You would typically call addToast here with the appropriate styling
   },
-  error: (message: string) => {
+  error: (title: string, description?: string) => {
     // Implement error toast
+    console.log('Error toast:', title, description);
+    // You would typically call addToast here with the appropriate styling
   },
   // Add other toast methods as needed
 };
 
-// Replace 'any' with a more specific type
-const TOAST_LIMIT = 1 as const;
-const TOAST_REMOVE_DELAY = 1000000 as const;
+// These constants are defined but not used.
+// If they're needed elsewhere, export them. Otherwise, consider removing them.
+export const TOAST_LIMIT = 1;
+export const TOAST_REMOVE_DELAY = 1000000;
 
-type ToastT = {
-  id: string;
-  title?: string;
-  description?: string;
-  action?: React.ReactNode;
-};
+export type ToastT = ToastProps;

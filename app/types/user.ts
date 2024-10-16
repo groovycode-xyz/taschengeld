@@ -1,11 +1,10 @@
 export interface User {
-  id: string;
+  user_id: string;
   name: string;
-  role: 'parent' | 'child';
-  sound: string | null;
-  soundUrl: string | null;
-  birthday: string;
   icon: string;
+  soundurl: string;
+  birthday: string;
+  role: 'parent' | 'child';
 }
 
-export type CreateUserInput = Omit<User, 'id'>;
+export type CreateUserInput = Omit<User, 'user_id'>;

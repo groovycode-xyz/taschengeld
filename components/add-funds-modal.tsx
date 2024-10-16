@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image'; // Add this import
 import {
   Dialog,
   DialogContent,
@@ -145,11 +146,15 @@ export function AddFundsModal({
                 ref={fileInputRef}
               />
               {photo && (
-                <img
-                  src={photo}
-                  alt="Attached"
-                  className="mt-2 max-w-full h-32 object-cover rounded"
-                />
+                <div className="mt-2 relative w-full h-32">
+                  <Image
+                    src={photo}
+                    alt="Attached"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded"
+                  />
+                </div>
               )}
             </div>
           </div>

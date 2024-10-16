@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -9,6 +6,9 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -16,128 +16,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { User } from '@/types/user'; // Updated User type import
 import { IconSelectorModal } from './icon-selector-modal';
 import { SelectUserSoundModal } from './select-user-sound-modal';
-import {
-  Baby,
-  Laugh,
-  Smile,
-  Star,
-  Heart,
-  Flower,
-  User as UserIcon,
-  Users,
-  Bird,
-  Bug,
-  Cat,
-  Dog,
-  Egg,
-  Rabbit,
-  Snail,
-  Squirrel,
-  Turtle,
-  Save,
-  X,
-  Play,
-} from 'lucide-react';
+import { User } from '@/app/types/user';
+import { Save, X, Play, Trash2 } from 'lucide-react';
 
 interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onEditUser: (user: User) => void;
+  onDeleteUser: (userId: string) => void;
   user: User;
 }
 
-export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserModalProps) {
+export function EditUserModal({
+  isOpen,
+  onClose,
+  onEditUser,
+  onDeleteUser,
+  user,
+}: EditUserModalProps) {
+  console.log('EditUserModal received user:', JSON.stringify(user, null, 2));
+
   const [name, setName] = useState(user.name);
   const [icon, setIcon] = useState(user.icon);
-  const [sound, setSound] = useState<string | null>(user.sound);
-  const [birthday, setBirthday] = useState(user.birthday);
-  const [role, setRole] = useState<'parent' | 'child'>(user.role);
+  const [soundurl, setSoundurl] = useState(user.soundurl || '');
+  const [birthday, setBirthday] = useState(user.birthday ? user.birthday.split('T')[0] : '');
+  const [role, setRole] = useState(user.role);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
-  const [nameError, setNameError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setName(user.name);
-      setIcon(user.icon);
-      setSound(user.sound);
-      setBirthday(user.birthday);
-      setRole(user.role);
-      setNameError(null); // Reset error when user changes
-    }
+    console.log('EditUserModal useEffect triggered with user:', user);
+    console.log('Setting birthday:', user.birthday ? user.birthday.split('T')[0] : '');
+    console.log('Setting soundurl:', user.soundurl || '');
+    setName(user.name);
+    setIcon(user.icon);
+    setSoundurl(user.soundurl || '');
+    setBirthday(user.birthday ? user.birthday.split('T')[0] : '');
+    setRole(user.role);
   }, [user]);
 
-  /**
-   * Handles form submission by validating inputs and invoking the onEditUser callback.
-   * @param e - The form submit event.
-   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onEditUser({ ...user, name, icon, sound, birthday, role });
+    const updatedUser = { ...user, name, icon, soundurl, birthday, role };
+    console.log('Submitting updated user:', updatedUser);
+    onEditUser(updatedUser);
     onClose();
-    resetForm();
   };
 
-  /**
-   * Resets the form state to initial values.
-   */
-  const resetForm = () => {
-    setName('');
-    setIcon('user');
-    setSound(null);
-    setBirthday('');
-    setRole('child');
-    setNameError(null);
-  };
-
-  /**
-   * Returns the appropriate icon component based on the icon name.
-   * @param iconName - The name of the icon.
-   * @returns JSX Element representing the icon.
-   */
-  const getIconComponent = (iconName: string) => {
-    const IconComponent =
-      {
-        baby: Baby,
-        laugh: Laugh,
-        smile: Smile,
-        star: Star,
-        heart: Heart,
-        flower: Flower,
-        user: UserIcon,
-        users: Users,
-        bird: Bird,
-        bug: Bug,
-        cat: Cat,
-        dog: Dog,
-        egg: Egg,
-        rabbit: Rabbit,
-        snail: Snail,
-        squirrel: Squirrel,
-        turtle: Turtle,
-      }[iconName] || UserIcon;
-    return <IconComponent className="h-6 w-6" />;
-  };
-
-  /**
-   * Handles playing the selected sound.
-   */
-  const handlePlaySound = () => {
-    if (sound) {
-      try {
-        const audio = new Audio(`/sounds/users/${sound}.mp3`);
-        audio.play();
-      } catch (error) {
-        console.error('Error playing sound:', error);
-        // Optionally, display an error message to the user
-      }
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      onDeleteUser(user.user_id);
+      onClose();
     }
   };
-
-  if (!isOpen || !user) return null;
 
   return (
     <>
@@ -148,7 +81,6 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-              {/* Name Field */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
                   Name
@@ -156,24 +88,10 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
                 <Input
                   id="name"
                   value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    if (e.target.value.trim() !== '') {
-                      setNameError(null);
-                    }
-                  }}
+                  onChange={(e) => setName(e.target.value)}
                   className="col-span-3"
-                  aria-invalid={nameError ? 'true' : 'false'}
-                  aria-describedby={nameError ? 'name-error' : undefined}
                 />
-                {nameError && (
-                  <p className="col-span-4 text-red-500 text-sm" id="name-error">
-                    {nameError}
-                  </p>
-                )}
               </div>
-
-              {/* Birthday Field */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="birthday" className="text-right">
                   Birthday
@@ -184,17 +102,14 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
                   value={birthday}
                   onChange={(e) => setBirthday(e.target.value)}
                   className="col-span-3"
-                  max={new Date().toISOString().split('T')[0]} // Prevent selecting future dates
                 />
               </div>
-
-              {/* Role Select */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="role" className="text-right">
                   Role
                 </Label>
                 <Select onValueChange={(value: 'parent' | 'child') => setRole(value)} value={role}>
-                  <SelectTrigger className="col-span-3" aria-label="Select role">
+                  <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,16 +118,17 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
                   </SelectContent>
                 </Select>
               </div>
-
-              {/* User Sound Selection */}
               <div>
                 <Label>User Sound</Label>
                 <div className="flex items-center space-x-2">
                   <Input
-                    value={sound ? sound.toUpperCase() : 'NO SOUND'}
+                    value={
+                      soundurl
+                        ? soundurl.split('/').pop()?.replace('.mp3', '').toUpperCase()
+                        : 'NO SOUND'
+                    }
                     readOnly
                     placeholder="No sound selected"
-                    aria-label="Selected sound"
                   />
                   <Button
                     type="button"
@@ -222,11 +138,14 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
                   >
                     Select Sound
                   </Button>
-                  {sound && (
+                  {soundurl && (
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={handlePlaySound}
+                      onClick={() => {
+                        const audio = new Audio(soundurl);
+                        audio.play();
+                      }}
                       aria-label="Play Sound"
                     >
                       <Play className="h-4 w-4" />
@@ -234,8 +153,6 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
                   )}
                 </div>
               </div>
-
-              {/* Icon Selection */}
               <div className="flex justify-center">
                 <Button
                   type="button"
@@ -244,49 +161,34 @@ export function EditUserModal({ isOpen, onClose, onEditUser, user }: EditUserMod
                   onClick={() => setIsIconModalOpen(true)}
                   aria-label="Select Icon"
                 >
-                  {getIconComponent(icon)}
+                  {icon}
                 </Button>
               </div>
             </div>
             <DialogFooter className="mt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  onClose();
-                  resetForm();
-                }}
-                aria-label="Cancel"
-              >
+              <Button type="button" variant="destructive" onClick={handleDelete}>
+                <Trash2 className="h-4 w-4 mr-2" /> Delete
+              </Button>
+              <Button type="button" variant="outline" onClick={onClose}>
                 <X className="h-4 w-4" />
               </Button>
-              <Button type="submit" aria-label="Save">
-                <Save className="h-4 w-4" />
+              <Button type="submit">
+                <Save className="h-4 w-4 mr-2" /> Save
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
-
-      {/* Icon Selector Modal */}
       <IconSelectorModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelectIcon={(selectedIcon) => {
-          setIcon(selectedIcon);
-          setIsIconModalOpen(false);
-        }}
+        onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
       />
-
-      {/* Sound Selector Modal */}
       <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => {
-          setSound(selectedSound);
-          setIsSoundModalOpen(false);
-        }}
-        currentSound={sound}
+        onSelectSound={(selectedSound) => setSoundurl(selectedSound || '')}
+        currentSound={soundurl}
       />
     </>
   );
