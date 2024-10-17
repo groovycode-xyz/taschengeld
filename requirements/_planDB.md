@@ -1,7 +1,7 @@
 # Database Schema and Server-Side Data Management Plan
 
 Created: 2024-07-23
-Last Updated: 2024-10-18
+Last Updated: 2024-10-17
 
 This document serves as a comprehensive plan for the server-side database and data management system for the Taschengeld project.
 
@@ -17,7 +17,6 @@ Implemented tables:
 
 Tables to be implemented:
 
-- completed_tasks
 - piggybank_accounts
 - piggybank_transactions
 
@@ -27,10 +26,11 @@ Fully Implemented:
 
 - User Management
 - Task Management
+- Task Completion (partially implemented)
 
 To be implemented:
 
-- Task Completion
+- Task Completion (to be completed)
 - Payday Interface
 - Piggy Bank Interface
 
