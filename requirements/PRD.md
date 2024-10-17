@@ -33,7 +33,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 | **Authentication** | Internal PIN-based system | Implementing role-based access control with PIN verification for parent mode |
 | **Version Control** | Git with GitHub | Managing code repositories and collaboration. |
 | **IDE** | Cursor AI using VS Code engine | Development environment with rich extensions and support. |
-| **Design & Prototyping**| Excalidraw | Designing wireframes, mockups, and interactive prototypes. |
+| **Design & Prototyping**| draw.io | Designing wireframes, mockups, and interactive prototypes. |
 
 ---
 
@@ -211,7 +211,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 - **Self-Hosting:** Designed to run on a home server, homelab, or Docker container.
 - **Web-Based Application:** Accessible via web browsers with touch support.
 - **Database:** Utilize PostgreSQL for robust data management and storage.
-- **ORM:** Use Prisma for database interactions and migrations.
+- **Database Access:** Use direct SQL queries for database interactions.
 - **Coding Language:** Primarily JavaScript/TypeScript with Next.js and React for the frontend and backend.
 
 #### **6.3.2 Performance Requirements**
@@ -514,7 +514,8 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 - **Next.js API Routes:** Develop backend functionalities within the Next.js framework for seamless integration.
 - **PostgreSQL:** Use as the primary database for storing all application data.
-- **Prisma ORM:** Utilize for database schema management, migrations, and querying.
+- **Database Access:** Use direct SQL queries for database interactions.
+- **Coding Language:** Primarily JavaScript/TypeScript with Next.js and React for the frontend and backend.
 
 ### **16.3 Deployment Integration**
 

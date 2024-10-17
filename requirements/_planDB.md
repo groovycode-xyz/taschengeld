@@ -99,7 +99,7 @@ photo VARCHAR(255)
 
 ## 5. Data Access Layer
 
-Plan to create a data access layer using an ORM (e.g., Prisma or Sequelize) or raw SQL queries.
+Plan to create a data access layer using direct SQL queries. We will not be using an ORM for this project.
 
 ## 6. Authentication and Authorization
 
@@ -115,9 +115,9 @@ Update front-end components to use the new API instead of the mock database.
 
 ## Progress Tracking
 
-- [ ] Finalize database schema
+- [x] Finalize database schema
 - [ ] Set up development database
-- [ ] Implement data access layer
+- [ ] Implement data access layer using direct SQL queries
 - [ ] Create API endpoints
 - [ ] Implement authentication and authorization
 - [ ] Develop migration scripts
@@ -129,27 +129,22 @@ Update front-end components to use the new API instead of the mock database.
 
 1. Review and finalize the proposed database schema
 2. Set up a development database environment
-3. Begin implementing the data access layer
+3. Begin implementing the data access layer using direct SQL queries
 
 ## Notes
 
-- Consider using PostgreSQL for the database due to its robustness and support for JSON data types, which could be useful for storing additional metadata.
-- Evaluate the need for additional tables or fields as the project progresses.
-- Consider implementing soft delete for relevant tables to maintain data history.
-- Plan for database indexing to optimize query performance.
+- We have decided not to use an ORM for this project. Instead, we will use direct SQL queries for database operations.
+- Consider using the `pg` library for PostgreSQL interactions in Node.js.
 - Implement proper error handling and logging in the data access layer.
 - Consider implementing database migrations for easier schema updates in the future.
-- Consider adding a 'comments' field to the piggybank_transactions table
-- Consider adding a 'photo' field to the piggybank_transactions table (as you've implemented client-side)
-- Consider adding a 'sound' field to the tasks table
-- Consider adding a 'sound' field to the users table
+- Ensure all SQL queries are properly parameterized to prevent SQL injection vulnerabilities.
+- Document all SQL queries used in the project for easier maintenance and debugging.
 
 ### To move forward with this plan, here are some suggested next steps:
 
 1. Review the proposed database schema in detail. Ensure it covers all the necessary fields and relationships for your application's current and future needs.
 2. Set up a development database environment. You might want to consider using Docker to create a consistent and easily reproducible database setup.
-3. Choose an ORM (Object-Relational Mapping) tool for your data access layer. Given that you're using Next.js, Prisma could be a good choice as it integrates well with TypeScript and provides type-safe database access.
-4. Start implementing the data access layer, beginning with the most crucial tables (like users and tasks).
-5. As you implement the data access layer, also start creating the API endpoints. You can do this incrementally, replacing the mock data with real database queries one endpoint at a time.
-6. Plan out your authentication and authorization strategy. Consider using a solution like NextAuth.js for handling user authentication.
-7. Begin updating your front-end components to use the new API endpoints instead of the mock data.
+3. Start implementing the data access layer using direct SQL queries, beginning with the most crucial tables (like users and tasks).
+4. As you implement the data access layer, also start creating the API endpoints. You can do this incrementally, replacing the mock data with real database queries one endpoint at a time.
+5. Plan out your authentication and authorization strategy. Consider using a solution like NextAuth.js for handling user authentication.
+6. Begin updating your front-end components to use the new API endpoints instead of the mock data.

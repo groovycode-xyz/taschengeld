@@ -19,43 +19,53 @@
 ## Directory Structure
 
 - `/app`
-  - `/page.tsx`
-  - `/layout.tsx`
   - `/api`
-    - `route.ts`
-    - `route.ts`
-    - `route.ts`
+  - `/completed-tasks`
+  - `/global-settings`
+  - `/home`
+  - `/lib`
+  - `/payday`
+  - `/piggy-bank`
+  - `/task-completion`
+  - `/task-management`
+  - `/types`
+  - `/user-management`
+  - `layout.tsx`
+  - `page.tsx`
 - `/components`
-  - `ui`
-    - `button.tsx`
-    - `card.tsx`
-    - `dialog.tsx`
-    - `input.tsx`
-    - `label.tsx`
-    - `table.tsx`
-- `/types`
-  - `tasks.ts`
-  - `users.ts`
+  - `/ui`
+    - (UI components)
+  - (Feature-specific components)
+- `/hooks`
+- `/prisma`
 - `/public`
   - `/images`
-    - `icons`
-    - `images`
-    - `sounds`
+  - `/sounds`
+- `/requirements`
+- `/types`
+
+## Additional Directories
+
+- `/hooks`: Contains custom React hooks used across the application.
+- `/prisma`: Used for database schema management (even though we're not using an ORM).
+- `/requirements`: Stores project documentation and requirements.
 
 ## Tech Stack
 
-| **Frontend Framework** | Next.js | Building the user interface with React, server-side rendering, and APIs. |
-| **Styling** | Tailwind CSS | Utility-first CSS for responsive and customizable designs. |
-| **UI Components** | shadcn/ui | Customizable UI components built on top of Radix UI and Tailwind CSS. |
-| **Sound Effects** | Howler.js | Managing and playing audio effects. |
-| **Backend Framework** | Next.js API Routes | Handling backend logic and APIs within the Next.js framework. |
-| **Database** | PostgreSQL | Relational database for managing users, tasks, transactions, and accounts. |
-| **ORM** | Prisma | Simplifying database interactions and managing migrations. |
-| **Authentication** | Internal PIN-based system | Implementing role-based access control with PIN verification for parent mode |
-| **Version Control** | Git with GitHub | Managing code repositories and collaboration. |
-| **IDE** | Cursor AI using VS Code engine | Development environment with rich extensions and support. |
-| **Design & Prototyping**| Excalidraw | Designing wireframes, mockups, and interactive prototypes. |
-| **Sound Effects** | Howler.js | Managing and playing audio effects. |
+| Component                | Technology                     | Purpose                                                                      |
+| ------------------------ | ------------------------------ | ---------------------------------------------------------------------------- |
+| **Frontend Framework**   | Next.js                        | Building the user interface with React, server-side rendering, and APIs.     |
+| **Styling**              | Tailwind CSS                   | Utility-first CSS for responsive and customizable designs.                   |
+| **UI Components**        | shadcn/ui                      | Customizable UI components built on top of Radix UI and Tailwind CSS.        |
+| **Sound Effects**        | Howler.js                      | Managing and playing audio effects.                                          |
+| **Backend Framework**    | Next.js API Routes             | Handling backend logic and APIs within the Next.js framework.                |
+| **Database**             | PostgreSQL                     | Relational database for managing users, tasks, transactions, and accounts.   |
+| **Database Access**      | Direct SQL queries             | Handling database operations without an ORM                                  |
+| **Authentication**       | Internal PIN-based system      | Implementing role-based access control with PIN verification for parent mode |
+| **Version Control**      | Git with GitHub                | Managing code repositories and collaboration.                                |
+| **IDE**                  | Cursor AI using VS Code engine | Development environment with rich extensions and support.                    |
+| **Design & Prototyping** | draw.io                        | Designing wireframes, mockups, and interactive prototypes.                   |
+| **Sound Effects**        | Howler.js                      | Managing and playing audio effects.                                          |
 
 ## Menus and Features
 

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added visual indicator (green icon) to the Payday interface
 - Updated task mapping to ensure compatibility with CompletedTaskCard component
 - Adjusted task handling to use 'id' instead of 'c_task_id'
+- Decided to use direct SQL queries instead of an ORM for database operations
 
 ### Fixed
 

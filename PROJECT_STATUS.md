@@ -2,6 +2,7 @@
 
 ## Recent Updates
 
+- Decided against using an ORM for database operations, opting for direct SQL queries instead.
 - Moved mock data (`mockTasks` and `mockUsers`) from `task-completion-page.tsx` to a separate file `mocks/taskCompletionData.ts` for better organization and potential reuse.
 - Updated User interface in `app/types/user.ts` to include both `sound` and `soundUrl` properties.
 - Resolved linter errors in `mocks/taskCompletionData.ts` related to User interface.
@@ -19,6 +20,7 @@
 - Ensuring consistent use of Tailwind CSS across components.
 - Ensuring all components and files are using the correct User interface.
 - Ensuring all components are using the ParentChildModeProvider correctly.
+- Planning the implementation of direct SQL queries for database operations.
 
 ## Upcoming Tasks
 
@@ -27,10 +29,27 @@
 - Ensure role-based access control functionality exists at the sidebar level.
 - Review the naming convention for touch-based components and consider a more consistent approach.
 - Ensure consistent use of either single quotes or double quotes for string literals across all files.
+- Develop SQL query templates for common database operations.
 
 ## Known Issues
 
 - Some components may still have inconsistent naming conventions or import styles.
+- The project has had significant issues with automated testing. We will avoid this by using manual testing.
+
+## Current Tasks
+
+| Task                      | Description                                      | Priority | Status      |
+| ------------------------- | ------------------------------------------------ | -------- | ----------- |
+| Implement loading states  | Add loading indicators for data fetching         | High     | In Progress |
+| Refactor components       | Ensure consistent use of ParentChildModeProvider | Medium   | To Do       |
+| Review naming conventions | Standardize component naming across the project  | Low      | To Do       |
+
+## Known Issues
+
+| Issue               | Description                                          | Priority |
+| ------------------- | ---------------------------------------------------- | -------- |
+| Inconsistent naming | Some components have inconsistent naming conventions | Medium   |
+| TypeScript errors   | Address remaining TypeScript errors in components    | High     |
 
 ## Next Steps
 
