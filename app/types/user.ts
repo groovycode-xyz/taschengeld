@@ -2,7 +2,7 @@ export interface User {
   user_id: string;
   name: string;
   icon: string;
-  soundurl: string;
+  soundurl?: string;
   birthday: string;
   role: 'parent' | 'child';
 }

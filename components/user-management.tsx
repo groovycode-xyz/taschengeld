@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserCard } from './user-card';
 import { AddUserModal } from './add-user-modal';
-import { EditUserModal } from './edit-user-modal';
 import { User, CreateUserInput } from '@/app/types/user';
 import { Plus, UsersIcon } from 'lucide-react';
 
@@ -83,11 +82,16 @@ export function UserManagement() {
 
   const handleDeleteUser = async (userId: string) => {
     try {
-      const response = await fetch(`/api/users?id=${userId}`, { method: 'DELETE' });
+      console.log('Deleting user with ID:', userId);
+      if (!userId) {
+        throw new Error('User ID is undefined');
+      }
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+      });
       if (!response.ok) throw new Error('Failed to delete user');
       setUsers((prevUsers) => prevUsers.filter((user) => user.user_id !== userId));
-      setIsEditModalOpen(false);
-      setEditingUser(null);
+      setIsEditModalOpen(false); // Close the modal after successful deletion
     } catch (error) {
       console.error('Error deleting user:', error);
       setError('Failed to delete user. Please try again.');
@@ -127,16 +131,18 @@ export function UserManagement() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAddUser={handleAddUser}
+        onDeleteUser={handleDeleteUser}
+        user={undefined}
       />
 
       {editingUser && (
-        <EditUserModal
+        <AddUserModal
           isOpen={isEditModalOpen}
           onClose={() => {
             setIsEditModalOpen(false);
             setEditingUser(null);
           }}
-          onEditUser={handleEditUser}
+          onAddUser={(updatedUser) => handleEditUser({ ...editingUser, ...updatedUser })}
           onDeleteUser={handleDeleteUser}
           user={editingUser}
         />

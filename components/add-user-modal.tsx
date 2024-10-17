@@ -35,42 +35,77 @@ import {
   Snail,
   Squirrel,
   Turtle,
-  Save,
-  X,
   Play,
+  Trash2,
 } from 'lucide-react';
 import { SelectUserSoundModal } from './select-user-sound-modal';
-import { CreateUserInput } from '@/app/types/user';
+import { CreateUserInput, User } from '@/app/types/user';
+import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddUser: (user: CreateUserInput) => void;
+  onDeleteUser: (userId: string) => void;
+  user?: User;
 }
 
-export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) {
+export function AddUserModal({
+  isOpen,
+  onClose,
+  onAddUser,
+  onDeleteUser,
+  user,
+}: AddUserModalProps) {
   const [name, setName] = useState('');
-  const [icon, setIcon] = useState('');
+  const [icon, setIcon] = useState('user');
   const [soundUrl, setSoundUrl] = useState('');
   const [birthday, setBirthday] = useState('');
   const [role, setRole] = useState<'parent' | 'child'>('child');
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && user) {
+      setName(user.name);
+      setIcon(user.icon);
+      setSoundUrl(user.soundurl || '');
+      setBirthday(user.birthday);
+      setRole(user.role);
+    } else {
       setName('');
-      setIcon('');
+      setIcon('user');
       setSoundUrl('');
       setBirthday('');
       setRole('child');
     }
-  }, [isOpen]);
+  }, [isOpen, user]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddUser({ name, icon, soundurl: soundUrl, birthday, role });
+    if (user) {
+      // If editing an existing user
+      onAddUser({ user_id: user.user_id, name, icon, soundurl: soundUrl, birthday, role });
+    } else {
+      // If adding a new user
+      onAddUser({ name, icon, soundurl: soundUrl, birthday, role });
+    }
     onClose();
+  };
+
+  const handleDelete = () => {
+    setIsDeleteConfirmationOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (user && user.user_id) {
+      onDeleteUser(user.user_id);
+      setIsDeleteConfirmationOpen(false);
+      onClose();
+    } else {
+      console.error('Cannot delete user: user ID is undefined');
+    }
   };
 
   const getIconComponent = (iconName: string) => {
@@ -102,7 +137,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New User</DialogTitle>
+            <DialogTitle>{user ? 'Edit User' : 'Add New User'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
@@ -127,6 +162,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                   value={birthday}
                   onChange={(e) => setBirthday(e.target.value)}
                   className="col-span-3"
+                  placeholder=" "
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -151,7 +187,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                 <Label>User Sound</Label>
                 <div className="flex items-center space-x-2">
                   <Input
-                    value={soundUrl ? soundUrl.toUpperCase() : 'NO SOUND'}
+                    value={soundUrl ? soundUrl.split('.')[0].toUpperCase() : 'NO SOUND'}
                     readOnly
                     placeholder="No sound selected"
                   />
@@ -168,7 +204,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(`/sounds/users/${soundUrl}.mp3`);
+                        const audio = new Audio(`/sounds/users/${soundUrl}`);
                         audio.play();
                       }}
                       aria-label="Play Sound"
@@ -189,23 +225,18 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                   {getIconComponent(icon)}
                 </Button>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="soundUrl">Sound URL</Label>
-                <Input
-                  id="soundUrl"
-                  value={soundUrl}
-                  onChange={(e) => setSoundUrl(e.target.value)}
-                  required
-                />
-              </div>
             </div>
             <DialogFooter className="mt-6">
+              {user && (
+                <Button type="button" variant="destructive" onClick={handleDelete}>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete User
+                </Button>
+              )}
               <Button type="button" variant="outline" onClick={onClose}>
-                <X className="h-4 w-4" />
+                Cancel
               </Button>
-              <Button type="submit">
-                <Save className="h-4 w-4" />
-              </Button>
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -220,6 +251,12 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
         onClose={() => setIsSoundModalOpen(false)}
         onSelectSound={(selectedSound) => setSoundUrl(selectedSound || '')}
         currentSound={soundUrl}
+      />
+      <DeleteConfirmationDialog
+        isOpen={isDeleteConfirmationOpen}
+        onClose={() => setIsDeleteConfirmationOpen(false)}
+        onConfirm={confirmDelete}
+        itemName={name}
       />
     </>
   );
