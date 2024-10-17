@@ -20,6 +20,7 @@ import { IconSelectorModal } from './icon-selector-modal';
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { User } from '@/app/types/user';
 import { Save, X, Play, Trash2 } from 'lucide-react';
+import { IconComponent } from './icon-component';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -161,19 +162,24 @@ export function EditUserModal({
                   onClick={() => setIsIconModalOpen(true)}
                   aria-label="Select Icon"
                 >
-                  {icon}
+                  <IconComponent icon={icon} />
                 </Button>
               </div>
             </div>
             <DialogFooter className="mt-6">
-              <Button type="button" variant="destructive" onClick={handleDelete}>
-                <Trash2 className="h-4 w-4 mr-2" /> Delete
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+                aria-label="Delete User"
+              >
+                <Trash2 className="h-4 w-4" />
               </Button>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={onClose} aria-label="Cancel">
                 <X className="h-4 w-4" />
               </Button>
-              <Button type="submit">
-                <Save className="h-4 w-4 mr-2" /> Save
+              <Button type="submit" aria-label="Save Changes">
+                <Save className="h-4 w-4" />
               </Button>
             </DialogFooter>
           </form>

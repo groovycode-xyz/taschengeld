@@ -96,6 +96,7 @@
 │   │   │   ├── 28ad92fd3f25e42636cb701a671388afe7e359
 │   │   │   ├── 32c0c6df6f879c5502eb2ce65b56ec0c9a84ab
 │   │   │   ├── a5a8f706bef5e42e5422b5335475e35c30a974
+│   │   │   ├── b4c6a3294e2fadb479550a35aacf61853b144f
 │   │   │   ├── c6ed6cc7b01baa98d59483e1d86722ac271b7d
 │   │   │   └── e74b00765ab23a2c14f09e5959018dbccb415d
 │   │   ├── 18
@@ -154,6 +155,7 @@
 │   │   ├── 28
 │   │   │   └── 92d28ea038bbc87592f732f2659394ccc1b403
 │   │   ├── 2a
+│   │   │   ├── 87319107eabb260ea07ebc2f11f4ea3e2dfbb8
 │   │   │   ├── a108b3529f72f9c9fc72dc84dc77ca06be15fc
 │   │   │   ├── ef9848606f81144f6dcdee1a96ad95bf10fdca
 │   │   │   └── f4e7859e72bbb77305fcba7153b444b10f7740
@@ -201,7 +203,8 @@
 │   │   │   ├── c1cf83e4a2593b04cc16ac527cd19919e444c0
 │   │   │   └── f1bfac993d3ce8429fbc0c91a895b03d253d72
 │   │   ├── 3d
-│   │   │   └── 63e7dfb0a5a85f5593e13f9c14f9b990ddb308
+│   │   │   ├── 63e7dfb0a5a85f5593e13f9c14f9b990ddb308
+│   │   │   └── aaddbd18887b083110a8183a3f51cff1bf25be
 │   │   ├── 3e
 │   │   │   └── e966db2cd3e3b3a7e5f14480acab5514d09109
 │   │   ├── 40
@@ -214,6 +217,8 @@
 │   │   │   ├── 81af977c9996074dd9778101f79d8c2230db52
 │   │   │   ├── c72fc725fab7a7793e56483f4187fbb1b5dc75
 │   │   │   └── d4434c5c5237fee2b93b285502bf10d896da70
+│   │   ├── 43
+│   │   │   └── 7a4a2ddbb5a4288b6b125b6fc13d89aef2c995
 │   │   ├── 44
 │   │   │   ├── 503579990ab2e94a11dc3372f5f3f63613e75c
 │   │   │   └── fc89cbcc2b843302248f45eb917a3a7c275861
@@ -226,7 +231,8 @@
 │   │   ├── 47
 │   │   │   ├── 2a1e9fe546dff761752ff8ff9af52a740ce01c
 │   │   │   ├── 7c099d7cec9ff397de6b58edeee5bea1ac5f4f
-│   │   │   └── 9b3f1a991999b9d71474a59b46fdfb15d83d30
+│   │   │   ├── 9b3f1a991999b9d71474a59b46fdfb15d83d30
+│   │   │   └── a7614660712e867b22ec0e1eec5133aebc6aec
 │   │   ├── 48
 │   │   │   └── 7b967344f679da208d070f3d52dc7932a8af26
 │   │   ├── 4a
@@ -235,6 +241,8 @@
 │   │   │   ├── 23e4ad82f4c2225b98324c74e2afd34e9cea20
 │   │   │   ├── 281c53f6c1b739a20c2e092f701057192018b3
 │   │   │   └── 78889f5916e08d9cbee56236567e17d9719cb0
+│   │   ├── 4c
+│   │   │   └── c68e2f00f42109a8532c6325b00dc773d2dba5
 │   │   ├── 4d
 │   │   │   ├── 3735b16ebe1611c4742aadf7344e6942aa25f6
 │   │   │   ├── 4855f06470a23a0d5cf2ea25e2da82a1540cfd
@@ -322,6 +330,7 @@
 │   │   │   ├── 4511273ad008c9974454408e665b80c9ece704
 │   │   │   └── 8046b3f0c89c39bd5f98f82680a8c7e16abbd6
 │   │   ├── 67
+│   │   │   ├── 4c65699b4cff66e36502fa94fbf00217ee7237
 │   │   │   └── ca332f4026b6a703f2465748e17a14012d1744
 │   │   ├── 69
 │   │   │   ├── 34f69a345bf23edcb2befd0839c6dfaee7dbbd
@@ -371,6 +380,7 @@
 │   │   │   ├── d08418847da2079bb4c69c9ea948a68853a7f9
 │   │   │   └── e95fb4b6e4c5654be111513dc0d8c177c18f9a
 │   │   ├── 77
+│   │   │   ├── 88f2b134c0ea1cabfd70d990eb5acf2371033b
 │   │   │   ├── be27b11c41804f9fbc55e670575e63e6d9987e
 │   │   │   └── f2c863931de3315fd10112fba277debb597ddc
 │   │   ├── 78
@@ -386,6 +396,7 @@
 │   │   │   ├── 7dc805409ea7bac298241967f5754ee3358950
 │   │   │   └── e91cf7361d75b14dc9e2d3a6b3189e82cd8671
 │   │   ├── 7d
+│   │   │   ├── 07896e355d5008625ce0a715fc0c85bf81158e
 │   │   │   ├── 58e24e7035d716311e605dbb44f052fb176645
 │   │   │   └── c75bc86d9c353cb04776752bbab997ed1325fc
 │   │   ├── 7e
@@ -414,7 +425,8 @@
 │   │   │   ├── 1104952b70aeb1231ed03e4eb6e97496daf8ae
 │   │   │   ├── 3ca2525a4d4e86fad1f73f89801ec8182e457a
 │   │   │   ├── 4a3477b2a69bd50a8aab65dc432214ef560e96
-│   │   │   └── 7f2d4c4e2cfd0b4224ccfc8897b4139147a66b
+│   │   │   ├── 7f2d4c4e2cfd0b4224ccfc8897b4139147a66b
+│   │   │   └── 97ae1b8876613ceb5df27359cf35478a4b65e0
 │   │   ├── 85
 │   │   │   ├── 5cfa1b9c227c1a157fa601071431122710bcd8
 │   │   │   ├── e49685bd09cf9e544a0100be3ed1f611ef8192
@@ -439,6 +451,7 @@
 │   │   ├── 8a
 │   │   │   └── d64cbe9a6413f9a6c0694181196079f7231690
 │   │   ├── 8b
+│   │   │   ├── 77320e59e69720b92f1706f7ab9629e76ed657
 │   │   │   └── a13dcb5707d3624425c5dfda7b7efa46d6ddc1
 │   │   ├── 8c
 │   │   │   ├── 437904462a13a45fbae654045b445bd62f62da
@@ -554,6 +567,7 @@
 │   │   │   ├── 10fed8a28014b195200152adfc40b8b8c3721d
 │   │   │   ├── 4b01ed07f73a24702cbc9b0400f51f3c0bea79
 │   │   │   ├── 7d29c4c1b031783d2b79fa62a8170f06455253
+│   │   │   ├── d368bef48a15d127121e7e97052d1e80297da4
 │   │   │   ├── d6c61454e18f640c99d117a1402b9615d380f2
 │   │   │   └── f8fa2b0c3b9fc3f8ac5dea67b4c003c3c50f3c
 │   │   ├── af
@@ -588,6 +602,7 @@
 │   │   │   ├── d2be18167cea9506e9a5e918d6eb94b38f6353
 │   │   │   └── f0653326e90197a45d31ecfc67635e14c9e0db
 │   │   ├── b7
+│   │   │   ├── 90b904b6e2e43cb4b09c0fe97215b181c2cab8
 │   │   │   └── c602cda94e2b639028ea11c35f40cdf91e933f
 │   │   ├── b8
 │   │   │   ├── 0e8481c7b4344b1dd74f4cb05bb6c3a9fee0b8
@@ -698,6 +713,7 @@
 │   │   ├── d5
 │   │   │   └── ee2e02be0f87278313638cfd95a5af2617b536
 │   │   ├── d7
+│   │   │   ├── 4368f6137f875c7651c7c5b3406e6af81e92c6
 │   │   │   └── 60b57e4acb0ae57228ad204204abc685f30d18
 │   │   ├── d8
 │   │   │   ├── 27dde94ea62fe5a2755c6c7bbb2904642512c4
@@ -730,6 +746,7 @@
 │   │   ├── e0
 │   │   │   ├── 5b3b1b1f5c48500495e28f685cbb5c2d51e1ad
 │   │   │   ├── 6a4454ab0627b0a0cc46229eaf4bac8379deb2
+│   │   │   ├── ae32b176645b7acfdfe3f2bdd509c3ef7f65b8
 │   │   │   └── b38dddd79fa8bf33008d758af12a7e326e833b
 │   │   ├── e1
 │   │   │   ├── a4c1670738f54c66751013f79ce6e739c2fb68
@@ -805,7 +822,8 @@
 │   │   │   ├── 01d7fd3be28d3d12d9bf3d7426dfc7d515f554
 │   │   │   └── 1bf9294e7f4825b450f8d8c08844898812343b
 │   │   ├── fa
-│   │   │   └── 3e55efc29f79378672ddcf84c598a936aba715
+│   │   │   ├── 3e55efc29f79378672ddcf84c598a936aba715
+│   │   │   └── d4023b56be4262cd7e9ffe05d362b05a3185be
 │   │   ├── fb
 │   │   │   └── ce24d812ad0324d818e3292ca62710c5edfa74
 │   │   ├── fc
@@ -849,25 +867,6 @@
 │   ├── index
 │   ├── ORIG_HEAD
 │   └── packed-refs
-├── .husky (hidden)
-│   └── _
-│       ├── .gitignore (hidden)
-│       ├── applypatch-msg
-│       ├── commit-msg
-│       ├── h
-│       ├── husky.sh
-│       ├── post-applypatch
-│       ├── post-checkout
-│       ├── post-commit
-│       ├── post-merge
-│       ├── post-rewrite
-│       ├── pre-applypatch
-│       ├── pre-auto-gc
-│       ├── pre-commit
-│       ├── pre-merge-commit
-│       ├── pre-push
-│       ├── pre-rebase
-│       └── prepare-commit-msg
 ├── .next (hidden)
 │   ├── cache
 │   │   ├── eslint
@@ -876,7 +875,7 @@
 │   │   │   ├── G8pJRlJo2mOe6n494FZoZezoiRwvcBa8B2h206dKxDU=
 │   │   │   │   └── 60.1729142471799.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   │   ├── Ui7DBF75XFtBHm4FS8Hrw+TgWdYpGWHSWnWMEInFtMg=
-│   │   │   │   └── 60.1729151552273.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
+│   │   │   │   └── 60.1729156520156.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   │   └── uLE19DzZg-yhKgjDZlDHqExJdgsogyPmzEVIkfb7v3Y=
 │   │   │       └── 60.1729142717145.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   ├── swc
@@ -947,6 +946,18 @@
 │   │   │   ├── home
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
+│   │   │   ├── payday
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
+│   │   │   ├── piggy-bank
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
+│   │   │   ├── task-completion
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
+│   │   │   ├── task-management
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
 │   │   │   └── user-management
 │   │   │       ├── page.js
 │   │   │       └── page_client-reference-manifest.js
@@ -983,6 +994,14 @@
 │   │   │   ├── app
 │   │   │   │   ├── home
 │   │   │   │   │   └── page.js
+│   │   │   │   ├── payday
+│   │   │   │   │   └── page.js
+│   │   │   │   ├── piggy-bank
+│   │   │   │   │   └── page.js
+│   │   │   │   ├── task-completion
+│   │   │   │   │   └── page.js
+│   │   │   │   ├── task-management
+│   │   │   │   │   └── page.js
 │   │   │   │   ├── user-management
 │   │   │   │   │   └── page.js
 │   │   │   │   └── layout.js
@@ -1007,17 +1026,33 @@
 │   │   └── webpack
 │   │       ├── app
 │   │       │   └── layout.74ccd6719e8f1910.hot-update.js
+│   │       ├── 4a5a8fec7b88f35e.webpack.hot-update.json
 │   │       ├── 633457081244afec._.hot-update.json
+│   │       ├── 744d1e93fb58f73d.webpack.hot-update.json
 │   │       ├── 74ccd6719e8f1910.webpack.hot-update.json
+│   │       ├── 8ce80c80e8970844.webpack.hot-update.json
 │   │       ├── ad7294a2f05593a8.webpack.hot-update.json
+│   │       ├── fbc482b629a01840.webpack.hot-update.json
+│   │       ├── webpack.4a5a8fec7b88f35e.hot-update.js
+│   │       ├── webpack.744d1e93fb58f73d.hot-update.js
 │   │       ├── webpack.74ccd6719e8f1910.hot-update.js
-│   │       └── webpack.ad7294a2f05593a8.hot-update.js
+│   │       ├── webpack.8ce80c80e8970844.hot-update.js
+│   │       ├── webpack.ad7294a2f05593a8.hot-update.js
+│   │       └── webpack.fbc482b629a01840.hot-update.js
 │   ├── types
 │   │   ├── app
 │   │   │   ├── api
 │   │   │   │   └── users
 │   │   │   │       └── route.ts
 │   │   │   ├── home
+│   │   │   │   └── page.ts
+│   │   │   ├── payday
+│   │   │   │   └── page.ts
+│   │   │   ├── piggy-bank
+│   │   │   │   └── page.ts
+│   │   │   ├── task-completion
+│   │   │   │   └── page.ts
+│   │   │   ├── task-management
 │   │   │   │   └── page.ts
 │   │   │   ├── user-management
 │   │   │   │   └── page.ts
@@ -33014,7 +33049,6 @@
 │   ├── manual_testing.md
 │   ├── markdown_style_guide_options.md
 │   ├── onboarding_guide.md
-│   ├── orm_comparison.md
 │   ├── overview2.jpg
 │   ├── piggy-bank.md
 │   ├── PRD.md
