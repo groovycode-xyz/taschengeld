@@ -160,7 +160,7 @@ export function TaskManagement() {
       </div>
 
       <ScrollArea className="h-[calc(100vh-200px)]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredAndSortedTasks.map((task) => (
             <Card
               key={task.task_id}
@@ -168,18 +168,12 @@ export function TaskManagement() {
                 task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
               }`}
               onClick={() => {
-                setEditingTask({
-                  ...task,
-                  icon_name: task.icon_name,
-                  sound_url: task.sound_url,
-                  payout_value: task.payout_value,
-                  is_active: task.is_active,
-                });
+                setEditingTask(task);
                 setIsEditModalOpen(true);
               }}
             >
-              <CardContent className="p-4 flex items-center space-x-4">
-                <div className="h-16 w-16 flex-shrink-0">
+              <CardContent className="p-4 flex flex-col items-center text-center">
+                <div className="h-20 w-20 mb-2">
                   <IconComponent
                     icon={task.icon_name}
                     className={`h-full w-full ${
@@ -187,20 +181,19 @@ export function TaskManagement() {
                     }`}
                   />
                 </div>
-                <div
-                  className={`flex-grow flex justify-between items-center ${
+                <h3
+                  className={`text-lg font-semibold mb-1 ${
                     task.is_active ? 'text-black' : 'text-gray-500'
-                  }`}
+                  } ${task.is_active ? '' : 'italic'}`}
                 >
-                  <h3 className={`text-lg font-bold ${task.is_active ? '' : 'italic'}`}>
-                    {task.title}
-                  </h3>
-                  <p className="text-lg font-bold">
-                    {typeof task.payout_value === 'number'
-                      ? task.payout_value.toFixed(2)
-                      : task.payout_value}
-                  </p>
-                </div>
+                  {task.title}
+                </h3>
+                <p className="text-xl font-bold text-green-600">
+                  $
+                  {typeof task.payout_value === 'number'
+                    ? task.payout_value.toFixed(2)
+                    : task.payout_value}
+                </p>
               </CardContent>
             </Card>
           ))}
