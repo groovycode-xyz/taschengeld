@@ -1,34 +1,30 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { IconComponent } from './icon-component';
 import { User } from '@/app/types/user';
+import { IconComponent } from './icon-component';
 
-type UserCardProps = {
+interface UserCardProps {
   user: User;
   onClick: () => void;
-};
+}
 
 export function UserCard({ user, onClick }: UserCardProps) {
-  console.log('UserCard received user:', JSON.stringify(user, null, 2));
-  const cardColorClass = user.role === 'parent' ? 'bg-blue-50' : 'bg-green-50';
+  const bgColor = user.role === 'parent' ? 'bg-blue-100' : 'bg-green-100';
+  const iconColor = user.role === 'parent' ? 'text-blue-700' : 'text-green-700';
 
   return (
-    <Card
-      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${cardColorClass}`}
+    <div
+      className={`${bgColor} p-4 rounded-lg shadow-md cursor-pointer transition-all hover:shadow-lg`}
       onClick={onClick}
     >
-      <CardContent className="p-4 flex items-center space-x-4">
-        <div className="h-16 w-16 flex-shrink-0">
-          <IconComponent icon={user.icon || 'user'} className="h-full w-full" />
+      <div className="flex items-center space-x-4">
+        <div className={`${iconColor} w-16 h-16 flex items-center justify-center`}>
+          <IconComponent icon={user.icon} className="w-12 h-12" />
         </div>
-        <div className="flex-grow">
-          <h3 className="text-lg font-bold">{user.name || 'Unnamed User'}</h3>
-          <p className="text-sm text-gray-600 capitalize">{user.role || 'No Role'}</p>
-          <p className="text-sm text-gray-600">Sound: {user.soundurl || 'No Sound'}</p>
-          <p className="text-sm text-gray-600">Birthday: {user.birthday || 'No Birthday'}</p>
-          <p className="text-sm text-gray-600">ID: {user.user_id}</p>
+        <div>
+          <h3 className="text-lg font-semibold">{user.name}</h3>
+          <p className="text-sm capitalize">{user.role}</p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
