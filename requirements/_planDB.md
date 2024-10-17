@@ -5,6 +5,9 @@ Last Updated: 2024-10-18
 
 This document serves as a comprehensive plan for the server-side database and data management system for the Taschengeld project.
 
+Database connection file is located at /app/lib/db.ts
+user: tged_admin
+
 ## 1. Current Data Structure
 
 Implemented tables:

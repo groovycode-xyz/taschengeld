@@ -6,17 +6,38 @@ import { TouchTaskGrid } from '@/components/task-completion/touch-task-grid';
 import { UserRow } from '@/components/task-completion/user-row';
 import { TouchUserRow } from '@/components/task-completion/touch-user-row';
 import { Task } from '@/types/task';
-import { User } from '@/types/user';
+import { User } from '@/app/types/user';
 import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
 import { CheckSquareIcon } from 'lucide-react';
-import { mockTasks, mockUsers } from '@/mocks/taskCompletionData';
+import { mockUsers } from '@/mocks/taskCompletionData';
 
 export const TaskCompletionPage: React.FC = () => {
-  const [tasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [users] = useState<User[]>(mockUsers);
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [completedTaskUserId, setCompletedTaskUserId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const isTouchDevice = useIsTouchDevice();
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch('/api/tasks');
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks');
+        }
+        const data = await response.json();
+        setTasks(data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   useEffect(() => {
     console.log('isTouchDevice:', isTouchDevice);
@@ -60,6 +81,10 @@ export const TaskCompletionPage: React.FC = () => {
     console.log(`Dropped task ${taskId} on user ${userId}`);
     handleTaskCompletion(taskId, userId);
   };
+
+  if (isLoading) {
+    return <div>Loading tasks...</div>;
+  }
 
   return (
     <div className="task-completion-page p-4">
