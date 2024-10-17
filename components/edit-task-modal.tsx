@@ -44,10 +44,10 @@ export function EditTaskModal({
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setIcon(task.iconName || 'box'); // Changed from 'cuboid' to 'box'
-      setSound(task.soundUrl);
-      setPayoutValue(task.payoutValue.toString());
-      setActiveStatus(task.isActive);
+      setIcon(task.icon_name || 'box');
+      setSound(task.sound_url);
+      setPayoutValue(task.payout_value !== undefined ? task.payout_value.toString() : '0');
+      setActiveStatus(task.is_active);
       // {{ If using assignedUser, set it here }}
       // setAssignedUser(task.assignedUser);
     }
@@ -55,16 +55,17 @@ export function EditTaskModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (task) {
-      onEditTask(task.id, {
+    if (task && task.task_id) {
+      onEditTask(task.task_id, {
         title,
         description,
-        iconName: icon,
-        soundUrl: sound,
-        payoutValue: parseFloat(payoutValue),
-        isActive: activeStatus,
-        updatedAt: new Date(),
+        icon_name: icon,
+        sound_url: sound,
+        payout_value: parseFloat(payoutValue),
+        is_active: activeStatus,
       });
+    } else {
+      console.error('Cannot update task: task_id is undefined');
     }
     onClose();
   };
@@ -85,9 +86,11 @@ export function EditTaskModal({
 
   // Add confirmDelete function to handle the actual deletion
   const confirmDelete = () => {
-    if (task) {
-      onDeleteTask(task.id);
+    if (task && task.task_id) {
+      onDeleteTask(task.task_id);
       onClose();
+    } else {
+      console.error('Cannot delete task: task_id is undefined');
     }
   };
 

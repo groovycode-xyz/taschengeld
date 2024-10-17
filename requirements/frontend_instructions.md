@@ -255,3 +255,56 @@ return (
 This approach simplifies our component structure, reduces the need for prop drilling, and keeps related logic and UI elements together. It also makes it easier for developers to understand and maintain each interface component.
 
 When creating new interface components or refactoring existing ones, please follow this structure to maintain consistency across the project.
+
+# Frontend Development Instructions
+
+## Implemented Features
+
+1. User Management
+
+   - View all users
+   - Add new user
+   - Edit existing user
+   - Delete user
+
+2. Task Management
+   - View all tasks
+   - Add new task
+   - Edit existing task
+   - Delete task
+   - Filter tasks by status (active/inactive)
+   - Sort tasks by title, payout value, or creation date
+
+## Components to be Implemented
+
+1. Task Completion Interface
+2. Payday Interface
+3. Piggy Bank Interface
+
+## Development Guidelines
+
+- Use TypeScript for all new components and functions
+- Implement proper error handling and loading states
+- Use the shadcn/ui component library for consistent styling
+- Ensure all components are responsive and accessible
+- Write unit tests for new components and functions
+
+## API Integration
+
+- All API calls should be made using the fetch API
+- Handle API errors gracefully and display user-friendly error messages
+- Use appropriate HTTP methods for different operations (GET, POST, PUT, DELETE)
+
+## State Management
+
+- Use React hooks (useState, useEffect) for local state management
+- Consider using React Context for global state if needed in the future
+
+## Next Steps
+
+1. Implement authentication and authorization on the frontend
+2. Develop the Task Completion interface
+3. Create the Payday interface
+4. Build the Piggy Bank interface
+5. Conduct thorough testing of all features
+6. Optimize performance and accessibility

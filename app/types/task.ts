@@ -1,14 +1,13 @@
 export interface Task {
-  id: string;
-  taskId: string; // Add this line
+  task_id: string;
   title: string;
   description: string;
-  iconName: string;
-  soundUrl: string | null;
-  payoutValue: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  icon_name: string;
+  sound_url: string | null;
+  payout_value: number;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export type CompletedTask = Task & {

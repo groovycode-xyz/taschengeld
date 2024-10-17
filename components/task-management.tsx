@@ -17,8 +17,6 @@ import { EditTaskModal } from './edit-task-modal';
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 
-// TaskManagement component: Manages tasks/chores for the application
-// Allows creating, editing, and toggling visibility of tasks
 export function TaskManagement() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -26,79 +24,105 @@ export function TaskManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
   const fetchTasks = async () => {
-    // Mock data for testing
-    const mockTasks: Task[] = [
-      {
-        id: '1',
-        taskId: '1', // Add taskId
-        title: 'Clean Room',
-        description: 'Tidy up the bedroom',
-        iconName: 'broom',
-        soundUrl: '/sounds/clean.mp3',
-        payoutValue: 5,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: '2',
-        taskId: '2', // Add taskId
-        title: 'Do Homework',
-        description: 'Complete all assigned homework',
-        iconName: 'book',
-        soundUrl: null,
-        payoutValue: 3.5,
-        isActive: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-    setTasks(mockTasks);
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/tasks');
+      if (!response.ok) {
+        throw new Error('Failed to fetch tasks');
+      }
+      const data = await response.json();
+      setTasks(data);
+    } catch (err) {
+      console.error('Error fetching tasks:', err);
+      setError('Failed to load tasks. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleAddTask = (newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'taskId'>) => {
-    const task: Task = {
-      ...newTask,
-      id: Date.now().toString(),
-      taskId: Date.now().toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    setTasks((prevTasks) => [...prevTasks, task]);
-    setIsAddModalOpen(false);
+  const handleAddTask = async (newTask: Omit<Task, 'task_id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const taskWithPayoutValue = {
+        ...newTask,
+        payout_value: newTask.payout_value || 0, // Provide a default value if not set
+      };
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taskWithPayoutValue),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add task');
+      }
+      const task = await response.json();
+      setTasks((prevTasks) => [...prevTasks, task]);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error('Error adding task:', error);
+      setError('Failed to add task. Please try again.');
+    }
   };
 
-  const handleEditTask = (taskId: string, updatedTask: Partial<Task>) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === taskId ? { ...task, ...updatedTask } : task))
-    );
-    setIsEditModalOpen(false);
+  const handleEditTask = async (taskId: string, updatedTask: Partial<Task>) => {
+    try {
+      console.log('Updating task:', taskId, updatedTask); // Add this log
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTask),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update task');
+      }
+      const task = await response.json();
+      setTasks((prevTasks) => prevTasks.map((t) => (t.task_id === task.task_id ? task : t)));
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.error('Error updating task:', error);
+      setError('Failed to update task. Please try again.');
+    }
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-    setIsEditModalOpen(false);
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete task');
+      }
+      setTasks((prevTasks) => prevTasks.filter((task) => task.task_id !== taskId));
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      setError('Failed to delete task. Please try again.');
+    }
   };
 
   const filteredAndSortedTasks = tasks
     .filter(
       (task) =>
         statusFilter === 'all' ||
-        (statusFilter === 'active' && task.isActive) ||
-        (statusFilter === 'inactive' && !task.isActive)
+        (statusFilter === 'active' && task.is_active) ||
+        (statusFilter === 'inactive' && !task.is_active)
     )
     .sort((a, b) => {
       if (sortBy === 'title') return a.title.localeCompare(b.title);
-      if (sortBy === 'payoutValue') return b.payoutValue - a.payoutValue;
-      if (sortBy === 'createdAt') return b.createdAt.getTime() - a.createdAt.getTime();
+      if (sortBy === 'payout_value') return b.payout_value - a.payout_value;
+      if (sortBy === 'created_at')
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       return 0;
     });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="space-y-6">
@@ -129,8 +153,8 @@ export function TaskManagement() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="title">Sort by Title</SelectItem>
-            <SelectItem value="payoutValue">Sort by Payout</SelectItem>
-            <SelectItem value="createdAt">Sort by Created Date</SelectItem>
+            <SelectItem value="payout_value">Sort by Payout</SelectItem>
+            <SelectItem value="created_at">Sort by Created Date</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -139,31 +163,43 @@ export function TaskManagement() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredAndSortedTasks.map((task) => (
             <Card
-              key={task.id}
+              key={task.task_id}
               className={`cursor-pointer transition-all duration-300 ${
-                task.isActive ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
+                task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
               }`}
               onClick={() => {
-                setEditingTask(task);
+                setEditingTask({
+                  ...task,
+                  icon_name: task.icon_name,
+                  sound_url: task.sound_url,
+                  payout_value: task.payout_value,
+                  is_active: task.is_active,
+                });
                 setIsEditModalOpen(true);
               }}
             >
               <CardContent className="p-4 flex items-center space-x-4">
                 <div className="h-16 w-16 flex-shrink-0">
                   <IconComponent
-                    icon={task.iconName}
-                    className={`h-full w-full ${task.isActive ? 'text-blue-600' : 'text-gray-400'}`}
+                    icon={task.icon_name}
+                    className={`h-full w-full ${
+                      task.is_active ? 'text-blue-600' : 'text-gray-400'
+                    }`}
                   />
                 </div>
                 <div
                   className={`flex-grow flex justify-between items-center ${
-                    task.isActive ? 'text-black' : 'text-gray-500'
+                    task.is_active ? 'text-black' : 'text-gray-500'
                   }`}
                 >
-                  <h3 className={`text-lg font-bold ${task.isActive ? '' : 'italic'}`}>
+                  <h3 className={`text-lg font-bold ${task.is_active ? '' : 'italic'}`}>
                     {task.title}
                   </h3>
-                  <p className="text-lg font-bold">{task.payoutValue.toFixed(2)}</p>
+                  <p className="text-lg font-bold">
+                    {typeof task.payout_value === 'number'
+                      ? task.payout_value.toFixed(2)
+                      : task.payout_value}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -178,7 +214,10 @@ export function TaskManagement() {
       />
       <EditTaskModal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingTask(null);
+        }}
         onEditTask={handleEditTask}
         onDeleteTask={handleDeleteTask}
         task={editingTask}

@@ -48,11 +48,10 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
     onAddTask({
       title: taskState.title,
       description: taskState.description,
-      iconName: taskState.icon,
-      soundUrl: taskState.sound,
-      payoutValue: parseFloat(taskState.payoutValue),
-      isActive: taskState.activeStatus,
-      updatedAt: new Date(),
+      icon_name: taskState.icon,
+      sound_url: taskState.sound,
+      payout_value: parseFloat(taskState.payoutValue),
+      is_active: taskState.activeStatus,
     });
     onClose();
   };
@@ -122,18 +121,19 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                   )}
                 </div>
               </div>
-              <div>
-                <Label htmlFor="payoutValue">Payout Value</Label>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="payout_value" className="text-right">
+                  Payout Value
+                </Label>
                 <Input
-                  id="payoutValue"
+                  id="payout_value"
                   type="number"
+                  step="0.01"
                   value={taskState.payoutValue}
                   onChange={(e) =>
                     setTaskState((prev) => ({ ...prev, payoutValue: e.target.value }))
                   }
-                  step="0.01"
-                  min="0"
-                  required
+                  className="col-span-3"
                 />
               </div>
               <div className="flex items-center space-x-2">
