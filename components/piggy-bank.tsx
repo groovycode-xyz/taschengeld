@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardTitle } from 'components/ui/card';
+import { Button } from 'components/ui/button';
 import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionsModal } from './transactions-modal';
-import { User } from '@/app/types/user';
-import { mockDb } from '@/app/lib/mockDb';
-import { useParentChildMode } from '@/hooks/useParentChildMode';
+import { User } from 'app/types/user';
+import { mockDb } from 'app/lib/mockDb';
 import { IconComponent } from './icon-component';
 import { PiggyBankIcon } from 'lucide-react';
 
@@ -36,7 +35,6 @@ export function PiggyBank() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
-  const { isParentMode } = useParentChildMode();
 
   useEffect(() => {
     const loadUserBalances = () => {
@@ -187,22 +185,18 @@ export function PiggyBank() {
             <div className="w-full h-px bg-gray-200 mb-4"></div>{' '}
             {/* Add this line for the separator */}
             <div className="w-full space-y-2">
-              {isParentMode && (
-                <>
-                  <Button
-                    onClick={() => handleAddFunds(userBalance.user)}
-                    className="w-full bg-green-500 hover:bg-green-600 text-white"
-                  >
-                    Add Funds
-                  </Button>
-                  <Button
-                    onClick={() => handleWithdrawFunds(userBalance.user)}
-                    className="w-full bg-red-500 hover:bg-red-600 text-white"
-                  >
-                    Withdraw Funds
-                  </Button>
-                </>
-              )}
+              <Button
+                onClick={() => handleAddFunds(userBalance.user)}
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+              >
+                Add Funds
+              </Button>
+              <Button
+                onClick={() => handleWithdrawFunds(userBalance.user)}
+                className="w-full bg-red-500 hover:bg-red-600 text-white"
+              >
+                Withdraw Funds
+              </Button>
               <Button onClick={() => handleViewTransactions(userBalance)} className="w-full">
                 View Transactions
               </Button>

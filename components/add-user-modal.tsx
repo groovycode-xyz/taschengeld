@@ -5,17 +5,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from 'components/ui/dialog';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from 'components/ui/select';
 import { IconSelectorModal } from './icon-selector-modal';
 import {
   Baby,
@@ -39,13 +39,13 @@ import {
   Trash2,
 } from 'lucide-react';
 import { SelectUserSoundModal } from './select-user-sound-modal';
-import { CreateUserInput, User } from '@/app/types/user';
+import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddUser: (user: CreateUserInput) => void;
+  onAddUser: (user: CreateUserInput | User) => void;
   onDeleteUser: (userId: string) => void;
   user?: User;
 }
@@ -84,12 +84,13 @@ export function AddUserModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const userData: CreateUserInput = { name, icon, soundurl: soundUrl, birthday, role };
     if (user) {
       // If editing an existing user
-      onAddUser({ user_id: user.user_id, name, icon, soundurl: soundUrl, birthday, role });
+      onAddUser({ ...userData, user_id: user.user_id });
     } else {
       // If adding a new user
-      onAddUser({ name, icon, soundurl: soundUrl, birthday, role });
+      onAddUser(userData);
     }
     onClose();
   };

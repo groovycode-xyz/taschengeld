@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { AppShell } from '@/components/app-shell';
+import { AppShell } from 'components/app-shell';
 
 export default function HomePage() {
   return (

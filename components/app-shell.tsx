@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sidebar } from '@/components/sidebar';
+import { Sidebar } from 'components/sidebar';
 import { SearchIcon, Settings } from 'lucide-react';
 
 interface AppShellProps {

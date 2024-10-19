@@ -5,8 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from 'components/ui/dialog';
+import { Button } from 'components/ui/button';
 
 interface DeleteConfirmationDialogProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ export function DeleteConfirmationDialog({
         <DialogHeader>
           <DialogTitle>Delete User</DialogTitle>
         </DialogHeader>
-        <p>Are you sure you want to delete the user &quot;{itemName}&quot;?</p>
+        <p>Are you sure you want to delete the user &#34;{itemName}&#34;?</p>
         <DialogFooter>
           <Button onClick={onClose} variant="outline">
             Cancel

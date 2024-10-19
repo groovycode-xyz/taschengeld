@@ -5,8 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from 'components/ui/dialog';
+import { Button } from 'components/ui/button';
 import { Play } from 'lucide-react';
 
 type SelectUserSoundModalProps = {

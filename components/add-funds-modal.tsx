@@ -6,11 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+} from 'components/ui/dialog';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
+import { Label } from 'components/ui/label';
+import { Textarea } from 'components/ui/textarea';
 import { IconComponent } from './icon-component';
 import { Camera } from 'lucide-react'; // Import the Camera icon
 

@@ -6,12 +6,8 @@ import {
   ClipboardListIcon,
   UsersIcon,
 } from 'lucide-react';
-import { Switch } from './ui/switch';
-import { useParentChildMode } from '@/hooks/useParentChildMode'; // Add this import
 
 export function Sidebar() {
-  const { isParentMode, toggleMode } = useParentChildMode(); // Use the hook here
-
   return (
     <aside className="w-64 bg-gray-100 h-full flex-shrink-0 flex flex-col">
       <nav className="mt-4 flex-grow">
@@ -52,16 +48,7 @@ export function Sidebar() {
         </Link>
       </nav>
       <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">
-            {isParentMode ? 'Parent' : 'Child'} Mode
-          </span>
-          <Switch
-            checked={isParentMode}
-            onCheckedChange={toggleMode} // Use toggleMode here
-            className="data-[state=checked]:bg-blue-600"
-          />
-        </div>
+        {/* Parent/Child mode toggle has been removed */}
       </div>
     </aside>
   );
