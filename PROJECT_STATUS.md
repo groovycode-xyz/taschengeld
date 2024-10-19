@@ -10,7 +10,6 @@
 - Removed the `app/pages` directory as we're using Next.js 13+ with the App Router.
 - Decided on React Context API for state management.
 - Confirmed the use of Tailwind CSS and Shadcn for styling and UI components.
-- Resolved linter error in `components/client-layout.tsx` by updating the ParentChildModeProvider in `hooks/useParentChildMode.tsx`.
 
 ## Current Focus
 
@@ -19,7 +18,6 @@
 - Implementing React Context API for global state management where necessary.
 - Ensuring consistent use of Tailwind CSS across components.
 - Ensuring all components and files are using the correct User interface.
-- Ensuring all components are using the ParentChildModeProvider correctly.
 - Planning the implementation of direct SQL queries for database operations.
 
 ## Upcoming Tasks
@@ -38,11 +36,10 @@
 
 ## Current Tasks
 
-| Task                      | Description                                      | Priority | Status      |
-| ------------------------- | ------------------------------------------------ | -------- | ----------- |
-| Implement loading states  | Add loading indicators for data fetching         | High     | In Progress |
-| Refactor components       | Ensure consistent use of ParentChildModeProvider | Medium   | To Do       |
-| Review naming conventions | Standardize component naming across the project  | Low      | To Do       |
+| Task                      | Description                                     | Priority | Status      |
+| ------------------------- | ----------------------------------------------- | -------- | ----------- |
+| Implement loading states  | Add loading indicators for data fetching        | High     | In Progress |
+| Review naming conventions | Standardize component naming across the project | Low      | To Do       |
 
 ## Known Issues
 
@@ -60,12 +57,22 @@
 
 ## Project Structure
 
-The project structure has been updated to follow Next.js 13+ conventions with the App Router. Key directories include:
+The project follows the Next.js 13+ conventions with the App Router. Below is a detailed overview of the key directories:
 
 - `/app`: Contains the main application logic and page components.
-- `/components`: Houses reusable React components.
-- `/types`: Stores TypeScript type definitions.
-- `/mocks`: Contains mock data for development and testing.
+  - `/lib`: Houses utility functions and database connection logic.
+  - `/types`: Stores TypeScript type definitions for consistent data structures.
+  - `/components`: Contains reusable React components used across the application.
+- `/components`: Reusable UI components that are used in various parts of the application.
+  - `Button.tsx`: A styled button component.
+  - `Header.tsx`: The application header component.
+- `/mocks`: Contains mock data for development and testing purposes.
+  - `mockDb.ts`: Mock database functions simulating backend interactions.
+- `/tests`: Includes unit and integration tests to ensure code reliability.
+  - `userRepository.test.ts`: Tests for user repository functions.
+- `/public`: Static assets like images, icons, and fonts.
+- `/styles`: Global and component-specific styles.
+- `/pages`: Next.js page components for routing.
 
 ## Git Commit Preparation Process
 

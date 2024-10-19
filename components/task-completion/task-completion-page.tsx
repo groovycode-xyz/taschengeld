@@ -9,11 +9,10 @@ import { Task } from '@/types/task';
 import { User } from '@/app/types/user';
 import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
 import { CheckSquareIcon } from 'lucide-react';
-import { mockUsers } from '@/mocks/taskCompletionData';
 
 export const TaskCompletionPage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [users] = useState<User[]>(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [completedTaskUserId, setCompletedTaskUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +36,25 @@ export const TaskCompletionPage: React.FC = () => {
     };
 
     fetchTasks();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch users');
+        }
+        const data = await response.json();
+        const childUsers = data.filter((user: User) => user.role === 'child');
+        setUsers(childUsers);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        // Handle error (e.g., show error message to user)
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   useEffect(() => {

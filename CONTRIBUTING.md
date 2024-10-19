@@ -29,11 +29,6 @@ We welcome contributions to the Taschengeld project! This document outlines the 
 - Automatic linting, type-checking, and testing have been removed from the project workflow.
 - Developers are responsible for ensuring code quality before submitting pull requests.
 
-## Project Structure
-
-- `hooks/useParentChildMode.tsx`: Contains the ParentChildModeProvider and useParentChildMode hook for managing the global Parent/Child mode state.
-- `components/client-layout.tsx`: A client-side wrapper component that applies the ParentChildModeProvider to the application.
-
 ## Development Guidelines
 
 - When adding new features, consider whether they should be restricted based on the Parent/Child mode.
