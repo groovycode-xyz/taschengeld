@@ -9,20 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added .env.local file for local environment variables
+
 
 ### Changed
 
-- Updated Task Completion interface to make it more visually appealing and simple for kids to use
-  - User cards now display user icons with smaller text for user names in both regular and touch interfaces
-  - Removed display of user roles from user cards to simplify the interface
+- Task Completion interface harmonized.  Task cards and User cards same look and feel and behavior across both touch and non-touch devices.  Icons appear as expected.  Text on each icons appear as expected. Hover over causes drop shadow for all cards as expected.
 
 ### Fixed
 
-- Database credentials were hardcoded in the /app/lib/db.ts file.
+
 
 ### Improved
 
-- Improved security by moving database credentials to .env.local
 
-## [0.1.2] - 2024-10-20
+
+## [0.1.3] - 2024-10-20

@@ -95,7 +95,9 @@ This architecture provides a modular and scalable structure for the Taschengeld 
 
 ## Known Issues
 
-There is some inconsitencies related to the /components folder. The Task Completion interface has it's own subfolder /components/task-completion containing the related .tsx files. This should eventually be refactored to align to the placement of the other interfaces (payday.tsx, piggy-bank.tsx, task-management.tsx and user-management.tsx)
+- There is some inconsitencies related to the /components folder. The Task Completion interface has it's own subfolder /components/task-completion containing the related .tsx files. This should eventually be refactored to align to the placement of the other interfaces (payday.tsx, piggy-bank.tsx, task-management.tsx and user-management.tsx)
+
+- Global state management was at one time implemented during development phase, but became problematic and has been removed. Some artifacts related to the global state (i.e.: Parent versus Child mode) may remain in the codebase.  We will come back to address this feature as it is core to the functionality of the application.
 
 ## Git Commit Preparation Process
 

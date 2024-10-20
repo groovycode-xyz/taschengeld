@@ -2,7 +2,7 @@
 
 ## Recent Updates
 
-- Implemented the .env.local file for local environment variables. Changelog revision [v.0.1.1](CHANGELOG.md).
+- - Task Completion interface harmonized.  Task cards and User cards same look and feel and behavior across both touch and non-touch devices.  Icons appear as expected.  Text on each icons appear as expected. Hover over causes drop shadow for all cards as expected. Changelog revision [v.0.1.3](CHANGELOG.md).
 
 ## Current Focus
 
