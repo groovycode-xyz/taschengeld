@@ -14,10 +14,10 @@
 
 - [ ] Make the **Task Completion** interface more visually appealing, simple for kids to use, while keeping the functionality the same.
 
-  - [ ] Task card should display it's icon, large.
-  - [ ] Task card should display the task name in small text below the icon.
-  - [ ] User card should display the user's icon.
-  - [ ] User card should display the user's name in small text below the icon.
+  - [x] Task card should display its icon, large.
+  - [x] Task card should display the task name in small text below the icon.
+  - [x] User card should display the user's icon.
+  - [x] User card should display the user's name in small text below the icon.
   - [ ] Complete the **Task Completion** interface by fixing the undesired behavior where all user cards in a user_row are acknowledging the task completion by flashing the green color.
   - [ ] Create **completed_tasks** table in the database for supporting the **Task Completion** interface and the **Payday** interface.
   - [ ] Create API endpoints for **completed_tasks** table.
@@ -29,13 +29,12 @@
   - [ ] Create **piggybank_transactions** table in the database for supporting the **Piggy Bank** interface and the **Payday** interface.
   - [ ] Create API endpoints for **piggybank_transactions** table.
   - [ ] Add functionality to the **User Management** interface to allow for adding a piggy bank account to a user, both in the **Add User** modal and the **Edit User** modal.
-    - [ ] Include logic to determine if a **piggybank_accounts** for the user already exists, and if so, to chose that account instead of creating a new one, or if it does not exist, to create a new one.
+    - [ ] Include logic to determine if a **piggybank_accounts** for the user already exists, and if so, to choose that account instead of creating a new one, or if it does not exist, to create a new one.
     - [ ] Add appropriate field to the **Add User** modal and **Edit User** modal to indicate that a **piggybank_accounts** is linked to that user.
-  - [ ] Transition the **Piggy Bank** interface from using mock data to the **piggybank_accounts** and **piggybank_transactions** tables, without losing any exiting functionality.
+  - [ ] Transition the **Piggy Bank** interface from using mock data to the **piggybank_accounts** and **piggybank_transactions** tables, without losing any existing functionality.
 
 - [ ] Complete the **Payday** interface.
-
-  - [ ] Migrate the **Payday** interface from using mock data to using the **completed_tasks** and **piggybank_transactions** tables, without losing any exiting functionality.
+  - [ ] Migrate the **Payday** interface from using mock data to using the **completed_tasks** and **piggybank_transactions** tables, without losing any existing functionality.
   - [ ] Ensure that the **Payday** interface works the same as it did when using mock data.
 
 ## Known Issues

@@ -13,8 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Migrated Database Credentials: Moved sensitive database configuration details (user, host, database, password, port) from hardcoded values to environment variables using process.env.
-- Port Conversion: Ensured the port is correctly interpreted as a number by wrapping process.env.DB_PORT with Number().
+- Updated Task Completion interface to make it more visually appealing and simple for kids to use
+  - User cards now display user icons with smaller text for user names in both regular and touch interfaces
+  - Removed display of user roles from user cards to simplify the interface
 
 ### Fixed
 
@@ -24,4 +25,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved security by moving database credentials to .env.local
 
-## [0.1.1] - 2024-10-20
+## [0.1.2] - 2024-10-20
