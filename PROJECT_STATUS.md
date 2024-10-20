@@ -2,88 +2,63 @@
 
 ## Recent Updates
 
-- Decided against using an ORM for database operations, opting for direct SQL queries instead.
-- Moved mock data (`mockTasks` and `mockUsers`) from `task-completion-page.tsx` to a separate file `mocks/taskCompletionData.ts` for better organization and potential reuse.
-- Updated User interface in `app/types/user.ts` to include both `sound` and `soundUrl` properties.
-- Resolved linter errors in `mocks/taskCompletionData.ts` related to User interface.
-- Standardized import statements to use absolute imports for consistency across the project.
-- Removed the `app/pages` directory as we're using Next.js 13+ with the App Router.
-- Decided on React Context API for state management.
-- Confirmed the use of Tailwind CSS and Shadcn for styling and UI components.
+- Implemented the .env.local file for local environment variables. Changelog revision [v.0.1.1](CHANGELOG.md).
 
 ## Current Focus
 
-- Reviewing recent changes to ensure no new issues were introduced.
-- Beginning implementation of loading states and error handling for data fetching.
-- Implementing React Context API for global state management where necessary.
-- Ensuring consistent use of Tailwind CSS across components.
-- Ensuring all components and files are using the correct User interface.
-- Planning the implementation of direct SQL queries for database operations.
+- Fixing minor UI/UX issues without losing any existing functionality.
+- Migrating all interfaces from use of mock data to using the PosgreSQL datbase. (See ## Upcoming Tasks for details.)
+- Implementing a backend API for handling CRUD operations on the database. (See ## Upcoming Tasks for details.)
 
 ## Upcoming Tasks
 
-- Implement handling of loading states or errors when fetching data (to be addressed when moving from mockDB to actual database).
-- Add pagination and filtering capability to user and task lists.
-- Ensure role-based access control functionality exists at the sidebar level.
-- Review the naming convention for touch-based components and consider a more consistent approach.
-- Ensure consistent use of either single quotes or double quotes for string literals across all files.
-- Develop SQL query templates for common database operations.
+- [ ] Make the **Task Completion** interface more visually appealing, simple for kids to use, while keeping the functionality the same.
+
+  - [ ] Task card should display it's icon, large.
+  - [ ] Task card should display the task name in small text below the icon.
+  - [ ] User card should display the user's icon.
+  - [ ] User card should display the user's name in small text below the icon.
+  - [ ] Complete the **Task Completion** interface by fixing the undesired behavior where all user cards in a user_row are acknowledging the task completion by flashing the green color.
+  - [ ] Create **completed_tasks** table in the database for supporting the **Task Completion** interface and the **Payday** interface.
+  - [ ] Create API endpoints for **completed_tasks** table.
+
+- [ ] Complete the **Piggy Bank** interface.
+
+  - [ ] Create **piggybank_accounts** table in the database for supporting the **Piggy Bank** interface.
+  - [ ] Create API endpoints for **piggybank_accounts** table.
+  - [ ] Create **piggybank_transactions** table in the database for supporting the **Piggy Bank** interface and the **Payday** interface.
+  - [ ] Create API endpoints for **piggybank_transactions** table.
+  - [ ] Add functionality to the **User Management** interface to allow for adding a piggy bank account to a user, both in the **Add User** modal and the **Edit User** modal.
+    - [ ] Include logic to determine if a **piggybank_accounts** for the user already exists, and if so, to chose that account instead of creating a new one, or if it does not exist, to create a new one.
+    - [ ] Add appropriate field to the **Add User** modal and **Edit User** modal to indicate that a **piggybank_accounts** is linked to that user.
+  - [ ] Transition the **Piggy Bank** interface from using mock data to the **piggybank_accounts** and **piggybank_transactions** tables, without losing any exiting functionality.
+
+- [ ] Complete the **Payday** interface.
+
+  - [ ] Migrate the **Payday** interface from using mock data to using the **completed_tasks** and **piggybank_transactions** tables, without losing any exiting functionality.
+  - [ ] Ensure that the **Payday** interface works the same as it did when using mock data.
 
 ## Known Issues
 
+- In the **User Management** interface
+
+  - On the **Edit User** modal
+    - The value in the **Birthday** field is not being shown from the database. The behavior is different in different browsers.
+      - On **Safari** browser, it is showing the same value for all users "10/20/2024".
+      - On **Arc** browser, it simply shows "dd.mm.yyyy" - but no numeric/date value from the database.
+    - In the area of the **User Sound**, when a sound is shown to be defined, clicking the **Play** button does not play the sound. This behavior is consistent across all browsers.
+  - On the **Add User** modal
+    - On **Safari** browser (only), the value in the **Birthday** field is pre-populated with "10/20/2024". This should not be the case. The value in the field should be "dd.mm.yyyy"
+    - In the area of the **User Sound**, when a sound is shown to be defined, clicking the **Play** button does not play the sound. This behavior is consistent across all browsers.
+
+- In the **Task Completion** interface
+
+  - When a task is **completed by dragging and dropping** the task card to a user card in the user_row, all of the user cards in the user_row are acknowledging the task completion by flashing the green color. This behavior is undesired because the desired behavior is that only the user card to which the task card was dragged and dropped will acknowledge the task completion by flashing the green color.
+
 - Some components may still have inconsistent naming conventions or import styles.
-- The project has had significant issues with automated testing. We will avoid this by using manual testing.
 
 ## Current Tasks
 
-| Task                      | Description                                     | Priority | Status      |
-| ------------------------- | ----------------------------------------------- | -------- | ----------- |
-| Implement loading states  | Add loading indicators for data fetching        | High     | In Progress |
-| Review naming conventions | Standardize component naming across the project | Low      | To Do       |
-
-## Known Issues
-
-| Issue               | Description                                          | Priority |
-| ------------------- | ---------------------------------------------------- | -------- |
-| Inconsistent naming | Some components have inconsistent naming conventions | Medium   |
-| TypeScript errors   | Address remaining TypeScript errors in components    | High     |
-
 ## Next Steps
 
-1. Continue addressing items in the cleanup checklist (2024_1009-cleanUp.md).
-2. Begin implementation of loading states and error handling for data fetching.
-3. Start work on pagination and filtering for user and task lists.
-4. Review and update any remaining documentation to reflect recent changes.
-
 ## Project Structure
-
-The project follows the Next.js 13+ conventions with the App Router. Below is a detailed overview of the key directories:
-
-- `/app`: Contains the main application logic and page components.
-  - `/lib`: Houses utility functions and database connection logic.
-  - `/types`: Stores TypeScript type definitions for consistent data structures.
-  - `/components`: Contains reusable React components used across the application.
-- `/components`: Reusable UI components that are used in various parts of the application.
-  - `Button.tsx`: A styled button component.
-  - `Header.tsx`: The application header component.
-- `/mocks`: Contains mock data for development and testing purposes.
-  - `mockDb.ts`: Mock database functions simulating backend interactions.
-- `/tests`: Includes unit and integration tests to ensure code reliability.
-  - `userRepository.test.ts`: Tests for user repository functions.
-- `/public`: Static assets like images, icons, and fonts.
-- `/styles`: Global and component-specific styles.
-- `/pages`: Next.js page components for routing.
-
-## Git Commit Preparation Process
-
-When preparing for a git commit, always follow these steps:
-
-1. Review and update the CHANGELOG.md file with any new features, changes, or fixes.
-2. Update the PROJECT_STATUS.md file to reflect the current state of the project, including any completed tasks or new known issues.
-3. Prepare a concise but descriptive commit message that summarizes the changes made.
-4. Run any linters or tests to ensure code quality and catch any potential issues.
-5. Stage the changes using `git add .`
-6. Commit the changes using `git commit -m "Your prepared commit message"`
-7. Push the changes to the remote repository using `git push origin main` (or the appropriate branch name)
-
-Following these steps ensures that the project documentation remains up-to-date and that commit messages are informative and consistent.

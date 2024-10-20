@@ -6,7 +6,7 @@ import { TouchTaskGrid } from '@/components/task-completion/touch-task-grid';
 import { UserRow } from '@/components/task-completion/user-row';
 import { TouchUserRow } from '@/components/task-completion/touch-user-row';
 import { Task } from '@/types/task';
-import { User } from '@/app/types/user';
+import { User } from '@/types/user'; // Update this import
 import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
 import { CheckSquareIcon } from 'lucide-react';
 
@@ -16,6 +16,7 @@ export const TaskCompletionPage: React.FC = () => {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [completedTaskUserId, setCompletedTaskUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const isTouchDevice = useIsTouchDevice();
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export const TaskCompletionPage: React.FC = () => {
         setTasks(data);
       } catch (error) {
         console.error('Error fetching tasks:', error);
-        // Handle error (e.g., show error message to user)
+        setError('Failed to load tasks. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -50,7 +51,7 @@ export const TaskCompletionPage: React.FC = () => {
         setUsers(childUsers);
       } catch (error) {
         console.error('Error fetching users:', error);
-        // Handle error (e.g., show error message to user)
+        setError('Failed to load users. Please try again later.');
       }
     };
 
@@ -100,8 +101,12 @@ export const TaskCompletionPage: React.FC = () => {
     handleTaskCompletion(taskId, userId);
   };
 
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
+
   if (isLoading) {
-    return <div>Loading tasks...</div>;
+    return <div className="loading-spinner">Loading...</div>;
   }
 
   return (

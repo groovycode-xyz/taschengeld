@@ -119,7 +119,13 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
   - Keep comments up-to-date when changing code.
   - Avoid commented-out code in commits; use version control instead.
 
+- **Markdown Style Guide**
+
+   - Use GitHub Flavored Markdown
+   - Link: https://github.github.com/gfm/
+
 - **README:**
+
   - Maintain an up-to-date README with setup instructions, usage, and contribution guidelines.
 
 ## Testing
@@ -137,51 +143,26 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
 
 - **Branching Strategy:**
 
-  - Use Git Flow or a similar branching model.
-  - Main branches: `main` (production), `develop` (staging).
+   - origin main
 
 - **Commit Messages:**
 
-  - Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-  - Example: `feat(auth): add JWT authentication`
+  - Main message plus comments should be use during git commit -m "<message + comments>"
 
 - **Pull Requests:**
   - Require code reviews before merging.
   - Ensure all tests pass and adhere to coding standards.
 
-## Security Practices
-
-1. **Authentication and Authorization:**
-
-   - Secure endpoints with proper authentication.
-   - Implement role-based access control if necessary.
-
-2. **Data Protection:**
-
-   - Encrypt sensitive data both in transit and at rest.
-   - Use environment variables for sensitive configurations.
-
-3. **Dependency Management:**
-   - Regularly update dependencies to patch security vulnerabilities.
-   - Use tools like `npm audit` to identify and fix vulnerabilities.
 
 ## Performance Optimization
 
 - **Frontend:**
-
-  - Lazy load components and routes.
-  - Use React.memo for performance optimization of functional components.
-  - Utilize useMemo for expensive computations.
-  - Apply useCallback for event handlers passed as props to child components.
-  - Optimize images and assets (compress, use appropriate formats).
-  - Implement code splitting to reduce initial bundle size.
+   
+   Not defined
 
 - **Backend:**
 
-  - Optimize database queries (use indexing, limit result sets).
-  - Implement caching where appropriate (e.g., Redis for frequently accessed data).
-  - Use pagination for large data sets.
-  - Optimize API responses (send only necessary data).
+   Not defined
 
 ## Accessibility
 
@@ -199,10 +180,6 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
 - Conduct regular code reviews to maintain code quality.
 - Provide constructive feedback and encourage best practices.
 
----
-
-By following these coding principles and rules, the BudgetMaster project will maintain high standards of quality, security, and performance.
-
 ## Environment-Specific Code
 
 - Use environment variables for configuration that varies between environments.
@@ -217,3 +194,7 @@ By following these coding principles and rules, the BudgetMaster project will ma
 - Follow Tailwind's utility-first approach.
 - Create custom utility classes in the Tailwind config when necessary.
 - Maintain a consistent color palette and design system using Tailwind's theme customization.
+
+---
+
+By following these coding principles and rules, the BudgetMaster project will maintain high standards of quality, security, and performance.

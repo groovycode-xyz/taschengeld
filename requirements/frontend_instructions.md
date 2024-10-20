@@ -11,10 +11,13 @@
 - `/requirements/PRD.md`
 - `/requirements/overview2.jpg`
 - `/directory_tree.txt`
+- `/requirements/TG-Wirefeame-1.jpg`
+- `/requirements/tgeld_wireframe_01.jpg`
 
 ## Project Development Phase
 
 - A mock database is implemented in `app/lib/mockDb.ts`
+- A production database is implemented using PostgreSQL:  tgeld
 
 ## Directory Structure
 
@@ -97,7 +100,7 @@
 # Rules
 
 - All new components should go into the /components/ui folder in the format of: example-component.tsx unless otherwise specified
-- Some feature-specific compnents (like payday-interface.tsx) are located directly in the /components folder
+- Some feature-specific compnents for the main interfaces (like payday.tsx) are located directly in the /components folder
 
 # Frontend Implementation Instructions
 
@@ -299,12 +302,6 @@ When creating new interface components or refactoring existing ones, please foll
    - Responsive design for various screen sizes
    - CRUD operations fully integrated with PostgreSQL database
 
-## Components to be Implemented
-
-1. Task Completion Interface
-2. Payday Interface
-3. Piggy Bank Interface
-
 ## Development Guidelines
 
 - Use TypeScript for all new components and functions
@@ -324,26 +321,3 @@ When creating new interface components or refactoring existing ones, please foll
 
 - Use React hooks (useState, useEffect) for local state management
 - Consider using React Context for global state if needed in the future
-
-## Task Management Specifics
-
-- Task cards now display in a responsive grid layout
-- Each task card shows an icon, title, and payout value
-- Task management supports filtering by status and sorting by various criteria
-- Edit and delete operations are confirmed through modal dialogs
-
-## Next Steps
-
-1. Implement authentication and authorization on the frontend
-2. Develop the Task Completion interface
-3. Create the Payday interface
-4. Build the Piggy Bank interface
-5. Conduct thorough testing of all features
-6. Optimize performance and accessibility
-
-## Recent Updates
-
-- Task Management now fully integrated with PostgreSQL database
-- Improved responsive design for task cards
-- Added confirmation modal for task deletion
-- Enhanced error handling and user feedback in Task Management interface

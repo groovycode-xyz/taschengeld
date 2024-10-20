@@ -192,6 +192,7 @@
 │   │   │   ├── 247fb970fb8e8021881fc25cc6fff0afa901a2
 │   │   │   └── 66c78573725856baea2366d3a8ea4366da87c8
 │   │   ├── 2e
+│   │   │   ├── 4bbfdf970687114b72f0cf9029f3a60efb59d3
 │   │   │   ├── 4cd0cf37c1d69a55b2c412a27b4f05512353d3
 │   │   │   ├── c46ade78e48e3dca1571b86589345c202dfdbf
 │   │   │   └── f30fcf4272e19cf6a23d07b0544027954f9627
@@ -226,6 +227,7 @@
 │   │   ├── 39
 │   │   │   └── 0e13127697599107b8cd782b4e5dc2cc05b086
 │   │   ├── 3a
+│   │   │   ├── 2b579d3b5fd3e8270de854e9fe2298c649f8d5
 │   │   │   ├── 93506e90c5a1989bff5f1de8d824ee6579a9b5
 │   │   │   ├── 9a0555f2bc635e38e7aabab45d127d86cb6044
 │   │   │   ├── c7a8a50c1fceb1af9ea398be6aec5dd14b35cb
@@ -442,6 +444,7 @@
 │   │   ├── 77
 │   │   │   ├── 88f2b134c0ea1cabfd70d990eb5acf2371033b
 │   │   │   ├── be27b11c41804f9fbc55e670575e63e6d9987e
+│   │   │   ├── ca86b940c78e26d46113ae24bc3733028ad93b
 │   │   │   └── f2c863931de3315fd10112fba277debb597ddc
 │   │   ├── 78
 │   │   │   └── 2055e28d04329924347ba4e556c1c0a3ee2428
@@ -523,6 +526,8 @@
 │   │   │   └── cb4ef6fdfe3e99f9bdd9aba0e37fddbec32888
 │   │   ├── 8d
 │   │   │   └── 98d3607a060fcb67ea7d66d7d506eaf28e8afe
+│   │   ├── 8e
+│   │   │   └── 1b57b99a3dc85370525a55df3158e2a3cb5dbd
 │   │   ├── 90
 │   │   │   ├── 029765623e2199896a7a8fe68ca4517c87d410
 │   │   │   ├── 2acd090c1973f4cac0319153061ac6a61517fc
@@ -554,6 +559,7 @@
 │   │   │   ├── 006cae8d19367c886daf722c07e2d6a700ece7
 │   │   │   ├── 1c7969b143d5619d5b5affc9963a76db28fa44
 │   │   │   ├── 29e96f0cf029e644288ae24431f3f1ba151c6f
+│   │   │   ├── 669442b6bf971183326b5b1f180ae837e5f7b0
 │   │   │   └── 6ad5a03e3c28adc722407dec8cc766ece20ea7
 │   │   ├── 98
 │   │   │   ├── 2e678a90cffaca38bb9a1a57437f64ea46425d
@@ -676,7 +682,8 @@
 │   │   │   └── f0653326e90197a45d31ecfc67635e14c9e0db
 │   │   ├── b7
 │   │   │   ├── 90b904b6e2e43cb4b09c0fe97215b181c2cab8
-│   │   │   └── c602cda94e2b639028ea11c35f40cdf91e933f
+│   │   │   ├── c602cda94e2b639028ea11c35f40cdf91e933f
+│   │   │   └── cb2fe860944fe649e15c4d33b3fc0e9d5ff5ea
 │   │   ├── b8
 │   │   │   ├── 0e8481c7b4344b1dd74f4cb05bb6c3a9fee0b8
 │   │   │   ├── ccf7f5bad6c30be08aa078b9c03a241219056e
@@ -724,6 +731,7 @@
 │   │   │   ├── 5c12eb0af9e79ffe613344185d7f30c1156959
 │   │   │   ├── 66c0d6f9eae32d50583be6bba809576f170b80
 │   │   │   ├── 78435f05da6e6acb9c7084266a2ef5c9343736
+│   │   │   ├── 7f0e1c8b1370f51a39c0a90748911d67eab07b
 │   │   │   └── c4185d9a4a5074fd925c40cd18fdd14bc12794
 │   │   ├── c4
 │   │   │   ├── 0566a860645fb600b0d70768f67c37d621a417
@@ -909,6 +917,7 @@
 │   │   │   └── 276ccdc2ce2d9f9bb078dfe0f18a2023d0494c
 │   │   ├── f5
 │   │   │   ├── 713cedf013ad17cc879932c47418d2da2adf2e
+│   │   │   ├── bf2135a840b052980e2e647c8d17104dcc8f82
 │   │   │   └── c68adcaf87feeacc1be681ee8f192651f1402f
 │   │   ├── f6
 │   │   │   ├── 6b316ee8eea5b5f0680622df3201dfb9db0915
@@ -925,6 +934,7 @@
 │   │   │   ├── 3e55efc29f79378672ddcf84c598a936aba715
 │   │   │   └── d4023b56be4262cd7e9ffe05d362b05a3185be
 │   │   ├── fb
+│   │   │   ├── 70ab12520bf30ab0021afdf3a2a18e3110d320
 │   │   │   └── ce24d812ad0324d818e3292ca62710c5edfa74
 │   │   ├── fc
 │   │   │   ├── 240a6592823f04447338bec25a46b2d19d55fd
@@ -946,6 +956,7 @@
 │   │   ├── ff
 │   │   │   ├── 2d788eb435223edfb7e994eee450fe787161ef
 │   │   │   ├── 6d01c4ba0be313fa76b9fa8a41a6abc9d277d5
+│   │   │   ├── d46ee9c4d820d38d334b34ebb95f30cd9a6999
 │   │   │   └── dca89e63e07ce1962ae19b915b8a59ed61b42f
 │   │   ├── info
 │   │   └── pack
@@ -974,7 +985,7 @@
 │   │   │   └── .cache_eifgds (hidden)
 │   │   ├── images
 │   │   │   ├── Ui7DBF75XFtBHm4FS8Hrw+TgWdYpGWHSWnWMEInFtMg=
-│   │   │   │   └── 60.1729331054299.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
+│   │   │   │   └── 60.1729350101192.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   │   └── uLE19DzZg-yhKgjDZlDHqExJdgsogyPmzEVIkfb7v3Y=
 │   │   │       └── 60.1729324207685.agv-raE43pX+dheir+v92Y4P2TC51ZKHhRseHhtfN78=.webp
 │   │   ├── swc
@@ -991,6 +1002,8 @@
 │   │       │   ├── 14.pack.gz
 │   │       │   ├── 15.pack.gz
 │   │       │   ├── 16.pack.gz
+│   │       │   ├── 17.pack.gz
+│   │       │   ├── 18.pack.gz
 │   │       │   ├── 2.pack.gz
 │   │       │   ├── 3.pack.gz
 │   │       │   ├── 4.pack.gz
@@ -1016,6 +1029,9 @@
 │   │       │   ├── 13.pack.gz
 │   │       │   ├── 14.pack.gz
 │   │       │   ├── 15.pack.gz
+│   │       │   ├── 16.pack.gz
+│   │       │   ├── 17.pack.gz
+│   │       │   ├── 18.pack.gz
 │   │       │   ├── 2.pack.gz
 │   │       │   ├── 3.pack.gz
 │   │       │   ├── 4.pack.gz
@@ -1031,16 +1047,27 @@
 │   │           └── index.pack
 │   ├── server
 │   │   ├── app
+│   │   │   ├── _not-found
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
 │   │   │   ├── api
-│   │   │   │   └── tasks
+│   │   │   │   ├── tasks
+│   │   │   │   │   └── route.js
+│   │   │   │   └── users
 │   │   │   │       └── route.js
+│   │   │   ├── home
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
 │   │   │   ├── payday
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
 │   │   │   ├── piggy-bank
 │   │   │   │   ├── page.js
 │   │   │   │   └── page_client-reference-manifest.js
-│   │   │   └── task-completion
+│   │   │   ├── task-completion
+│   │   │   │   ├── page.js
+│   │   │   │   └── page_client-reference-manifest.js
+│   │   │   └── user-management
 │   │   │       ├── page.js
 │   │   │       └── page_client-reference-manifest.js
 │   │   ├── vendor-chunks
@@ -1074,11 +1101,17 @@
 │   ├── static
 │   │   ├── chunks
 │   │   │   ├── app
+│   │   │   │   ├── _not-found
+│   │   │   │   │   └── page.js
+│   │   │   │   ├── home
+│   │   │   │   │   └── page.js
 │   │   │   │   ├── payday
 │   │   │   │   │   └── page.js
 │   │   │   │   ├── piggy-bank
 │   │   │   │   │   └── page.js
 │   │   │   │   ├── task-completion
+│   │   │   │   │   └── page.js
+│   │   │   │   ├── user-management
 │   │   │   │   │   └── page.js
 │   │   │   │   └── layout.js
 │   │   │   ├── app-pages-internals.js
@@ -1101,24 +1134,102 @@
 │   │   │   └── df0a9ae256c0569c-s.woff2
 │   │   └── webpack
 │   │       ├── app
-│   │       │   └── layout.4a7bb47ac88023e7.hot-update.js
-│   │       ├── 00a1fd2f38f64514.webpack.hot-update.json
-│   │       ├── 06d913aad1602a75.webpack.hot-update.json
-│   │       ├── 4a7bb47ac88023e7.webpack.hot-update.json
+│   │       │   ├── task-completion
+│   │       │   │   ├── page.11b6bca1c27b4d37.hot-update.js
+│   │       │   │   ├── page.12cbdce262c5da66.hot-update.js
+│   │       │   │   ├── page.2a1bdfc17391c78c.hot-update.js
+│   │       │   │   ├── page.2e8aff26006d6e03.hot-update.js
+│   │       │   │   ├── page.35ee195b5e62e851.hot-update.js
+│   │       │   │   ├── page.3e845b16906fc219.hot-update.js
+│   │       │   │   ├── page.48bb8798622fbd9e.hot-update.js
+│   │       │   │   ├── page.61e37c9fe61e40e2.hot-update.js
+│   │       │   │   ├── page.79047d8bfc339565.hot-update.js
+│   │       │   │   ├── page.7d99b2ab4167e382.hot-update.js
+│   │       │   │   ├── page.81cb35d60ee212bc.hot-update.js
+│   │       │   │   ├── page.ba5ef6ab31b78a3d.hot-update.js
+│   │       │   │   └── page.efd978f88192150b.hot-update.js
+│   │       │   ├── layout.076618c08751fd7e.hot-update.js
+│   │       │   ├── layout.11b6bca1c27b4d37.hot-update.js
+│   │       │   ├── layout.12cbdce262c5da66.hot-update.js
+│   │       │   ├── layout.2a1bdfc17391c78c.hot-update.js
+│   │       │   ├── layout.2e8aff26006d6e03.hot-update.js
+│   │       │   ├── layout.35ee195b5e62e851.hot-update.js
+│   │       │   ├── layout.3e845b16906fc219.hot-update.js
+│   │       │   ├── layout.3f6f88b5ab9c46a5.hot-update.js
+│   │       │   ├── layout.48bb8798622fbd9e.hot-update.js
+│   │       │   ├── layout.52ef40848e6652ea.hot-update.js
+│   │       │   ├── layout.61e37c9fe61e40e2.hot-update.js
+│   │       │   ├── layout.6ff0f8685d95e3d7.hot-update.js
+│   │       │   ├── layout.79047d8bfc339565.hot-update.js
+│   │       │   ├── layout.7d99b2ab4167e382.hot-update.js
+│   │       │   ├── layout.81cb35d60ee212bc.hot-update.js
+│   │       │   ├── layout.ba5ef6ab31b78a3d.hot-update.js
+│   │       │   └── layout.efd978f88192150b.hot-update.js
+│   │       ├── 076618c08751fd7e.webpack.hot-update.json
+│   │       ├── 11b6bca1c27b4d37.webpack.hot-update.json
+│   │       ├── 12cbdce262c5da66.webpack.hot-update.json
+│   │       ├── 260dc14615ce1d4e.webpack.hot-update.json
+│   │       ├── 2a1bdfc17391c78c.webpack.hot-update.json
+│   │       ├── 2e28e31db7eb92b1.webpack.hot-update.json
+│   │       ├── 2e8aff26006d6e03.webpack.hot-update.json
+│   │       ├── 30a8bd1d840ce6d2.webpack.hot-update.json
+│   │       ├── 35ee195b5e62e851.webpack.hot-update.json
+│   │       ├── 3e845b16906fc219.webpack.hot-update.json
+│   │       ├── 3f6f88b5ab9c46a5.webpack.hot-update.json
+│   │       ├── 48bb8798622fbd9e.webpack.hot-update.json
+│   │       ├── 52ef40848e6652ea.webpack.hot-update.json
+│   │       ├── 61e37c9fe61e40e2.webpack.hot-update.json
 │   │       ├── 633457081244afec._.hot-update.json
-│   │       ├── webpack.00a1fd2f38f64514.hot-update.js
-│   │       ├── webpack.06d913aad1602a75.hot-update.js
-│   │       └── webpack.4a7bb47ac88023e7.hot-update.js
+│   │       ├── 6ff0f8685d95e3d7.webpack.hot-update.json
+│   │       ├── 79047d8bfc339565.webpack.hot-update.json
+│   │       ├── 7d99b2ab4167e382.webpack.hot-update.json
+│   │       ├── 81cb35d60ee212bc.webpack.hot-update.json
+│   │       ├── b0b0cf11bf368891.webpack.hot-update.json
+│   │       ├── ba5ef6ab31b78a3d.webpack.hot-update.json
+│   │       ├── bc342cd8d3b6061f.webpack.hot-update.json
+│   │       ├── d5d4b15491a15361.webpack.hot-update.json
+│   │       ├── ec1e71bb6c943179.webpack.hot-update.json
+│   │       ├── efd978f88192150b.webpack.hot-update.json
+│   │       ├── webpack.076618c08751fd7e.hot-update.js
+│   │       ├── webpack.11b6bca1c27b4d37.hot-update.js
+│   │       ├── webpack.12cbdce262c5da66.hot-update.js
+│   │       ├── webpack.260dc14615ce1d4e.hot-update.js
+│   │       ├── webpack.2a1bdfc17391c78c.hot-update.js
+│   │       ├── webpack.2e28e31db7eb92b1.hot-update.js
+│   │       ├── webpack.2e8aff26006d6e03.hot-update.js
+│   │       ├── webpack.30a8bd1d840ce6d2.hot-update.js
+│   │       ├── webpack.35ee195b5e62e851.hot-update.js
+│   │       ├── webpack.3e845b16906fc219.hot-update.js
+│   │       ├── webpack.3f6f88b5ab9c46a5.hot-update.js
+│   │       ├── webpack.48bb8798622fbd9e.hot-update.js
+│   │       ├── webpack.52ef40848e6652ea.hot-update.js
+│   │       ├── webpack.61e37c9fe61e40e2.hot-update.js
+│   │       ├── webpack.6ff0f8685d95e3d7.hot-update.js
+│   │       ├── webpack.79047d8bfc339565.hot-update.js
+│   │       ├── webpack.7d99b2ab4167e382.hot-update.js
+│   │       ├── webpack.81cb35d60ee212bc.hot-update.js
+│   │       ├── webpack.b0b0cf11bf368891.hot-update.js
+│   │       ├── webpack.ba5ef6ab31b78a3d.hot-update.js
+│   │       ├── webpack.bc342cd8d3b6061f.hot-update.js
+│   │       ├── webpack.d5d4b15491a15361.hot-update.js
+│   │       ├── webpack.ec1e71bb6c943179.hot-update.js
+│   │       └── webpack.efd978f88192150b.hot-update.js
 │   ├── types
 │   │   ├── app
 │   │   │   ├── api
-│   │   │   │   └── tasks
+│   │   │   │   ├── tasks
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── users
 │   │   │   │       └── route.ts
+│   │   │   ├── home
+│   │   │   │   └── page.ts
 │   │   │   ├── payday
 │   │   │   │   └── page.ts
 │   │   │   ├── piggy-bank
 │   │   │   │   └── page.ts
 │   │   │   ├── task-completion
+│   │   │   │   └── page.ts
+│   │   │   ├── user-management
 │   │   │   │   └── page.ts
 │   │   │   └── layout.ts
 │   │   └── package.json
@@ -32364,18 +32475,15 @@
 ├── requirements
 │   ├── _planDB.md
 │   ├── codingPrinciples.md
-│   ├── documentation_review_schedule.md
 │   ├── frontend_instructions.md
 │   ├── frontend_wf_task_mgt_intf.md
 │   ├── fundamental_workflow.jpg
-│   ├── manual_testing.md
-│   ├── markdown_style_guide_options.md
 │   ├── onboarding_guide.md
 │   ├── overview2.jpg
 │   ├── piggy-bank.md
 │   ├── PRD.md
-│   ├── prd_update_process.md
 │   ├── TG-Wireframe-1.jpg
+│   ├── tgeld_wireframe_01.jpg
 │   └── tree.txt
 ├── types
 │   ├── task.ts

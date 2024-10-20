@@ -9,27 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New Interface Component Structure guidelines in frontend instructions
-- Implemented filtering of users to show only child users in the Payday interface
+- Added .env.local file for local environment variables
 
 ### Changed
 
-- Refactored Payday interface by merging PaydayInterface into a single Payday component
-- Updated Payday interface to use mock database for fetching users and completed tasks
-- Modified the user filter in Payday interface to only show users with the role of 'child'
-- Added visual indicator (green icon) to the Payday interface
-- Updated task mapping to ensure compatibility with CompletedTaskCard component
-- Adjusted task handling to use 'id' instead of 'c_task_id'
-- Decided to use direct SQL queries instead of an ORM for database operations
+- Migrated Database Credentials: Moved sensitive database configuration details (user, host, database, password, port) from hardcoded values to environment variables using process.env.
+- Port Conversion: Ensured the port is correctly interpreted as a number by wrapping process.env.DB_PORT with Number().
 
 ### Fixed
 
-- Resolved issue where all users were being displayed in the Payday interface instead of only child users
-- Fixed runtime error related to undefined 'completedAt' property
+- Database credentials were hardcoded in the /app/lib/db.ts file.
 
 ### Improved
 
-- Enhanced code organization and reduced prop drilling in Payday component
-- Improved readability and maintainability of the Payday feature
+- Improved security by moving database credentials to .env.local
 
-## [0.1.0] - 2024-XX-XX
+## [0.1.1] - 2024-10-20

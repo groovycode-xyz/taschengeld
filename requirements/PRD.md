@@ -321,53 +321,6 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 ---
 
-## **10. Milestones and Timeline**
-
-### **10.1 Key Development Milestones**
-
-1. **Milestone 1: Project Setup (Week 1)**
-
-   - Finalize PRD.
-   - Assign roles and responsibilities.
-   - Set up project management and version control systems.
-   - Choose and configure the tech stack.
-
-2. **Milestone 2: Design Phase (Weeks 2-3)**
-
-   - Complete wireframes and mockups for all core interfaces using Figma.
-   - Review and iterate designs based on feedback from family members.
-
-3. **Milestone 3: Core Development (Weeks 4-8)**
-
-   - Develop User Management and Task Management Interfaces.
-   - Implement Role-Based Access Control.
-   - Set up the PostgreSQL database schema using Prisma.
-
-4. **Milestone 4: Additional Features Development (Weeks 9-12)**
-
-   - Develop Piggy Bank Account Interface.
-   - Implement Reporting and Payday Interface.
-   - Create Task Completion Interface with animations and sounds.
-
-5. **Milestone 5: Testing and Refinement (Weeks 13-15)**
-
-   - Conduct unit, integration, and end-to-end (E2E) testing.
-   - Perform usability testing with actual users (family members).
-   - Fix identified bugs and refine features based on feedback.
-
-6. **Milestone 6: Deployment and Launch (Weeks 16-17)**
-
-   - Set up the self-hosted environment using Docker.
-   - Deploy the application locally on a home server or homelab.
-   - Conduct post-deployment testing to ensure functionality.
-
-7. **Milestone 7: Maintenance and Feedback Integration (Ongoing)**
-   - Monitor application performance.
-   - Gather and implement user feedback.
-   - Plan and develop future enhancements based on user needs.
-
----
-
 ## **11. Risks and Mitigation Strategies**
 
 ### **11.1 Potential Risks to Project Success**
@@ -471,7 +424,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 - **Product Owner:** James
 - **Family Members:** Mommy, Eliana, Ariel
-- **AI Coding Assistants:** ChatGPT and other AI tools assisting in development
+- **AI Coding Assistants:** AI coding assistants
 
 ### **14.2 Approval Process and Sign-offs Required**
 
@@ -483,7 +436,9 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 ### **15.1 Wireframes or Mockups**
 
-- **Wireframes:** To be created using Figma, illustrating layouts for all core interfaces including User Management, Task Management, Piggy Bank Accounts, Reporting and Payday, and Task Completion.
+/requirements/TG-Wireframe1-jpg
+
+- **Wireframes:** To be created using Draw.io, illustrating layouts for all core interfaces including User Management, Task Management, Piggy Bank Accounts, Reporting and Payday, and Task Completion.
 - **Mockups:** High-fidelity designs incorporating colors, icons, animations, and sound elements as per user experience requirements.
 
 ### **15.2 Market Research Data**
@@ -496,7 +451,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 ### **15.4 Technical Architecture Diagrams**
 
-- **Architecture Diagrams:** Detailed diagrams showcasing the interaction between frontend, backend, and database components using Next.js, PostgreSQL, and Prisma.
+- **Architecture Diagrams:** Detailed diagrams showcasing the interaction between frontend, backend, and database components using Next.js, PostgreSQL.
 - **Data Flow Diagrams:** Visual representations of data movement between different parts of the application.
 
 ---
@@ -522,64 +477,4 @@ The application utilizes a modern, open-source, and free technology stack to ens
 - **Docker & Docker Compose:** Containerize the application for consistent deployment across different environments.
 - **Self-Hosting:** Deploy the application on a home server or homelab using Docker containers to manage frontend, backend, and database services.
 
-### **16.4 Testing and Monitoring Integration**
 
-- **Jest & React Testing Library:** Conduct unit and integration testing for frontend components.
-- **Cypress:** Perform end-to-end testing to validate complete user workflows.
-- **Sentry, Prometheus & Grafana:** Implement monitoring tools for error tracking and performance visualization.
-
----
-
-## **17. Summary and Next Steps**
-
-### **17.1 Initiate Project Planning**
-
-- Finalize the PRD and establish the project roadmap based on the revised document.
-
-### **17.2 Assemble the Development Team**
-
-- Assign roles and set up collaboration tools, primarily leveraging AI-driven development assistance.
-
-### **17.3 Begin Design Phase**
-
-- Create detailed wireframes and UI/UX designs using Figma, focusing on user-friendly and engaging interfaces for children and parents.
-
-### **17.4 Start Development**
-
-- Break down core features into smaller tasks and begin coding using the recommended tech stack.
-- Implement User Management and Task Management Interfaces first to establish foundational functionalities.
-
-### **17.5 Implement Testing Protocols**
-
-- Develop and execute unit, integration, and end-to-end tests to ensure reliability and usability.
-- Conduct usability testing with family members to gather feedback and make necessary refinements.
-
-### **17.6 Deploy and Monitor**
-
-- Set up the self-hosted environment using Docker.
-- Deploy the application locally and perform post-deployment testing to verify functionality.
-
-### **17.7 Iterate and Improve**
-
-- Continuously gather feedback from users (family members) and implement improvements.
-- Plan for future enhancements based on user needs and project progress.
-
-### **17.8 Implement PostgreSQL Database**
-
-- Set up PostgreSQL database and update all database interactions to use Prisma ORM.
-- Migrate existing mock data to the new PostgreSQL database.
-- Update and test all API routes to ensure they work correctly with the new database setup.
-
----
-
-## **18. Additional Tips for a Successful Development Process**
-
-- **Regular Communication:** Maintain consistent communication with all stakeholders, ensuring that feedback is incorporated promptly.
-- **Stay User-Centric:** Focus on the needs and behaviors of the primary users (parents and children) throughout the development process.
-- **Embrace Iteration:** Adopt an agile approach, allowing for continuous improvements based on testing and user feedback.
-- **Leverage Existing Libraries and Frameworks:** Utilize the power of open-source libraries and frameworks to accelerate development and ensure reliability.
-- **Prioritize Security:** Ensure that robust security measures are in place from the outset to protect sensitive information and maintain user trust.
-
----
-
-By following this revised PRD, the development team can systematically build the **Allowance Tracker** application, ensuring that all requirements are met and the final product is user-friendly, secure, and effective in achieving its goals.

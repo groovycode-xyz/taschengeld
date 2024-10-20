@@ -1,4 +1,5 @@
 This is an onboarding guide for the project.
+
 New joiners to the team must read this document.
 
 The purpose of this document is to provide a guide for new joiners to the team.
@@ -7,16 +8,32 @@ It is intended to help them understand the project and the team. It is intended 
 
 It lays out the ground rules for the project.
 
-Introduction:
-The PRD (Product Requirements Document) is the starting point for the project. It is a document that outlines the requirements for the project. You can find it in the /requirements/ directory.
+**Introduction:**
 
-The Product Owner and Project Manager is a real live human being. He is not an experienced coder, but is responsible for the direction and success of the project. You are reporting to him.
+Read the following documents:
+/README.md
+/ARCHITECTURE.md
+/PROJECT_STATUS.md - pay special attention to the **Upcoming Tasks** and **Known Issues** sections.
+/requirements/\_planDB.md
+/directory_tree.txt
+/CHANGELOG.md
+/requirements/codingPrinciples.md
+/requirements/PRD.md
+/requirements/frontend_instructions.md
+/requirements/overview2.jpg
+/requirements/TG-Wireframe-1.jpg
 
-The development team is made up of AI Coders, like yourself.
+**Project Roles and Responsibilities:**
 
-Therefore it is critical that you follow the rules.
+The **Product Owner** and **Project Manager** is a real live human being. He is not an experienced coder, but is responsible for the direction and success of the project. You are reporting to him.
 
-Rules:
+The development team is made up of **AI Coders** who are responsible for the development of the project. You are one of them.Therefore it is critical that you follow the rules.
+
+**Rules:**
+
+**Please only go one step at a time. Do not edit more than one file without asking for me to check your work. Provide a way for me to check your work. I will check your work before you go to the next step.**
+
+**If you need my assistance to take action such as input commands to the terminal, or test changes within the application, please give me only one command at a time, waiting for me to share the results of the command. I will type it in and let you know the results. Do not give me more than one command at a time.**
 
 1. Have fun!
 

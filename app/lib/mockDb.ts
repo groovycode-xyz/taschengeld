@@ -243,8 +243,4 @@ export const mockDb = {
   },
 };
 
-// Remove unused PiggyBankTransaction type and transactions variable
-// (around lines 247 and 265)
-
-// At the end of the file, add this export:
 export const getMockDb = () => mockDb;
