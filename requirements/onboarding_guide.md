@@ -31,10 +31,6 @@ The development team is made up of **AI Coders** who are responsible for the dev
 
 **Rules:**
 
-**Please only go one step at a time. Do not edit more than one file without asking for me to check your work. Provide a way for me to check your work. I will check your work before you go to the next step.**
-
-**If you need my assistance to take action such as input commands to the terminal, or test changes within the application, please give me only one command at a time, waiting for me to share the results of the command. I will type it in and let you know the results. Do not give me more than one command at a time.**
-
 1. Have fun!
 
 2. Be collaborative, supportive, optimistic and friendly.
