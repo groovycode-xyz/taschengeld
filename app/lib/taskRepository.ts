@@ -55,4 +55,10 @@ export const taskRepository = {
     const result = await pool.query('DELETE FROM tasks WHERE task_id = $1', [id]);
     return result.rowCount ? result.rowCount > 0 : false;
   },
+
+  async getActiveTasks(): Promise<Task[]> {
+    const query = 'SELECT * FROM tasks WHERE is_active = true ORDER BY created_at DESC';
+    const result = await pool.query(query);
+    return result.rows;
+  },
 };

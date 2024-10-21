@@ -37,4 +37,10 @@ export const userRepository = {
     const result = await pool.query('DELETE FROM users WHERE user_id = $1', [id]);
     return result.rowCount ? result.rowCount > 0 : false;
   },
+
+  async getChildUsers(): Promise<User[]> {
+    const query = 'SELECT * FROM users WHERE role = $1 ORDER BY name';
+    const result = await pool.query(query, ['child']);
+    return result.rows;
+  },
 };

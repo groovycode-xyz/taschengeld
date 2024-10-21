@@ -9,12 +9,18 @@
 
 ## Backend Development
 
-- [ ] Implement API route for creating a completed task (POST)
-- [ ] Implement API route for fetching completed tasks (GET)
-- [ ] Implement API route for updating a completed task (PUT)
-- [ ] Implement API route for deleting a completed task (DELETE)
-- [ ] Update existing `tasks` route to fetch only active tasks if needed
-- [ ] Update existing `users` route to fetch only child users if needed
+- [x] Implement API route for creating a completed task (POST)
+- [x] Implement API route for fetching completed tasks (GET)
+- [x] Create completedTaskRepository for database operations
+- [x] Define types for CompletedTask and CreateCompletedTaskInput
+- [x] Resolve linter errors related to import statements
+- [x] Implement API route for updating a completed task (PUT)
+- [x] Implement API route for deleting a completed task (DELETE)
+- [x] Test PUT and DELETE methods for completed tasks
+- [x] Create new API route for fetching only active tasks
+- [x] Create new API route for fetching only child users
+- [x] Test new routes for active tasks and child users
+- [ ] Consider updating TypeScript to a version officially supported by @typescript-eslint/typescript-estree (optional)
 
 ## Frontend Development
 
