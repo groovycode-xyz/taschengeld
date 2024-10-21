@@ -28,11 +28,10 @@ Fully Implemented:
 
 - User Management
 - Task Management
-- Task Completion (mostly implemented)
 
 To be implemented: (also see PROJECT_STATUS.md, **Upcoming Tasks**)
 
-- Task Completion (to be completed)
+- Task Completion
 - Piggy Bank Interface
 - Payday Interface
 

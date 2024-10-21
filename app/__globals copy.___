@@ -1,0 +1,359 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.task-completion-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.5rem;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background-color: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-row {
+  display: flex;
+  overflow-x: auto;
+  padding: 1.5rem;
+  background-color: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 1.5rem; /* Add this line to create space between user icons */
+}
+
+.task-icon,
+.user-icon {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-size: 2.5rem;
+  transition: all 0.3s ease;
+  cursor: grab;
+}
+
+.task-icon {
+  background-color: #e6f2ff; /* Light blue background */
+  color: #4a90e2; /* Blue color for icons */
+  position: relative;
+  z-index: 1;
+}
+
+.task-icon.dragging {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.7);
+  z-index: 10;
+}
+
+.task-icon.dragging::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: rgba(74, 144, 226, 0.2);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.task-icon:active {
+  cursor: grabbing;
+}
+
+.task-icon:hover,
+.user-icon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.task-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.task-title {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--foreground);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.task-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.task-item.dragging .task-icon {
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.7);
+  transform: scale(1.1);
+}
+
+.user-icon.task-completed {
+  animation: fadeOut 2s ease-in-out;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.task-item .task-icon {
+  transition: all 0.3s ease;
+}
+
+.user-icon {
+  transition: all 0.3s ease;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-size: 2.5rem;
+  cursor: pointer;
+  background-color: #ffe6e6; /* Light red background */
+  color: #e24a4a; /* Red color for icons */
+  flex-shrink: 0; /* Prevent icons from shrinking */
+}
+
+.user-icon.task-completed {
+  animation: fadeOut 2s ease-in-out;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Add this at the end of the file */
+body.dragging {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.task-icon-clone {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.8;
+  transform: scale(1.1);
+  transition: none;
+}
+
+/* Add these styles at the end of the file */
+
+@media (hover: none) and (pointer: coarse) {
+  .touch-task-grid .task-item {
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+    user-select: none; /* Prevent text selection */
+  }
+
+  .touch-task-grid .task-icon {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .touch-task-grid .task-icon.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.7);
+    background-color: #b3d9ff; /* Lighter blue background for selected state */
+  }
+
+  .touch-user-row .user-icon {
+    transition: transform 0.2s ease;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+  }
+
+  .touch-user-row .user-icon:active {
+    transform: scale(0.95);
+  }
+}
+
+.dragged-task {
+  will-change: transform;
+  transition: none !important;
+}
+
+/* Add or update these styles */
+
+.touch-task-grid .task-item {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.touch-task-grid .task-item.dragging {
+  opacity: 0.8;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.7);
+}
+
+.touch-task-grid .task-icon.selected {
+  background-color: #b3d9ff;
+}
+
+/* Add these styles at the end of the file */
+
+.dragged-task-icon {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e6f2ff;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+  transform: scale(1.1);
+}
+
+.touch-task-grid .task-item .task-icon {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.touch-task-grid .task-item.dragging .task-icon {
+  opacity: 0.5;
+}

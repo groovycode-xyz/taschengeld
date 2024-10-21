@@ -1,8 +1,0 @@
-CREATE TABLE IF NOT EXISTS users (
-    user_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    icon VARCHAR(50) NOT NULL,
-    soundUrl VARCHAR(255) NOT NULL,
-    birthday DATE NOT NULL,
-    role VARCHAR(20) NOT NULL
-);

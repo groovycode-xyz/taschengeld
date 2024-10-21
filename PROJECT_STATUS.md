@@ -2,8 +2,6 @@
 
 ## Recent Updates
 
-- - Task Completion interface harmonized.  Task cards and User cards same look and feel and behavior across both touch and non-touch devices.  Icons appear as expected.  Text on each icons appear as expected. Hover over causes drop shadow for all cards as expected. Changelog revision [v.0.1.3](CHANGELOG.md).
-
 ## Current Focus
 
 - Fixing minor UI/UX issues without losing any existing functionality.
@@ -12,13 +10,8 @@
 
 ## Upcoming Tasks
 
-- [ ] Make the **Task Completion** interface more visually appealing, simple for kids to use, while keeping the functionality the same.
+- [ ] Create the **Task Completion** interface.
 
-  - [x] Task card should display its icon, large.
-  - [x] Task card should display the task name in small text below the icon.
-  - [x] User card should display the user's icon.
-  - [x] User card should display the user's name in small text below the icon.
-  - [ ] Complete the **Task Completion** interface by fixing the undesired behavior where all user cards in a user_row are acknowledging the task completion by flashing the green color.
   - [ ] Create **completed_tasks** table in the database for supporting the **Task Completion** interface and the **Payday** interface.
   - [ ] Create API endpoints for **completed_tasks** table.
 
@@ -49,10 +42,6 @@
   - On the **Add User** modal
     - On **Safari** browser (only), the value in the **Birthday** field is pre-populated with "10/20/2024". This should not be the case. The value in the field should be "dd.mm.yyyy"
     - In the area of the **User Sound**, when a sound is shown to be defined, clicking the **Play** button does not play the sound. This behavior is consistent across all browsers.
-
-- In the **Task Completion** interface
-
-  - When a task is **completed by dragging and dropping** the task card to a user card in the user_row, all of the user cards in the user_row are acknowledging the task completion by flashing the green color. This behavior is undesired because the desired behavior is that only the user card to which the task card was dragged and dropped will acknowledge the task completion by flashing the green color.
 
 - Some components may still have inconsistent naming conventions or import styles.
 

@@ -31,16 +31,9 @@ We welcome contributions to the Taschengeld project! This document outlines the 
 
 ## Development Guidelines
 
-- When adding new features, consider whether they should be restricted based on the Parent/Child mode.
-- Use the `useParentChildMode` hook to access the current mode in components that need to adapt their behavior or UI.
 - For components that use React hooks or browser APIs, remember to add the 'use client' directive at the top of the file.
 - Be aware of existing TypeScript and linter errors, and aim to resolve them as part of the development process.
 - When modifying components, ensure that type definitions are correctly updated and imported.
-
-## Current Challenges
-
-- There are TypeScript and linter errors in some components (e.g., piggy-bank.tsx, client-layout.tsx) that need to be addressed.
-- Type definitions for some modal components (AddFundsModal, WithdrawFundsModal, TransactionsModal) may need to be reviewed and updated.
 
 ## Questions
 

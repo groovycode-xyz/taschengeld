@@ -75,7 +75,7 @@ def main():
     tree_output = "\n".join(tree)
 
     # Define the output file name
-    output_file = "directory_tree.txt"
+    output_file = "directory_tree2.txt"
 
     try:
         with open(output_file, 'w', encoding='utf-8') as f:

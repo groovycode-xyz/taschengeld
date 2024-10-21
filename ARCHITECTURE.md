@@ -12,7 +12,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
   - `Button.tsx`: A styled button component.
   - `Header.tsx`: The application header component.
 - `/mocks`: Contains mock data for development and testing purposes.
-  - `mockDb.ts`: Mock database functions simulating backend interactions.
+  - `mockDb.ts`: Mock database functions simulating backend interactions. (is temporary and will be removed incrementally as API calls to the PostgreSQL database are implemented)
 - `/tests`: Includes unit and integration tests to ensure code reliability.
   - `userRepository.test.ts`: Tests for user repository functions.
 - `/public`: Static assets like images, icons, and fonts.
@@ -27,6 +27,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
    - /requirements/TG-Wireframe-1.jpg
    - /requirements/tgeld_wireframe_01.jpg
+   - /requirements/overview2.jpg
 
 1. AppShell (`components/app-shell.tsx`)
 
@@ -53,10 +54,9 @@ The Taschengeld project follows a Next.js-based architecture with React componen
    - Manages task approval and allowance allocation
    - Uses CompletedTaskCard component
 
-6. Task Completion Interface (`components/task-completion/task-completion-page.tsx`)
+6. Task Completion Interface (does not exist yet)
 
    - Manages task completion
-   - Uses import TaskGrid, TouchTaskGrid, UserRow and TouchUserRow
 
 ## State Management
 
@@ -65,7 +65,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 ## API Structure
 
-(Note: Currently using mock data. API routes to be implemented)
+(Note: Currently using mock data. Some API routes may already exist. Check first!)
 
 - `/api/users`: User management endpoints
 - `/api/tasks`: Task management endpoints
@@ -86,18 +86,9 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 - ESLint is used for linting
 - TypeScript is used for type checking
 
-## Testing
-
-- Jest for unit and integration testing
-- React Testing Library for component testing
-
-This architecture provides a modular and scalable structure for the Taschengeld application, allowing for easy expansion and maintenance of features.
-
 ## Known Issues
 
-- There is some inconsitencies related to the /components folder. The Task Completion interface has it's own subfolder /components/task-completion containing the related .tsx files. This should eventually be refactored to align to the placement of the other interfaces (payday.tsx, piggy-bank.tsx, task-management.tsx and user-management.tsx)
-
-- Global state management was at one time implemented during development phase, but became problematic and has been removed. Some artifacts related to the global state (i.e.: Parent versus Child mode) may remain in the codebase.  We will come back to address this feature as it is core to the functionality of the application.
+- Global state management was at one time implemented during development phase, but became problematic and has been removed. Some artifacts related to the global state (i.e.: Parent versus Child mode) may remain in the codebase. We will come back to address this feature as it is core to the functionality of the application.
 
 ## Git Commit Preparation Process
 

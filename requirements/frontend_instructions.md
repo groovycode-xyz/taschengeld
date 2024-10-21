@@ -17,19 +17,17 @@
 ## Project Development Phase
 
 - A mock database is implemented in `app/lib/mockDb.ts`
-- A production database is implemented using PostgreSQL:  tgeld
+- A production database is implemented using PostgreSQL: tgeld
 
 ## Directory Structure
 
 - `/app`
   - `/api`
-  - `/completed-tasks`
   - `/global-settings`
   - `/home`
   - `/lib`
   - `/payday`
   - `/piggy-bank`
-  - `/task-completion`
   - `/task-management`
   - `/types`
   - `/user-management`
@@ -37,8 +35,6 @@
   - `page.tsx`
 - `/components`
   - `/ui`
-    - (UI components)
-  - (Feature-specific components)
 - `/hooks`
 - `/prisma`
 - `/public`
@@ -134,43 +130,24 @@ The Piggy Bank feature is implemented in `components/piggy-bank.tsx`. It consist
 
 ## Task Completion Interface Component
 
-The Task Completion feature is implemented in `components/task-completion/task-completion-page.tsx`. It consists of the following key elements:
+The Task Completion feature is not yet implemented. It should consist of the following key elements:
 
 - Main TaskCompletionPage component
-- TaskGrid component for non-touch devices
-- TouchTaskGrid component for touch devices
-- UserRow component for non-touch devices
-- TouchUserRow component for touch devices
+- List of available tasks in the form of cards with the task icon and title (from database where status = 'active')
+- List of user cards with the user icon and name (from database where role = 'child')
+- Drag and drop tasks from the task list to the user card to complete the task
 
 ### Task Completion Interface Features
 
 - Displays available tasks in a grid layout (only Active tasks are displayed)
 - Shows a row of user icons representing child users (only Child users are displayed)
-- Allows for task completion by dragging and dropping tasks onto user icons (non-touch devices)
-- Supports task selection and user selection for task completion (touch devices)
+- Allows for task completion by dragging and dropping tasks onto user icons
 - Fetches real user data from the PostgreSQL database via API
 - Fetches real task data from the PostgreSQL database via API
-- Responsive design that adapts to touch and non-touch devices
-
-### Recent Updates
-
-- Replaced mock user data with real user data fetched from the PostgreSQL database
-- Implemented error handling for API calls
-- Added loading state while fetching data
-- Ensured only child users are displayed in the user row
-
-### Next Steps
-
-1. Implement the actual task completion logic (currently only logging to console)
-2. Add animations or visual feedback for successful task completions
-3. Implement error handling and user feedback for failed task completions
-4. Consider adding a confirmation step before marking a task as complete
-
-This component now serves as an example of integrating real database data into the interface, replacing mock data with API calls to fetch users and tasks.
 
 ## Payday Interface Component
 
-The Payday Interface feature is implemented in `components/Payday.tsx`. It follows the new Interface Component Structure guidelines and consists of the following key elements:
+The Payday Interface feature is implemented in `components/Payday.tsx`. It is currently relying on mock data, and should be updated to fetch data from the PostgreSQL database via API. It follows the new Interface Component Structure guidelines and consists of the following key elements:
 
 - Main Payday component
 - Filtering and sorting functionality
@@ -234,55 +211,6 @@ The User Management Interface feature is implemented in `components/user-managem
 - Allows for modification of users by launching the UserEditModal
 - Allows for addition of users by launching the UserAddModal
 
-## Interface Component Structure
-
-To maintain consistency and simplify our codebase, we've adopted a unified approach for interface components. This approach combines the main component and its interface into a single file. Here are the key points of this structure:
-
-1. **Single File Component**: Each interface (e.g., Payday, Task Management, User Management) should be contained within a single TypeScript React file (e.g., `Payday.tsx`, `TaskManagement.tsx`, `UserManagement.tsx`).
-
-2. **Naming Convention**: Use PascalCase for the component name, which should match the filename (e.g., `export function Payday() { ... }` in `Payday.tsx`).
-
-3. **State Management**: Utilize React hooks (useState, useEffect) for local state management within the component.
-
-4. **Data Fetching**: Include data fetching logic (using the mock database for now) within the component using useEffect.
-
-5. **Event Handlers**: Define all event handlers (e.g., handleApprove, handleReject) within the component.
-
-6. **UI Structure**: The component should return a single JSX structure that includes:
-
-   - A header section with the component's title and any relevant icons
-   - The main interface elements (filters, action buttons, etc.)
-   - A scrollable area for displaying lists of items (if applicable)
-
-7. **Sub-components**: If the interface requires complex sub-components, these can be defined in separate files and imported into the main component file.
-
-Example structure:
-typescript
-'use client';
-import React, { useState, useEffect } from 'react';
-import { relevantComponents } from '@/components/ui/...';
-import { relevantIcons } from 'lucide-react';
-import { getMockDb } from '@/app/lib/mockDb';
-export function InterfaceName() {
-// State declarations
-// useEffect for data fetching
-// Event handlers and other functions
-return (
-
-<div>
-{/ Header section /}
-{/ Main interface elements /}
-{/ Scrollable area if needed /}
-</div>
-);
-}
-
-This approach simplifies our component structure, reduces the need for prop drilling, and keeps related logic and UI elements together. It also makes it easier for developers to understand and maintain each interface component.
-
-When creating new interface components or refactoring existing ones, please follow this structure to maintain consistency across the project.
-
-# Frontend Development Instructions
-
 ## Implemented Features
 
 1. User Management
@@ -293,6 +221,7 @@ When creating new interface components or refactoring existing ones, please foll
    - Delete user
 
 2. Task Management
+
    - View all tasks
    - Add new task
    - Edit existing task
@@ -307,6 +236,7 @@ When creating new interface components or refactoring existing ones, please foll
 - Use TypeScript for all new components and functions
 - Implement proper error handling and loading states
 - Use the shadcn/ui component library for consistent styling
+- Use Lucide icons for all icons
 - Ensure all components are responsive and accessible
 - Write unit tests for new components and functions
 
