@@ -1,6 +1,21 @@
-# Taschengeld - Architecture Overview
+# Taschengeld Application Architecture
 
-## Project Structure
+## Overview
+
+Taschengeld is a Next.js-based web application designed to manage allowances and tasks for children. It uses a PostgreSQL database for data persistence and follows a modular architecture for maintainability and scalability.
+
+## Tech Stack
+
+- Frontend: Next.js 14 with React
+- Backend: Next.js API Routes
+- Database: PostgreSQL
+- ORM: Direct SQL queries (no ORM used)
+- Styling: Tailwind CSS
+- UI Components: shadcn/ui
+- Authentication: Custom PIN-based system
+- State Management: React hooks (useState, useEffect, useContext)
+
+## Directory Structure
 
 The Taschengeld project follows a Next.js-based architecture with React components and App Router. Here's an overview of the main directories and their purposes:
 
@@ -49,7 +64,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
    - Handles task creation and management
    - Uses AddTaskModal and EditTaskModal components
 
-5. Payday Interface (`components/payday-interface.tsx`)
+5. Payday Interface (`components/payday.tsx`)
 
    - Manages task approval and allowance allocation
    - Uses CompletedTaskCard component

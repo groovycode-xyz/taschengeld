@@ -1,237 +1,236 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardTitle } from 'components/ui/card';
-import { Button } from 'components/ui/button';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
-import { TransactionsModal } from './transactions-modal';
-import { User } from 'app/types/user';
-import { mockDb } from 'app/lib/mockDb';
-import { IconComponent } from './icon-component';
+import { PiggyBankAccount } from '@/app/types/piggyBankAccount';
+import { PiggyBankTransaction } from '@/app/types/piggyBankTransaction';
+import { formatCurrency } from '@/lib/utils';
 import { PiggyBankIcon } from 'lucide-react';
 
-interface Transaction {
-  id: string;
-  userId: string;
-  amount: number;
-  type: 'deposit' | 'withdrawal';
-  date: Date;
-  comments?: string;
-  photo?: string | null;
-  balance: number;
-}
-
-interface UserBalance {
-  user: User;
-  balance: number;
-  transactions: Transaction[];
-}
-
 export function PiggyBank() {
-  const [userBalances, setUserBalances] = useState<UserBalance[]>([]);
+  const [account, setAccount] = useState<PiggyBankAccount | null>(null);
+  const [transactions, setTransactions] = useState<PiggyBankTransaction[]>([]);
+  const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false);
+  const [isWithdrawFundsModalOpen, setIsWithdrawFundsModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const loadUserBalances = () => {
-      const childUsers = mockDb.users.getAll().filter((user) => user.role === 'child');
-      const storedBalances = localStorage.getItem('userBalances');
-      if (storedBalances) {
-        const parsedBalances = JSON.parse(storedBalances);
-        // Check if stored balances match current child users
-        if (parsedBalances.length === childUsers.length) {
-          setUserBalances(parsedBalances);
-        } else {
-          // If not, create new balances for all child users
-          const initialBalances = childUsers.map((user) => ({
-            user,
-            balance: 0,
-            transactions: [],
-          }));
-          setUserBalances(initialBalances);
-        }
-      } else {
-        // If no stored balances, create new balances for all child users
-        const initialBalances = childUsers.map((user) => ({
-          user,
-          balance: 0,
-          transactions: [],
-        }));
-        setUserBalances(initialBalances);
-      }
+  const fetchAccountData = useCallback(async () => {
+    try {
+      const response = await fetch('/api/piggy-bank');
+      if (!response.ok) throw new Error('Failed to fetch account data');
+      const data = await response.json();
+      setAccount(data);
       setIsLoading(false);
-    };
-
-    loadUserBalances();
+    } catch (err) {
+      setError('Error fetching account data');
+      console.error(err);
+      setIsLoading(false);
+    }
   }, []);
 
+  const fetchTransactions = useCallback(async () => {
+    if (!account || !account.account_id) return;
+    try {
+      const response = await fetch(`/api/piggy-bank/transactions?accountId=${account.account_id}`);
+      if (!response.ok) throw new Error('Failed to fetch transactions');
+      const data = await response.json();
+      setTransactions(data);
+    } catch (err) {
+      setError('Error fetching transactions');
+      console.error(err);
+    }
+  }, [account]);
+
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('userBalances', JSON.stringify(userBalances));
+    fetchAccountData();
+  }, [fetchAccountData]);
+
+  useEffect(() => {
+    if (account && account.account_id) {
+      fetchTransactions();
     }
-  }, [userBalances, isLoading]);
+  }, [account, fetchTransactions]);
 
-  const handleAddFunds = (user: User) => {
-    setSelectedUser(user);
-    setIsAddModalOpen(true);
-  };
+  const handleAddFunds = async (amount: number, comments: string, photo: string | null) => {
+    if (!account) return;
 
-  const handleWithdrawFunds = (user: User) => {
-    setSelectedUser(user);
-    setIsWithdrawModalOpen(true);
-  };
+    // Optimistically update the UI
+    const newTransaction: PiggyBankTransaction = {
+      transaction_id: Date.now(), // Temporary ID
+      account_id: account.account_id,
+      amount: amount.toString(),
+      transaction_type: 'deposit',
+      transaction_date: new Date().toISOString(),
+      description: comments,
+      photo: photo,
+    };
 
-  const handleViewTransactions = (userBalance: UserBalance) => {
-    setSelectedUser(userBalance.user);
-    setIsTransactionsModalOpen(true);
-  };
+    setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
+    setAccount((prevAccount) =>
+      prevAccount
+        ? { ...prevAccount, balance: (parseFloat(prevAccount.balance) + amount).toString() }
+        : null
+    );
 
-  const handleAddFundsConfirm = (amount: number, comments: string, photo: string | null) => {
-    if (selectedUser) {
-      const userBalance = userBalances.find((ub) => ub.user.id === selectedUser.id);
-      const newBalance = (userBalance?.balance || 0) + amount;
-      const newTransaction = {
-        id: Date.now().toString(),
-        userId: selectedUser.id,
-        type: 'deposit' as const,
-        amount,
-        date: new Date(),
-        comments,
-        photo,
-        balance: newBalance,
-      };
+    try {
+      const response = await fetch('/api/piggy-bank', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          account_id: account.account_id,
+          amount,
+          transaction_type: 'deposit',
+          description: comments,
+          photo,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to add funds');
 
-      setUserBalances((prevBalances) =>
-        prevBalances.map((ub) =>
-          ub.user.id === selectedUser.id
-            ? {
-                ...ub,
-                balance: newBalance,
-                transactions: [newTransaction, ...ub.transactions],
-              }
-            : ub
-        )
-      );
+      // Refresh data from the server to ensure consistency
+      await fetchAccountData();
+      await fetchTransactions();
+    } catch (err) {
+      setError('Error adding funds');
+      console.error(err);
+      // Revert optimistic updates
+      await fetchAccountData();
+      await fetchTransactions();
     }
-    setIsAddModalOpen(false);
   };
 
-  const handleWithdrawFundsConfirm = (amount: number, comments: string, photo: string | null) => {
-    if (selectedUser) {
-      const userBalance = userBalances.find((ub) => ub.user.id === selectedUser.id);
-      const newBalance = (userBalance?.balance || 0) - amount;
-      const newTransaction = {
-        id: Date.now().toString(),
-        userId: selectedUser.id,
-        type: 'withdrawal' as const,
-        amount,
-        date: new Date(),
-        comments,
-        photo,
-        balance: newBalance,
-      };
-
-      setUserBalances((prevBalances) =>
-        prevBalances.map((ub) =>
-          ub.user.id === selectedUser.id
-            ? {
-                ...ub,
-                balance: newBalance,
-                transactions: [newTransaction, ...ub.transactions],
-              }
-            : ub
-        )
-      );
+  const handleWithdrawFunds = async (amount: number, comments: string, photo: string | null) => {
+    if (!account) return;
+    if (account.balance < amount) {
+      setError('Insufficient balance');
+      return;
     }
-    setIsWithdrawModalOpen(false);
+
+    // Optimistically update the UI
+    const newTransaction: PiggyBankTransaction = {
+      transaction_id: Date.now(), // Temporary ID
+      account_id: account.account_id,
+      amount: (-amount).toString(),
+      transaction_type: 'withdrawal',
+      transaction_date: new Date().toISOString(),
+      description: comments,
+      photo: photo,
+    };
+
+    setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
+    setAccount((prevAccount) =>
+      prevAccount
+        ? { ...prevAccount, balance: (parseFloat(prevAccount.balance) - amount).toString() }
+        : null
+    );
+
+    try {
+      const response = await fetch('/api/piggy-bank', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          account_id: account.account_id,
+          amount: -amount,
+          transaction_type: 'withdrawal',
+          description: comments,
+          photo,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to withdraw funds');
+
+      // Refresh data from the server to ensure consistency
+      await fetchAccountData();
+      await fetchTransactions();
+    } catch (err) {
+      setError('Error withdrawing funds');
+      console.error(err);
+      // Revert optimistic updates
+      await fetchAccountData();
+      await fetchTransactions();
+    }
   };
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (userBalances.length === 0) {
-    return (
-      <div>
-        No child users found. Please add child users in the User Management interface to use the
-        Piggy Bank feature.
-      </div>
-    );
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!account) {
+    return <div>No account found.</div>;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
-          <PiggyBankIcon className="mr-3 h-10 w-10" /> {/* Increased size here */}
+          <PiggyBankIcon className="mr-3 h-10 w-10" />
           Piggy Bank
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {userBalances.map((userBalance) => (
-          <Card key={userBalance.user.id} className="flex flex-col items-center p-4">
-            <div className="w-20 h-20 mb-2">
-              <IconComponent icon={userBalance.user.iconName} className="w-full h-full" />
-            </div>
-            <CardTitle className="text-xl mb-3">{userBalance.user.name}</CardTitle>
-            <div className="bg-blue-100 rounded-lg shadow-md p-3 mb-4 w-full text-center">
-              <p className="text-3xl font-bold text-blue-600">{userBalance.balance.toFixed(2)}</p>
-            </div>
-            <div className="w-full h-px bg-gray-200 mb-4"></div>{' '}
-            {/* Add this line for the separator */}
-            <div className="w-full space-y-2">
-              <Button
-                onClick={() => handleAddFunds(userBalance.user)}
-                className="w-full bg-green-500 hover:bg-green-600 text-white"
-              >
-                Add Funds
-              </Button>
-              <Button
-                onClick={() => handleWithdrawFunds(userBalance.user)}
-                className="w-full bg-red-500 hover:bg-red-600 text-white"
-              >
-                Withdraw Funds
-              </Button>
-              <Button onClick={() => handleViewTransactions(userBalance)} className="w-full">
-                View Transactions
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Account Balance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-2xl font-bold">{formatCurrency(parseFloat(account.balance))}</p>
+          <div className="mt-4 space-x-2">
+            <Button onClick={() => setIsAddFundsModalOpen(true)}>Add Funds</Button>
+            <Button onClick={() => setIsWithdrawFundsModalOpen(true)}>Withdraw Funds</Button>
+          </div>
+        </CardContent>
+      </Card>
 
-      {selectedUser && (
-        <>
-          <AddFundsModal
-            isOpen={isAddModalOpen}
-            onClose={() => setIsAddModalOpen(false)}
-            onAddFunds={handleAddFundsConfirm}
-            userName={selectedUser.name}
-            userIcon={selectedUser.iconName}
-          />
-          <WithdrawFundsModal
-            isOpen={isWithdrawModalOpen}
-            onClose={() => setIsWithdrawModalOpen(false)}
-            onWithdrawFunds={handleWithdrawFundsConfirm}
-            balance={userBalances.find((ub) => ub.user.id === selectedUser?.id)?.balance || 0}
-            userName={selectedUser.name}
-            userIcon={selectedUser.iconName}
-          />
-          <TransactionsModal
-            isOpen={isTransactionsModalOpen}
-            onClose={() => setIsTransactionsModalOpen(false)}
-            transactions={
-              userBalances.find((ub) => ub.user.id === selectedUser.id)?.transactions || []
-            }
-            user={selectedUser} // Pass the entire user object
-          />
-        </>
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>Transaction History</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {transactions.length === 0 ? (
+            <p>No transactions found.</p>
+          ) : (
+            <ul className="space-y-2">
+              {transactions.map((transaction) => (
+                <li key={transaction.transaction_id} className="border-b pb-2">
+                  <p className="font-semibold">
+                    {transaction.transaction_type === 'deposit' ? 'Deposit' : 'Withdrawal'}:{' '}
+                    {formatCurrency(parseFloat(transaction.amount))}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(transaction.transaction_date).toLocaleString()}
+                  </p>
+                  {transaction.description && <p>{transaction.description}</p>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+
+      <AddFundsModal
+        isOpen={isAddFundsModalOpen}
+        onClose={() => setIsAddFundsModalOpen(false)}
+        onAddFunds={handleAddFunds}
+        userName={account.user_name || ''}
+        userIcon={account.user_icon || ''}
+      />
+
+      <WithdrawFundsModal
+        isOpen={isWithdrawFundsModalOpen}
+        onClose={() => setIsWithdrawFundsModalOpen(false)}
+        onWithdrawFunds={handleWithdrawFunds}
+        balance={parseFloat(account.balance)}
+        userName={account.user_name || ''}
+        userIcon={account.user_icon || ''}
+      />
+
+      {error && <div className="text-red-500 mt-4">{error}</div>}
     </div>
   );
 }

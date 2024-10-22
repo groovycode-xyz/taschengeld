@@ -1,7 +1,7 @@
 # Database Schema and Server-Side Data Management Plan
 
 Created: 2024-07-23
-Last Updated: 2024-10-17
+Last Updated: 2024-10-22
 
 This document serves as a comprehensive plan for the server-side database and data management system for the Taschengeld project.
 
@@ -15,10 +15,10 @@ Implemented tables:
 
 - users
 - tasks
+  -completed_tasks
 
 Tables to be implemented:
 
-- completed_tasks
 - piggybank_accounts
 - piggybank_transactions
 
@@ -28,10 +28,10 @@ Fully Implemented:
 
 - User Management
 - Task Management
+- Task Completion
 
 To be implemented: (also see PROJECT_STATUS.md, **Upcoming Tasks**)
 
-- Task Completion
 - Piggy Bank Interface
 - Payday Interface
 
@@ -46,7 +46,8 @@ name VARCHAR(100) NOT NULL,
 birthday DATE,
 role VARCHAR(20) NOT NULL,
 soundurl VARCHAR(255),
-icon VARCHAR(50)
+icon VARCHAR(50),
+piggybank_account_id INTEGER REFERENCES piggybank_accounts(account_id)
 );
 
 ### tasks Table
@@ -68,14 +69,61 @@ updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 sql
 CREATE TABLE completed_tasks (
+c_task_id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(user_id),
+task_id INTEGER REFERENCES tasks(task_id),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+comment TEXT,
+attachment TEXT,
+payment_status VARCHAR(20)
+);
 
 ### piggybank_accounts Table
 
 sql
+CREATE TABLE piggybank_accounts (
+account_id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(user_id),
+account_number VARCHAR(50),
+balance DECIMAL(10,2) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 ### piggybank_transactions Table
 
 sql
+CREATE TABLE piggybank_transactions (
+transaction_id SERIAL PRIMARY KEY,
+account_id INTEGER REFERENCES piggybank_accounts(account_id),
+amount DECIMAL(10,2) NOT NULL,
+transaction_type VARCHAR(20) NOT NULL,
+transaction_date DATE NOT NULL,
+description TEXT,
+photo TEXT
+);
+
+## 4. Relationships
+
+- A user can have many completed tasks (one-to-many)
+- A task can have many completed instances (one-to-many)
+- A user has one piggy bank account (one-to-one)
+- A piggy bank account can have many transactions (one-to-many)
+
+## 5. Notes
+
+- The `piggybank_account_id` in the `users` table establishes a one-to-one relationship between users and piggy bank accounts.
+- The `completed_tasks` table serves as a junction table between `users` and `tasks`, recording each instance of a task completion.
+- The `piggybank_transactions` table records all deposits and withdrawals for each piggy bank account.
+- The `payment_status` in `completed_tasks` can be used to track whether a task has been paid out or not.
+- Photos for transactions are stored as file paths or URLs in the `photo` column of the `piggybank_transactions` table.
+
+## 6. Recent Updates
+
+- Added `piggybank_accounts` and `piggybank_transactions` tables to support the Piggy Bank feature.
+- Updated the `users` table to include a foreign key reference to `piggybank_accounts`.
+- Implemented automatic creation of a Piggy Bank account when a new child user is added.
+- Added support for adding funds and withdrawing funds from Piggy Bank accounts.
+- Implemented transaction history for Piggy Bank accounts.
 
 # Additional Information
 

@@ -9,10 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Implemented Piggy Bank functionality with real database integration
+- Created `piggyBankAccountRepository` and `piggyBankTransactionRepository` for database operations
+- Added API routes for fetching and updating Piggy Bank accounts and transactions
+- Implemented AddFundsModal and WithdrawFundsModal with error handling and form reset
+- Added optimistic updates for better user experience in Piggy Bank transactions
+
 ### Changed
+
+- Updated PiggyBank component to use real data from API instead of mock data
+- Refactored API routes to handle Piggy Bank operations
+- Updated types for PiggyBankAccount and PiggyBankTransaction
 
 ### Fixed
 
+- Resolved issues with form field reset and modal closure in AddFundsModal and WithdrawFundsModal
+- Fixed error handling for insufficient balance in WithdrawFundsModal
+
 ### Improved
 
-## [0.1.3] - 2024-10-20
+- Enhanced error handling and user feedback in Piggy Bank operations
+- Optimized database queries for Piggy Bank transactions
+
+## [0.1.4] - 2024-10-22

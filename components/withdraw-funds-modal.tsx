@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -11,16 +12,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { IconComponent } from './icon-component';
-import { Camera } from 'lucide-react'; // Import the Camera icon
-import Image from 'next/image'; // Add this import
+import { Camera } from 'lucide-react';
 
 interface WithdrawFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onWithdrawFunds: (amount: number, comments: string, photo: string | null) => void;
+  onWithdrawFunds: (amount: number, comments: string, photo: string | null) => Promise<void>;
   balance: number;
   userName: string;
-  userIcon: string; // Add this line
+  userIcon: string;
 }
 
 export function WithdrawFundsModal({
@@ -29,43 +29,37 @@ export function WithdrawFundsModal({
   onWithdrawFunds,
   balance,
   userName,
-  userIcon, // Add this parameter
+  userIcon,
 }: WithdrawFundsModalProps) {
   const [amount, setAmount] = useState('');
   const [comments, setComments] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      // Preload the audio when the modal opens
-      audioRef.current?.load();
+      // Reset form fields when modal opens
+      setAmount('');
+      setComments('');
+      setPhoto(null);
+      setIsSubmitting(false);
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
-    if (!isNaN(numAmount) && numAmount > 0 && numAmount <= balance) {
-      console.log('Attempting to play sound');
-      const audioElement = audioRef.current;
-      if (audioElement) {
-        audioElement.currentTime = 0; // Reset to start
-        audioElement
-          .play()
-          .then(() => {
-            console.log('Sound played successfully');
-            // Wait for the sound to finish playing before closing the modal
-            setTimeout(() => {
-              onWithdrawFunds(numAmount, comments, photo);
-              setAmount('');
-              setComments('');
-              setPhoto(null);
-              onClose();
-            }, audioElement.duration * 1000); // Convert duration to milliseconds
-          })
-          .catch((error) => console.error('Error playing audio:', error));
+    if (!isNaN(numAmount) && numAmount > 0 && numAmount <= balance && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        await onWithdrawFunds(numAmount, comments, photo);
+        onClose();
+      } catch (error) {
+        console.error('Error withdrawing funds:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -86,8 +80,21 @@ export function WithdrawFundsModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open && !isSubmitting) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent
+        onPointerDownOutside={(e) => {
+          if (!isSubmitting) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center">
             Withdraw Funds for {userName} <IconComponent icon={userIcon} className="ml-2 h-6 w-6" />
@@ -107,6 +114,7 @@ export function WithdrawFundsModal({
                 min="0"
                 max={balance}
                 required
+                disabled={isSubmitting}
               />
             </div>
             <div>
@@ -116,6 +124,7 @@ export function WithdrawFundsModal({
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="Add any comments..."
+                disabled={isSubmitting}
               />
             </div>
             <div>
@@ -126,6 +135,7 @@ export function WithdrawFundsModal({
                   variant="outline"
                   onClick={triggerFileInput}
                   className="w-full"
+                  disabled={isSubmitting}
                 >
                   <Camera className="mr-2 h-4 w-4" />
                   {photo ? 'Change Photo' : 'Choose File'}
@@ -136,6 +146,7 @@ export function WithdrawFundsModal({
                     variant="outline"
                     onClick={() => setPhoto(null)}
                     className="text-red-500"
+                    disabled={isSubmitting}
                   >
                     Remove
                   </Button>
@@ -148,6 +159,7 @@ export function WithdrawFundsModal({
                 onChange={handlePhotoUpload}
                 className="hidden"
                 ref={fileInputRef}
+                disabled={isSubmitting}
               />
               {photo && (
                 <div className="mt-2 relative w-full h-32">
@@ -163,10 +175,11 @@ export function WithdrawFundsModal({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Withdraw Funds</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Withdrawing Funds...' : 'Withdraw Funds'}
+            </Button>
           </DialogFooter>
         </form>
-        <audio ref={audioRef} src="/sounds/lose1.wav" preload="auto" />
       </DialogContent>
     </Dialog>
   );

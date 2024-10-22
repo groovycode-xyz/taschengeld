@@ -1,23 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image'; // Add this import
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Button } from 'components/ui/button';
-import { Label } from 'components/ui/label';
-import { Textarea } from 'components/ui/textarea';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { IconComponent } from './icon-component';
-import { Camera } from 'lucide-react'; // Import the Camera icon
+import { Camera } from 'lucide-react';
 
 interface AddFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddFunds: (amount: number, comments: string, photo: string | null) => void;
+  onAddFunds: (amount: number, comments: string, photo: string | null) => Promise<void>;
   userName: string;
   userIcon: string;
 }
@@ -33,36 +33,31 @@ export function AddFundsModal({
   const [comments, setComments] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      audioRef.current?.load();
+      // Reset form fields when modal opens
+      setAmount('');
+      setComments('');
+      setPhoto(null);
+      setIsSubmitting(false);
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
-    if (!isNaN(numAmount) && numAmount > 0) {
-      console.log('Attempting to play sound');
-      const audioElement = audioRef.current;
-      if (audioElement) {
-        audioElement.currentTime = 0; // Reset to start
-        audioElement
-          .play()
-          .then(() => {
-            console.log('Sound played successfully');
-            // Wait for the sound to finish playing before closing the modal
-            setTimeout(() => {
-              onAddFunds(numAmount, comments, photo);
-              setAmount('');
-              setComments('');
-              setPhoto(null);
-              onClose();
-            }, audioElement.duration * 1000); // Convert duration to milliseconds
-          })
-          .catch((error) => console.error('Error playing audio:', error));
+    if (!isNaN(numAmount) && numAmount > 0 && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        await onAddFunds(numAmount, comments, photo);
+        onClose();
+      } catch (error) {
+        console.error('Error adding funds:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -83,8 +78,21 @@ export function AddFundsModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open && !isSubmitting) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent
+        onPointerDownOutside={(e) => {
+          if (!isSubmitting) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center">
             Add Funds for {userName} <IconComponent icon={userIcon} className="ml-2 h-6 w-6" />
@@ -103,6 +111,7 @@ export function AddFundsModal({
                 step="0.01"
                 min="0"
                 required
+                disabled={isSubmitting}
               />
             </div>
             <div>
@@ -112,6 +121,7 @@ export function AddFundsModal({
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="Add any comments..."
+                disabled={isSubmitting}
               />
             </div>
             <div>
@@ -122,6 +132,7 @@ export function AddFundsModal({
                   variant="outline"
                   onClick={triggerFileInput}
                   className="w-full"
+                  disabled={isSubmitting}
                 >
                   <Camera className="mr-2 h-4 w-4" />
                   {photo ? 'Change Photo' : 'Choose File'}
@@ -132,6 +143,7 @@ export function AddFundsModal({
                     variant="outline"
                     onClick={() => setPhoto(null)}
                     className="text-red-500"
+                    disabled={isSubmitting}
                   >
                     Remove
                   </Button>
@@ -144,6 +156,7 @@ export function AddFundsModal({
                 onChange={handlePhotoUpload}
                 className="hidden"
                 ref={fileInputRef}
+                disabled={isSubmitting}
               />
               {photo && (
                 <div className="mt-2 relative w-full h-32">
@@ -159,10 +172,11 @@ export function AddFundsModal({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Add Funds</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Adding Funds...' : 'Add Funds'}
+            </Button>
           </DialogFooter>
         </form>
-        <audio ref={audioRef} src="/sounds/cheer1.wav" preload="auto" />
       </DialogContent>
     </Dialog>
   );

@@ -236,6 +236,8 @@ export const mockDb = {
       const newTransaction: Transaction = {
         ...transaction,
         id: (mockDb.piggyBankTransactions.getAll().length + 1).toString(),
+        comments: transaction.comments || '', // Provide a default empty string if comments is undefined
+        photo: transaction.photo || null, // Provide a default null if photo is undefined
       };
       mockDb.piggyBankTransactions.getAll().push(newTransaction);
       return newTransaction;

@@ -10,10 +10,10 @@
 
 ## Upcoming Tasks
 
-- [ ] Create the **Task Completion** interface.
+- [x] Create the **Task Completion** interface.
 
-  - [ ] Create **completed_tasks** table in the database for supporting the **Task Completion** interface and the **Payday** interface.
-  - [ ] Create API endpoints for **completed_tasks** table.
+  - [x] Create **completed_tasks** table in the database for supporting the **Task Completion** interface and the **Payday** interface.
+  - [x] Create API endpoints for **completed_tasks** table.
 
 - [ ] Complete the **Piggy Bank** interface.
 
