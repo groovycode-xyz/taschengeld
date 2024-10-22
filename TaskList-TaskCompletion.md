@@ -7,7 +7,7 @@
   - [x] Write and execute the SQL creation script
   - [x] Verify the table was created successfully
 
-## Backend Development
+## Backend Development (Completed)
 
 - [x] Implement API route for creating a completed task (POST)
 - [x] Implement API route for fetching completed tasks (GET)
@@ -20,46 +20,42 @@
 - [x] Create new API route for fetching only active tasks
 - [x] Create new API route for fetching only child users
 - [x] Test new routes for active tasks and child users
-- [ ] Consider updating TypeScript to a version officially supported by @typescript-eslint/typescript-estree (optional)
+- [x] Implement API route for individual completed tasks operations ([id] route)
 
-## Frontend Development
+## Frontend Development - Phase 1: Basic Functionality
 
-- [ ] Create a new `TaskCompletion` component
-- [ ] Implement fetching of active tasks
-- [ ] Implement fetching of child users
-- [ ] Create UI for displaying active tasks
-- [ ] Create UI for displaying child users
-- [ ] Implement drag and drop functionality
-- [ ] Implement task completion logic
-- [ ] Integrate with backend API for marking tasks as completed
+- [x] Create a new `TaskCompletion` component
+- [x] Implement fetching of active tasks
+- [x] Implement fetching of child users
+- [x] Create UI for displaying active tasks as a list of cards
+- [x] Implement a modal for selecting a child user when a task is clicked
+- [x] Create a simple mechanism to submit a completed task
+- [x] Add a section to display completed tasks for verification purposes
+- [x] Integrate with backend API for marking tasks as completed
+- [x] Implement minimal error handling for troubleshooting
+- [x] Test the basic functionality in the browser
 
-## Testing
+## Frontend Development - Phase 2: Advanced UI and Interactions
 
-- [ ] Test the new API endpoints for completed tasks
-- [ ] Test the frontend task completion functionality
-- [ ] Verify drag and drop behavior
-- [ ] Ensure proper error handling and loading states
-
-## Integration
-
-- [ ] Integrate the new Task Completion interface with the existing app structure
-- [ ] Update navigation to include the new Task Completion page
-- [ ] Ensure routing is set up correctly for the new page
-
-## Polish and Enhancements
-
+- [ ] Implement touch-based or drag-and-drop functionality for task completion
+- [ ] Refine UI based on the new interaction model
+- [ ] Implement real-time updates when tasks are completed
 - [ ] Add animations for task completion
 - [ ] Implement sound effects for task completion
-- [ ] Perform final UI/UX review and adjustments
+- [ ] Enhance error handling and user feedback
+- [ ] Implement accessibility features
+- [ ] Perform comprehensive UI/UX testing
 
-## Documentation
+## Integration and Final Steps
 
+- [x] Integrate the new Task Completion interface with the existing app structure
+- [x] Update navigation to include the new Task Completion page
+- [x] Ensure routing is set up correctly for the new page
+- [ ] Remove temporary completed tasks display (if implemented in Phase 1)
 - [ ] Update project documentation to include the new Task Completion feature
-- [ ] Add any necessary comments to the code
-- [ ] Update the README if needed
-
-## Final Review
-
 - [ ] Conduct a final review of all implemented features
-- [ ] Ensure all items on this checklist have been addressed
 - [ ] Prepare for deployment of the new feature
+
+## Optional Tasks
+
+- [ ] Consider updating TypeScript to a version officially supported by @typescript-eslint/typescript-estree

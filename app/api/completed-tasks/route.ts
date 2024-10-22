@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
-import { completedTaskRepository } from '../../lib/completedTaskRepository';
-import { CreateCompletedTaskInput, CompletedTask } from '../../types/completedTask';
+import { completedTaskRepository } from '@/app/lib/completedTaskRepository';
+import { CreateCompletedTaskInput, CompletedTask } from '@/app/types/completedTask';
 
 export async function POST(request: Request) {
   try {
     const body: CreateCompletedTaskInput = await request.json();
     console.log('Received completed task data:', body);
     const completedTask: CompletedTask = await completedTaskRepository.create(body);
+    console.log('Created completed task:', completedTask);
     return NextResponse.json(completedTask, { status: 201 });
   } catch (error) {
     console.error('Failed to create completed task:', error);
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const completedTasks: CompletedTask[] = await completedTaskRepository.getAll();
+    console.log('Sending completed tasks:', completedTasks);
     return NextResponse.json(completedTasks);
   } catch (error) {
     console.error('Failed to fetch completed tasks:', error);
