@@ -4,6 +4,7 @@ export interface PiggyBankAccount {
   account_number: string;
   balance: string;
   created_at: string;
-  user_name?: string;
-  user_icon?: string;
+  user_name: string;
+  user_icon: string;
+  birthday: string;
 }

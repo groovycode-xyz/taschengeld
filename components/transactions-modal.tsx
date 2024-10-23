@@ -1,72 +1,109 @@
-import React from 'react';
-import Image from 'next/image'; // Add this import
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { PiggyBankTransaction } from '@/app/types/piggyBankTransaction';
+import { PiggyBankAccount } from '@/app/types/piggyBankAccount';
+import { formatCurrency } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { IconComponent } from './icon-component';
-import { User } from '@/app/types/user';
-
-interface Transaction {
-  id: string;
-  type: 'deposit' | 'withdrawal';
-  amount: number;
-  date: Date;
-  comments?: string;
-  photo?: string | null;
-  balance: number; // Add this line
-}
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface TransactionsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  transactions: Transaction[];
-  user: User; // Change this to accept the entire User object
+  accounts: PiggyBankAccount[];
 }
 
-export function TransactionsModal({ isOpen, onClose, transactions, user }: TransactionsModalProps) {
+export function TransactionsModal({ isOpen, onClose, accounts }: TransactionsModalProps) {
+  const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
+  const [transactions, setTransactions] = useState<PiggyBankTransaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen && accounts.length > 0 && !selectedAccountId) {
+      setSelectedAccountId(accounts[0].account_id);
+    }
+  }, [isOpen, accounts, selectedAccountId]);
+
+  useEffect(() => {
+    if (isOpen && selectedAccountId) {
+      fetchTransactions(selectedAccountId);
+    }
+  }, [isOpen, selectedAccountId]);
+
+  const fetchTransactions = async (accountId: number) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/piggy-bank/transactions?accountId=${accountId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch transactions');
+      }
+      const data = await response.json();
+      setTransactions(data);
+    } catch (err) {
+      console.error('Error fetching transactions:', err);
+      setError('Failed to load transactions');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const selectedAccount = accounts.find((account) => account.account_id === selectedAccountId);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="flex items-center">
-            Transactions for {user.name}{' '}
-            <IconComponent icon={user.iconName} className="ml-2 h-6 w-6" />
-          </DialogTitle>
+          <DialogTitle>Transactions for {selectedAccount?.user_name}</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="mt-8 max-h-[60vh]">
-          {transactions.map((transaction) => (
-            <div key={transaction.id} className="mb-4 p-4 border rounded-lg">
-              <div className="flex justify-between items-center">
-                <span
-                  className={`font-bold ${
-                    transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {transaction.type === 'deposit' ? '+' : '-'}
-                  {transaction.amount.toFixed(2)}
-                </span>
-                <span className="text-sm text-gray-500">
-                  {new Date(transaction.date).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="mt-2 text-sm text-gray-600">
-                Balance: {transaction.balance.toFixed(2)}
-              </div>
-              {transaction.comments && (
-                <p className="mt-2 text-sm text-gray-600">{transaction.comments}</p>
-              )}
-              {transaction.photo && (
-                <div className="mt-2 relative w-full h-32">
-                  <Image
-                    src={transaction.photo}
-                    alt="Transaction"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded"
-                  />
-                </div>
-              )}
-            </div>
-          ))}
+        {accounts.length > 1 && (
+          <Select
+            value={selectedAccountId?.toString()}
+            onValueChange={(value) => setSelectedAccountId(Number(value))}
+          >
+            <SelectTrigger className="w-[200px] mb-4">
+              <SelectValue placeholder="Select account" />
+            </SelectTrigger>
+            <SelectContent>
+              {accounts.map((account) => (
+                <SelectItem key={account.account_id} value={account.account_id.toString()}>
+                  {account.account_number} - {formatCurrency(parseFloat(account.balance))}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        <ScrollArea className="flex-grow overflow-auto">
+          <div className="pr-4 space-y-4">
+            {isLoading ? (
+              <p>Loading transactions...</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : transactions.length === 0 ? (
+              <p>No transactions found for this account.</p>
+            ) : (
+              <ul className="space-y-4">
+                {transactions.map((transaction) => (
+                  <li key={transaction.transaction_id} className="border-b pb-4">
+                    <p className="font-semibold">
+                      {transaction.transaction_type === 'deposit' ? 'Deposit' : 'Withdrawal'}:{' '}
+                      {formatCurrency(parseFloat(transaction.amount))}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(transaction.transaction_date).toLocaleString()}
+                    </p>
+                    {transaction.description && <p>{transaction.description}</p>}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </ScrollArea>
       </DialogContent>
     </Dialog>

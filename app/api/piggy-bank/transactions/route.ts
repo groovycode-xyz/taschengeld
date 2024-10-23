@@ -3,21 +3,16 @@ import { piggyBankTransactionRepository } from '@/app/lib/piggyBankTransactionRe
 
 // GET route to fetch transactions for a specific account
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const accountId = searchParams.get('accountId');
+
+  if (!accountId) {
+    return NextResponse.json({ error: 'Account ID is required' }, { status: 400 });
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const accountId = searchParams.get('accountId');
-
-    if (!accountId) {
-      return NextResponse.json({ error: 'Account ID is required' }, { status: 400 });
-    }
-
-    const accountIdNumber = parseInt(accountId, 10);
-    if (isNaN(accountIdNumber)) {
-      return NextResponse.json({ error: 'Invalid Account ID' }, { status: 400 });
-    }
-
     const transactions = await piggyBankTransactionRepository.getTransactionsByAccountId(
-      accountIdNumber
+      parseInt(accountId, 10)
     );
     return NextResponse.json(transactions);
   } catch (error) {

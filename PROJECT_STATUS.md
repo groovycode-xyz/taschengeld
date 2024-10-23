@@ -2,51 +2,38 @@
 
 ## Recent Updates
 
+- Implemented automatic Piggy Bank account creation when a new user is added
+- Added cascading deletion for Piggy Bank accounts and transactions when a user is deleted
+- Introduced sorting and filtering options for Piggy Bank accounts
+- Updated Piggy Bank interface to handle multiple accounts per user
+
 ## Current Focus
 
-- Fixing minor UI/UX issues without losing any existing functionality.
-- Migrating all interfaces from use of mock data to using the PosgreSQL datbase. (See ## Upcoming Tasks for details.)
-- Implementing a backend API for handling CRUD operations on the database. (See ## Upcoming Tasks for details.)
+- Refining and testing the new Piggy Bank account management features
+- Ensuring smooth integration between User Management and Piggy Bank functionalities
 
 ## Upcoming Tasks
 
-- [x] Create the **Task Completion** interface.
-
-  - [x] Create **completed_tasks** table in the database for supporting the **Task Completion** interface and the **Payday** interface.
-  - [x] Create API endpoints for **completed_tasks** table.
-
-- [ ] Complete the **Piggy Bank** interface.
-
-  - [ ] Create **piggybank_accounts** table in the database for supporting the **Piggy Bank** interface.
-  - [ ] Create API endpoints for **piggybank_accounts** table.
-  - [ ] Create **piggybank_transactions** table in the database for supporting the **Piggy Bank** interface and the **Payday** interface.
-  - [ ] Create API endpoints for **piggybank_transactions** table.
-  - [ ] Add functionality to the **User Management** interface to allow for adding a piggy bank account to a user, both in the **Add User** modal and the **Edit User** modal.
-    - [ ] Include logic to determine if a **piggybank_accounts** for the user already exists, and if so, to choose that account instead of creating a new one, or if it does not exist, to create a new one.
-    - [ ] Add appropriate field to the **Add User** modal and **Edit User** modal to indicate that a **piggybank_accounts** is linked to that user.
-  - [ ] Transition the **Piggy Bank** interface from using mock data to the **piggybank_accounts** and **piggybank_transactions** tables, without losing any existing functionality.
-
-- [ ] Complete the **Payday** interface.
-  - [ ] Migrate the **Payday** interface from using mock data to using the **completed_tasks** and **piggybank_transactions** tables, without losing any existing functionality.
-  - [ ] Ensure that the **Payday** interface works the same as it did when using mock data.
+- [ ] Implement comprehensive error handling for Piggy Bank operations
+- [ ] Add unit and integration tests for new Piggy Bank features
+- [ ] Enhance user interface for managing multiple Piggy Bank accounts
+- [ ] Implement data validation and sanitization for user inputs
+- [ ] Create user documentation for new Piggy Bank features
 
 ## Known Issues
 
-- In the **User Management** interface
-
-  - On the **Edit User** modal
-    - The value in the **Birthday** field is not being shown from the database. The behavior is different in different browsers.
-      - On **Safari** browser, it is showing the same value for all users "10/20/2024".
-      - On **Arc** browser, it simply shows "dd.mm.yyyy" - but no numeric/date value from the database.
-    - In the area of the **User Sound**, when a sound is shown to be defined, clicking the **Play** button does not play the sound. This behavior is consistent across all browsers.
-  - On the **Add User** modal
-    - On **Safari** browser (only), the value in the **Birthday** field is pre-populated with "10/20/2024". This should not be the case. The value in the field should be "dd.mm.yyyy"
-    - In the area of the **User Sound**, when a sound is shown to be defined, clicking the **Play** button does not play the sound. This behavior is consistent across all browsers.
-
-- Some components may still have inconsistent naming conventions or import styles.
-
-## Current Tasks
+- No critical issues at the moment
 
 ## Next Steps
 
+- Conduct thorough testing of the new Piggy Bank account management features
+- Gather user feedback on the new sorting and filtering options
+- Plan for potential performance optimizations for users with many accounts or transactions
+
 ## Project Structure
+
+- The project structure remains largely the same, with updates to the following components:
+  - User Management interface
+  - Piggy Bank interface
+  - TransactionsModal
+  - User and Piggy Bank repositories

@@ -22,8 +22,11 @@ export const piggyBankTransactionRepository = {
   },
 
   async getTransactionsByAccountId(accountId: number): Promise<PiggyBankTransaction[]> {
-    const query =
-      'SELECT * FROM piggybank_transactions WHERE account_id = $1 ORDER BY transaction_date DESC';
+    const query = `
+      SELECT * FROM piggybank_transactions
+      WHERE account_id = $1
+      ORDER BY transaction_date DESC
+    `;
     const result = await pool.query(query, [accountId]);
     return result.rows;
   },

@@ -14,10 +14,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body: CreateUserInput = await request.json();
-    console.log('Received user data:', body); // Add this line
-    const user = await userRepository.create(body);
-    return NextResponse.json(user, { status: 201 });
+    const userData = await request.json();
+    const newUser = await userRepository.createUser(userData);
+    return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
     console.error('Failed to create user:', error);
     return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
@@ -39,17 +38,16 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get('userId');
+
+  if (!userId) {
+    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    if (!id) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
-    }
-    const success = await userRepository.delete(id);
-    if (!success) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-    return NextResponse.json({ message: 'User deleted successfully' });
+    await userRepository.deleteUser(parseInt(userId, 10));
+    return NextResponse.json({ message: 'User deleted successfully' }, { status: 200 });
   } catch (error) {
     console.error('Failed to delete user:', error);
     return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
