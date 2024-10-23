@@ -98,7 +98,19 @@ export function TaskCompletion() {
 
         const newCompletedTask: CompletedTask = await response.json();
         console.log('New completed task:', newCompletedTask);
-        setCompletedTasks([newCompletedTask, ...completedTasks]);
+
+        // Update the local state with the new completed task
+        setCompletedTasks((prevTasks) => [
+          {
+            ...newCompletedTask,
+            task_title: selectedTask.title,
+            user_name: childUsers.find((user) => user.user_id === userId)?.name || '',
+            icon_name: selectedTask.icon_name,
+            user_icon: childUsers.find((user) => user.user_id === userId)?.icon || '',
+          },
+          ...prevTasks,
+        ]);
+
         setIsModalOpen(false);
         setSelectedTask(null);
       } catch (err) {
@@ -140,6 +152,31 @@ export function TaskCompletion() {
         setError('Error deleting completed task');
         console.error(err);
       }
+    }
+  };
+
+  const handleCompleteTask = async (taskId: number) => {
+    try {
+      const response = await fetch('/api/completed-tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: currentUserId, // Assuming you have the current user's ID
+          task_id: taskId,
+          // comment and attachment are optional
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to complete task');
+      }
+
+      // Handle successful task completion (e.g., update UI, show message)
+    } catch (error) {
+      console.error('Error completing task:', error);
+      // Handle error (e.g., show error message to user)
     }
   };
 
