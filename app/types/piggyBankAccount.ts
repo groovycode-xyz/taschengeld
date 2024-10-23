@@ -7,4 +7,5 @@ export interface PiggyBankAccount {
   user_name: string;
   user_icon: string;
   birthday: string;
+  role: string;
 }

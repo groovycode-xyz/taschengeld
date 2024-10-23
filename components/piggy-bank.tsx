@@ -50,18 +50,20 @@ export function PiggyBank() {
   const groupedAccounts = useMemo(() => {
     const grouped: { [key: number]: GroupedAccount } = {};
     accounts.forEach((account) => {
-      if (!grouped[account.user_id]) {
-        grouped[account.user_id] = {
-          user_id: account.user_id,
-          user_name: account.user_name,
-          user_icon: account.user_icon,
-          birthday: account.birthday,
-          total_balance: 0,
-          accounts: [],
-        };
+      if (account.role === 'child') {
+        if (!grouped[account.user_id]) {
+          grouped[account.user_id] = {
+            user_id: account.user_id,
+            user_name: account.user_name,
+            user_icon: account.user_icon,
+            birthday: account.birthday,
+            total_balance: 0,
+            accounts: [],
+          };
+        }
+        grouped[account.user_id].total_balance += parseFloat(account.balance);
+        grouped[account.user_id].accounts.push(account);
       }
-      grouped[account.user_id].total_balance += parseFloat(account.balance);
-      grouped[account.user_id].accounts.push(account);
     });
     return Object.values(grouped);
   }, [accounts]);
@@ -74,9 +76,9 @@ export function PiggyBank() {
         case 'name-desc':
           return b.user_name.localeCompare(a.user_name);
         case 'age-desc': // Oldest to youngest
-          return new Date(b.birthday).getTime() - new Date(a.birthday).getTime();
-        case 'age-asc': // Youngest to oldest
           return new Date(a.birthday).getTime() - new Date(b.birthday).getTime();
+        case 'age-asc': // Youngest to oldest
+          return new Date(b.birthday).getTime() - new Date(a.birthday).getTime();
         default:
           return 0;
       }
@@ -97,7 +99,7 @@ export function PiggyBank() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold flex items-center">
         <PiggyBankIcon className="mr-3 h-10 w-10" />
-        Piggy Bank Accounts
+        Children&apos;s Piggy Bank Accounts
       </h1>
       <div className="flex space-x-4 mb-4">
         <Select onValueChange={setSortOption} defaultValue={sortOption}>

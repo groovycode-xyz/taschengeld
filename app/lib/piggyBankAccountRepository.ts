@@ -1,12 +1,14 @@
+import { Pool, PoolClient } from 'pg';
 import pool from './db';
 import { PiggyBankAccount } from '@/app/types/piggyBankAccount';
 
 export const piggyBankAccountRepository = {
   async getAll(): Promise<PiggyBankAccount[]> {
     const query = `
-      SELECT pa.*, u.name as user_name, u.icon as user_icon, u.birthday
+      SELECT pa.*, u.name as user_name, u.icon as user_icon, u.birthday, u.role
       FROM piggybank_accounts pa
       JOIN users u ON pa.user_id = u.user_id
+      WHERE u.role = 'child'
       ORDER BY pa.created_at DESC
     `;
     const result = await pool.query(query);
@@ -42,7 +44,7 @@ export const piggyBankAccountRepository = {
   async createAccount(
     userId: number,
     accountNumber: string,
-    client = pool
+    client: Pool | PoolClient = pool
   ): Promise<PiggyBankAccount> {
     const query = `
       INSERT INTO piggybank_accounts (user_id, account_number, balance)
