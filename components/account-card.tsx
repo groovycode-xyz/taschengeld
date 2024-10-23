@@ -6,7 +6,7 @@ import { formatCurrency } from '@/lib/utils';
 import { IconComponent } from './icon-component';
 import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
-import { TransactionsModal } from './transactions-modal'; // You'll need to create this component
+import { TransactionsModal } from './transactions-modal';
 
 interface AccountCardProps {
   account: PiggyBankAccount;
@@ -74,22 +74,35 @@ export function AccountCard({ account, onUpdate, allAccounts }: AccountCardProps
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <IconComponent icon={account.user_icon || ''} className="mr-2 h-6 w-6" />
-          {account.user_name}
-        </CardTitle>
+    <Card className="flex flex-col items-center text-center">
+      <CardHeader className="flex flex-col items-center">
+        <IconComponent icon={account.user_icon || ''} className="w-24 h-24 mb-2" />
+        <CardTitle>{account.user_name}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col items-center w-full">
         <p className="text-2xl font-bold mb-4">{formatCurrency(parseFloat(account.balance))}</p>
         {allAccounts.length > 1 && (
           <p className="text-sm text-gray-500 mb-2">{allAccounts.length} accounts</p>
         )}
-        <div className="flex flex-col space-y-2">
-          <Button onClick={() => setIsAddFundsModalOpen(true)}>Add Funds</Button>
-          <Button onClick={() => setIsWithdrawFundsModalOpen(true)}>Withdraw Funds</Button>
-          <Button onClick={() => setIsTransactionsModalOpen(true)}>Transactions</Button>
+        <div className="flex flex-col space-y-2 w-full">
+          <Button
+            onClick={() => setIsAddFundsModalOpen(true)}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+          >
+            Add Funds
+          </Button>
+          <Button
+            onClick={() => setIsWithdrawFundsModalOpen(true)}
+            className="bg-rose-600 hover:bg-rose-700 text-white"
+          >
+            Withdraw Funds
+          </Button>
+          <Button
+            onClick={() => setIsTransactionsModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Transactions
+          </Button>
         </div>
       </CardContent>
 

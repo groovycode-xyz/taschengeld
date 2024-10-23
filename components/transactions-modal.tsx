@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { IconComponent } from './icon-component';
 
 interface TransactionsModalProps {
   isOpen: boolean;
@@ -60,7 +61,10 @@ export function TransactionsModal({ isOpen, onClose, accounts }: TransactionsMod
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Transactions for {selectedAccount?.user_name}</DialogTitle>
+          <DialogTitle className="flex items-center">
+            <IconComponent icon={selectedAccount?.user_icon || ''} className="mr-2 h-6 w-6" />
+            Transactions for {selectedAccount?.user_name}
+          </DialogTitle>
         </DialogHeader>
         {accounts.length > 1 && (
           <Select
@@ -73,7 +77,10 @@ export function TransactionsModal({ isOpen, onClose, accounts }: TransactionsMod
             <SelectContent>
               {accounts.map((account) => (
                 <SelectItem key={account.account_id} value={account.account_id.toString()}>
-                  {account.account_number} - {formatCurrency(parseFloat(account.balance))}
+                  <div className="flex items-center">
+                    <IconComponent icon={account.user_icon || ''} className="mr-2 h-4 w-4" />
+                    {account.account_number} - {formatCurrency(parseFloat(account.balance))}
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
