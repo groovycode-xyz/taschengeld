@@ -155,31 +155,6 @@ export function TaskCompletion() {
     }
   };
 
-  const handleCompleteTask = async (taskId: number) => {
-    try {
-      const response = await fetch('/api/completed-tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: currentUserId, // Assuming you have the current user's ID
-          task_id: taskId,
-          // comment and attachment are optional
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to complete task');
-      }
-
-      // Handle successful task completion (e.g., update UI, show message)
-    } catch (error) {
-      console.error('Error completing task:', error);
-      // Handle error (e.g., show error message to user)
-    }
-  };
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 

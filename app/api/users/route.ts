@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { userRepository } from '@/app/lib/userRepository';
-import { CreateUserInput } from '@/app/types/user';
 
 export async function GET() {
   try {

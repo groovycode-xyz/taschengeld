@@ -15,7 +15,7 @@ Implemented tables:
 
 - users
 - tasks
-  -completed_tasks
+- completed_tasks
 
 Tables to be implemented:
 
@@ -118,12 +118,6 @@ photo TEXT
 - Photos for transactions are stored as file paths or URLs in the `photo` column of the `piggybank_transactions` table.
 
 ## 6. Recent Updates
-
-- Added `piggybank_accounts` and `piggybank_transactions` tables to support the Piggy Bank feature.
-- Updated the `users` table to include a foreign key reference to `piggybank_accounts`.
-- Implemented automatic creation of a Piggy Bank account when a new child user is added.
-- Added support for adding funds and withdrawing funds from Piggy Bank accounts.
-- Implemented transaction history for Piggy Bank accounts.
 
 # Additional Information
 

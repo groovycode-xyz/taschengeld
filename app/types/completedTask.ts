@@ -9,12 +9,14 @@ export interface CompletedTask {
   c_task_id: number;
   user_id: number;
   task_id: number;
+  created_at: string;
+  task_title: string;
+  user_name: string;
+  icon_name: string;
+  user_icon: string;
   description: string;
   payout_value: string;
-  created_at: string;
   comment: string | null;
   attachment: string | null;
   payment_status: string;
-  task_title?: string;
-  user_name?: string;
 }
