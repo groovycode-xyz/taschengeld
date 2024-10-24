@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced transaction history UI with color-coded entries and status icons
 - Added user identification header in transaction modal
 - Added scrollable transaction history with fixed height modal
+- Added comprehensive DATABASE_SCHEMA.md documentation
+- Documented all database tables, relationships, and cascading deletions
+- Added detailed column descriptions for all database tables
 
 ### Changed
 

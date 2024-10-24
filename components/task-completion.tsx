@@ -52,9 +52,10 @@ export function TaskCompletion() {
         setActiveTasks(tasksData);
         setChildUsers(usersData);
         setCompletedTasks(completedData.filter((task) => task.payment_status === 'Unpaid')); // Updated from 'unpaid' to 'Unpaid'
-      } catch (err: any) {
-        setError(err.message || 'An error occurred');
-        console.error(err);
+      } catch (err) {
+        const error = err as Error; // Specify the error type
+        setError(error.message || 'An error occurred');
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
