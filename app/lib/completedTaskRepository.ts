@@ -160,4 +160,14 @@ export const completedTaskRepository = {
     await pool.query(query);
     console.log('Cleared all completed tasks');
   },
+
+  /**
+   * Deletes all completed tasks associated with a specific user.
+   * @param userId - The ID of the user.
+   * @returns A promise that resolves when the deletion is complete.
+   */
+  async deleteByUserId(userId: number): Promise<void> {
+    const query = 'DELETE FROM completed_tasks WHERE user_id = $1';
+    await pool.query(query, [userId]);
+  },
 };

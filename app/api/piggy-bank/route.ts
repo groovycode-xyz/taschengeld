@@ -17,7 +17,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { account_id, amount, transaction_type, description, photo } = body;
+    const {
+      account_id,
+      amount,
+      transaction_type,
+      description,
+      photo,
+      completed_task_id, // New field
+    } = body;
 
     // Update the account balance
     const updatedAccount = await piggyBankAccountRepository.updateBalance(account_id, amount);
@@ -32,6 +39,7 @@ export async function POST(request: Request) {
       transaction_type,
       description,
       photo,
+      completed_task_id, // Include completed task reference
     });
 
     return NextResponse.json(

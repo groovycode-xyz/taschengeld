@@ -37,6 +37,7 @@ export function Payday() {
   const handleUpdatePaymentStatus = async (cTaskId: number, newStatus: string) => {
     setLoadingTaskIds((prev) => [...prev, cTaskId]);
     try {
+      // First update the task status
       const response = await fetch('/api/completed-tasks', {
         method: 'PUT',
         headers: {
@@ -49,7 +50,30 @@ export function Payday() {
         throw new Error('Failed to update payment status');
       }
 
-      // Remove the approved/rejected task from the list immediately
+      const updatedTask = await response.json();
+
+      // If task is approved, create a piggy bank transaction
+      if (newStatus === 'Approved') {
+        const transactionResponse = await fetch('/api/piggy-bank', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            account_id: updatedTask.user_piggybank_account_id, // We'll need to ensure this is included
+            amount: updatedTask.payout_value,
+            transaction_type: 'deposit',
+            description: `Payment for task: ${updatedTask.task_title}`,
+            completed_task_id: cTaskId,
+          }),
+        });
+
+        if (!transactionResponse.ok) {
+          throw new Error('Failed to create transaction');
+        }
+      }
+
+      // Remove the approved/rejected task from the list
       setCompletedTasks((prevTasks) => prevTasks.filter((task) => task.c_task_id !== cTaskId));
     } catch (error) {
       console.error('Error updating payment status:', error);

@@ -3,13 +3,11 @@ import { completedTaskRepository } from '@/app/lib/completedTaskRepository';
 import { CreateCompletedTaskInput } from '@/app/types/completedTask';
 import { taskRepository } from '@/app/lib/taskRepository';
 import { userRepository } from '@/app/lib/userRepository';
-import { piggyBankAccountRepository } from '@/app/lib/piggyBankAccountRepository';
-import { piggyBankTransactionRepository } from '@/app/lib/piggyBankTransactionRepository';
+import { User } from '@/app/types/user';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const completedTasks = await completedTaskRepository.getAll();
-    console.log('Completed Tasks:', completedTasks); // Added for debugging
     return NextResponse.json(completedTasks);
   } catch (error) {
     console.error('Failed to fetch completed tasks:', error);
@@ -43,43 +41,28 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const { c_task_id, payment_status } = await request.json();
-    const updatedCompletedTask = await completedTaskRepository.updatePaymentStatus(
+    const body = await request.json();
+    const { c_task_id, payment_status } = body;
+
+    const updatedTask = await completedTaskRepository.updatePaymentStatus(
       c_task_id,
       payment_status
     );
-
-    if (!updatedCompletedTask) {
-      return NextResponse.json({ error: 'Completed task not found' }, { status: 404 });
+    if (!updatedTask) {
+      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    if (payment_status === 'Approved') {
-      // Fetch the user's piggy bank account
-      const piggyBankAccount = await piggyBankAccountRepository.getByUserId(
-        updatedCompletedTask.user_id
-      );
+    const taskDetails = await taskRepository.getById(updatedTask.task_id.toString());
+    const userDetails = (await userRepository.getById(updatedTask.user_id.toString())) as User;
 
-      if (!piggyBankAccount) {
-        return NextResponse.json({ error: 'Piggy bank account not found' }, { status: 404 });
-      }
+    const fullTaskDetails = {
+      ...updatedTask,
+      task_title: taskDetails?.title,
+      user_piggybank_account_id: userDetails?.piggybank_account_id,
+      payout_value: taskDetails?.payout_value,
+    };
 
-      // Create a new transaction
-      await piggyBankTransactionRepository.addTransaction({
-        account_id: piggyBankAccount.account_id,
-        amount: updatedCompletedTask.payout_value,
-        transaction_type: 'deposit',
-        description: `Payment for task: ${updatedCompletedTask.task_title}`,
-        photo: null,
-      });
-
-      // Update the account balance
-      await piggyBankAccountRepository.updateBalance(
-        piggyBankAccount.account_id,
-        parseFloat(updatedCompletedTask.payout_value)
-      );
-    }
-
-    return NextResponse.json(updatedCompletedTask);
+    return NextResponse.json(fullTaskDetails);
   } catch (error) {
     console.error('Failed to update completed task:', error);
     return NextResponse.json({ error: 'Failed to update completed task' }, { status: 500 });

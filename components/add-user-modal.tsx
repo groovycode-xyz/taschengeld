@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from 'components/ui/dialog';
 import { Button } from 'components/ui/button';
@@ -41,6 +42,7 @@ import {
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
+import { format } from 'date-fns';
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -57,34 +59,43 @@ export function AddUserModal({
   onDeleteUser,
   user,
 }: AddUserModalProps) {
-  const [name, setName] = useState('');
-  const [icon, setIcon] = useState('user');
-  const [soundUrl, setSoundUrl] = useState('');
-  const [birthday, setBirthday] = useState('');
+  const [name, setName] = useState(user?.name || '');
+  const [icon, setIcon] = useState(user?.icon || '');
+  const [soundUrl, setSoundUrl] = useState(user?.soundurl || '');
+  const [birthday, setBirthday] = useState(
+    user ? format(new Date(user.birthday), 'yyyy-MM-dd') : ''
+  );
   const [role, setRole] = useState<'parent' | 'child'>('child');
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen && user) {
+    if (user) {
       setName(user.name);
       setIcon(user.icon);
       setSoundUrl(user.soundurl || '');
-      setBirthday(user.birthday);
+      setBirthday(format(new Date(user.birthday), 'yyyy-MM-dd')); // Ensures correct format
       setRole(user.role);
     } else {
       setName('');
-      setIcon('user');
-      setSoundUrl('');
       setBirthday('');
+      setIcon('');
+      setSoundUrl('');
       setRole('child');
     }
-  }, [isOpen, user]);
+  }, [user]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const userData: CreateUserInput = { name, icon, soundurl: soundUrl, birthday, role };
+    const formattedBirthday = birthday ? new Date(birthday).toISOString() : null;
+    const userData: CreateUserInput = {
+      name,
+      icon,
+      soundurl: soundUrl,
+      birthday: formattedBirthday,
+      role,
+    };
     if (user) {
       // If editing an existing user
       onAddUser({ ...userData, user_id: user.user_id });
@@ -136,9 +147,12 @@ export function AddUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
+        <DialogContent aria-describedby="add-user-description">
           <DialogHeader>
-            <DialogTitle>{user ? 'Edit User' : 'Add New User'}</DialogTitle>
+            <DialogTitle>{user ? 'Edit User' : 'Add User'}</DialogTitle>
+            <DialogDescription id="add-user-description">
+              {user ? 'Update the details of the user.' : 'Fill in the details to add a new user.'}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">

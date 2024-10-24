@@ -55,17 +55,32 @@ export function TransactionsModal({ isOpen, onClose, accounts }: TransactionsMod
     }
   };
 
+  const getTransactionDescription = (transaction: PiggyBankTransaction) => {
+    if (transaction.completed_task_id && transaction.task_title) {
+      return `Payment for task: ${transaction.task_title}`;
+    }
+    return transaction.description || 'No description available';
+  };
+
   const selectedAccount = accounts.find((account) => account.account_id === selectedAccountId);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="flex items-center">
-            <IconComponent icon={selectedAccount?.user_icon || ''} className="mr-2 h-6 w-6" />
-            Transactions for {selectedAccount?.user_name}
-          </DialogTitle>
+    <Dialog open={isOpen} onOpenChange={() => onClose()}>
+      <DialogContent className="max-h-[80vh] flex flex-col p-6">
+        <DialogHeader className="mb-4">
+          <div className="flex items-center gap-2">
+            {selectedAccount && (
+              <IconComponent icon={selectedAccount.user_icon || ''} className="h-6 w-6" />
+            )}
+            <div className="flex flex-col">
+              <DialogTitle>Transaction History</DialogTitle>
+              {selectedAccount && (
+                <p className="text-sm text-gray-500 mt-1">{selectedAccount.user_name}</p>
+              )}
+            </div>
+          </div>
         </DialogHeader>
+
         {accounts.length > 1 && (
           <Select
             value={selectedAccountId?.toString()}
@@ -86,29 +101,83 @@ export function TransactionsModal({ isOpen, onClose, accounts }: TransactionsMod
             </SelectContent>
           </Select>
         )}
-        <ScrollArea className="flex-grow overflow-auto">
-          <div className="pr-4 space-y-4">
+
+        <ScrollArea className="h-[50vh] w-full rounded-md">
+          <div className="space-y-4 pr-4">
             {isLoading ? (
               <p>Loading transactions...</p>
             ) : error ? (
               <p className="text-red-500">{error}</p>
             ) : transactions.length === 0 ? (
-              <p>No transactions found for this account.</p>
+              <p>No transactions found</p>
             ) : (
-              <ul className="space-y-4">
-                {transactions.map((transaction) => (
-                  <li key={transaction.transaction_id} className="border-b pb-4">
-                    <p className="font-semibold">
-                      {transaction.transaction_type === 'deposit' ? 'Deposit' : 'Withdrawal'}:{' '}
-                      {formatCurrency(parseFloat(transaction.amount))}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {new Date(transaction.transaction_date).toLocaleString()}
-                    </p>
-                    {transaction.description && <p>{transaction.description}</p>}
-                  </li>
-                ))}
-              </ul>
+              transactions.map((transaction) => (
+                <div
+                  key={transaction.transaction_id}
+                  className={`border p-4 rounded-lg space-y-2 transition-colors ${
+                    transaction.transaction_type === 'deposit'
+                      ? 'bg-green-50 border-green-200 hover:bg-green-100'
+                      : 'bg-red-50 border-red-200 hover:bg-red-100'
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`p-2 rounded-full ${
+                          transaction.transaction_type === 'deposit' ? 'bg-green-100' : 'bg-red-100'
+                        }`}
+                      >
+                        {transaction.transaction_type === 'deposit' ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-green-600"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 3a1 1 0 00-.707.293l-4 4a1 1 0 101.414 1.414L10 5.414l3.293 3.293a1 1 0 001.414-1.414l-4-4A1 1 0 0010 3z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-red-600"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 17a1 1 0 00.707-.293l4-4a1 1 0 00-1.414-1.414L10 14.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4A1 1 0 0010 17z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="font-medium">
+                        {transaction.transaction_type === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-lg font-semibold ${
+                        transaction.transaction_type === 'deposit'
+                          ? 'text-green-600'
+                          : 'text-red-600'
+                      }`}
+                    >
+                      {transaction.transaction_type === 'deposit' ? '+' : '-'}
+                      {formatCurrency(Math.abs(parseFloat(transaction.amount)))}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700 font-medium">
+                    {getTransactionDescription(transaction)}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(transaction.transaction_date).toLocaleString()}
+                  </p>
+                </div>
+              ))
             )}
           </div>
         </ScrollArea>
