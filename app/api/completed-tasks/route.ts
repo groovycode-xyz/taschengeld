@@ -7,23 +7,9 @@ import { piggyBankAccountRepository } from '@/app/lib/piggyBankAccountRepository
 import { piggyBankTransactionRepository } from '@/app/lib/piggyBankTransactionRepository';
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const userId = searchParams.get('userId');
-  const status = searchParams.get('status');
-
   try {
-    let completedTasks;
-    if (userId) {
-      completedTasks = await completedTaskRepository.getByUserId(parseInt(userId, 10));
-    } else {
-      completedTasks = await completedTaskRepository.getAll();
-    }
-
-    // Filter by status if provided
-    if (status) {
-      completedTasks = completedTasks.filter((task) => task.payment_status === status);
-    }
-
+    const completedTasks = await completedTaskRepository.getAll();
+    console.log('Completed Tasks:', completedTasks); // Added for debugging
     return NextResponse.json(completedTasks);
   } catch (error) {
     console.error('Failed to fetch completed tasks:', error);

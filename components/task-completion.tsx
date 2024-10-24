@@ -31,49 +31,37 @@ export function TaskCompletion() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
-    fetchActiveTasks();
-    fetchChildUsers();
-    fetchCompletedTasks();
+    const fetchData = async () => {
+      try {
+        const [tasksRes, usersRes, completedRes] = await Promise.all([
+          fetch('/api/active-tasks'),
+          fetch('/api/child-users'),
+          fetch('/api/completed-tasks'),
+        ]);
+
+        if (!tasksRes.ok) throw new Error('Failed to fetch active tasks');
+        if (!usersRes.ok) throw new Error('Failed to fetch child users');
+        if (!completedRes.ok) throw new Error('Failed to fetch completed tasks');
+
+        const [tasksData, usersData, completedData] = await Promise.all([
+          tasksRes.json(),
+          usersRes.json(),
+          completedRes.json(),
+        ]);
+
+        setActiveTasks(tasksData);
+        setChildUsers(usersData);
+        setCompletedTasks(completedData.filter((task) => task.payment_status === 'Unpaid')); // Updated from 'unpaid' to 'Unpaid'
+      } catch (err: any) {
+        setError(err.message || 'An error occurred');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
-
-  const fetchActiveTasks = async () => {
-    try {
-      const response = await fetch('/api/active-tasks');
-      if (!response.ok) throw new Error('Failed to fetch active tasks');
-      const data = await response.json();
-      setActiveTasks(data);
-    } catch (err) {
-      setError('Error fetching active tasks');
-      console.error(err);
-    }
-  };
-
-  const fetchChildUsers = async () => {
-    try {
-      const response = await fetch('/api/child-users');
-      if (!response.ok) throw new Error('Failed to fetch child users');
-      const data = await response.json();
-      setChildUsers(data);
-    } catch (err) {
-      setError('Error fetching child users');
-      console.error(err);
-    }
-  };
-
-  const fetchCompletedTasks = async () => {
-    try {
-      const response = await fetch('/api/completed-tasks');
-      if (!response.ok) throw new Error('Failed to fetch completed tasks');
-      const data = await response.json();
-      console.log('Received completed tasks:', data);
-      setCompletedTasks(data);
-    } catch (err) {
-      setError('Error fetching completed tasks');
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleTaskClick = (task: Task) => {
     setSelectedTask(task);
@@ -194,27 +182,44 @@ export function TaskCompletion() {
               className="w-full hover:shadow-lg transition-shadow duration-300"
             >
               <CardContent className="flex items-center justify-between p-4">
+                {/* Task Icon */}
                 <Card className="flex-1 mr-2 bg-blue-50 shadow-sm">
                   <CardContent className="flex items-center p-2">
-                    {task.icon_name && (
+                    {task.icon_name ? (
                       <IconComponent icon={task.icon_name} className="h-8 w-8 mr-2" />
+                    ) : (
+                      <IconComponent
+                        icon="default-task-icon"
+                        className="h-8 w-8 mr-2 text-gray-400"
+                      />
                     )}
                     <span className="text-sm font-medium">{task.task_title}</span>
                   </CardContent>
                 </Card>
+
+                {/* User Icon */}
                 <Card className="flex-1 mx-2 bg-green-50 shadow-sm">
                   <CardContent className="flex items-center p-2">
-                    {task.user_icon && (
+                    {task.user_icon ? (
                       <IconComponent icon={task.user_icon} className="h-8 w-8 mr-2" />
+                    ) : (
+                      <IconComponent
+                        icon="default-user-icon"
+                        className="h-8 w-8 mr-2 text-gray-400"
+                      />
                     )}
                     <span className="text-sm font-medium">{task.user_name}</span>
                   </CardContent>
                 </Card>
+
+                {/* Time Since Created */}
                 <Card className="flex-1 ml-2 bg-gray-50 shadow-sm">
                   <CardContent className="p-2 text-center">
                     <TimeSince date={task.created_at} />
                   </CardContent>
                 </Card>
+
+                {/* Delete Button */}
                 <Button
                   variant="ghost"
                   size="icon"

@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected age-based sorting in Children's Piggy Bank interface
 - Fixed apostrophe rendering issue in "Children's Piggy Bank Accounts" title
 - Addressed issue with payout values not displaying correctly in the Payday interface
+- Corrected `payment_status` case in Task Completion interface to display only tasks with status "Unpaid".
+- Ensured `icon_name` and `user_icon` are included in Completed Task API responses for accurate icon rendering.
+- Resolved issue where task and user icons were not displaying for existing completed tasks after page refresh.
 
 ### Improved
 

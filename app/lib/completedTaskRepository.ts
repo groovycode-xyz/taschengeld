@@ -6,11 +6,20 @@ console.log('Database connection:', pool.options);
 export const completedTaskRepository = {
   async getAll(): Promise<CompletedTask[]> {
     const query = `
-      SELECT ct.*, t.title as task_title, u.name as user_name
-      FROM completed_tasks ct
-      JOIN tasks t ON ct.task_id = t.task_id
-      JOIN users u ON ct.user_id = u.user_id
-      ORDER BY ct.created_at DESC
+      SELECT 
+        ct.*, 
+        t.title AS task_title, 
+        t.icon_name, 
+        u.name AS user_name, 
+        u.icon AS user_icon
+      FROM 
+        completed_tasks ct
+      JOIN 
+        tasks t ON ct.task_id = t.task_id
+      JOIN 
+        users u ON ct.user_id = u.user_id
+      ORDER BY 
+        ct.created_at DESC
     `;
     const result = await pool.query(query);
     return result.rows;
@@ -18,12 +27,22 @@ export const completedTaskRepository = {
 
   async getByUserId(userId: number): Promise<CompletedTask[]> {
     const query = `
-      SELECT ct.*, t.title as task_title, u.name as user_name
-      FROM completed_tasks ct
-      JOIN tasks t ON ct.task_id = t.task_id
-      JOIN users u ON ct.user_id = u.user_id
-      WHERE ct.user_id = $1
-      ORDER BY ct.created_at DESC
+      SELECT 
+        ct.*, 
+        t.title AS task_title, 
+        t.icon_name, 
+        u.name AS user_name, 
+        u.icon AS user_icon
+      FROM 
+        completed_tasks ct
+      JOIN 
+        tasks t ON ct.task_id = t.task_id
+      JOIN 
+        users u ON ct.user_id = u.user_id
+      WHERE 
+        ct.user_id = $1
+      ORDER BY 
+        ct.created_at DESC
     `;
     const result = await pool.query(query, [userId]);
     return result.rows;

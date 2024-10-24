@@ -220,6 +220,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 #### **6.3.3 Security Requirements**
 
+- **Kiosk Mode:** With regards to the design methodology of access management, this application does not need to track user sessions or logins. Instead, it it is assumed that two classes of users will be using the system at any given time, adn that the user chooses which class he/she is a member of. This is not tracked or stored in the database. Therefore, any interactions within the application will never need to track a specific user-ID (for example, "selectedUser" or "selectedUserId" or anything of that nature). The application will simply assume that whomever is using the application at any given time is the appropriate role and act accordingly. When a specific user is needed to be known, for example, for retrieving User information from the users table, or writing data to a table based upon a specific UserID, this will be factored into user activity workflow in such a way that the user (whatever mode he/she is operating in) will clearly be choosing from the UI/UX which specific User they are targeting for a specific transaction.
 - **Role-Based Access Control (RBAC):** Differentiate functionalities based on Parent and Child roles.
 - **PIN Security:** Secure storage and verification of PINs using bcrypt hashing.
 - **Data Encryption:** Implement HTTPS for secure data transmission and encrypt sensitive data in the database.
@@ -476,5 +477,3 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 - **Docker & Docker Compose:** Containerize the application for consistent deployment across different environments.
 - **Self-Hosting:** Deploy the application on a home server or homelab using Docker containers to manage frontend, backend, and database services.
-
-
