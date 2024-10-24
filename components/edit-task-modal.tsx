@@ -37,6 +37,7 @@ export function EditTaskModal({
   const [activeStatus, setActiveStatus] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false); // Add this line
   // {{ Remove the following line }}
   // const [assignedUser, setAssignedUser] = useState<User | null>(null);
 
@@ -142,7 +143,7 @@ export function EditTaskModal({
                     readOnly
                     placeholder="No sound selected"
                   />
-                  <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
+                  <Button type="button" variant="outline" onClick={() => setIsSoundModalOpen(true)}>
                     Select Sound
                   </Button>
                   {sound && (
@@ -198,8 +199,8 @@ export function EditTaskModal({
         onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
       />
       <SelectSoundModal
-        isOpen={isIconModalOpen}
-        onClose={() => setIsIconModalOpen(false)}
+        isOpen={isSoundModalOpen} // Corrected to use the sound modal state
+        onClose={() => setIsSoundModalOpen(false)}
         onSelectSound={(selectedSound) => setSound(selectedSound)}
         currentSound={sound}
       />

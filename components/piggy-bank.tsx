@@ -99,7 +99,7 @@ export function PiggyBank() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold flex items-center">
         <PiggyBankIcon className="mr-3 h-10 w-10" />
-        Children&apos;s Piggy Bank Accounts
+        Sparkässeli
       </h1>
       <div className="flex space-x-4 mb-4">
         <Select onValueChange={setSortOption} defaultValue={sortOption}>

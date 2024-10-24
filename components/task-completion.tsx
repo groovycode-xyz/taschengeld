@@ -9,7 +9,7 @@ import { TimeSince } from './time-since';
 import { Task } from '@/app/types/task';
 import { User } from '@/app/types/user';
 import { CompletedTask } from '@/app/types/completedTask';
-import { ClipboardListIcon, Trash2 } from 'lucide-react';
+import { ClipboardListIcon, Trash2, SquareCheckBig } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -51,9 +51,9 @@ export function TaskCompletion() {
 
         setActiveTasks(tasksData);
         setChildUsers(usersData);
-        setCompletedTasks(completedData.filter((task) => task.payment_status === 'Unpaid')); // Updated from 'unpaid' to 'Unpaid'
+        setCompletedTasks(completedData.filter((task) => task.payment_status === 'Unpaid'));
       } catch (err) {
-        const error = err as Error; // Specify the error type
+        const error = err as Error;
         setError(error.message || 'An error occurred');
         console.error(error);
       } finally {
@@ -88,7 +88,6 @@ export function TaskCompletion() {
         const newCompletedTask: CompletedTask = await response.json();
         console.log('New completed task:', newCompletedTask);
 
-        // Update the local state with the new completed task
         setCompletedTasks((prevTasks) => [
           {
             ...newCompletedTask,
@@ -180,9 +179,12 @@ export function TaskCompletion() {
           {completedTasks.map((task) => (
             <Card
               key={task.c_task_id}
-              className="w-full hover:shadow-lg transition-shadow duration-300"
+              className="w-full hover:shadow-lg transition-shadow duration-300 bg-white"
             >
               <CardContent className="flex items-center justify-between p-4">
+                {/* SquareCheckBig Icon */}
+                <SquareCheckBig className="h-8 w-8 mr-2 text-green-500" />
+
                 {/* Task Icon */}
                 <Card className="flex-1 mr-2 bg-blue-50 shadow-sm">
                   <CardContent className="flex items-center p-2">

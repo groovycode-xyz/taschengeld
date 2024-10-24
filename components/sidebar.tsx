@@ -23,7 +23,7 @@ export function Sidebar() {
           className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200"
         >
           <PiggyBankIcon className="mr-3 h-5 w-5" />
-          <span>Piggy Bank</span>
+          <span>Sparkässeli</span>
         </Link>
         <Link
           href="/payday"
@@ -44,7 +44,7 @@ export function Sidebar() {
           className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200"
         >
           <UsersIcon className="mr-3 h-5 w-5" />
-          <span>User Management</span>
+          <span>Family Management</span>
         </Link>
       </nav>
       <div className="p-4 border-t border-gray-200">

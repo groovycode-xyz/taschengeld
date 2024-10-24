@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { IconComponent } from './icon-component';
+import { SquareCheckBig } from 'lucide-react'; // Import the new icon
 
 interface CompletedTaskCardProps {
   task: CompletedTask;
@@ -25,7 +26,7 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
 
   const formattedPayout =
     task.payout_value && !isNaN(parseFloat(task.payout_value))
-      ? formatCurrency(parseFloat(task.payout_value))
+      ? parseFloat(task.payout_value).toFixed(2)
       : 'N/A';
 
   const handleAction = (action: 'Approve' | 'Reject') => {
@@ -43,6 +44,7 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
   return (
     <Card>
       <CardHeader className="flex flex-row items-center space-x-2">
+        <SquareCheckBig className="h-6 w-6 text-green-500" /> {/* Add the new icon here */}
         <IconComponent icon={task.icon_name} className="h-6 w-6 text-blue-500" />
         <CardTitle>{task.task_title}</CardTitle>
       </CardHeader>
@@ -51,8 +53,7 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
           <IconComponent icon={task.user_icon} className="h-6 w-6 text-gray-500" />
           <span>Completed by: {task.user_name}</span>
         </div>
-        <p>Payout: {formattedPayout}</p>
-        <p>Status: {task.payment_status}</p>
+        <p>Payout: {formatCurrency(parseFloat(task.payout_value))}</p>
         {task.comment && <p>Comment: {task.comment}</p>}
         {task.attachment && <p>Attachment: {task.attachment}</p>}
         {task.payment_status === 'Unpaid' && (

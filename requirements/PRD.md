@@ -201,7 +201,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 - **Audio Message Attachments:** Allow children to record and attach audio messages when marking tasks as completed.
 - **Duplicate Task Indicators:** Notify users if a task has recently been marked as complete to prevent accidental duplicate entries.
-- **Custom Terminology and Number Formatting:** Enable customization of terms and currency formats for future enhancements.
+- **Custom Terminology and Number Formatting:** Enable customization of terms and currency formats for future enhancements. Include the option for no currency formatting at all.
 
 ### **6.3 Technical Requirements**
 
@@ -394,7 +394,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 - **Custom Terminology and Number Formatting:**
 
-  - Allow users to customize terms (e.g., Parent, Child, Task) and currency formats to suit different languages and regions.
+  - Allow users to customize terms (e.g., Parent, Child, Task) and currency formats to suit different languages and regions. Include the option for no currency formatting at all.
 
 - **Audio Message Attachments:**
 

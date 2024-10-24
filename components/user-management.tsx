@@ -106,7 +106,7 @@ export function UserManagement() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
           <UsersIcon className="mr-3 h-10 w-10" />
-          User Management
+          Family Management
         </h1>
         <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Add User

@@ -189,7 +189,6 @@ export function TaskManagement() {
                   {task.title}
                 </h3>
                 <p className="text-xl font-bold text-green-600">
-                  $
                   {typeof task.payout_value === 'number'
                     ? task.payout_value.toFixed(2)
                     : task.payout_value}
