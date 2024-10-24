@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Sidebar } from 'components/sidebar';
-import { SearchIcon, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -15,17 +15,9 @@ export function AppShell({ children }: AppShellProps) {
         <Link href="/home" className="text-2xl font-bold hover:text-gray-300 transition-colors">
           Taschengeld
         </Link>
-        <div className="flex items-center">
-          <div className="relative mr-4">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-800 text-white px-4 py-2 rounded-full pl-10 w-64"
-            />
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          </div>
+        <div className="flex items-center space-x-6">
           <Link href="/global-settings" className="mr-4">
-            <Settings className="h-6 w-6 text-white hover:text-gray-300 transition-colors" />
+            <Settings className="h-8 w-8 text-white hover:text-gray-300 transition-colors" />
           </Link>
         </div>
       </header>

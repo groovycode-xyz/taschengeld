@@ -60,12 +60,12 @@ export function AddUserModal({
   user,
 }: AddUserModalProps) {
   const [name, setName] = useState(user?.name || '');
-  const [icon, setIcon] = useState(user?.icon || '');
+  const [icon, setIcon] = useState(user?.icon || 'user'); // Set default icon to 'user'
   const [soundUrl, setSoundUrl] = useState(user?.soundurl || '');
   const [birthday, setBirthday] = useState(
     user ? format(new Date(user.birthday), 'yyyy-MM-dd') : ''
   );
-  const [role, setRole] = useState<'parent' | 'child'>('child');
+  const [role, setRole] = useState<'parent' | 'child'>(user?.role || 'child');
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
@@ -73,14 +73,14 @@ export function AddUserModal({
   useEffect(() => {
     if (user) {
       setName(user.name);
-      setIcon(user.icon);
+      setIcon(user.icon || 'user'); // Set default icon to 'user' if not provided
       setSoundUrl(user.soundurl || '');
-      setBirthday(format(new Date(user.birthday), 'yyyy-MM-dd')); // Ensures correct format
+      setBirthday(format(new Date(user.birthday), 'yyyy-MM-dd'));
       setRole(user.role);
     } else {
       setName('');
       setBirthday('');
-      setIcon('');
+      setIcon('user'); // Set default icon to 'user' for new users
       setSoundUrl('');
       setRole('child');
     }
@@ -91,16 +91,14 @@ export function AddUserModal({
     const formattedBirthday = birthday ? new Date(birthday).toISOString() : null;
     const userData: CreateUserInput = {
       name,
-      icon,
+      icon: icon || 'user', // Ensure icon is never empty
       soundurl: soundUrl,
       birthday: formattedBirthday,
       role,
     };
     if (user) {
-      // If editing an existing user
       onAddUser({ ...userData, user_id: user.user_id });
     } else {
-      // If adding a new user
       onAddUser(userData);
     }
     onClose();
@@ -237,7 +235,7 @@ export function AddUserModal({
                   onClick={() => setIsIconModalOpen(true)}
                   aria-label="Select Icon"
                 >
-                  {getIconComponent(icon)}
+                  {getIconComponent(icon || 'user')} {/* Ensure icon is never empty */}
                 </Button>
               </div>
             </div>

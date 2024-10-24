@@ -108,17 +108,6 @@ export function TaskCompletion() {
     }
   };
 
-  const clearCompletedTasks = async () => {
-    try {
-      const response = await fetch('/api/completed-tasks/clear', { method: 'POST' });
-      if (!response.ok) throw new Error('Failed to clear completed tasks');
-      setCompletedTasks([]);
-    } catch (err) {
-      setError('Error clearing completed tasks');
-      console.error(err);
-    }
-  };
-
   const handleDeleteTask = async (taskId: number) => {
     setDeleteTaskId(taskId);
     setIsDeleteDialogOpen(true);
@@ -182,10 +171,8 @@ export function TaskCompletion() {
               className="w-full hover:shadow-lg transition-shadow duration-300 bg-white"
             >
               <CardContent className="flex items-center justify-between p-4">
-                {/* SquareCheckBig Icon */}
                 <SquareCheckBig className="h-8 w-8 mr-2 text-green-500" />
 
-                {/* Task Icon */}
                 <Card className="flex-1 mr-2 bg-blue-50 shadow-sm">
                   <CardContent className="flex items-center p-2">
                     {task.icon_name ? (
@@ -200,7 +187,6 @@ export function TaskCompletion() {
                   </CardContent>
                 </Card>
 
-                {/* User Icon */}
                 <Card className="flex-1 mx-2 bg-green-50 shadow-sm">
                   <CardContent className="flex items-center p-2">
                     {task.user_icon ? (
@@ -215,14 +201,12 @@ export function TaskCompletion() {
                   </CardContent>
                 </Card>
 
-                {/* Time Since Created */}
                 <Card className="flex-1 ml-2 bg-gray-50 shadow-sm">
                   <CardContent className="p-2 text-center">
                     <TimeSince date={task.created_at} />
                   </CardContent>
                 </Card>
 
-                {/* Delete Button */}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -243,10 +227,6 @@ export function TaskCompletion() {
         onSelectUser={handleUserSelect}
         childUsers={childUsers}
       />
-
-      <Button onClick={clearCompletedTasks} className="mt-4">
-        Clear Completed Tasks
-      </Button>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>

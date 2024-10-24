@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { PiggyBankAccount } from '@/app/types/piggyBankAccount';
-import { PiggyBankIcon } from 'lucide-react';
+import { HandCoinsIcon } from 'lucide-react';
 import { AccountCard } from './account-card';
 import {
   Select,
@@ -11,6 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AddFundsModal } from './add-funds-modal';
+import { WithdrawFundsModal } from './withdraw-funds-modal';
+import { TransactionsModal } from './transactions-modal';
 
 interface GroupedAccount {
   user_id: number;
@@ -98,7 +103,7 @@ export function PiggyBank() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold flex items-center">
-        <PiggyBankIcon className="mr-3 h-10 w-10" />
+        <HandCoinsIcon className="mr-3 h-10 w-10" />
         Sparkässeli
       </h1>
       <div className="flex space-x-4 mb-4">

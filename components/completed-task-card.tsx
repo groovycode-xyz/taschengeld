@@ -24,11 +24,6 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'Approve' | 'Reject' | null>(null);
 
-  const formattedPayout =
-    task.payout_value && !isNaN(parseFloat(task.payout_value))
-      ? parseFloat(task.payout_value).toFixed(2)
-      : 'N/A';
-
   const handleAction = (action: 'Approve' | 'Reject') => {
     setActionType(action);
     setIsDialogOpen(true);
@@ -42,13 +37,13 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center space-x-2">
+    <Card className="rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white">
+      <CardHeader className="flex flex-row items-center space-x-2 p-4 bg-blue-50 rounded-t-lg">
         <SquareCheckBig className="h-6 w-6 text-green-500" /> {/* Add the new icon here */}
         <IconComponent icon={task.icon_name} className="h-6 w-6 text-blue-500" />
-        <CardTitle>{task.task_title}</CardTitle>
+        <CardTitle className="text-blue-600">{task.task_title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4">
         <div className="flex items-center space-x-2 mb-2">
           <IconComponent icon={task.user_icon} className="h-6 w-6 text-gray-500" />
           <span>Completed by: {task.user_name}</span>
@@ -60,14 +55,14 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
           <div className="mt-4 space-x-2">
             <Button
               onClick={() => handleAction('Approve')}
-              className="bg-green-500 hover:bg-green-600"
+              className="bg-green-500 hover:bg-green-600 text-white"
               disabled={isLoading}
             >
               {isLoading ? 'Processing...' : 'Approve'}
             </Button>
             <Button
               onClick={() => handleAction('Reject')}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 text-white"
               disabled={isLoading}
             >
               {isLoading ? 'Processing...' : 'Reject'}
