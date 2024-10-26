@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New PiggyBankUser type with improved structure
 - Dedicated transaction history modal component
 - Consistent styling with shadcn/ui components
+- Direct PostgreSQL database integration for task toggle endpoint
+- Comprehensive API documentation in API.txt
 
 ### Changed
 
@@ -32,6 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added consistent AppShell/MainContent layout
   - Improved modal interactions for deposits/withdrawals
   - Added loading and error states
+- Updated task toggle endpoint to use real database
+- Improved type consistency across user management
+- Enhanced birthday validation in user modals
+- Updated API routes to handle number types consistently
+- Consolidated API documentation into single source of truth
 
 ### Database Changes
 
@@ -53,11 +60,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed unused AccountCard component
 - Removed old TransactionsModal component
 - Removed unused PiggyBankAccount type
+- Deprecated mockDb.ts and all related code
+- Removed mockDb references from documentation
+- Removed redundant API.md in favor of API.txt
+- Removed unused navigation component in favor of Sidebar
 
 ### Fixed
 
 - Fixed layout consistency with AppShell wrapper
 - Fixed navigation behavior in sidebar
+- Type consistency for user_id (now using number throughout)
+- Repository method signatures to match database types
+
+### Documentation
+
+- Updated ARCHITECTURE.md to reflect current implementation
+- Updated frontend_instructions.md to remove mock database references
+- Created comprehensive DEPRECATION_PLAN.md tracking all changes
+- Consolidated API documentation into API.txt
 
 ## [0.1.7] - 2024-10-25
 

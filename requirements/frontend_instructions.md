@@ -16,8 +16,8 @@
 
 ## Project Development Phase
 
-- A mock database is implemented in `app/lib/mockDb.ts`
-- A production database is implemented using PostgreSQL: tgeld
+- Production database is implemented using PostgreSQL: tgeld
+- Database interactions are handled through API routes and repositories
 
 ## Directory Structure
 
@@ -126,7 +126,7 @@ The Piggy Bank feature is implemented in `components/piggy-bank.tsx`. It consist
 ### Architectural Changes
 
 - The Piggy Bank feature introduces a new pattern for managing modals and state within a single component.
-- We've implemented a mock database (`mockDb`) for development purposes, which should be replaced with actual API calls to our PostgreSQL database in production.
+- Database interactions are handled through API routes with direct PostgreSQL queries.
 
 ## Task Completion Interface Component
 
@@ -165,7 +165,7 @@ The Payday Interface feature is implemented in `components/Payday.tsx`. It is cu
 ### Payday Interface Summary:
 
 1. The component uses React hooks (useState and useEffect) for state management and side effects.
-2. It fetches completed tasks and users from a mock database using getMockDb().
+2. It fetches completed tasks and users from the PostgreSQL database via API routes.
 3. The interface allows filtering tasks by user (child users only) and sorting by date completed or payout value.
 4. It supports bulk approval/rejection of tasks and individual task approval/rejection.
 5. The component uses various UI components from the project's component library, such as Button, Select, ScrollArea, and CompletedTaskCard.

@@ -26,8 +26,6 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 - `/components`: Reusable UI components that are used in various parts of the application.
   - `Button.tsx`: A styled button component.
   - `Header.tsx`: The application header component.
-- `/mocks`: Contains mock data for development and testing purposes.
-  - `mockDb.ts`: Mock database functions simulating backend interactions. (is temporary and will be removed incrementally as API calls to the PostgreSQL database are implemented)
 - `/tests`: Includes unit and integration tests to ensure code reliability.
   - `userRepository.test.ts`: Tests for user repository functions.
 - `/public`: Static assets like images, icons, and fonts.
@@ -76,7 +74,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 ## State Management
 
 - Local state management using React hooks (useState, useEffect)
-- Mock database (`app/lib/mockDb.ts`) for development, to be replaced with actual API calls to the database tgeld (app/lib/db.ts and .env.local).
+- Direct database interactions through API routes and repositories
 
 ## API Structure
 
