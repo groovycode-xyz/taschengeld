@@ -151,7 +151,7 @@ export const completedTaskRepository = {
   async delete(c_task_id: number): Promise<boolean> {
     const query = 'DELETE FROM completed_tasks WHERE c_task_id = $1';
     const result = await pool.query(query, [c_task_id]);
-    return result.rowCount > 0;
+    return result.rowCount ? result.rowCount > 0 : false;
   },
 
   async clearAll(): Promise<void> {
@@ -169,5 +169,34 @@ export const completedTaskRepository = {
   async deleteByUserId(userId: number): Promise<void> {
     const query = 'DELETE FROM completed_tasks WHERE user_id = $1';
     await pool.query(query, [userId]);
+  },
+
+  async getFullTaskDetails(cTaskId: number): Promise<CompletedTask | null> {
+    const query = `
+      SELECT 
+        ct.c_task_id,
+        ct.payment_status,
+        ct.payout_value,
+        t.title AS task_title,
+        t.payout_value as task_payout_value,
+        u.piggybank_account_id,
+        u.name AS user_name,
+        pa.account_id,
+        pa.balance
+      FROM 
+        completed_tasks ct
+      JOIN 
+        tasks t ON ct.task_id = t.task_id
+      JOIN 
+        users u ON ct.user_id = u.user_id
+      JOIN
+        piggybank_accounts pa ON u.user_id = pa.user_id
+      WHERE 
+        ct.c_task_id = $1;
+    `;
+    console.log('Executing getFullTaskDetails query for c_task_id:', cTaskId);
+    const result = await pool.query(query, [cTaskId]);
+    console.log('Full task details query result:', result.rows[0]);
+    return result.rows[0] || null;
   },
 };

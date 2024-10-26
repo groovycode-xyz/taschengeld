@@ -3,7 +3,7 @@ import { completedTaskRepository } from '@/app/lib/completedTaskRepository';
 import { CreateCompletedTaskInput } from '@/app/types/completedTask';
 import { taskRepository } from '@/app/lib/taskRepository';
 import { userRepository } from '@/app/lib/userRepository';
-import { User } from '@/app/types/user';
+import { piggyBankTransactionRepository } from '@/app/lib/piggyBankTransactionRepository';
 
 export async function GET() {
   try {
@@ -42,29 +42,61 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
+    console.log('PUT /api/completed-tasks - Request body:', body);
+
     const { c_task_id, payment_status } = body;
 
+    // Update the payment status
     const updatedTask = await completedTaskRepository.updatePaymentStatus(
       c_task_id,
       payment_status
     );
+    console.log('Updated task details:', updatedTask);
+
     if (!updatedTask) {
+      console.error('Task not found for c_task_id:', c_task_id);
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    const taskDetails = await taskRepository.getById(updatedTask.task_id.toString());
-    const userDetails = (await userRepository.getById(updatedTask.user_id.toString())) as User;
+    // Fetch full task details using the optimized query
+    const fullTaskDetails = await completedTaskRepository.getFullTaskDetails(c_task_id);
+    console.log('Full task details with account:', fullTaskDetails);
 
-    const fullTaskDetails = {
-      ...updatedTask,
-      task_title: taskDetails?.title,
-      user_piggybank_account_id: userDetails?.piggybank_account_id,
-      payout_value: taskDetails?.payout_value,
-    };
+    if (!fullTaskDetails) {
+      console.error('Failed to fetch full task details for c_task_id:', c_task_id);
+      return NextResponse.json({ error: 'Failed to fetch full task details' }, { status: 500 });
+    }
+
+    // Handle transaction creation if the task is approved
+    if (
+      payment_status === 'Approved' &&
+      fullTaskDetails.piggybank_account_id &&
+      fullTaskDetails.payout_value
+    ) {
+      console.log('Creating transaction with details:', {
+        accountId: fullTaskDetails.piggybank_account_id,
+        amount: fullTaskDetails.payout_value,
+        taskTitle: fullTaskDetails.task_title,
+        taskId: c_task_id,
+      });
+
+      const transactionCreated = await piggyBankTransactionRepository.createTransaction(
+        fullTaskDetails.piggybank_account_id,
+        Number(fullTaskDetails.payout_value),
+        fullTaskDetails.task_title || 'Task Payment',
+        c_task_id
+      );
+
+      if (!transactionCreated) {
+        console.error('Failed to create transaction for c_task_id:', c_task_id);
+        return NextResponse.json({ error: 'Failed to create transaction' }, { status: 500 });
+      }
+      console.log('Transaction created successfully');
+    }
 
     return NextResponse.json(fullTaskDetails);
   } catch (error) {
-    console.error('Failed to update completed task:', error);
+    console.error('Failed to update completed task. Error:', error);
     return NextResponse.json({ error: 'Failed to update completed task' }, { status: 500 });
   }
 }

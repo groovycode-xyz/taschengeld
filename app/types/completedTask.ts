@@ -19,4 +19,5 @@ export interface CompletedTask {
   comment: string | null;
   attachment: string | null;
   payment_status: string;
+  piggybank_account_id?: number; // Add this property
 }

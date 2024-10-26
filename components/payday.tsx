@@ -23,7 +23,6 @@ export function Payday() {
         throw new Error('Failed to fetch completed tasks');
       }
       const data = await response.json();
-      // Filter tasks to only include those with "Unpaid" status
       const unpaidTasks = data.filter((task: CompletedTask) => task.payment_status === 'Unpaid');
       setCompletedTasks(unpaidTasks);
     } catch (err) {
@@ -37,7 +36,6 @@ export function Payday() {
   const handleUpdatePaymentStatus = async (cTaskId: number, newStatus: string) => {
     setLoadingTaskIds((prev) => [...prev, cTaskId]);
     try {
-      // First update the task status
       const response = await fetch('/api/completed-tasks', {
         method: 'PUT',
         headers: {
@@ -47,37 +45,17 @@ export function Payday() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update payment status');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to process task');
       }
 
       const updatedTask = await response.json();
+      console.log('Task processed successfully:', updatedTask);
 
-      // If task is approved, create a piggy bank transaction
-      if (newStatus === 'Approved') {
-        const transactionResponse = await fetch('/api/piggy-bank', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            account_id: updatedTask.user_piggybank_account_id, // We'll need to ensure this is included
-            amount: updatedTask.payout_value,
-            transaction_type: 'deposit',
-            description: `Payment for task: ${updatedTask.task_title}`,
-            completed_task_id: cTaskId,
-          }),
-        });
-
-        if (!transactionResponse.ok) {
-          throw new Error('Failed to create transaction');
-        }
-      }
-
-      // Remove the approved/rejected task from the list
       setCompletedTasks((prevTasks) => prevTasks.filter((task) => task.c_task_id !== cTaskId));
     } catch (error) {
       console.error('Error updating payment status:', error);
-      setError('Failed to update payment status');
+      setError(error instanceof Error ? error.message : 'Failed to process task');
     } finally {
       setLoadingTaskIds((prev) => prev.filter((id) => id !== cTaskId));
     }

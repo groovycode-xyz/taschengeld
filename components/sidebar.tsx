@@ -44,7 +44,7 @@ export function Sidebar() {
           className="flex items-center px-6 py-4 text-gray-700 bg-gray-300 rounded-lg transition-colors active:bg-gray-400"
         >
           <UsersIcon className="mr-4 h-8 w-8" />
-          <span className="text-lg">Family Management</span>
+          <span className="text-lg">Family</span>
         </Link>
       </nav>
       <div className="p-4 border-t border-gray-300">
