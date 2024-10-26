@@ -44,11 +44,30 @@ import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 import { format } from 'date-fns';
 
+// Add validation function
+const validateBirthday = (date: string): string | null => {
+  const birthdayDate = new Date(date);
+  const today = new Date();
+  const maxAge = new Date();
+  maxAge.setFullYear(today.getFullYear() - 120); // 120 years old max
+
+  if (isNaN(birthdayDate.getTime())) {
+    return 'Invalid date format';
+  }
+  if (birthdayDate > today) {
+    return 'Birthday cannot be in the future';
+  }
+  if (birthdayDate < maxAge) {
+    return 'Birthday seems too far in the past';
+  }
+  return null;
+};
+
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddUser: (user: CreateUserInput | User) => void;
-  onDeleteUser: (userId: string) => void;
+  onDeleteUser: (userId: number) => void;
   user?: User;
 }
 
@@ -69,6 +88,7 @@ export function AddUserModal({
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [birthdayError, setBirthdayError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -88,12 +108,19 @@ export function AddUserModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formattedBirthday = birthday ? new Date(birthday).toISOString() : null;
+
+    // Validate birthday
+    if (!birthday) {
+      setBirthdayError('Birthday is required');
+      return;
+    }
+
+    const formattedBirthday = new Date(birthday).toISOString();
     const userData: CreateUserInput = {
       name,
-      icon: icon || 'user', // Ensure icon is never empty
+      icon: icon || 'user',
       soundurl: soundUrl,
-      birthday: formattedBirthday,
+      birthday: formattedBirthday, // Will always have a value
       role,
     };
     if (user) {
@@ -110,11 +137,9 @@ export function AddUserModal({
 
   const confirmDelete = () => {
     if (user && user.user_id) {
-      onDeleteUser(user.user_id);
+      onDeleteUser(Number(user.user_id));
       setIsDeleteConfirmationOpen(false);
       onClose();
-    } else {
-      console.error('Cannot delete user: user ID is undefined');
     }
   };
 
@@ -169,14 +194,21 @@ export function AddUserModal({
                 <Label htmlFor="birthday" className="text-right">
                   Birthday
                 </Label>
-                <Input
-                  id="birthday"
-                  type="date"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
-                  className="col-span-3"
-                  placeholder=" "
-                />
+                <div className="col-span-3">
+                  <Input
+                    id="birthday"
+                    type="date"
+                    value={birthday}
+                    onChange={(e) => {
+                      setBirthday(e.target.value);
+                      const error = validateBirthday(e.target.value);
+                      setBirthdayError(error);
+                    }}
+                    className={birthdayError ? 'border-red-500' : ''}
+                    required
+                  />
+                  {birthdayError && <p className="text-sm text-red-500 mt-1">{birthdayError}</p>}
+                </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="role" className="text-right">

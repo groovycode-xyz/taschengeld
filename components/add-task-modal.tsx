@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
 import { SelectSoundModal } from './select-sound-modal';
@@ -20,7 +19,14 @@ import { Save, X, Play } from 'lucide-react';
 type AddTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onAddTask: (newTask: Omit<Task, 'taskId' | 'createdAt'>) => void;
+  onAddTask: (newTask: {
+    title: string;
+    description: string;
+    icon_name: string;
+    sound_url: string | null;
+    payout_value: number;
+    is_active: boolean;
+  }) => void;
 };
 
 const defaultTaskState = {

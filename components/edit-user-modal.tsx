@@ -26,7 +26,7 @@ interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onEditUser: (user: User) => void;
-  onDeleteUser: (userId: string) => void;
+  onDeleteUser: (userId: number) => void;
   user: User;
 }
 
@@ -46,6 +46,7 @@ export function EditUserModal({
   const [role, setRole] = useState(user.role);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
+  const [birthdayError, setBirthdayError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('EditUserModal useEffect triggered with user:', user);
@@ -58,9 +59,47 @@ export function EditUserModal({
     setRole(user.role);
   }, [user]);
 
+  const validateBirthday = (date: string): string | null => {
+    const birthdayDate = new Date(date);
+    const today = new Date();
+    const maxAge = new Date();
+    maxAge.setFullYear(today.getFullYear() - 120); // 120 years old max
+
+    if (isNaN(birthdayDate.getTime())) {
+      return 'Invalid date format';
+    }
+    if (birthdayDate > today) {
+      return 'Birthday cannot be in the future';
+    }
+    if (birthdayDate < maxAge) {
+      return 'Birthday seems too far in the past';
+    }
+    return null;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const updatedUser = { ...user, name, icon, soundurl, birthday, role };
+
+    // Validate birthday
+    if (!birthday) {
+      setBirthdayError('Birthday is required');
+      return;
+    }
+
+    const error = validateBirthday(birthday);
+    if (error) {
+      setBirthdayError(error);
+      return;
+    }
+
+    const updatedUser = {
+      ...user,
+      name,
+      icon,
+      soundurl,
+      birthday, // Will always have a value
+      role,
+    };
     console.log('Submitting updated user:', updatedUser);
     onEditUser(updatedUser);
     onClose();
@@ -68,7 +107,7 @@ export function EditUserModal({
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      onDeleteUser(user.user_id);
+      onDeleteUser(Number(user.user_id));
       onClose();
     }
   };
@@ -97,13 +136,21 @@ export function EditUserModal({
                 <Label htmlFor="birthday" className="text-right">
                   Birthday
                 </Label>
-                <Input
-                  id="birthday"
-                  type="date"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
-                  className="col-span-3"
-                />
+                <div className="col-span-3">
+                  <Input
+                    id="birthday"
+                    type="date"
+                    value={birthday}
+                    onChange={(e) => {
+                      setBirthday(e.target.value);
+                      const error = validateBirthday(e.target.value);
+                      setBirthdayError(error);
+                    }}
+                    className={birthdayError ? 'border-red-500' : ''}
+                    required
+                  />
+                  {birthdayError && <p className="text-sm text-red-500 mt-1">{birthdayError}</p>}
+                </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="role" className="text-right">

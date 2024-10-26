@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatCurrency } from '@/lib/utils';
 import { IconComponent } from './icon-component';
-import { PiggyBankUser } from '@/app/types/piggyBank';
+import { PiggyBankUser } from '@/app/types/piggyBankUser';
 
 interface TransactionHistoryModalProps {
   isOpen: boolean;

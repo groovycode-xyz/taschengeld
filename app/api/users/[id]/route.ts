@@ -3,7 +3,7 @@ import { userRepository } from '@/app/lib/userRepository';
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const user = await userRepository.getById(params.id);
+    const user = await userRepository.getById(Number(params.id));
     if (user) {
       return NextResponse.json(user);
     } else {
@@ -19,7 +19,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     const updatedUser = await request.json();
     console.log('Received user update request:', updatedUser);
-    const user = await userRepository.update(params.id, updatedUser);
+    const user = await userRepository.update(Number(params.id), updatedUser);
     if (user) {
       console.log('Updated user in database:', user);
       return NextResponse.json(user);
@@ -34,7 +34,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
-    const success = await userRepository.delete(params.id);
+    const success = await userRepository.delete(Number(params.id));
     if (success) {
       return NextResponse.json({ message: 'User deleted successfully' });
     } else {

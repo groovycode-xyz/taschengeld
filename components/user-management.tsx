@@ -80,7 +80,7 @@ export function UserManagement() {
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
+  const handleDeleteUser = async (userId: number) => {
     try {
       console.log('Deleting user with ID:', userId);
       if (!userId) {
@@ -91,7 +91,7 @@ export function UserManagement() {
       });
       if (!response.ok) throw new Error('Failed to delete user');
       setUsers((prevUsers) => prevUsers.filter((user) => user.user_id !== userId));
-      setIsEditModalOpen(false); // Close the modal after successful deletion
+      setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error deleting user:', error);
       setError('Failed to delete user. Please try again.');

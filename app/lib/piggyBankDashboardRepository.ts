@@ -1,14 +1,5 @@
 import pool from './db';
-import { PiggyBankUser } from '@/app/types/piggyBank';
-
-interface Transaction {
-  transaction_id: number | null;
-  amount: string;
-  transaction_type: 'deposit' | 'withdrawal';
-  description: string;
-  transaction_date: string;
-  task_title?: string;
-}
+import { PiggyBankUser } from '@/app/types/piggyBankUser';
 
 export const piggyBankDashboardRepository = {
   async getDashboardData(): Promise<PiggyBankUser[]> {

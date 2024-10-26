@@ -1,5 +1,5 @@
 export interface User {
-  user_id: string;
+  user_id: number;
   name: string;
   icon: string;
   soundurl?: string;
@@ -7,4 +7,10 @@ export interface User {
   role: 'parent' | 'child';
 }
 
-export type CreateUserInput = Omit<User, 'user_id'>;
+export interface CreateUserInput {
+  name: string;
+  icon: string;
+  soundurl?: string;
+  birthday: string;
+  role: 'parent' | 'child';
+}

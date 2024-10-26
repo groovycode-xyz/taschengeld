@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     // Fetch additional data for the response
     const taskDetails = await taskRepository.getById(completedTaskData.task_id.toString());
-    const userDetails = await userRepository.getById(completedTaskData.user_id.toString());
+    const userDetails = await userRepository.getById(Number(completedTaskData.user_id));
 
     const fullCompletedTask = {
       ...newCompletedTask,

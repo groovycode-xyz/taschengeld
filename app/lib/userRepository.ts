@@ -3,40 +3,35 @@ import { User, CreateUserInput } from '@/app/types/user';
 import { piggyBankAccountRepository } from './piggyBankAccountRepository';
 
 export const userRepository = {
-  getAll: async (): Promise<User[]> => {
-    const result = await pool.query('SELECT * FROM users');
+  async getAll(): Promise<User[]> {
+    const result = await pool.query('SELECT * FROM users ORDER BY name ASC');
     return result.rows;
   },
 
-  getById: async (id: string): Promise<User | null> => {
+  async getById(id: number): Promise<User | null> {
     const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
     return result.rows[0] || null;
   },
 
-  create: async (user: CreateUserInput): Promise<User> => {
-    const { name, icon, soundurl, birthday, role } = user;
-    console.log('Creating user with data:', { name, icon, soundurl, birthday, role });
+  async create(user: CreateUserInput): Promise<User> {
     const result = await pool.query(
       'INSERT INTO users (name, icon, soundurl, birthday, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, icon, soundurl, birthday, role]
+      [user.name, user.icon, user.soundurl, user.birthday, user.role]
     );
     return result.rows[0];
   },
 
-  update: async (id: string, user: Partial<User>): Promise<User | null> => {
-    const { name, icon, soundurl, birthday, role } = user;
-    console.log('Updating user in database:', { id, name, icon, soundurl, birthday, role });
+  async update(id: number, data: Partial<User>): Promise<User | null> {
     const result = await pool.query(
       'UPDATE users SET name = COALESCE($1, name), icon = COALESCE($2, icon), soundurl = COALESCE($3, soundurl), birthday = COALESCE($4, birthday), role = COALESCE($5, role) WHERE user_id = $6 RETURNING *',
-      [name, icon, soundurl, birthday, role, id]
+      [data.name, data.icon, data.soundurl, data.birthday, data.role, id]
     );
-    console.log('Update result:', result.rows[0]);
     return result.rows[0] || null;
   },
 
-  delete: async (id: string): Promise<boolean> => {
+  async delete(id: number): Promise<boolean> {
     const result = await pool.query('DELETE FROM users WHERE user_id = $1', [id]);
-    return result.rowCount ? result.rowCount > 0 : false;
+    return (result.rowCount ?? 0) > 0; // Use nullish coalescing to handle null
   },
 
   async getChildUsers(): Promise<User[]> {

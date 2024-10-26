@@ -19,21 +19,21 @@ async function testUserRepository() {
     console.log('All users:', allUsers);
 
     // Test getById
-    const retrievedUser = await userRepository.getById(createdUser.user_id);
+    const retrievedUser = await userRepository.getById(Number(createdUser.user_id));
     console.log('Retrieved user:', retrievedUser);
 
     // Test update
-    const updatedUser = await userRepository.update(createdUser.user_id, {
+    const updatedUser = await userRepository.update(Number(createdUser.user_id), {
       name: 'Updated Test User',
     });
     console.log('Updated user:', updatedUser);
 
     // Test delete
-    const deleteResult = await userRepository.delete(createdUser.user_id);
+    const deleteResult = await userRepository.delete(Number(createdUser.user_id));
     console.log('User deleted:', deleteResult);
 
     // Verify deletion
-    const deletedUser = await userRepository.getById(createdUser.user_id);
+    const deletedUser = await userRepository.getById(Number(createdUser.user_id));
     console.log('Deleted user (should be null):', deletedUser);
   } catch (error) {
     console.error('Error during test:', error);

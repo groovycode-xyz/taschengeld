@@ -51,7 +51,9 @@ export function TaskCompletion() {
 
         setActiveTasks(tasksData);
         setChildUsers(usersData);
-        setCompletedTasks(completedData.filter((task) => task.payment_status === 'Unpaid'));
+        setCompletedTasks(
+          completedData.filter((task: CompletedTask) => task.payment_status === 'Unpaid')
+        );
       } catch (err) {
         const error = err as Error;
         setError(error.message || 'An error occurred');
@@ -86,15 +88,14 @@ export function TaskCompletion() {
         if (!response.ok) throw new Error('Failed to create completed task');
 
         const newCompletedTask: CompletedTask = await response.json();
-        console.log('New completed task:', newCompletedTask);
-
+        const matchingUser = childUsers.find((user) => user.user_id === userId);
         setCompletedTasks((prevTasks) => [
           {
             ...newCompletedTask,
             task_title: selectedTask.title,
-            user_name: childUsers.find((user) => user.user_id === userId)?.name || '',
+            user_name: matchingUser?.name || '',
             icon_name: selectedTask.icon_name,
-            user_icon: childUsers.find((user) => user.user_id === userId)?.icon || '',
+            user_icon: matchingUser?.icon || '',
           },
           ...prevTasks,
         ]);
