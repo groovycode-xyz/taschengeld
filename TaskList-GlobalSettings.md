@@ -1,49 +1,43 @@
 # Global App Settings Implementation Checklist
 
-## Phase 1: UI Framework (Current)
+## Phase 1: Core Settings UI
 
-- [x] Add Role Enforcement toggle with hint text
-- [x] Add conditional PIN input field
-- [x] Add currency selector dropdown (USD, EUR, GBP, CHF)
-- [ ] Add warning messages for reset buttons
-- [ ] Add confirmation dialogs for reset actions
-- [ ] Remove duplicate PIN section (currently showing twice)
-- [ ] Add proper hint text for all reset options
-- [ ] Add loading states for all reset buttons
-- [ ] Add proper error handling UI components
-- [ ] Add success notification components
+- [ ] Implement Role Enforcement toggle
+  - [ ] Add toggle with proper state management
+  - [ ] Add hint text explaining the feature
+  - [ ] Add loading states
+  - [ ] Add success/error notifications
+- [ ] Add child user detection
+  - [ ] Add API endpoint to check for child users
+  - [ ] Auto-enable Parent mode if no children exist
+  - [ ] Add proper error handling
 
-## Phase 2: Database Setup (Future)
+## Phase 2: PIN Management UI
 
-- [ ] Create app_settings table `sql
-CREATE TABLE app_settings (
-  setting_id SERIAL PRIMARY KEY,
-  enforce_roles BOOLEAN DEFAULT false,
-  global_pin VARCHAR(4),
-  currency_code VARCHAR(3) DEFAULT 'USD',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);  `
-- [ ] Create database migration script
-- [ ] Create app_settings repository
-- [ ] Add API endpoints for settings CRUD operations
+- [ ] Add PIN setup section
+  - [ ] Add PIN input with validation
+  - [ ] Add PIN confirmation field
+  - [ ] Add PIN visibility toggle
+  - [ ] Add PIN reset functionality
+- [ ] Add PIN validation UI
+  - [ ] Add PIN test functionality
+  - [ ] Add validation feedback
+  - [ ] Add error messages
 
-## Phase 3: Backend Integration (Future)
+## Phase 3: Additional Settings UI
 
-- [ ] Implement settings fetch on app load
-- [ ] Implement settings update functionality
-- [ ] Implement table-specific reset functionality
-- [ ] Add backup/restore functionality for:
-  - [ ] Users table
-  - [ ] Tasks table
-  - [ ] Accounts table
-  - [ ] Transactions table
-- [ ] Add proper error handling and validation
+- [ ] Add currency selector
+- [ ] Add backup/restore UI
+- [ ] Add reset options UI
 
-## Phase 4: Testing & Documentation (Future)
+## Phase 4: Database Integration (When Essential)
 
-- [ ] Add unit tests for settings components
-- [ ] Add integration tests for settings API
-- [ ] Update ARCHITECTURE.md
-- [ ] Update API documentation
-- [ ] Add migration documentation
+- [ ] Create app_settings table
+- [ ] Add settings persistence
+- [ ] Add API endpoints
+
+## Phase 5: Testing & Documentation
+
+- [ ] Add unit tests
+- [ ] Add integration tests
+- [ ] Update documentation

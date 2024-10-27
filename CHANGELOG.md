@@ -25,10 +25,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Role enforcement toggle with PIN input
   - Currency selection (USD, EUR, GBP, CHF)
   - Reset options with confirmation dialogs
+  - Backup and Restore functionality for Tasks, Users, and Piggy Bank data
+  - JSON file download/upload for data backup
+  - Section-specific warning messages and confirmations
 - Toast notification system using shadcn/ui
   - Success notifications for settings changes
-  - Customizable toast messages with auto-dismiss
-  - Proper TypeScript support and error handling
+  - Error handling with descriptive messages
+  - Auto-dismiss functionality
+  - Proper TypeScript support
+  - Custom styling and positioning
+- Enhanced PIN management in Global Settings
+  - Added PIN confirmation field for validation
+  - Added show/hide PIN toggle
+  - Added PIN test functionality
+  - Added PIN clear button
+  - Added confirmation dialog for disabling role enforcement
+- Improved backup/restore interface
+  - Added dedicated section with clear visual hierarchy
+  - Added file download/upload functionality
+  - Added loading states and progress indicators
+  - Added success/error notifications
+  - Added type validation for backup files
+- Enhanced accessibility in Global Settings
+  - Added ARIA labels for all interactive elements
+  - Added keyboard navigation support
+  - Added focus indicators for interactive elements
+  - Added screen reader support for PIN validation
+  - Added descriptive ARIA labels for buttons and inputs
+  - Added proper focus management for modals
 
 ### Changed
 
@@ -50,6 +74,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved UI feedback with loading states and confirmation dialogs
 - Enhanced user experience with interactive feedback
 - Updated layout structure to support toast notifications
+- Enhanced Global Settings UI/UX
+  - Added section icons for better visual hierarchy
+  - Improved spacing and layout consistency
+  - Added loading states for all actions
+  - Enhanced button feedback with spinners
+  - Added clear section dividers
+  - Improved warning message visibility
+  - Added PIN management controls
+  - Added role enforcement safeguards
+  - Added visual feedback for interactive elements
+  - Enhanced keyboard navigation support
+  - Improved focus states for better accessibility
 
 ### Database Changes
 
@@ -67,6 +103,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented proper toast context and provider
 - Added type-safe toast notifications
 - Improved component organization for settings
+- Added file handling for backup/restore operations
+- Enhanced error handling with proper TypeScript types
 
 ### Removed
 

@@ -4,6 +4,7 @@ import './globals.css';
 import ClientLayout from 'components/client-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { ToastProvider } from '@/components/ui/use-toast';
+import { ModeProvider } from '@/components/context/mode-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,8 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <ToastProvider>
-          <ClientLayout>{children}</ClientLayout>
-          <Toaster />
+          <ModeProvider>
+            <ClientLayout>{children}</ClientLayout>
+            <Toaster />
+          </ModeProvider>
         </ToastProvider>
       </body>
     </html>

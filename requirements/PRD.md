@@ -6,7 +6,7 @@
 
 ### **1.1 Brief Overview of the Product**
 
-**Taschegeld - Allowance Tracker** is a kid-friendly, intuitive application designed for families to manage and track chore/task completions within the household. The app aims to make chore management fun and engaging for children while providing parents with the tools to monitor progress, allocate allowances, and foster essential life skills such as responsibility, accountability, honesty, and money management.
+**Taschengeld - Allowance Tracker** is a kid-friendly, intuitive application designed for families to manage and track chore/task completions within the household. The app aims to make chore management fun and engaging for children while providing parents with the tools to monitor progress, allocate allowances, and foster essential life skills such as responsibility, accountability, honesty, and money management.
 
 ### **1.2 Key Objectives and Goals**
 
@@ -81,7 +81,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 ### **4.2 Importance of Addressing This Problem**
 
 - **Convenience:** Physical coins can be cumbersome for children to carry and manage.
-- **Practicality:** Many stores do not accept all types of coins, limiting their usability.
+- **Practicality:** Many stores do not accept payment from customers who are using large amounts of coins (instead of bills) limiting their usability and frustrating children and parents alike.
 
 ---
 
@@ -183,9 +183,8 @@ The application utilizes a modern, open-source, and free technology stack to ens
   - **Hint text:** This is for those people who do not want to "mess" with toggling between Parent mode and verifying they are a Parent.
     - If **No**
       - Then Role Based Access and any related configurations or restrictions will be lifted and everything will operate in Parent mode at all times.
-      - Then the Toggle Switch to Enable Parent Mode (found at the bottom of the sidebar.tsx on the Overall Application Interface) will be greyed out on the Overall Application Interface (since it will serve no purpose with this No setting).
     - If **Yes**, then all Role Based Access configurations, restrictions, functionality, et al, will be enforced.
-      - This includes if someone wants to enter the these global settings under the Application Configuration Icon
+      - This includes if someone wants to enter the these global settings under the Application Configuration Icon in order to toggle the parent/child mode switch.
       - Field appears, "Global PIN:" (4 digits) (default value is empty)
         - **Hint text:** Use this PIN to enter Global Settings. This PIN may also be used anytime user is required to verify they are a Parent when using the Parent toggle switch within the application.
   - **Reset Settings**
@@ -195,13 +194,12 @@ The application utilizes a modern, open-source, and free technology stack to ens
     - **Reset and erase all defined Tasks**
       - **Hint text:** Will delete all currently defined Tasks, as well as all Task completion history. Not reversible. You will need to create new Tasks.
     - **Reset and erase all Piggy Bank Account Balances**
-      - **Hint text:** Will delete all Bank Accounts of all users. Will delete all transactions and history. Not reversable.
+      - **Hint text:** Will delete all Bank Accounts of all users. Will delete all transactions and history. Not reversible.
 
 ### **6.2 Nice-to-Have Features**
 
 - **Audio Message Attachments:** Allow children to record and attach audio messages when marking tasks as completed.
 - **Duplicate Task Indicators:** Notify users if a task has recently been marked as complete to prevent accidental duplicate entries.
-- **Custom Terminology and Number Formatting:** Enable customization of terms and currency formats for future enhancements. Include the option for no currency formatting at all.
 
 ### **6.3 Technical Requirements**
 
@@ -212,7 +210,7 @@ The application utilizes a modern, open-source, and free technology stack to ens
 - **Web-Based Application:** Accessible via web browsers with touch support.
 - **Database:** Utilize PostgreSQL for robust data management and storage.
 - **Database Access:** Use direct SQL queries for database interactions.
-- **Coding Language:** Primarily JavaScript/TypeScript with Next.js and React for the frontend and backend.
+- **Coding Language:** Primarily JavaScript/TypeScript with Next.js, React and Shadcn/UI for the frontend and backend.
 
 #### **6.3.2 Performance Requirements**
 
@@ -220,9 +218,9 @@ The application utilizes a modern, open-source, and free technology stack to ens
 
 #### **6.3.3 Security Requirements**
 
-- **Kiosk Mode:** With regards to the design methodology of access management, this application does not need to track user sessions or logins. Instead, it it is assumed that two classes of users will be using the system at any given time, adn that the user chooses which class he/she is a member of. This is not tracked or stored in the database. Therefore, any interactions within the application will never need to track a specific user-ID (for example, "selectedUser" or "selectedUserId" or anything of that nature). The application will simply assume that whomever is using the application at any given time is the appropriate role and act accordingly. When a specific user is needed to be known, for example, for retrieving User information from the users table, or writing data to a table based upon a specific UserID, this will be factored into user activity workflow in such a way that the user (whatever mode he/she is operating in) will clearly be choosing from the UI/UX which specific User they are targeting for a specific transaction.
+- **Kiosk Mode:** With regards to the design methodology of access management, this application does not need to track user sessions or logins. Instead, it is assumed that two classes of users (Parent or Child) will be using the system at any given time, and that the user chooses which class he/she is considered as. This is tracked by means of a global state (Parent or Child) that is defined by using a toggle switch that is inside of the Global App Settings page. Therefore, any interactions within the application will never need to track a specific user-ID (for example, "selectedUser" or "selectedUserId" or anything of that nature). Instead, the global state is defined by the user's choice of which role they are operating as. The application will simply assume that whomever is using the application at any given time is the appropriate role and act accordingly. When a specific user (userID)is needed to be known, for example, for retrieving User information from the users table, or writing data to a table based upon a specific UserID, this will be factored into user activity workflow in such a way that the user (whatever mode he/she is operating in) will clearly be choosing from the UI/UX which specific User they are targeting for a specific transaction.
 - **Role-Based Access Control (RBAC):** Differentiate functionalities based on Parent and Child roles.
-- **PIN Security:** Secure storage and verification of PINs using bcrypt hashing.
+- **PIN Security:** Simple 4-digit PIN verification for entering Global Settings, toggling between Parent and Child mode, authorizing certain critical actions such as resetting data.
 - **Data Encryption:** Implement HTTPS for secure data transmission and encrypt sensitive data in the database.
 - **Access Management:**
   - **Parents:** Full access to all functionalities.
