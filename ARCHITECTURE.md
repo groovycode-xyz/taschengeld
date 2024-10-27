@@ -78,8 +78,6 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 ## API Structure
 
-(Note: Currently using mock data. Some API routes may already exist. Check first!)
-
 - `/api/users`: User management endpoints
 - `/api/tasks`: Task management endpoints
 - `/api/transactions`: Transaction management for Piggy Bank

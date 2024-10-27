@@ -21,6 +21,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Consistent styling with shadcn/ui components
 - Direct PostgreSQL database integration for task toggle endpoint
 - Comprehensive API documentation in API.txt
+- New Global App Settings interface with improved UX
+  - Role enforcement toggle with PIN input
+  - Currency selection (USD, EUR, GBP, CHF)
+  - Reset options with confirmation dialogs
+- Toast notification system using shadcn/ui
+  - Success notifications for settings changes
+  - Customizable toast messages with auto-dismiss
+  - Proper TypeScript support and error handling
 
 ### Changed
 
@@ -39,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced birthday validation in user modals
 - Updated API routes to handle number types consistently
 - Consolidated API documentation into single source of truth
+- Improved UI feedback with loading states and confirmation dialogs
+- Enhanced user experience with interactive feedback
+- Updated layout structure to support toast notifications
 
 ### Database Changes
 
@@ -53,6 +64,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created new types and interfaces for improved type safety
 - Fixed component import paths
 - Fixed type definitions for better TypeScript support
+- Implemented proper toast context and provider
+- Added type-safe toast notifications
+- Improved component organization for settings
 
 ### Removed
 

@@ -33,7 +33,8 @@ CREATE TABLE public.completed_tasks (
     payout_value numeric(15,2),
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     comment text,
-    attachment character varying(255)
+    attachment character varying(255),
+    payment_status character varying(20) DEFAULT 'Unpaid'::character varying
 );
 
 
@@ -110,9 +111,7 @@ CREATE TABLE public.piggybank_transactions (
     transaction_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     description text,
     photo character varying(255),
-    completed_task_id integer,
-    task_title character varying(100),
-    task_icon character varying(50)
+    completed_task_id integer
 );
 
 

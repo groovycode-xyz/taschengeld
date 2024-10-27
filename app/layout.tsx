@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import ClientLayout from 'components/client-layout'; // Corrected import path
+import ClientLayout from 'components/client-layout';
+import { Toaster } from '@/components/ui/toaster';
+import { ToastProvider } from '@/components/ui/use-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,7 +16,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
+        <ToastProvider>
+          <ClientLayout>{children}</ClientLayout>
+          <Toaster />
+        </ToastProvider>
       </body>
     </html>
   );

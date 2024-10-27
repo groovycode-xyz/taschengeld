@@ -147,7 +147,7 @@ The Task Completion feature is not yet implemented. It should consist of the fol
 
 ## Payday Interface Component
 
-The Payday Interface feature is implemented in `components/Payday.tsx`. It is currently relying on mock data, and should be updated to fetch data from the PostgreSQL database via API. It follows the new Interface Component Structure guidelines and consists of the following key elements:
+It follows the new Interface Component Structure guidelines and consists of the following key elements:
 
 - Main Payday component
 - Filtering and sorting functionality

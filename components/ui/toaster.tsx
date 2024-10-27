@@ -1,4 +1,7 @@
-import * as React from 'react';
+'use client';
+
+import React from 'react';
+import { useToast } from '@/components/ui/use-toast';
 import {
   Toast,
   ToastClose,
@@ -7,20 +10,18 @@ import {
   ToastTitle,
   ToastViewport,
 } from '@/components/ui/toast';
-import { useToastOriginal, ToastProps } from '@/components/ui/use-toast-original';
 
 export function Toaster() {
-  const { toasts } = useToastOriginal();
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
-      {toasts.map(({ id, title, description, action, ...props }: ToastProps) => (
-        <Toast key={id} {...props}>
+      {toasts.map(({ id, title, description, variant }) => (
+        <Toast key={id} variant={variant}>
           <div className="grid gap-1">
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}
           </div>
-          {action}
           <ToastClose />
         </Toast>
       ))}
@@ -28,5 +29,3 @@ export function Toaster() {
     </ToastProvider>
   );
 }
-
-export { useToastOriginal as useToast, toast } from '@/components/ui/use-toast-original';
