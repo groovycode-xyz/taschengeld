@@ -18,28 +18,30 @@ interface ModeContextType {
 const ModeContext = createContext<ModeContextType | undefined>(undefined);
 
 export function ModeProvider({ children }: { children: React.ReactNode }) {
-  const [enforceRoles, setEnforceRoles] = useState(true); // Changed: default to true
-  const [isParentMode, setIsParentMode] = useState(true); // Changed: default to true
+  const [enforceRoles, setEnforceRoles] = useState(true);
+  const [isParentMode, setIsParentMode] = useState(true);
   const [pin, setPin] = useState<string | null>(null);
   const [isEnablingEnforcement, setIsEnablingEnforcement] = useState(false);
   const router = useRouter();
 
-  // Add state persistence
+  // Modified state persistence
   useEffect(() => {
     const savedMode = localStorage.getItem('parentMode');
     const savedEnforceRoles = localStorage.getItem('enforceRoles');
-    const savedPin = localStorage.getItem('pin');
+    // Remove PIN from localStorage on initial load
+    localStorage.removeItem('pin');
 
     if (savedEnforceRoles) setEnforceRoles(JSON.parse(savedEnforceRoles));
-    if (savedPin) setPin(savedPin);
     if (savedMode) setIsParentMode(JSON.parse(savedMode));
+    // Don't load saved PIN
   }, []);
 
-  // Save state changes
+  // Modified save state changes
   useEffect(() => {
     localStorage.setItem('parentMode', JSON.stringify(isParentMode));
     localStorage.setItem('enforceRoles', JSON.stringify(enforceRoles));
-    if (pin) localStorage.setItem('pin', pin);
+    // Only save PIN if explicitly set through setPin
+    if (pin !== null) localStorage.setItem('pin', pin);
   }, [isParentMode, enforceRoles, pin]);
 
   // Change this to give full access when enforcement is disabled
@@ -47,7 +49,7 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
 
   const verifyPin = useCallback(
     (inputPin: string) => {
-      if (!pin) return false;
+      if (!pin) return true; // Changed: if no PIN set, always allow access
       return inputPin === pin;
     },
     [pin]

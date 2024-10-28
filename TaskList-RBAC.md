@@ -2,28 +2,31 @@
 
 ## Phase 1: Core RBAC Implementation
 
-- [ ] Create mode management system
-  - [ ] Add mode state (Parent/Child) using React context
-  - [ ] Add mode toggle functionality
-  - [ ] Check for existing child users on app startup
-  - [ ] Auto-enable Parent mode if no child users exist
-  - [ ] Add PIN verification for Parent mode access (UI only initially)
+- [x] Create mode management system
+  - [x] Add mode state (Parent/Child) using React context
+  - [x] Add mode toggle functionality
+  - [x] Set default states to enabled
+  - [ ] Fix state persistence issues:
+    - [ ] Prevent unwanted page reloads
+    - [ ] Maintain parent mode state when enabling enforcement
+- [ ] Check for existing child users on app startup
+- [x] Auto-enable Parent mode if no child users exist
 
 ## Phase 2: UI Components
 
-- [ ] Add mode toggle button to sidebar
-  - [ ] Position at bottom left
-  - [ ] Show current mode state
-  - [ ] Add hover/focus states
-  - [ ] Add disabled state styling when enforcement is off
-  - [ ] Add hint text for disabled state
+- [x] Add mode toggle button to sidebar
+  - [x] Position at bottom left
+  - [x] Show current mode state
+  - [x] Add hover/focus states
+  - [x] Add disabled state styling when enforcement is off
+  - [x] Add hint text for disabled state
 
 ## Phase 3: Conditional Rendering
 
-- [ ] Implement sidebar menu item visibility
-  - [ ] Show all items in Parent mode
-  - [ ] Hide Payday/Task Management/Family in Child mode
-  - [ ] Always show Settings and Task Completion
+- [x] Implement sidebar menu item visibility
+  - [x] Show all items in Parent mode
+  - [x] Hide Payday/Task Management/Family in Child mode
+  - [x] Always show Settings and Task Completion
 - [ ] Implement Piggy Bank button visibility
   - [ ] Show Deposit/Withdraw in Parent mode
   - [ ] Hide Deposit/Withdraw in Child mode
@@ -49,7 +52,10 @@
 
 ## Phase 6: Testing & Documentation
 
-- [ ] Test all mode transitions
-- [ ] Test PIN validation
-- [ ] Test emergency PIN
+- [x] Initial test cases added
+- [ ] Fix failed test cases:
+  - [ ] Page reload on enforcement enable
+  - [ ] Parent mode state preservation
+  - [ ] PIN input field display
+- [ ] Complete remaining test cases
 - [ ] Update documentation

@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
+import React, { useState } from 'react';
 import {
   Select,
   SelectTrigger,
@@ -24,12 +23,13 @@ import {
   RotateCcw,
   Eye,
   EyeOff,
-  X,
 } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { saveAs } from 'file-saver';
 import { useMode } from '@/components/context/mode-context';
+import { Input } from '@/components/ui/input';
+import { PinSetupDialog } from '@/components/pin-setup-dialog';
 
 type ResetType = 'users' | 'tasks' | 'accounts';
 
@@ -44,16 +44,9 @@ interface BackupData {
   data: unknown;
 }
 
-interface PinState {
-  value: string;
-  confirmValue: string;
-  isVisible: boolean;
-  isSet: boolean;
-  isValid: boolean;
-}
-
 export function GlobalAppSettings() {
-  const { enforceRoles, setEnforceRoles, setPin, pin: contextPin } = useMode();
+  const { enforceRoles, setEnforceRoles, pin, setPin } = useMode(); // Add setPin back
+  const { addToast: toast } = useToast();
   const [loadingStates, setLoadingStates] = useState({
     users: false,
     tasks: false,
@@ -73,29 +66,23 @@ export function GlobalAppSettings() {
     users: false,
     piggybank: false,
   });
-  const [pinState, setPinState] = useState<PinState>({
-    value: contextPin || '',
-    confirmValue: '',
-    isVisible: false,
-    isSet: !!contextPin,
-    isValid: !!contextPin,
-  });
-  const [showPinConfirm, setShowPinConfirm] = useState(false);
   const [disableRolesDialog, setDisableRolesDialog] = useState(false);
-  const { addToast: toast } = useToast();
   const [selectedCurrency, setSelectedCurrency] = useState<string>('');
+  const [showPin, setShowPin] = useState(false);
 
-  // Add effect to sync with context
-  useEffect(() => {
-    if (contextPin) {
-      setPinState((prev) => ({
-        ...prev,
-        value: contextPin,
-        isSet: true,
-        isValid: true,
-      }));
+  // Remove all PIN-related state and effects
+
+  const handleRoleEnforcementChange = (checked: boolean) => {
+    if (!checked && enforceRoles) {
+      setDisableRolesDialog(true);
+    } else {
+      setEnforceRoles(checked);
+      toast({
+        title: 'Settings Updated',
+        description: `Parent/Child role enforcement is now ${checked ? 'enabled' : 'disabled'}`,
+      });
     }
-  }, [contextPin]);
+  };
 
   const getResetDialogProps = (type: ResetType) => {
     const props = {
@@ -151,80 +138,6 @@ export function GlobalAppSettings() {
       description: `Default currency has been set to ${value}`,
       variant: 'default',
     });
-  };
-
-  const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
-    setPinState((prev) => ({ ...prev, value: newValue }));
-
-    if (newValue.length === 4) {
-      setShowPinConfirm(true);
-    }
-  };
-
-  const handlePinConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
-    setPinState((prev) => ({ ...prev, confirmValue: newValue }));
-
-    if (newValue.length === 4) {
-      if (newValue === pinState.value) {
-        setPinState((prev) => ({ ...prev, isSet: true, isValid: true }));
-        setPin(newValue); // Set PIN in context
-        toast({
-          title: 'PIN Set Successfully',
-          description: 'Your new PIN has been saved',
-          variant: 'default',
-        });
-      } else {
-        toast({
-          title: 'PIN Mismatch',
-          description: 'The PINs do not match. Please try again.',
-          variant: 'destructive',
-        });
-      }
-      setShowPinConfirm(false);
-    }
-  };
-
-  const handleClearPin = () => {
-    setPinState({
-      value: '',
-      confirmValue: '',
-      isVisible: false,
-      isSet: false,
-      isValid: false,
-    });
-    setPin(null); // Clear PIN in context
-    toast({
-      title: 'PIN Cleared',
-      description: 'Your PIN has been removed',
-      variant: 'default',
-    });
-  };
-
-  const handleTestPin = () => {
-    const testPin = prompt('Enter your PIN to test it:');
-    if (testPin === pinState.value) {
-      toast({
-        title: 'PIN Test Successful',
-        description: 'The PIN you entered is correct',
-        variant: 'default',
-      });
-    } else {
-      toast({
-        title: 'PIN Test Failed',
-        description: 'The PIN you entered is incorrect',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleToggleRoles = (checked: boolean) => {
-    if (!checked && enforceRoles) {
-      setDisableRolesDialog(true);
-    } else {
-      setEnforceRoles(checked);
-    }
   };
 
   const handleBackup = async (type: 'tasks' | 'users' | 'piggybank') => {
@@ -316,316 +229,300 @@ export function GlobalAppSettings() {
     input.click();
   };
 
-  const getPinInputStyles = () => {
-    if (!pinState.value) return '';
-    if (pinState.value.length === 4) return 'border-green-500 focus-visible:ring-green-500';
-    return 'border-orange-500 focus-visible:ring-orange-500';
-  };
-
   return (
-    <div className="p-8 bg-white rounded-lg shadow-md space-y-8">
-      <div className="flex items-center gap-3 border-b pb-4">
-        <Settings2 className="h-8 w-8 text-gray-700" />
+    <div className="p-8 bg-white rounded-lg shadow-md space-y-6">
+      <div className="flex items-center space-x-3">
+        <Settings2 className="h-6 w-6" />
         <h1 className="text-3xl font-bold">Global App Settings</h1>
       </div>
 
-      {/* Role Enforcement Section */}
-      <div className="space-y-4 border-b pb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Shield className="h-6 w-6 text-gray-700" />
-          <h2 className="text-xl font-semibold">Access Control</h2>
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label className="text-base">Enforce Parent/Child Roles</Label>
-            <p className="text-sm text-muted-foreground">
-              This is for those people who do not want to &ldquo;mess&rdquo; with toggling between
-              Parent mode and verifying they are a Parent.
-            </p>
+      <div className="space-y-6">
+        {/* Access Control Section */}
+        <div className="space-y-4 border-b pb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <Shield className="h-6 w-6 text-gray-700" />
+            <h2 className="text-xl font-semibold">Access Control</h2>
           </div>
-          <Switch
-            checked={enforceRoles}
-            onCheckedChange={handleToggleRoles}
-            aria-label="Toggle role enforcement"
-          />
-        </div>
 
-        {enforceRoles && (
-          <div className="ml-6 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="pin">Global PIN</Label>
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Input
-                    id="pin"
-                    type={pinState.isVisible ? 'text' : 'password'}
-                    maxLength={4}
-                    placeholder="Enter 4-digit PIN"
-                    className={`w-32 transition-colors ${getPinInputStyles()}`}
-                    value={pinState.value}
-                    onChange={handlePinChange}
-                    aria-label="Enter PIN"
-                    aria-invalid={pinState.value.length > 0 && pinState.value.length < 4}
-                    aria-describedby="pin-hint"
-                  />
-                  <span id="pin-hint" className="sr-only">
-                    Enter a 4-digit PIN code
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setPinState((prev) => ({ ...prev, isVisible: !prev.isVisible }))}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    aria-label={pinState.isVisible ? 'Hide PIN' : 'Show PIN'}
-                  >
-                    {pinState.isVisible ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                {pinState.isSet && (
-                  <>
-                    <Button variant="outline" size="sm" onClick={handleClearPin} className="h-10">
-                      <X className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={handleTestPin} className="h-10">
-                      Test PIN
-                    </Button>
-                  </>
-                )}
-              </div>
+          <div className="flex items-center justify-between space-x-4">
+            <div>
+              <Label htmlFor="role-enforcement" className="text-lg font-medium">
+                Enforce Parent/Child Roles
+              </Label>
+              <p className="text-sm text-gray-500 mt-1">
+                This is for those people who do not want to &quot;mess&quot; with toggling between
+                Parent mode and verifying they are a Parent.
+              </p>
             </div>
+            <Switch
+              id="role-enforcement"
+              checked={enforceRoles}
+              onCheckedChange={handleRoleEnforcementChange}
+              aria-label="Toggle role enforcement"
+            />
+          </div>
 
-            {showPinConfirm && (
-              <div className="space-y-2">
-                <Label htmlFor="pin-confirm">Confirm PIN</Label>
+          {/* Update Global PIN section */}
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-2">Global PIN</h3>
+            <div className="flex items-center space-x-2">
+              <div className="relative">
                 <Input
-                  id="pin-confirm"
-                  type={pinState.isVisible ? 'text' : 'password'}
-                  maxLength={4}
-                  placeholder="Confirm 4-digit PIN"
-                  className="w-32"
-                  value={pinState.confirmValue}
-                  onChange={handlePinConfirmChange}
+                  type={showPin ? 'text' : 'password'}
+                  value={pin || ''}
+                  placeholder="Enter 4-digit PIN"
+                  className="w-32 pr-8"
+                  readOnly
                 />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-2"
+                  onClick={() => setShowPin(!showPin)}
+                >
+                  {showPin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+              {!pin ? (
+                <PinSetupDialog onSetPin={setPin} />
+              ) : (
+                <>
+                  <Button variant="outline" size="sm">
+                    Test PIN
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => setPin(null)}>
+                    ✕
+                  </Button>
+                </>
+              )}
+            </div>
+            {!pin && (
+              <div className="mt-2 max-w-lg">
+                <p className="text-sm text-gray-500">
+                  No PIN configured. Without a PIN, any user can enter this settings page. A PIN is
+                  not required, but helps to keep children from accidentally wandering into the
+                  settings. If you forget the PIN, you may be locked out and need to reinstall the
+                  application.
+                </p>
               </div>
             )}
           </div>
-        )}
-      </div>
-
-      {/* Default Currency Section */}
-      <div className="space-y-4 border-b pb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Coins className="h-6 w-6 text-gray-700" />
-          <h2 className="text-xl font-semibold">Default Currency</h2>
         </div>
-        <Select onValueChange={handleCurrencyChange} aria-label="Select default currency">
-          <SelectTrigger
-            className={`w-48 ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
-          >
-            <SelectValue placeholder="Select Currency" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="USD">USD</SelectItem>
-            <SelectItem value="EUR">EUR</SelectItem>
-            <SelectItem value="GBP">GBP</SelectItem>
-            <SelectItem value="CHF">CHF</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
 
-      {/* Reset Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3 mb-4">
-          <RotateCcw className="h-6 w-6 text-gray-700" />
-          <h2 className="text-xl font-semibold">Reset Options</h2>
+        {/* Default Currency Section */}
+        <div className="space-y-4 border-b pb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <Coins className="h-6 w-6 text-gray-700" />
+            <h2 className="text-xl font-semibold">Default Currency</h2>
+          </div>
+          <Select onValueChange={handleCurrencyChange} aria-label="Select default currency">
+            <SelectTrigger
+              className={`w-48 ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
+            >
+              <SelectValue placeholder="Select Currency" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="USD">USD</SelectItem>
+              <SelectItem value="EUR">EUR</SelectItem>
+              <SelectItem value="GBP">GBP</SelectItem>
+              <SelectItem value="CHF">CHF</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-          <div className="flex">
-            <AlertCircle className="h-5 w-5 text-yellow-400" />
-            <p className="ml-3 text-sm text-yellow-700">
-              Warning: These options will have irreversible consequences. Do not use unless you are
-              aware that you will need to recreate any data that is deleted by taking these actions.
-            </p>
+
+        {/* Reset Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 mb-4">
+            <RotateCcw className="h-6 w-6 text-gray-700" />
+            <h2 className="text-xl font-semibold">Reset Options</h2>
+          </div>
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div className="flex">
+              <AlertCircle className="h-5 w-5 text-yellow-400" />
+              <p className="ml-3 text-sm text-yellow-700">
+                Warning: These options will have irreversible consequences. Do not use unless you
+                are aware that you will need to recreate any data that is deleted by taking these
+                actions.
+              </p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div>
+              <Button
+                variant="outline"
+                className="w-full mb-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                onClick={() => handleResetClick('users')}
+                disabled={loadingStates.users}
+                aria-label="Reset and erase all users"
+              >
+                {loadingStates.users && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Reset and erase all Users
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Will delete all users. Not reversible. You will need to create new users. The
+                default built-in Parent User will be recreated automatically.
+              </p>
+            </div>
+            <div>
+              <Button
+                variant="outline"
+                className="w-full mb-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                onClick={() => handleResetClick('tasks')}
+                disabled={loadingStates.tasks}
+                aria-label="Reset and erase all tasks"
+              >
+                {loadingStates.tasks && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Reset and erase all Tasks
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Will delete all currently defined Tasks, as well as all Task completion history. Not
+                reversible. You will need to create new Tasks.
+              </p>
+            </div>
+            <div>
+              <Button
+                variant="outline"
+                className="w-full mb-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                onClick={() => handleResetClick('accounts')}
+                disabled={loadingStates.accounts}
+                aria-label="Reset and erase all piggy bank accounts"
+              >
+                {loadingStates.accounts && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Reset and erase all Piggy Bank Account Balances
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Will delete all Bank Accounts of all users. Will delete all transactions and
+                history. Not reversible.
+              </p>
+            </div>
           </div>
         </div>
-        <div className="space-y-6">
-          <div>
-            <Button
-              variant="outline"
-              className="w-full mb-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              onClick={() => handleResetClick('users')}
-              disabled={loadingStates.users}
-              aria-label="Reset and erase all users"
-            >
-              {loadingStates.users && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Reset and erase all Users
-            </Button>
+
+        {/* Backup and Restore Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 mb-4">
+            <Save className="h-6 w-6 text-gray-700" />
+            <h2 className="text-xl font-semibold">Backup and Restore</h2>
+          </div>
+
+          {/* Tasks Backup/Restore */}
+          <div className="space-y-2">
+            <h3 className="text-lg font-medium">Tasks</h3>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 transition-all hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                onClick={() => handleBackup('tasks')}
+                disabled={loadingBackup.tasks}
+              >
+                {loadingBackup.tasks ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Download Tasks
+              </Button>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                onClick={() => handleRestore('tasks')}
+                disabled={loadingRestore.tasks}
+              >
+                {loadingRestore.tasks ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+                Restore Tasks
+              </Button>
+            </div>
             <p className="text-sm text-muted-foreground">
-              Will delete all users. Not reversible. You will need to create new users. The default
-              built-in Parent User will be recreated automatically.
+              Download a JSON file containing all Tasks and their configurations
             </p>
           </div>
-          <div>
-            <Button
-              variant="outline"
-              className="w-full mb-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              onClick={() => handleResetClick('tasks')}
-              disabled={loadingStates.tasks}
-              aria-label="Reset and erase all tasks"
-            >
-              {loadingStates.tasks && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Reset and erase all Tasks
-            </Button>
+
+          {/* Users Backup/Restore */}
+          <div className="space-y-2">
+            <h3 className="text-lg font-medium">Users</h3>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 transition-all hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                onClick={() => handleBackup('users')}
+                disabled={loadingBackup.users}
+              >
+                {loadingBackup.users ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Download Users
+              </Button>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                onClick={() => handleRestore('users')}
+                disabled={loadingRestore.users}
+              >
+                {loadingRestore.users ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+                Restore Users
+              </Button>
+            </div>
             <p className="text-sm text-muted-foreground">
-              Will delete all currently defined Tasks, as well as all Task completion history. Not
-              reversible. You will need to create new Tasks.
+              Download a JSON file containing all Users and their configurations
             </p>
           </div>
-          <div>
-            <Button
-              variant="outline"
-              className="w-full mb-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              onClick={() => handleResetClick('accounts')}
-              disabled={loadingStates.accounts}
-              aria-label="Reset and erase all piggy bank accounts"
-            >
-              {loadingStates.accounts && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Reset and erase all Piggy Bank Account Balances
-            </Button>
+
+          {/* Piggy Bank Backup/Restore */}
+          <div className="space-y-2">
+            <h3 className="text-lg font-medium">Piggy Bank</h3>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 transition-all hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                onClick={() => handleBackup('piggybank')}
+                disabled={loadingBackup.piggybank}
+              >
+                {loadingBackup.piggybank ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Download Piggy Bank Data
+              </Button>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                onClick={() => handleRestore('piggybank')}
+                disabled={loadingRestore.piggybank}
+              >
+                {loadingRestore.piggybank ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+                Restore Piggy Bank Data
+              </Button>
+            </div>
             <p className="text-sm text-muted-foreground">
-              Will delete all Bank Accounts of all users. Will delete all transactions and history.
-              Not reversible.
+              Download a JSON file containing all Piggy Bank accounts and their transaction history
             </p>
           </div>
-        </div>
-      </div>
 
-      {/* Backup and Restore Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3 mb-4">
-          <Save className="h-6 w-6 text-gray-700" />
-          <h2 className="text-xl font-semibold">Backup and Restore</h2>
-        </div>
-
-        {/* Tasks Backup/Restore */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium">Tasks</h3>
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 transition-all hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-              onClick={() => handleBackup('tasks')}
-              disabled={loadingBackup.tasks}
-            >
-              {loadingBackup.tasks ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Download Tasks
-            </Button>
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-              onClick={() => handleRestore('tasks')}
-              disabled={loadingRestore.tasks}
-            >
-              {loadingRestore.tasks ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Upload className="h-4 w-4" />
-              )}
-              Restore Tasks
-            </Button>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Download a JSON file containing all Tasks and their configurations
-          </p>
-        </div>
-
-        {/* Users Backup/Restore */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium">Users</h3>
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 transition-all hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-              onClick={() => handleBackup('users')}
-              disabled={loadingBackup.users}
-            >
-              {loadingBackup.users ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Download Users
-            </Button>
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-              onClick={() => handleRestore('users')}
-              disabled={loadingRestore.users}
-            >
-              {loadingRestore.users ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Upload className="h-4 w-4" />
-              )}
-              Restore Users
-            </Button>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Download a JSON file containing all Users and their configurations
-          </p>
-        </div>
-
-        {/* Piggy Bank Backup/Restore */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium">Piggy Bank</h3>
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 transition-all hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-              onClick={() => handleBackup('piggybank')}
-              disabled={loadingBackup.piggybank}
-            >
-              {loadingBackup.piggybank ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Download Piggy Bank Data
-            </Button>
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-              onClick={() => handleRestore('piggybank')}
-              disabled={loadingRestore.piggybank}
-            >
-              {loadingRestore.piggybank ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Upload className="h-4 w-4" />
-              )}
-              Restore Piggy Bank Data
-            </Button>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Download a JSON file containing all Piggy Bank accounts and their transaction history
-          </p>
-        </div>
-
-        {/* Warning Message */}
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
-          <div className="flex">
-            <AlertCircle className="h-5 w-5 text-yellow-400" />
-            <p className="ml-3 text-sm text-yellow-700">
-              Warning: Restoring data will overwrite any existing data. These actions cannot be
-              undone.
-            </p>
+          {/* Warning Message */}
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+            <div className="flex">
+              <AlertCircle className="h-5 w-5 text-yellow-400" />
+              <p className="ml-3 text-sm text-yellow-700">
+                Warning: Restoring data will overwrite any existing data. These actions cannot be
+                undone.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -648,13 +545,6 @@ export function GlobalAppSettings() {
         onConfirm={() => {
           setEnforceRoles(false);
           setDisableRolesDialog(false);
-          setPinState({
-            value: '',
-            confirmValue: '',
-            isVisible: false,
-            isSet: false,
-            isValid: false,
-          });
         }}
         title="Disable Role Enforcement?"
         description="This will clear the current PIN and disable role-based access control. This means that children will be able to access this settings page and all parts of the application. Are you sure?"

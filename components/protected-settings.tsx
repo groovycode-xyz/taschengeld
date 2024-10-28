@@ -7,17 +7,20 @@ import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 
 export function ProtectedSettings() {
-  const { enforceRoles, verifyPin, isParentMode } = useMode();
+  const { enforceRoles, verifyPin, isParentMode, pin } = useMode();
   const { addToast } = useToast();
   const router = useRouter();
   const [isVerified, setIsVerified] = useState(false);
 
-  // Add immediate check and redirect
   useEffect(() => {
     if (enforceRoles && !isParentMode && !isVerified) {
       const checkPin = async () => {
-        const pin = prompt('Enter PIN to access Settings:');
-        if (pin && verifyPin(pin)) {
+        if (!pin) {
+          setIsVerified(true); // No PIN = automatic access
+          return;
+        }
+        const inputPin = prompt('Enter PIN to access Settings:');
+        if (inputPin && verifyPin(inputPin)) {
           setIsVerified(true);
         } else {
           addToast({
@@ -30,21 +33,8 @@ export function ProtectedSettings() {
       };
       checkPin();
     }
-  }, []); // Empty dependency array for initial check
+  }, [enforceRoles, isParentMode, isVerified, verifyPin, addToast, router, pin]);
 
-  // Add effect to handle mode changes
-  useEffect(() => {
-    if (enforceRoles && !isParentMode) {
-      router.push('/');
-      addToast({
-        title: 'Access Restricted',
-        description: 'Settings access requires Parent mode.',
-        variant: 'destructive',
-      });
-    }
-  }, [enforceRoles, isParentMode, addToast, router]);
-
-  // Don't render anything while checking or if access is denied
   if (enforceRoles && !isParentMode && !isVerified) {
     return null;
   }

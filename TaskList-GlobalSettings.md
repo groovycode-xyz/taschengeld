@@ -2,18 +2,19 @@
 
 ## Phase 1: Core Settings UI
 
-- [ ] Implement Role Enforcement toggle
-  - [ ] Add toggle with proper state management
-  - [ ] Add hint text explaining the feature
-  - [ ] Add loading states
-  - [ ] Add success/error notifications
-- [ ] Add child user detection
-  - [ ] Add API endpoint to check for child users
-  - [ ] Auto-enable Parent mode if no children exist
-  - [ ] Add proper error handling
+- [x] Implement Role Enforcement toggle
+  - [x] Add toggle with proper state management
+  - [x] Add hint text explaining the feature
+  - [x] Add loading states
+  - [x] Add success/error notifications
+- [x] Add child user detection
+  - [x] Add API endpoint to check for child users
+  - [x] Auto-enable Parent mode if no children exist
+  - [x] Add proper error handling
 
 ## Phase 2: PIN Management UI
 
+- [ ] Fix page reload issue when enabling role enforcement
 - [ ] Add PIN setup section
   - [ ] Add PIN input with validation
   - [ ] Add PIN confirmation field
@@ -38,6 +39,10 @@
 
 ## Phase 5: Testing & Documentation
 
-- [ ] Add unit tests
-- [ ] Add integration tests
+- [x] Add initial test cases
+- [ ] Fix failed test cases:
+  - [ ] Fix page reload on role enforcement enable
+  - [ ] Implement PIN input field display
+  - [ ] Fix parent mode state after enforcement enable
+- [ ] Add remaining test cases
 - [ ] Update documentation
