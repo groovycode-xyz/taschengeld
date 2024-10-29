@@ -21,35 +21,53 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
   const [enforceRoles, setEnforceRoles] = useState(true);
   const [isParentMode, setIsParentMode] = useState(true);
   const [pin, setPin] = useState<string | null>(null);
-  const [isEnablingEnforcement, setIsEnablingEnforcement] = useState(false);
   const router = useRouter();
 
-  // Modified state persistence
+  // Load settings from database on mount
   useEffect(() => {
-    const savedMode = localStorage.getItem('parentMode');
-    const savedEnforceRoles = localStorage.getItem('enforceRoles');
-    // Remove PIN from localStorage on initial load
-    localStorage.removeItem('pin');
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        if (!response.ok) throw new Error('Failed to load settings');
+        const settings = await response.json();
 
-    if (savedEnforceRoles) setEnforceRoles(JSON.parse(savedEnforceRoles));
-    if (savedMode) setIsParentMode(JSON.parse(savedMode));
-    // Don't load saved PIN
+        setEnforceRoles(settings.enforce_roles === 'true');
+        setPin(settings.global_pin);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      }
+    };
+
+    loadSettings();
   }, []);
 
-  // Modified save state changes
-  useEffect(() => {
-    localStorage.setItem('parentMode', JSON.stringify(isParentMode));
-    localStorage.setItem('enforceRoles', JSON.stringify(enforceRoles));
-    // Only save PIN if explicitly set through setPin
-    if (pin !== null) localStorage.setItem('pin', pin);
-  }, [isParentMode, enforceRoles, pin]);
+  // Save settings to database when they change
+  const updateSetting = async (key: string, value: string | null) => {
+    try {
+      await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value }),
+      });
+    } catch (error) {
+      console.error('Error saving setting:', error);
+    }
+  };
 
-  // Change this to give full access when enforcement is disabled
+  // Update database when settings change
+  useEffect(() => {
+    updateSetting('enforce_roles', enforceRoles.toString());
+  }, [enforceRoles]);
+
+  useEffect(() => {
+    updateSetting('global_pin', pin);
+  }, [pin]);
+
   const hasFullAccess = !enforceRoles || isParentMode;
 
   const verifyPin = useCallback(
     (inputPin: string) => {
-      if (!pin) return true; // Changed: if no PIN set, always allow access
+      if (!pin) return true;
       return inputPin === pin;
     },
     [pin]
@@ -59,8 +77,7 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
     if (!isParentMode) {
       // Switching to Parent mode
       if (enforceRoles && pin) {
-        // Only check PIN if enforceRoles is true and PIN is set
-        const inputPin = prompt('Enter PIN to access Parent mode:');
+        const inputPin = prompt('Enter PIN to switch to Parent mode:');
         if (!inputPin || !verifyPin(inputPin)) {
           return false;
         }
@@ -68,22 +85,27 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
       setIsParentMode(true);
       return true;
     } else {
-      // Switching to Child mode - no verification needed
+      // Switching to Child mode - check current path and redirect if necessary
       setIsParentMode(false);
+
+      // List of protected paths that require parent mode
+      const protectedPaths = [
+        '/global-settings',
+        '/payday',
+        '/task-management',
+        '/user-management',
+      ];
+
+      // Check if current path is protected
+      const currentPath = window.location.pathname;
+      if (enforceRoles && protectedPaths.some((path) => currentPath.includes(path))) {
+        router.push('/');
+        return true;
+      }
+
       return true;
     }
-  }, [isParentMode, enforceRoles, pin, verifyPin]);
-
-  // Modify the effect to respect the enabling process
-  useEffect(() => {
-    if (enforceRoles && !isParentMode && !isEnablingEnforcement) {
-      if (window.location.pathname.includes('global-settings')) {
-        router.push('/');
-      }
-    }
-    // Reset the flag after the effect runs
-    setIsEnablingEnforcement(false);
-  }, [enforceRoles, isParentMode, router, isEnablingEnforcement]);
+  }, [isParentMode, enforceRoles, pin, verifyPin, router]);
 
   const value = {
     enforceRoles,

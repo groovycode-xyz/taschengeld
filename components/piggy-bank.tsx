@@ -9,8 +9,10 @@ import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionHistoryModal } from './transaction-history-modal';
 import { PiggyBankUser } from '@/app/types/piggyBankUser';
+import { useMode } from '@/components/context/mode-context';
 
 export function PiggyBank() {
+  const { isParentMode } = useMode();
   const [users, setUsers] = useState<PiggyBankUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,27 +107,29 @@ export function PiggyBank() {
                   {formatCurrency(parseFloat(user.account.balance))}
                 </div>
               </div>
-              <div className="flex gap-2 mt-4">
-                <Button
-                  onClick={() => {
-                    setSelectedAccount(user);
-                    setIsAddFundsModalOpen(true);
-                  }}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white flex-1"
-                >
-                  Deposit
-                </Button>
-                <Button
-                  onClick={() => {
-                    setSelectedAccount(user);
-                    setIsWithdrawFundsModalOpen(true);
-                  }}
-                  className="bg-rose-600 hover:bg-rose-700 text-white flex-1"
-                >
-                  Withdraw
-                </Button>
-              </div>
-              <div className="mt-2">
+              <div className="flex flex-col gap-2 mt-4">
+                {isParentMode && (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        setSelectedAccount(user);
+                        setIsAddFundsModalOpen(true);
+                      }}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white flex-1"
+                    >
+                      Deposit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setSelectedAccount(user);
+                        setIsWithdrawFundsModalOpen(true);
+                      }}
+                      className="bg-rose-600 hover:bg-rose-700 text-white flex-1"
+                    >
+                      Withdraw
+                    </Button>
+                  </div>
+                )}
                 <Button
                   onClick={() => {
                     setSelectedAccount(user);

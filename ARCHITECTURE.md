@@ -84,7 +84,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 ## Authentication
 
-- PIN-based system for parent/child mode switching (to be implemented)
+- PIN-based system for parent/child mode switching
 
 ## Styling
 
@@ -99,7 +99,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 ## Known Issues
 
-- Global state management was at one time implemented during development phase, but became problematic and has been removed. Some artifacts related to the global state (i.e.: Parent versus Child mode) may remain in the codebase. We will come back to address this feature as it is core to the functionality of the application.
+- none
 
 ## Git Commit Preparation Process
 

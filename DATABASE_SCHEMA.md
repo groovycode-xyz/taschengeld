@@ -5,13 +5,14 @@ As of 2024-10-24
 
 ## Tables Overview
 
-The database consists of five main tables:
+The database consists of six main tables:
 
 - users
 - tasks
 - completed_tasks
 - piggybank_accounts
 - piggybank_transactions
+- app_settings
 
 ## Detailed Table Structures
 
@@ -121,6 +122,29 @@ The database consists of five main tables:
 
 - account_id REFERENCES piggybank_accounts(account_id) ON DELETE CASCADE
 - completed_task_id REFERENCES completed_tasks(c_task_id)
+
+### App Settings Table
+
+**Table:** `public.app_settings`
+
+| Column        | Type        | Nullable | Default                   | Description               |
+| ------------- | ----------- | -------- | ------------------------- | ------------------------- |
+| setting_id    | integer     | not null | nextval('setting_id_seq') | Primary key               |
+| setting_key   | varchar(50) | not null | -                         | Unique setting identifier |
+| setting_value | text        | yes      | -                         | Setting value             |
+| created_at    | timestamp   | yes      | CURRENT_TIMESTAMP         | Record creation timestamp |
+| updated_at    | timestamp   | yes      | CURRENT_TIMESTAMP         | Record update timestamp   |
+
+**Indexes:**
+
+- PRIMARY KEY on (setting_id)
+- UNIQUE CONSTRAINT on (setting_key)
+
+**Current Settings:**
+
+- enforce_roles: Controls role-based access ('true'/'false')
+- global_pin: Stores the global PIN (nullable)
+- default_currency: Stores the default currency (e.g., 'CHF')
 
 ## Relationships
 
