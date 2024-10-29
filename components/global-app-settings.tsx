@@ -590,7 +590,7 @@ export function GlobalAppSettings() {
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Download or restore all task definitions and their completion history.
+                  Download or restore all task definitions.
                 </p>
               </div>
 
@@ -736,7 +736,7 @@ export function GlobalAppSettings() {
                   disabled={loadingStates.tasks}
                 >
                   {loadingStates.tasks && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Reset Tasks
+                  Delete All Tasks
                 </Button>
                 <p className="text-sm text-muted-foreground mt-2">
                   Will delete{' '}
@@ -757,14 +757,14 @@ export function GlobalAppSettings() {
                   disabled={loadingStates.users}
                 >
                   {loadingStates.users && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Reset Users
+                  Delete All Users
                 </Button>
                 <p className="text-sm text-muted-foreground mt-2">
                   Will delete{' '}
                   <Link href="/user-management" className="text-blue-600 hover:underline">
                     all users
                   </Link>{' '}
-                  and all their associated data (piggy bank accounts, completed tasks, transaction
+                  and all their associated data (Sparkässeli accounts, completed tasks, transaction
                   history). Not reversible.
                 </p>
               </div>
@@ -778,12 +778,12 @@ export function GlobalAppSettings() {
                   disabled={loadingStates.transactions}
                 >
                   {loadingStates.transactions && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Reset Transaction History
+                  Reset Transaction History and Balances
                 </Button>
                 <p className="text-sm text-muted-foreground mt-2">
                   Will delete all transaction history from{' '}
                   <Link href="/piggy-bank" className="text-blue-600 hover:underline">
-                    all accounts
+                    one or more Sparkässeli accounts
                   </Link>{' '}
                   and reset their balances to zero. Not reversible.
                 </p>
