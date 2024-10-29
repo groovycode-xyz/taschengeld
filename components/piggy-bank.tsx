@@ -97,17 +97,13 @@ export function PiggyBank() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
           <Card key={user.user_id} className="overflow-hidden">
-            <CardHeader className="bg-blue-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <IconComponent icon={user.icon} className="w-12 h-12" />
-                  <CardTitle>{user.name}</CardTitle>
-                </div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {formatCurrency(parseFloat(user.account.balance))}
-                </div>
+            <CardHeader className="bg-blue-50 flex flex-col items-center text-center">
+              <IconComponent icon={user.icon} className="w-20 h-20 mb-2" />
+              <CardTitle className="mb-2">{user.name}</CardTitle>
+              <div className="text-2xl font-bold text-blue-600 mb-4">
+                {formatCurrency(parseFloat(user.account.balance))}
               </div>
-              <div className="flex flex-col gap-2 mt-4">
+              <div className="flex flex-col gap-2 w-full">
                 {isParentMode && (
                   <div className="flex gap-2">
                     <Button

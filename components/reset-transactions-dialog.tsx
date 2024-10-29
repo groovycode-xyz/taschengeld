@@ -12,7 +12,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { PiggyBankUser } from '@/app/types/piggyBankUser';
 import { Loader2 } from 'lucide-react';
 
 interface ResetTransactionsDialogProps {
@@ -22,39 +21,45 @@ interface ResetTransactionsDialogProps {
   isLoading?: boolean;
 }
 
+interface Account {
+  account_id: number;
+  user_name: string;
+  balance: string;
+}
+
 export function ResetTransactionsDialog({
   isOpen,
   onClose,
   onConfirm,
   isLoading = false,
 }: ResetTransactionsDialogProps) {
-  const [users, setUsers] = useState<PiggyBankUser[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [selectedAccounts, setSelectedAccounts] = useState<number[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchAccounts = async () => {
       try {
-        const response = await fetch('/api/piggy-bank/dashboard');
-        if (!response.ok) throw new Error('Failed to fetch users');
+        const response = await fetch('/api/piggy-bank/accounts');
+        if (!response.ok) throw new Error('Failed to fetch accounts');
         const data = await response.json();
-        setUsers(data);
+        setAccounts(data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching accounts:', error);
       } finally {
         setFetchLoading(false);
       }
     };
 
     if (isOpen) {
-      fetchUsers();
+      fetchAccounts();
       setSelectedAccounts([]);
     }
   }, [isOpen]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedAccounts(users.map((user) => user.account.account_id));
+      setSelectedAccounts(accounts.map((account) => account.account_id));
     } else {
       setSelectedAccounts([]);
     }
@@ -76,7 +81,8 @@ export function ResetTransactionsDialog({
         <DialogHeader>
           <DialogTitle>Reset Transaction History</DialogTitle>
           <DialogDescription>
-            Select accounts to reset their transaction history and set balance to 0.
+            Select accounts to reset their transaction history and set balance to 0. This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
 
@@ -89,22 +95,22 @@ export function ResetTransactionsDialog({
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="select-all"
-                checked={selectedAccounts.length === users.length}
+                checked={selectedAccounts.length === accounts.length && accounts.length > 0}
                 onCheckedChange={handleSelectAll}
               />
               <Label htmlFor="select-all">Select All Accounts</Label>
             </div>
 
             <div className="space-y-2">
-              {users.map((user) => (
-                <div key={user.user_id} className="flex items-center space-x-2">
+              {accounts.map((account) => (
+                <div key={account.account_id} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`account-${user.account.account_id}`}
-                    checked={selectedAccounts.includes(user.account.account_id)}
-                    onCheckedChange={() => handleToggleAccount(user.account.account_id)}
+                    id={`account-${account.account_id}`}
+                    checked={selectedAccounts.includes(account.account_id)}
+                    onCheckedChange={() => handleToggleAccount(account.account_id)}
                   />
-                  <Label htmlFor={`account-${user.account.account_id}`}>
-                    {user.name}&apos;s Account ({formatCurrency(parseFloat(user.account.balance))})
+                  <Label htmlFor={`account-${account.account_id}`}>
+                    {account.user_name}&apos;s Account (Balance: {account.balance})
                   </Label>
                 </div>
               ))}

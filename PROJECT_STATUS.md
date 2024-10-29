@@ -2,6 +2,10 @@
 
 ## Recent Updates
 
+- Enhanced Reset Transaction History functionality
+  - Added account selection dialog
+  - Added ability to reset specific accounts
+  - Improved user feedback and loading states
 - Completed Global App Settings UI implementation
 - Added toast notification system
 - Added backup/restore functionality UI
@@ -12,7 +16,7 @@
 - [x] Global App Settings page implementation complete
   - [x] Role enforcement toggle with PIN
   - [x] Currency selection
-  - [x] Reset functionality
+  - [x] Reset functionality with account selection
   - [x] Backup/Restore UI
   - [x] Toast notifications
 - [x] Visual feedback enhancements

@@ -31,6 +31,7 @@ import { useMode } from '@/components/context/mode-context';
 import { Input } from '@/components/ui/input';
 import { PinSetupDialog } from '@/components/pin-setup-dialog';
 import Link from 'next/link';
+import { ResetTransactionsDialog } from '@/components/reset-transactions-dialog';
 
 type ResetType = 'users' | 'tasks' | 'transactions' | 'all';
 
@@ -134,6 +135,7 @@ export function GlobalAppSettings() {
   const [showPin, setShowPin] = useState(false);
   const [isPinClearDialogOpen, setIsPinClearDialogOpen] = useState(false);
   const [isConfigureFlashing, setIsConfigureFlashing] = useState(false);
+  const [isResetTransactionsOpen, setIsResetTransactionsOpen] = useState(false);
 
   // Remove all PIN-related state and effects
 
@@ -187,7 +189,11 @@ export function GlobalAppSettings() {
   };
 
   const handleResetClick = (type: ResetType) => {
-    setResetDialog({ isOpen: true, type });
+    if (type === 'transactions') {
+      setIsResetTransactionsOpen(true);
+    } else {
+      setResetDialog({ isOpen: true, type });
+    }
   };
 
   const handleResetConfirm = async () => {
@@ -423,6 +429,38 @@ export function GlobalAppSettings() {
         console.log('Animation should end now'); // Add this line
         setIsConfigureFlashing(false);
       }, 1000);
+    }
+  };
+
+  const handleResetTransactions = async (selectedAccountIds: number[]) => {
+    setLoadingStates((prev) => ({ ...prev, transactions: true }));
+
+    try {
+      const response = await fetch('/api/reset/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accountIds: selectedAccountIds }),
+      });
+
+      if (!response.ok) throw new Error('Reset failed');
+
+      toast({
+        title: 'Reset Successful',
+        description: `Successfully reset ${selectedAccountIds.length} account${
+          selectedAccountIds.length === 1 ? '' : 's'
+        }.`,
+        variant: 'default',
+      });
+    } catch (error) {
+      console.error('Reset failed:', error);
+      toast({
+        title: 'Reset Failed',
+        description: 'Failed to reset selected accounts. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, transactions: false }));
+      setIsResetTransactionsOpen(false);
     }
   };
 
@@ -844,6 +882,14 @@ export function GlobalAppSettings() {
         description="This will remove the PIN protection from the global settings. Anyone will be able to access the settings page when role enforcement is enabled. Are you sure you want to continue?"
         confirmText="Yes, Remove PIN"
         cancelText="Cancel"
+      />
+
+      {/* Add ResetTransactionsDialog */}
+      <ResetTransactionsDialog
+        isOpen={isResetTransactionsOpen}
+        onClose={() => setIsResetTransactionsOpen(false)}
+        onConfirm={handleResetTransactions}
+        isLoading={loadingStates.transactions}
       />
     </div>
   );

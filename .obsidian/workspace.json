@@ -164,6 +164,8 @@
   },
   "active": "b8f80367f204b6fe",
   "lastOpenFiles": [
+    "app/api/piggy-bank/accounts/route.ts",
+    "app/api/piggy-bank/accounts",
     "node_modules/@radix-ui/react-radio-group/package.json",
     "node_modules/@radix-ui/react-radio-group/README.md",
     "node_modules/@radix-ui/react-radio-group/dist/index.mjs.map",
@@ -175,8 +177,6 @@
     "node_modules/@radix-ui/react-radio-group/dist",
     "node_modules/@radix-ui/react-roving-focus/package.json",
     "node_modules/@radix-ui/react-roving-focus/README.md",
-    "node_modules/@radix-ui/react-roving-focus/dist/index.mjs.map",
-    "node_modules/@radix-ui/react-roving-focus/dist/index.mjs",
     "node_modules/@radix-ui/react-radio-group/node_modules/@radix-ui/react-presence/README.md",
     "node_modules/@radix-ui/react-radio-group/node_modules/@radix-ui/react-context/README.md",
     "node_modules/@types/js-cookie/README.md",
