@@ -16,7 +16,7 @@ interface ConfirmDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   title: string;
-  description: string;
+  description: string | JSX.Element;
   confirmText?: string;
   cancelText?: string;
 }

@@ -32,7 +32,7 @@ import { Input } from '@/components/ui/input';
 import { PinSetupDialog } from '@/components/pin-setup-dialog';
 import Link from 'next/link';
 
-type ResetType = 'users' | 'tasks' | 'accounts' | 'transactions' | 'all';
+type ResetType = 'users' | 'tasks' | 'transactions' | 'all';
 
 interface ResetDialogState {
   isOpen: boolean;
@@ -110,8 +110,8 @@ export function GlobalAppSettings() {
   const [loadingStates, setLoadingStates] = useState({
     users: false,
     tasks: false,
-    accounts: false,
     all: false,
+    transactions: false,
   });
   const [resetDialog, setResetDialog] = useState<ResetDialogState>({
     isOpen: false,
@@ -153,39 +153,13 @@ export function GlobalAppSettings() {
     const props = {
       users: {
         title: 'Reset All Users',
-        description: (
-          <>
-            This will delete{' '}
-            <Link href="/user-management" className="text-blue-600 hover:underline">
-              all users
-            </Link>{' '}
-            from the system. This action cannot be undone.
-          </>
-        ),
+        description:
+          'This will delete all users from the system, including their piggy bank accounts, completed tasks, and transaction history. This action cannot be undone.',
       },
       tasks: {
         title: 'Reset All Tasks',
-        description: (
-          <>
-            This will delete{' '}
-            <Link href="/task-management" className="text-blue-600 hover:underline">
-              all tasks
-            </Link>
-            . You will need to create new tasks. This action cannot be undone.
-          </>
-        ),
-      },
-      accounts: {
-        title: 'Reset All Accounts',
-        description: (
-          <>
-            This will delete{' '}
-            <Link href="/piggy-bank" className="text-blue-600 hover:underline">
-              all accounts
-            </Link>{' '}
-            and their transaction history. Not reversible.
-          </>
-        ),
+        description:
+          'This will delete all tasks and their completion history. Existing transactions will remain unchanged with their original descriptions and amounts. You will need to create new tasks. This action cannot be undone.',
       },
       transactions: {
         title: 'Reset Transaction History',
@@ -195,7 +169,7 @@ export function GlobalAppSettings() {
             <Link href="/piggy-bank" className="text-blue-600 hover:underline">
               all accounts
             </Link>{' '}
-            while preserving the accounts and their current balances. Not reversible.
+            and reset their balances to zero. Not reversible.
           </>
         ),
       },
@@ -768,9 +742,9 @@ export function GlobalAppSettings() {
                   Will delete{' '}
                   <Link href="/task-management" className="text-blue-600 hover:underline">
                     all tasks
-                  </Link>
-                  , as well as all Task completion history. Not reversible. You will need to create
-                  new Tasks.
+                  </Link>{' '}
+                  and their completion history. Existing transactions will remain unchanged. Not
+                  reversible. You will need to create new tasks.
                 </p>
               </div>
 
@@ -789,29 +763,9 @@ export function GlobalAppSettings() {
                   Will delete{' '}
                   <Link href="/user-management" className="text-blue-600 hover:underline">
                     all users
-                  </Link>
-                  . Not reversible. You will need to create new users. The default built-in Parent
-                  User will be recreated automatically.
-                </p>
-              </div>
-
-              <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  onClick={() => handleResetClick('accounts')}
-                  disabled={loadingStates.accounts}
-                >
-                  {loadingStates.accounts && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Reset Accounts
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Will delete{' '}
-                  <Link href="/piggy-bank" className="text-blue-600 hover:underline">
-                    all accounts
                   </Link>{' '}
-                  and their transaction history. Not reversible.
+                  and all their associated data (piggy bank accounts, completed tasks, transaction
+                  history). Not reversible.
                 </p>
               </div>
 
@@ -831,7 +785,7 @@ export function GlobalAppSettings() {
                   <Link href="/piggy-bank" className="text-blue-600 hover:underline">
                     all accounts
                   </Link>{' '}
-                  while preserving the accounts and their current balances. Not reversible.
+                  and reset their balances to zero. Not reversible.
                 </p>
               </div>
 

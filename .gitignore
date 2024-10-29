@@ -14,7 +14,6 @@
 /out/
 .next/cache/
 
-
 # production
 /build
 
@@ -39,6 +38,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Husky
-.husky/_
-.husky.sh
+# Database
+*.sql
+
+# IDEs and editors
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
