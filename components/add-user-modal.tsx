@@ -71,6 +71,14 @@ interface AddUserModalProps {
   user?: User;
 }
 
+const defaultUserState = {
+  name: '',
+  icon: 'user',
+  soundurl: '',
+  birthday: '',
+  role: 'child' as const,
+};
+
 export function AddUserModal({
   isOpen,
   onClose,
@@ -78,33 +86,35 @@ export function AddUserModal({
   onDeleteUser,
   user,
 }: AddUserModalProps) {
-  const [name, setName] = useState(user?.name || '');
-  const [icon, setIcon] = useState(user?.icon || 'user'); // Set default icon to 'user'
-  const [soundUrl, setSoundUrl] = useState(user?.soundurl || '');
-  const [birthday, setBirthday] = useState(
-    user ? format(new Date(user.birthday), 'yyyy-MM-dd') : ''
-  );
-  const [role, setRole] = useState<'parent' | 'child'>(user?.role || 'child');
+  const [name, setName] = useState(defaultUserState.name);
+  const [icon, setIcon] = useState(defaultUserState.icon);
+  const [soundUrl, setSoundUrl] = useState(defaultUserState.soundurl);
+  const [birthday, setBirthday] = useState(defaultUserState.birthday);
+  const [role, setRole] = useState(defaultUserState.role);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
 
+  // Reset form when modal opens/closes or when user prop changes
   useEffect(() => {
     if (user) {
+      // Edit mode - populate with user data
       setName(user.name);
-      setIcon(user.icon || 'user'); // Set default icon to 'user' if not provided
-      setSoundUrl(user.soundurl || '');
+      setIcon(user.icon || defaultUserState.icon);
+      setSoundUrl(user.soundurl || defaultUserState.soundurl);
       setBirthday(format(new Date(user.birthday), 'yyyy-MM-dd'));
       setRole(user.role);
-    } else {
-      setName('');
-      setBirthday('');
-      setIcon('user'); // Set default icon to 'user' for new users
-      setSoundUrl('');
-      setRole('child');
+    } else if (!isOpen) {
+      // Reset to defaults when modal closes
+      setName(defaultUserState.name);
+      setIcon(defaultUserState.icon);
+      setSoundUrl(defaultUserState.soundurl);
+      setBirthday(defaultUserState.birthday);
+      setRole(defaultUserState.role);
+      setBirthdayError(null);
     }
-  }, [user]);
+  }, [user, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -129,7 +129,10 @@ export function UserManagement() {
 
       <AddUserModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setEditingUser(null);
+        }}
         onAddUser={handleAddUser}
         onDeleteUser={handleDeleteUser}
         user={undefined}
