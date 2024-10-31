@@ -13,6 +13,7 @@ interface ModeContextType {
   setPin: (pin: string | null) => void;
   verifyPin: (inputPin: string) => boolean;
   toggleParentMode: () => Promise<boolean>;
+  isInitialized: boolean;
 }
 
 const ModeContext = createContext<ModeContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
   const [isParentMode, setIsParentMode] = useState(true);
   const [pin, setPin] = useState<string | null>(null);
   const router = useRouter();
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load settings from database on mount
   useEffect(() => {
@@ -33,8 +35,10 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
 
         setEnforceRoles(settings.enforce_roles === 'true');
         setPin(settings.global_pin);
+        setIsInitialized(true);
       } catch (error) {
         console.error('Error loading settings:', error);
+        setIsInitialized(true);
       }
     };
 
@@ -54,14 +58,11 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Update database when settings change
+  // Only update database after initial load
   useEffect(() => {
-    updateSetting('enforce_roles', enforceRoles.toString());
-  }, [enforceRoles]);
-
-  useEffect(() => {
+    if (!isInitialized) return;
     updateSetting('global_pin', pin);
-  }, [pin]);
+  }, [pin, isInitialized]);
 
   const hasFullAccess = !enforceRoles || isParentMode;
 
@@ -117,7 +118,13 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
     setPin,
     verifyPin,
     toggleParentMode,
+    isInitialized,
   };
+
+  // Optionally prevent render until initialized
+  if (!isInitialized) {
+    return null; // Or return a loading spinner
+  }
 
   return <ModeContext.Provider value={value}>{children}</ModeContext.Provider>;
 }
