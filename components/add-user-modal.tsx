@@ -238,11 +238,18 @@ export function AddUserModal({
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => {
-                        const audio = new Audio(`/sounds/users/${soundUrl}.mp3`);
-                        audio.play().catch((error) => {
+                      onClick={async () => {
+                        try {
+                          // Try mp3 first
+                          let audio = new Audio(`/sounds/users/${soundUrl}.mp3`);
+                          await audio.play().catch(() => {
+                            // If mp3 fails, try wav
+                            audio = new Audio(`/sounds/users/${soundUrl}.wav`);
+                            return audio.play();
+                          });
+                        } catch (error) {
                           console.error('Error playing sound:', error);
-                        });
+                        }
                       }}
                       aria-label="Play Sound"
                     >

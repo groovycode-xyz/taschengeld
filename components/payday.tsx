@@ -35,18 +35,41 @@ export function Payday() {
 
   const playCoinSound = async () => {
     try {
-      const audio = new Audio('/sounds/coin-ching.mp3');
-      await audio.play();
+      // Try mp3 first
+      let audio = new Audio('/sounds/coin-ching.mp3');
+      await audio.play().catch(() => {
+        // If mp3 fails, try wav
+        audio = new Audio('/sounds/coin-ching.wav');
+        return audio.play();
+      });
     } catch (error) {
       console.error('Error playing coin sound:', error);
+    }
+  };
+
+  const playWooshSound = async () => {
+    try {
+      // Try mp3 first
+      let audio = new Audio('/sounds/woosh1.mp3');
+      await audio.play().catch(() => {
+        // If mp3 fails, try wav
+        audio = new Audio('/sounds/woosh1.wav');
+        return audio.play();
+      });
+    } catch (error) {
+      console.error('Error playing woosh sound:', error);
     }
   };
 
   const handleUpdatePaymentStatus = async (cTaskId: number, newStatus: string) => {
     setLoadingTaskIds((prev) => [...prev, cTaskId]);
     try {
+      console.log('Payment status update:', newStatus);
       if (newStatus === 'Approved') {
         await playCoinSound();
+      } else if (newStatus === 'Rejected') {
+        console.log('Playing woosh sound');
+        await playWooshSound();
       }
 
       const response = await fetch('/api/completed-tasks', {

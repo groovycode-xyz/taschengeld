@@ -31,7 +31,8 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
 
   const confirmAction = () => {
     if (actionType) {
-      onUpdateStatus(task.c_task_id, actionType + 'd');
+      const newStatus = actionType === 'Reject' ? 'Rejected' : 'Approved';
+      onUpdateStatus(task.c_task_id, newStatus);
     }
     setIsDialogOpen(false);
   };

@@ -117,9 +117,18 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => {
-                        const audio = new Audio(`/sounds/tasks/${taskState.sound_url}.mp3`);
-                        audio.play();
+                      onClick={async () => {
+                        try {
+                          // Try mp3 first
+                          let audio = new Audio(`/sounds/tasks/${taskState.sound_url}.mp3`);
+                          await audio.play().catch(() => {
+                            // If mp3 fails, try wav
+                            audio = new Audio(`/sounds/tasks/${taskState.sound_url}.wav`);
+                            return audio.play();
+                          });
+                        } catch (error) {
+                          console.error('Error playing sound:', error);
+                        }
                       }}
                     >
                       <Play className="h-4 w-4" />

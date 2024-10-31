@@ -9,6 +9,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
 
+type Sound = {
+  name: string;
+  extension: string;
+};
+
 type SelectSoundModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -22,7 +27,7 @@ export function SelectSoundModal({
   onSelectSound,
   currentSound,
 }: SelectSoundModalProps) {
-  const [sounds, setSounds] = useState<string[]>([]);
+  const [sounds, setSounds] = useState<Sound[]>([]);
   const [selectedSound, setSelectedSound] = useState<string | null>(currentSound);
 
   useEffect(() => {
@@ -45,8 +50,8 @@ export function SelectSoundModal({
     }
   }
 
-  const playSound = (sound: string) => {
-    const audio = new Audio(`/sounds/tasks/${sound}.mp3`);
+  const playSound = (sound: Sound) => {
+    const audio = new Audio(`/sounds/tasks/${sound.name}${sound.extension}`);
     audio.play();
   };
 
@@ -71,12 +76,12 @@ export function SelectSoundModal({
           </Button>
           {sounds.map((sound) => (
             <Button
-              key={sound}
-              variant={selectedSound === sound ? 'default' : 'outline'}
+              key={sound.name}
+              variant={selectedSound === sound.name ? 'default' : 'outline'}
               className="w-full justify-between"
-              onClick={() => setSelectedSound(sound)}
+              onClick={() => setSelectedSound(sound.name)}
             >
-              {sound.toUpperCase()}
+              {sound.name.toUpperCase()}
               <Button
                 size="sm"
                 variant="ghost"

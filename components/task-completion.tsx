@@ -83,8 +83,11 @@ export function TaskCompletion() {
     setAnimationState('fireworks');
 
     try {
-      const applauseAudio = new Audio('/sounds/applause.mp3');
-      await applauseAudio.play();
+      let applauseAudio = new Audio('/sounds/applause.mp3');
+      await applauseAudio.play().catch(() => {
+        applauseAudio = new Audio('/sounds/applause.wav');
+        return applauseAudio.play();
+      });
       await new Promise((resolve) => {
         applauseAudio.addEventListener('ended', resolve);
       });
@@ -94,17 +97,24 @@ export function TaskCompletion() {
       if (task.sound_url && task.sound_url.trim() !== '') {
         setAnimationState('playing-task-sound');
         console.log('Playing task sound:', task.sound_url);
-        const taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.mp3`);
         try {
-          await taskAudio.play();
+          let taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.mp3`);
+          await taskAudio.play().catch(() => {
+            taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.wav`);
+            return taskAudio.play();
+          });
           await new Promise((resolve) => {
             taskAudio.addEventListener('ended', resolve);
           });
+
           setAnimationState('playing-user-sound');
           if (matchingUser?.soundurl) {
-            const userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
             try {
-              await userAudio.play();
+              let userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
+              await userAudio.play().catch(() => {
+                userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.wav`);
+                return userAudio.play();
+              });
               await new Promise((resolve) => {
                 userAudio.addEventListener('ended', resolve);
               });
@@ -118,43 +128,11 @@ export function TaskCompletion() {
           }
         } catch (error) {
           console.error('Error playing task sound:', error);
-          setAnimationState('playing-user-sound');
-          if (matchingUser?.soundurl) {
-            const userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
-            try {
-              await userAudio.play();
-              await new Promise((resolve) => {
-                userAudio.addEventListener('ended', resolve);
-              });
-              setAnimationState('idle');
-            } catch (error) {
-              console.error('Error playing user sound:', error);
-              setAnimationState('idle');
-            }
-          } else {
-            setAnimationState('idle');
-          }
-        }
-      } else {
-        setAnimationState('playing-user-sound');
-        if (matchingUser?.soundurl) {
-          const userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
-          try {
-            await userAudio.play();
-            await new Promise((resolve) => {
-              userAudio.addEventListener('ended', resolve);
-            });
-            setAnimationState('idle');
-          } catch (error) {
-            console.error('Error playing user sound:', error);
-            setAnimationState('idle');
-          }
-        } else {
           setAnimationState('idle');
         }
       }
     } catch (error) {
-      console.error('Error playing applause sound:', error);
+      console.error('Error playing sound sequence:', error);
       setAnimationState('idle');
       setShowFireworks(false);
     }

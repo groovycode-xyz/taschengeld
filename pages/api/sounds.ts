@@ -8,8 +8,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const fileNames = fs.readdirSync(soundsDirectory);
     const soundFiles = fileNames
-      .filter((fileName) => fileName.endsWith('.mp3'))
-      .map((fileName) => fileName.replace('.mp3', ''));
+      .filter((fileName) => fileName.endsWith('.mp3') || fileName.endsWith('.wav'))
+      .map((fileName) => {
+        const name = fileName.replace(/\.(mp3|wav)$/, '');
+        const extension = fileName.match(/\.(mp3|wav)$/)?.[0] || '.mp3';
+        return { name, extension };
+      });
 
     res.status(200).json(soundFiles);
   } catch (error) {
