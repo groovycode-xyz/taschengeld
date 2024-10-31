@@ -15,5 +15,8 @@ export interface CompletedTask {
   user_name: string;
   user_icon: string;
   created_at: Date;
-  payment_status: 'Paid' | 'Unpaid';
+  payment_status: 'Unpaid' | 'Approved' | 'Rejected';
+  payout_value: string;
+  comment?: string;
+  attachment?: string;
 }

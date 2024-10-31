@@ -12,15 +12,23 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { IconComponent } from './icon-component';
-import { SquareCheckBig } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface CompletedTaskCardProps {
   task: CompletedTask;
   onUpdateStatus: (cTaskId: number, newStatus: string) => void;
   isLoading: boolean;
+  isSelected?: boolean;
+  onSelect?: (taskId: number, checked: boolean) => void;
 }
 
-export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: CompletedTaskCardProps) {
+export function CompletedTaskCard({
+  task,
+  onUpdateStatus,
+  isLoading,
+  isSelected,
+  onSelect,
+}: CompletedTaskCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'Approve' | 'Reject' | null>(null);
 
@@ -40,9 +48,17 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
   return (
     <Card className="rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white">
       <CardHeader className="flex flex-row items-center space-x-2 p-4 bg-blue-50 rounded-t-lg">
-        <SquareCheckBig className="h-6 w-6 text-green-500" />
-        <IconComponent icon={task.icon_name} className="h-6 w-6 text-blue-500" />
-        <CardTitle className="text-blue-600">{task.task_title}</CardTitle>
+        <div className="flex items-center space-x-2">
+          {onSelect && (
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={(checked) => onSelect(task.c_task_id, checked as boolean)}
+              disabled={isLoading}
+            />
+          )}
+          <IconComponent icon={task.icon_name} className="h-6 w-6 text-blue-500" />
+          <CardTitle className="text-blue-600">{task.task_title}</CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="p-4">
         <div className="flex items-center space-x-2 mb-2">

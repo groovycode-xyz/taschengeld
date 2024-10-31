@@ -1,14 +1,33 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CompletedTask } from '@/app/types/completedTask';
 import { CompletedTaskCard } from './completed-task-card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SortAsc, SortDesc } from 'lucide-react';
+import { IconComponent } from '@/components/icon-component';
+
+type SortField = 'date' | 'payout' | 'title';
+type SortDirection = 'asc' | 'desc';
 
 export function Payday() {
   const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loadingTaskIds, setLoadingTaskIds] = useState<number[]>([]);
+  const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string>('all');
+  const [sortField, setSortField] = useState<SortField>('title');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
   useEffect(() => {
     fetchCompletedTasks();
@@ -97,23 +116,219 @@ export function Payday() {
     }
   };
 
+  const handleSelectAll = (checked: boolean) => {
+    setSelectedTasks(checked ? completedTasks.map((task) => task.c_task_id) : []);
+  };
+
+  const handleSelectTask = (taskId: number, checked: boolean) => {
+    setSelectedTasks((prev) => (checked ? [...prev, taskId] : prev.filter((id) => id !== taskId)));
+  };
+
+  const handleBulkAction = async (newStatus: 'Approved' | 'Rejected') => {
+    // Process tasks sequentially to maintain sound effects
+    for (const taskId of selectedTasks) {
+      await handleUpdatePaymentStatus(taskId, newStatus);
+    }
+    setSelectedTasks([]); // Clear selection after processing
+  };
+
+  // Get unique users from completed tasks
+  const users = useMemo(() => {
+    const uniqueUsers = Array.from(new Set(completedTasks.map((task) => task.user_name))).sort();
+    return uniqueUsers;
+  }, [completedTasks]);
+
+  // Group and sort tasks
+  const groupedAndSortedTasks = useMemo(() => {
+    let filtered = [...completedTasks];
+
+    // Apply user filter
+    if (selectedUser !== 'all') {
+      filtered = filtered.filter((task) => task.user_name === selectedUser);
+    }
+
+    // Sort tasks within each group
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      switch (sortField) {
+        case 'date':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+        case 'payout':
+          comparison = parseFloat(a.payout_value) - parseFloat(b.payout_value);
+          break;
+        case 'title':
+          comparison = a.task_title.localeCompare(b.task_title);
+          break;
+      }
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    // Group by user
+    const grouped = filtered.reduce((acc, task) => {
+      const userName = task.user_name;
+      if (!acc[userName]) {
+        acc[userName] = [];
+      }
+      acc[userName].push(task);
+      return acc;
+    }, {} as Record<string, CompletedTask[]>);
+
+    // Convert to array of entries and sort by user age (assuming younger users have higher user_id)
+    const sortedEntries = Object.entries(grouped).sort(([, tasksA], [, tasksB]) => {
+      // Compare user_id of first task in each group
+      // Assuming higher user_id means younger user
+      return tasksB[0].user_id - tasksA[0].user_id;
+    });
+
+    // Convert back to object
+    return Object.fromEntries(sortedEntries);
+  }, [completedTasks, selectedUser, sortField, sortDirection]);
+
+  // Toggle sort direction
+  const toggleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Payday</h1>
-      {completedTasks.length === 0 ? (
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Payday</h1>
+        {completedTasks.length > 0 && (
+          <div className="flex items-center space-x-4">
+            <Checkbox
+              checked={selectedTasks.length === completedTasks.length}
+              onCheckedChange={handleSelectAll}
+              id="select-all"
+            />
+            <label htmlFor="select-all" className="text-sm">
+              Select All
+            </label>
+          </div>
+        )}
+      </div>
+
+      {completedTasks.length > 0 && (
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* User Filter */}
+          <Select value={selectedUser} onValueChange={setSelectedUser}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Filter by user" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Users</SelectItem>
+              {users.map((user) => (
+                <SelectItem key={user} value={user}>
+                  {user}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Sort Controls */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => toggleSort('date')}
+              className={sortField === 'date' ? 'border-primary' : ''}
+            >
+              Date{' '}
+              {sortField === 'date' &&
+                (sortDirection === 'asc' ? (
+                  <SortAsc className="ml-2 h-4 w-4" />
+                ) : (
+                  <SortDesc className="ml-2 h-4 w-4" />
+                ))}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => toggleSort('payout')}
+              className={sortField === 'payout' ? 'border-primary' : ''}
+            >
+              Payout{' '}
+              {sortField === 'payout' &&
+                (sortDirection === 'asc' ? (
+                  <SortAsc className="ml-2 h-4 w-4" />
+                ) : (
+                  <SortDesc className="ml-2 h-4 w-4" />
+                ))}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => toggleSort('title')}
+              className={sortField === 'title' ? 'border-primary' : ''}
+            >
+              Title{' '}
+              {sortField === 'title' &&
+                (sortDirection === 'asc' ? (
+                  <SortAsc className="ml-2 h-4 w-4" />
+                ) : (
+                  <SortDesc className="ml-2 h-4 w-4" />
+                ))}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Actions Bar */}
+      {selectedTasks.length > 0 && (
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto bg-white p-4 rounded-lg shadow-lg border flex items-center justify-between gap-4">
+          <span className="text-sm font-medium">
+            {selectedTasks.length} task{selectedTasks.length === 1 ? '' : 's'} selected
+          </span>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => handleBulkAction('Approved')}
+              className="bg-green-500 hover:bg-green-600 text-white"
+              disabled={isLoading}
+            >
+              Approve Selected
+            </Button>
+            <Button
+              onClick={() => handleBulkAction('Rejected')}
+              variant="destructive"
+              disabled={isLoading}
+            >
+              Reject Selected
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {Object.keys(groupedAndSortedTasks).length === 0 ? (
         <p>No unpaid tasks available.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {completedTasks.map((task) => (
-            <CompletedTaskCard
-              key={task.c_task_id}
-              task={task}
-              onUpdateStatus={handleUpdatePaymentStatus}
-              isLoading={loadingTaskIds.includes(task.c_task_id)}
-            />
+        <div className="space-y-8">
+          {Object.entries(groupedAndSortedTasks).map(([userName, tasks]) => (
+            <div key={userName} className="space-y-4">
+              <h2 className="text-xl font-semibold text-blue-600 border-b border-blue-200 pb-2 flex items-center gap-2">
+                <IconComponent icon={tasks[0].user_icon} className="h-6 w-6 text-blue-500" />
+                {userName}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {tasks.map((task) => (
+                  <CompletedTaskCard
+                    key={task.c_task_id}
+                    task={task}
+                    onUpdateStatus={handleUpdatePaymentStatus}
+                    isLoading={loadingTaskIds.includes(task.c_task_id)}
+                    isSelected={selectedTasks.includes(task.c_task_id)}
+                    onSelect={handleSelectTask}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
