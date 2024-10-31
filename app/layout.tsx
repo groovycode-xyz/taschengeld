@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import ClientLayout from 'components/client-layout';
-import { Toaster } from '@/components/ui/toaster';
 import { ToastProvider } from '@/components/ui/use-toast';
 import { ModeProvider } from '@/components/context/mode-context';
 
@@ -20,7 +19,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ToastProvider>
           <ModeProvider>
             <ClientLayout>{children}</ClientLayout>
-            <Toaster />
           </ModeProvider>
         </ToastProvider>
       </body>

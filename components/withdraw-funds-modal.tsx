@@ -47,6 +47,15 @@ export function WithdrawFundsModal({
     }
   }, [isOpen]);
 
+  const playLoseSound = async () => {
+    try {
+      const audio = new Audio('/sounds/lose1.wav');
+      await audio.play();
+    } catch (error) {
+      console.error('Error playing lose sound:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
@@ -54,10 +63,10 @@ export function WithdrawFundsModal({
       setIsSubmitting(true);
       try {
         await onWithdrawFunds(numAmount, comments, photo);
+        await playLoseSound();
         onClose();
       } catch (error) {
         console.error('Error withdrawing funds:', error);
-        // Handle error (e.g., show error message to user)
       } finally {
         setIsSubmitting(false);
       }

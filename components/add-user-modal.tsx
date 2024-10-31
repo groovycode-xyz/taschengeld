@@ -42,27 +42,7 @@ import {
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
-import { format, parse } from 'date-fns';
-import { de } from 'date-fns/locale';
-
-// Add validation function
-const validateBirthday = (date: string): string | null => {
-  const birthdayDate = new Date(date);
-  const today = new Date();
-  const maxAge = new Date();
-  maxAge.setFullYear(today.getFullYear() - 120); // 120 years old max
-
-  if (isNaN(birthdayDate.getTime())) {
-    return 'Invalid date format';
-  }
-  if (birthdayDate > today) {
-    return 'Birthday cannot be in the future';
-  }
-  if (birthdayDate < maxAge) {
-    return 'Birthday seems too far in the past';
-  }
-  return null;
-};
+import { format } from 'date-fns';
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -218,11 +198,6 @@ export function AddUserModal({
                     required
                     max={new Date().toISOString().split('T')[0]}
                   />
-                  {birthday && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      Display format: {new Date(birthday).toLocaleDateString('de-DE')}
-                    </p>
-                  )}
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -264,8 +239,10 @@ export function AddUserModal({
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(`/sounds/users/${soundUrl}`);
-                        audio.play();
+                        const audio = new Audio(`/sounds/users/${soundUrl}.mp3`);
+                        audio.play().catch((error) => {
+                          console.error('Error playing sound:', error);
+                        });
                       }}
                       aria-label="Play Sound"
                     >

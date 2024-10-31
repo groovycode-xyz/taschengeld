@@ -153,7 +153,7 @@ export function GlobalAppSettings() {
     };
 
     loadSettings();
-  }, []);
+  }, [toast]);
 
   const handleRoleEnforcementChange = (checked: boolean) => {
     if (!checked && enforceRoles) {
@@ -359,15 +359,8 @@ export function GlobalAppSettings() {
       try {
         const content = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
-
-          reader.onload = (event) => {
-            resolve(event.target?.result as string);
-          };
-
-          reader.onerror = () => {
-            reject(new Error('Failed to read file'));
-          };
-
+          reader.onload = (event) => resolve(event.target?.result as string);
+          reader.onerror = () => reject(new Error('Failed to read file'));
           reader.readAsText(file);
         });
 
@@ -393,22 +386,29 @@ export function GlobalAppSettings() {
           );
         }
 
-        // Validate data content based on type
+        // Extract the correct data structure based on type
+        let dataToRestore;
         switch (type) {
           case 'tasks':
             if (!backupData.data.tasks?.tasks) {
               throw new Error('Invalid tasks backup file. No task data found.');
             }
+            dataToRestore = backupData.data.tasks;
             break;
           case 'piggybank':
-            if (!backupData.data.piggybank?.accounts) {
+            // Handle nested piggybank structure
+            const piggyData =
+              backupData.data.piggybank?.piggybank?.data?.piggybank || backupData.data.piggybank;
+            if (!piggyData?.accounts) {
               throw new Error('Invalid piggy bank backup file. No account data found.');
             }
+            dataToRestore = piggyData;
             break;
           case 'all':
             if (!backupData.data.all?.tasks || !backupData.data.all?.accounts) {
               throw new Error('Invalid full backup file. Missing required data.');
             }
+            dataToRestore = backupData.data.all;
             break;
         }
 
@@ -418,7 +418,7 @@ export function GlobalAppSettings() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(backupData.data[type]),
+          body: JSON.stringify(dataToRestore),
         });
 
         if (!response.ok) {

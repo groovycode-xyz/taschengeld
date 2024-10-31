@@ -18,6 +18,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Fireworks } from './fireworks';
+
+type AnimationState = 'idle' | 'fireworks' | 'playing-task-sound' | 'playing-user-sound';
 
 export function TaskCompletion() {
   const [activeTasks, setActiveTasks] = useState<Task[]>([]);
@@ -29,6 +32,8 @@ export function TaskCompletion() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [deleteTaskId, setDeleteTaskId] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [animationState, setAnimationState] = useState<AnimationState>('idle');
+  const [showFireworks, setShowFireworks] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,9 +76,95 @@ export function TaskCompletion() {
     setIsModalOpen(true);
   };
 
+  const playCompletionSequence = async (task: Task, userId: number) => {
+    const matchingUser = childUsers.find((user) => user.user_id === userId);
+
+    setShowFireworks(true);
+    setAnimationState('fireworks');
+
+    try {
+      const applauseAudio = new Audio('/sounds/applause.mp3');
+      await applauseAudio.play();
+      await new Promise((resolve) => {
+        applauseAudio.addEventListener('ended', resolve);
+      });
+
+      setShowFireworks(false);
+
+      if (task.sound_url && task.sound_url.trim() !== '') {
+        setAnimationState('playing-task-sound');
+        console.log('Playing task sound:', task.sound_url);
+        const taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.mp3`);
+        try {
+          await taskAudio.play();
+          await new Promise((resolve) => {
+            taskAudio.addEventListener('ended', resolve);
+          });
+          setAnimationState('playing-user-sound');
+          if (matchingUser?.soundurl) {
+            const userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
+            try {
+              await userAudio.play();
+              await new Promise((resolve) => {
+                userAudio.addEventListener('ended', resolve);
+              });
+              setAnimationState('idle');
+            } catch (error) {
+              console.error('Error playing user sound:', error);
+              setAnimationState('idle');
+            }
+          } else {
+            setAnimationState('idle');
+          }
+        } catch (error) {
+          console.error('Error playing task sound:', error);
+          setAnimationState('playing-user-sound');
+          if (matchingUser?.soundurl) {
+            const userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
+            try {
+              await userAudio.play();
+              await new Promise((resolve) => {
+                userAudio.addEventListener('ended', resolve);
+              });
+              setAnimationState('idle');
+            } catch (error) {
+              console.error('Error playing user sound:', error);
+              setAnimationState('idle');
+            }
+          } else {
+            setAnimationState('idle');
+          }
+        }
+      } else {
+        setAnimationState('playing-user-sound');
+        if (matchingUser?.soundurl) {
+          const userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
+          try {
+            await userAudio.play();
+            await new Promise((resolve) => {
+              userAudio.addEventListener('ended', resolve);
+            });
+            setAnimationState('idle');
+          } catch (error) {
+            console.error('Error playing user sound:', error);
+            setAnimationState('idle');
+          }
+        } else {
+          setAnimationState('idle');
+        }
+      }
+    } catch (error) {
+      console.error('Error playing applause sound:', error);
+      setAnimationState('idle');
+      setShowFireworks(false);
+    }
+  };
+
   const handleUserSelect = async (userId: number) => {
     if (selectedTask) {
       try {
+        playCompletionSequence(selectedTask, userId);
+
         const response = await fetch('/api/completed-tasks', {
           method: 'POST',
           headers: {
@@ -105,6 +196,7 @@ export function TaskCompletion() {
       } catch (err) {
         setError('Error creating completed task');
         console.error(err);
+        setAnimationState('idle');
       }
     }
   };
@@ -137,7 +229,7 @@ export function TaskCompletion() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${animationState === 'idle' ? '' : 'pointer-events-none'}`}>
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
           <ClipboardListIcon className="mr-3 h-10 w-10" />
@@ -247,6 +339,8 @@ export function TaskCompletion() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {showFireworks && <Fireworks />}
     </div>
   );
 }

@@ -45,6 +45,15 @@ export function AddFundsModal({
     }
   }, [isOpen]);
 
+  const playCheerSound = async () => {
+    try {
+      const audio = new Audio('/sounds/cheer1.wav');
+      await audio.play();
+    } catch (error) {
+      console.error('Error playing cheer sound:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
@@ -52,10 +61,10 @@ export function AddFundsModal({
       setIsSubmitting(true);
       try {
         await onAddFunds(numAmount, comments, photo);
+        await playCheerSound();
         onClose();
       } catch (error) {
         console.error('Error adding funds:', error);
-        // Handle error (e.g., show error message to user)
       } finally {
         setIsSubmitting(false);
       }

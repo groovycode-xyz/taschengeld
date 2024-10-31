@@ -21,8 +21,6 @@ import { SelectUserSoundModal } from './select-user-sound-modal';
 import { User } from '@/app/types/user';
 import { Save, X, Play, Trash2 } from 'lucide-react';
 import { IconComponent } from './icon-component';
-import { format, parse } from 'date-fns';
-import { de } from 'date-fns/locale';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -197,8 +195,10 @@ export function EditUserModal({
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(soundurl);
-                        audio.play();
+                        const audio = new Audio(`/sounds/users/${soundurl}.mp3`);
+                        audio.play().catch((error) => {
+                          console.error('Error playing sound:', error);
+                        });
                       }}
                       aria-label="Play Sound"
                     >

@@ -31,10 +31,10 @@ export function EditTaskModal({
 }: EditTaskModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [icon, setIcon] = useState('box'); // Changed from 'cuboid' to 'box'
-  const [sound, setSound] = useState<string | null>('');
-  const [payoutValue, setPayoutValue] = useState('0.00');
-  const [activeStatus, setActiveStatus] = useState(true);
+  const [icon_name, setIconName] = useState('box');
+  const [sound_url, setSoundUrl] = useState<string | null>(null);
+  const [payout_value, setPayoutValue] = useState('0.00');
+  const [is_active, setIsActive] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false); // Add this line
@@ -45,10 +45,10 @@ export function EditTaskModal({
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setIcon(task.icon_name || 'box');
-      setSound(task.sound_url);
+      setIconName(task.icon_name || 'box');
+      setSoundUrl(task.sound_url);
       setPayoutValue(task.payout_value !== undefined ? task.payout_value.toString() : '0');
-      setActiveStatus(task.is_active);
+      setIsActive(task.is_active);
       // {{ If using assignedUser, set it here }}
       // setAssignedUser(task.assignedUser);
     }
@@ -60,15 +60,15 @@ export function EditTaskModal({
       onEditTask(task.task_id, {
         title,
         description,
-        icon_name: icon,
-        sound_url: sound,
-        payout_value: parseFloat(payoutValue),
-        is_active: activeStatus,
+        icon_name,
+        sound_url,
+        payout_value: parseFloat(payout_value),
+        is_active,
       });
+      onClose();
     } else {
       console.error('Cannot update task: task_id is undefined');
     }
-    onClose();
   };
 
   // {{ Remove the handleAssignUser function if it's not used }}
@@ -128,7 +128,7 @@ export function EditTaskModal({
                 <Label>Task Icon</Label>
                 <div className="flex items-center space-x-2">
                   <div className="w-12 h-12 flex items-center justify-center border rounded">
-                    <IconComponent icon={icon} className="h-6 w-6" />
+                    <IconComponent icon={icon_name} className="h-6 w-6" />
                   </div>
                   <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
                     Select Icon
@@ -139,19 +139,19 @@ export function EditTaskModal({
                 <Label>Task Sound</Label>
                 <div className="flex items-center space-x-2">
                   <Input
-                    value={sound ? sound.toUpperCase() : 'NO SOUND'}
+                    value={sound_url ? sound_url.toUpperCase() : 'NO SOUND'}
                     readOnly
                     placeholder="No sound selected"
                   />
                   <Button type="button" variant="outline" onClick={() => setIsSoundModalOpen(true)}>
                     Select Sound
                   </Button>
-                  {sound && (
+                  {sound_url && (
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(`/sounds/tasks/${sound}.mp3`);
+                        const audio = new Audio(`/sounds/tasks/${sound_url}.mp3`);
                         audio.play();
                       }}
                     >
@@ -165,7 +165,7 @@ export function EditTaskModal({
                 <Input
                   id="payoutValue"
                   type="number"
-                  value={payoutValue}
+                  value={payout_value}
                   onChange={(e) => setPayoutValue(e.target.value)}
                   step="0.01"
                   min="0"
@@ -173,7 +173,7 @@ export function EditTaskModal({
                 />
               </div>
               <div className="flex items-center space-x-2">
-                <Switch id="isActive" checked={activeStatus} onCheckedChange={setActiveStatus} />
+                <Switch id="isActive" checked={is_active} onCheckedChange={setIsActive} />
                 <Label htmlFor="isActive">Active</Label>
               </div>
             </div>
@@ -196,13 +196,13 @@ export function EditTaskModal({
       <SelectIconModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
+        onSelectIcon={(selectedIcon) => setIconName(selectedIcon)}
       />
       <SelectSoundModal
         isOpen={isSoundModalOpen} // Corrected to use the sound modal state
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setSound(selectedSound)}
-        currentSound={sound}
+        onSelectSound={(selectedSound) => setSoundUrl(selectedSound)}
+        currentSound={sound_url}
       />
       <DeleteConfirmationModal
         isOpen={isDeleteConfirmationOpen}

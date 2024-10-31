@@ -33,9 +33,22 @@ export function Payday() {
     }
   };
 
+  const playCoinSound = async () => {
+    try {
+      const audio = new Audio('/sounds/coin-ching.mp3');
+      await audio.play();
+    } catch (error) {
+      console.error('Error playing coin sound:', error);
+    }
+  };
+
   const handleUpdatePaymentStatus = async (cTaskId: number, newStatus: string) => {
     setLoadingTaskIds((prev) => [...prev, cTaskId]);
     try {
+      if (newStatus === 'Approved') {
+        await playCoinSound();
+      }
+
       const response = await fetch('/api/completed-tasks', {
         method: 'PUT',
         headers: {

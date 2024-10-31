@@ -32,10 +32,10 @@ type AddTaskModalProps = {
 const defaultTaskState = {
   title: '',
   description: '',
-  icon: 'box', // Ensure this is set to 'box'
-  sound: null as string | null,
-  payoutValue: '0.00',
-  activeStatus: true,
+  icon_name: 'box',
+  sound_url: null as string | null,
+  payout_value: '0.00',
+  is_active: true,
 };
 
 export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) {
@@ -54,10 +54,10 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
     onAddTask({
       title: taskState.title,
       description: taskState.description,
-      icon_name: taskState.icon,
-      sound_url: taskState.sound,
-      payout_value: parseFloat(taskState.payoutValue),
-      is_active: taskState.activeStatus,
+      icon_name: taskState.icon_name,
+      sound_url: taskState.sound_url,
+      payout_value: parseFloat(taskState.payout_value),
+      is_active: taskState.is_active,
     });
     onClose();
   };
@@ -95,7 +95,7 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 <Label>Task Icon</Label>
                 <div className="flex items-center space-x-2">
                   <div className="w-12 h-12 flex items-center justify-center border rounded">
-                    <IconComponent icon={taskState.icon} className="h-6 w-6" />
+                    <IconComponent icon={taskState.icon_name} className="h-6 w-6" />
                   </div>
                   <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
                     Select Icon
@@ -106,19 +106,19 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 <Label>Task Sound</Label>
                 <div className="flex items-center space-x-2">
                   <Input
-                    value={taskState.sound ? taskState.sound.toUpperCase() : 'NO SOUND'}
+                    value={taskState.sound_url ? taskState.sound_url.toUpperCase() : 'NO SOUND'}
                     readOnly
                     placeholder="No sound selected"
                   />
                   <Button type="button" variant="outline" onClick={() => setIsSoundModalOpen(true)}>
                     Select Sound
                   </Button>
-                  {taskState.sound && (
+                  {taskState.sound_url && (
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const audio = new Audio(`/sounds/tasks/${taskState.sound}.mp3`);
+                        const audio = new Audio(`/sounds/tasks/${taskState.sound_url}.mp3`);
                         audio.play();
                       }}
                     >
@@ -135,9 +135,9 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                   id="payout_value"
                   type="number"
                   step="0.01"
-                  value={taskState.payoutValue}
+                  value={taskState.payout_value}
                   onChange={(e) =>
-                    setTaskState((prev) => ({ ...prev, payoutValue: e.target.value }))
+                    setTaskState((prev) => ({ ...prev, payout_value: e.target.value }))
                   }
                   className="col-span-3"
                 />
@@ -145,9 +145,9 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
               <div className="flex items-center space-x-2">
                 <Switch
                   id="isActive"
-                  checked={taskState.activeStatus}
+                  checked={taskState.is_active}
                   onCheckedChange={(checked) =>
-                    setTaskState((prev) => ({ ...prev, activeStatus: checked }))
+                    setTaskState((prev) => ({ ...prev, is_active: checked }))
                   }
                 />
                 <Label htmlFor="isActive">Active</Label>
@@ -167,15 +167,17 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
       <SelectIconModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelectIcon={(selectedIcon) => setTaskState((prev) => ({ ...prev, icon: selectedIcon }))}
+        onSelectIcon={(selectedIcon) =>
+          setTaskState((prev) => ({ ...prev, icon_name: selectedIcon }))
+        }
       />
       <SelectSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
         onSelectSound={(selectedSound) =>
-          setTaskState((prev) => ({ ...prev, sound: selectedSound }))
+          setTaskState((prev) => ({ ...prev, sound_url: selectedSound }))
         }
-        currentSound={taskState.sound}
+        currentSound={taskState.sound_url}
       />
     </>
   );
