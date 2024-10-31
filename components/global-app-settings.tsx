@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Select,
   SelectTrigger,
@@ -136,8 +136,28 @@ export function GlobalAppSettings() {
   const [isPinClearDialogOpen, setIsPinClearDialogOpen] = useState(false);
   const [isConfigureFlashing, setIsConfigureFlashing] = useState(false);
   const [isResetTransactionsOpen, setIsResetTransactionsOpen] = useState(false);
+  const [loadingCurrency, setLoadingCurrency] = useState(false);
 
-  // Remove all PIN-related state and effects
+  useEffect(() => {
+    const loadCurrency = async () => {
+      try {
+        const response = await fetch('/api/settings/currency');
+        if (response.ok) {
+          const data = await response.json();
+          setSelectedCurrency(data.currency);
+        }
+      } catch (error) {
+        console.error('Failed to load currency setting:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load currency setting',
+          variant: 'destructive',
+        });
+      }
+    };
+
+    loadCurrency();
+  }, []);
 
   const handleRoleEnforcementChange = (checked: boolean) => {
     if (!checked && enforceRoles) {
@@ -229,13 +249,33 @@ export function GlobalAppSettings() {
     }
   };
 
-  const handleCurrencyChange = (value: string) => {
-    setSelectedCurrency(value);
-    toast({
-      title: 'Currency Updated',
-      description: `Default currency has been set to ${value}`,
-      variant: 'default',
-    });
+  const handleCurrencyChange = async (value: string) => {
+    setLoadingCurrency(true);
+    try {
+      const response = await fetch('/api/settings/currency', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currency: value }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update currency');
+
+      setSelectedCurrency(value);
+      toast({
+        title: 'Currency Updated',
+        description: `Default currency has been set to ${value}`,
+        variant: 'default',
+      });
+    } catch (error) {
+      console.error('Failed to update currency:', error);
+      toast({
+        title: 'Update Failed',
+        description: 'Failed to update currency setting. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingCurrency(false);
+    }
   };
 
   const handleBackup = async (type: 'tasks' | 'users' | 'piggybank' | 'all') => {
@@ -569,11 +609,16 @@ export function GlobalAppSettings() {
             <Coins className="h-6 w-6 text-gray-700" />
             <h2 className="text-xl font-semibold">Default Currency</h2>
           </div>
-          <Select onValueChange={handleCurrencyChange} aria-label="Select default currency">
+          <Select
+            onValueChange={handleCurrencyChange}
+            value={selectedCurrency}
+            disabled={loadingCurrency}
+            aria-label="Select default currency"
+          >
             <SelectTrigger
               className={`w-48 ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
             >
-              <SelectValue placeholder="Select Currency" />
+              <SelectValue placeholder={loadingCurrency ? 'Loading...' : 'Select Currency'} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="USD">USD</SelectItem>
