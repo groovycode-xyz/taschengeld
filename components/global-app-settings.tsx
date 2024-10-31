@@ -58,14 +58,6 @@ interface CompletedTaskBackup {
   payment_status: string;
 }
 
-interface UserBackup {
-  name: string;
-  icon: string;
-  soundurl: string;
-  birthday: string;
-  role: string;
-}
-
 interface AccountBackup {
   account_number: string;
   balance: string;
@@ -83,21 +75,17 @@ interface TransactionBackup {
 
 interface BackupData {
   timestamp: string;
-  type: 'tasks' | 'users' | 'piggybank' | 'all';
+  type: 'tasks' | 'piggybank' | 'all';
   data: {
     tasks?: {
       tasks: TaskBackup[];
       completed_tasks: CompletedTaskBackup[];
-    };
-    users?: {
-      users: UserBackup[];
     };
     piggybank?: {
       accounts: AccountBackup[];
       transactions: TransactionBackup[];
     };
     all?: {
-      users: UserBackup[];
       tasks: TaskBackup[];
       accounts: AccountBackup[];
       transactions: TransactionBackup[];
@@ -120,13 +108,11 @@ export function GlobalAppSettings() {
   });
   const [loadingBackup, setLoadingBackup] = useState({
     tasks: false,
-    users: false,
     piggybank: false,
     all: false,
   });
   const [loadingRestore, setLoadingRestore] = useState({
     tasks: false,
-    users: false,
     piggybank: false,
     all: false,
   });
@@ -317,7 +303,7 @@ export function GlobalAppSettings() {
     }
   };
 
-  const handleBackup = async (type: 'tasks' | 'users' | 'piggybank' | 'all') => {
+  const handleBackup = async (type: 'tasks' | 'piggybank' | 'all') => {
     setLoadingBackup((prev) => ({ ...prev, [type]: true }));
 
     try {
@@ -359,7 +345,7 @@ export function GlobalAppSettings() {
     }
   };
 
-  const handleRestore = async (type: 'tasks' | 'users' | 'piggybank' | 'all') => {
+  const handleRestore = async (type: 'tasks' | 'piggybank' | 'all') => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -414,18 +400,13 @@ export function GlobalAppSettings() {
               throw new Error('Invalid tasks backup file. No task data found.');
             }
             break;
-          case 'users':
-            if (!backupData.data.users?.users) {
-              throw new Error('Invalid users backup file. No user data found.');
-            }
-            break;
           case 'piggybank':
             if (!backupData.data.piggybank?.accounts) {
               throw new Error('Invalid piggy bank backup file. No account data found.');
             }
             break;
           case 'all':
-            if (!backupData.data.all?.users || !backupData.data.all?.tasks) {
+            if (!backupData.data.all?.tasks || !backupData.data.all?.accounts) {
               throw new Error('Invalid full backup file. Missing required data.');
             }
             break;
@@ -551,104 +532,105 @@ export function GlobalAppSettings() {
         <h1 className="text-3xl font-bold">Global App Settings</h1>
       </div>
 
-      <div className="grid grid-cols-1 gap-8">
-        {/* Access Control Section */}
-        <section className="bg-gray-50 rounded-lg p-6">
+      <div className="grid grid-cols-3 gap-8">
+        {/* Access Control Section - Takes 2/3 width */}
+        <section className="col-span-2 bg-gray-50 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-6">
             <Shield className="h-6 w-6 text-gray-700" />
             <h2 className="text-xl font-semibold">Access Control</h2>
           </div>
 
-          <div className="flex items-center justify-between space-x-4">
-            <div>
-              <Label htmlFor="role-enforcement" className="text-lg font-medium">
-                Enforce Parent/Child Roles
-              </Label>
-              <p className="text-sm text-gray-500 mt-1">
-                This is for those people who do not want to &quot;mess&quot; with toggling between
-                Parent mode and verifying they are a Parent.
-              </p>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between space-x-4">
+              <div>
+                <Label htmlFor="role-enforcement" className="text-lg font-medium">
+                  Enforce Parent/Child Roles
+                </Label>
+                <p className="text-sm text-gray-500 mt-1">
+                  This is for those people who do not want to &quot;mess&quot; with toggling between
+                  Parent mode and verifying they are a Parent.
+                </p>
+              </div>
+              <Switch
+                id="role-enforcement"
+                checked={enforceRoles}
+                onCheckedChange={handleRoleEnforcementChange}
+                aria-label="Toggle role enforcement"
+              />
             </div>
-            <Switch
-              id="role-enforcement"
-              checked={enforceRoles}
-              onCheckedChange={handleRoleEnforcementChange}
-              aria-label="Toggle role enforcement"
-            />
-          </div>
 
-          {/* Only show PIN section when role enforcement is enabled */}
-          {enforceRoles && (
-            <div className="mt-6">
-              <h3 className="text-lg font-medium mb-2">Global PIN</h3>
-              <div className="flex items-center space-x-2">
-                <div className="relative">
-                  <Input
-                    type={showPin ? 'text' : 'password'}
-                    value={pin || ''}
-                    placeholder={pin ? 'Enter 4-digit PIN' : 'Not set'}
-                    className="w-32 pr-8"
-                    readOnly
-                    onClick={handlePinFieldClick}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-2"
-                    onClick={() => setShowPin(!showPin)}
-                  >
-                    {showPin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </div>
-                {!pin ? (
-                  <PinSetupDialog
-                    onSetPin={setPin}
-                    className={isConfigureFlashing ? 'animate-pulse scale-105 bg-blue-50' : ''}
-                  />
-                ) : (
-                  <>
-                    <Button variant="outline" size="sm" onClick={handleTestPin}>
-                      Test PIN
-                    </Button>
-                    <PinSetupDialog
-                      onSetPin={setPin}
-                      existingPin={pin}
-                      buttonText="Change PIN"
-                      dialogTitle="Change Global PIN"
+            {/* Only show PIN section when role enforcement is enabled */}
+            {enforceRoles && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium mb-2">Global PIN</h3>
+                <div className="flex items-center space-x-2">
+                  <div className="relative">
+                    <Input
+                      type={showPin ? 'text' : 'password'}
+                      value={pin || ''}
+                      placeholder={pin ? 'Enter 4-digit PIN' : 'Not set'}
+                      className="w-32 pr-8"
+                      readOnly
+                      onClick={handlePinFieldClick}
                     />
                     <Button
-                      variant="outline"
+                      type="button"
+                      variant="ghost"
                       size="sm"
-                      onClick={handleClearPin}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="absolute right-0 top-0 h-full px-2"
+                      onClick={() => setShowPin(!showPin)}
                     >
-                      Remove PIN
+                      {showPin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
-                  </>
+                  </div>
+                  {!pin ? (
+                    <PinSetupDialog
+                      onSetPin={setPin}
+                      className={isConfigureFlashing ? 'animate-pulse scale-105 bg-blue-50' : ''}
+                    />
+                  ) : (
+                    <div className="flex space-x-2">
+                      <Button variant="outline" size="sm" onClick={handleTestPin}>
+                        Test PIN
+                      </Button>
+                      <PinSetupDialog
+                        onSetPin={setPin}
+                        existingPin={pin}
+                        buttonText="Change PIN"
+                        dialogTitle="Change Global PIN"
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleClearPin}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        Remove PIN
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                {!pin && (
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      No PIN configured. Without a PIN, any user can enter this settings page. A PIN
+                      is not required, but helps to keep children from accidentally wandering into
+                      the settings.
+                    </p>
+                  </div>
                 )}
               </div>
-              {!pin && (
-                <div className="mt-2 max-w-lg">
-                  <p className="text-sm text-gray-500">
-                    No PIN configured. Without a PIN, any user can enter this settings page. A PIN
-                    is not required, but helps to keep children from accidentally wandering into the
-                    settings. If you forget the PIN, you may be locked out and need to reinstall the
-                    application.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </section>
 
-        {/* Default Currency Section */}
+        {/* Default Currency Section - Takes 1/3 width */}
         <section className="bg-gray-50 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-6">
             <Coins className="h-6 w-6 text-gray-700" />
             <h2 className="text-xl font-semibold">Default Currency</h2>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="space-y-4">
             <div>
               <Label htmlFor="currency-select" className="text-sm text-gray-600 mb-2 block">
                 Currency
@@ -661,7 +643,7 @@ export function GlobalAppSettings() {
               >
                 <SelectTrigger
                   id="currency-select"
-                  className={`w-48 ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
+                  className={`w-full ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
                 >
                   <SelectValue placeholder={loadingCurrency ? 'Loading...' : 'Select Currency'} />
                 </SelectTrigger>
@@ -685,7 +667,7 @@ export function GlobalAppSettings() {
                 disabled={!selectedCurrency || selectedCurrency === 'none'}
                 aria-label="Select currency display format"
               >
-                <SelectTrigger id="format-select" className="w-48">
+                <SelectTrigger id="format-select" className="w-full">
                   <SelectValue placeholder="Select Format" />
                 </SelectTrigger>
                 <SelectContent>
@@ -697,269 +679,210 @@ export function GlobalAppSettings() {
             </div>
           </div>
         </section>
+      </div>
 
-        {/* Two Column Layout for Backup and Reset */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Backup and Restore Section */}
-          <section className="bg-gray-50 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <Save className="h-6 w-6 text-gray-700" />
-              <h2 className="text-xl font-semibold">Backup and Restore</h2>
-            </div>
+      {/* Two Column Layout for Backup and Reset */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Backup and Restore Section */}
+        <section className="bg-gray-50 rounded-lg p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Save className="h-6 w-6 text-gray-700" />
+            <h2 className="text-xl font-semibold">Backup and Restore</h2>
+          </div>
 
-            {/* Tasks Backup/Restore */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Tasks</h3>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleBackup('tasks')}
-                    disabled={loadingBackup.tasks}
-                    className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
-                  >
-                    {loadingBackup.tasks ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Download className="h-4 w-4 mr-2" />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRestore('tasks')}
-                    disabled={loadingRestore.tasks}
-                    className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  >
-                    {loadingRestore.tasks ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Upload className="h-4 w-4 mr-2" />
-                    )}
-                    Restore
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Download or restore all task definitions.
-                </p>
-              </div>
-
-              {/* Users Backup/Restore */}
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Users</h3>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleBackup('users')}
-                    disabled={loadingBackup.users}
-                    className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
-                  >
-                    {loadingBackup.users ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Download className="h-4 w-4 mr-2" />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRestore('users')}
-                    disabled={loadingRestore.users}
-                    className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  >
-                    {loadingRestore.users ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Upload className="h-4 w-4 mr-2" />
-                    )}
-                    Restore
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Download or restore all user profiles and their settings.
-                </p>
-              </div>
-
-              {/* Accounts Backup/Restore */}
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Accounts</h3>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleBackup('piggybank')}
-                    disabled={loadingBackup.piggybank}
-                    className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
-                  >
-                    {loadingBackup.piggybank ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Download className="h-4 w-4 mr-2" />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRestore('piggybank')}
-                    disabled={loadingRestore.piggybank}
-                    className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  >
-                    {loadingRestore.piggybank ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Upload className="h-4 w-4 mr-2" />
-                    )}
-                    Restore
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Download or restore all account balances and transaction history.
-                </p>
-              </div>
-
-              {/* Entire Database Backup/Restore */}
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Entire Database</h3>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleBackup('all')}
-                    disabled={loadingBackup.all}
-                    className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
-                  >
-                    {loadingBackup.all ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Download className="h-4 w-4 mr-2" />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRestore('all')}
-                    disabled={loadingRestore.all}
-                    className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  >
-                    {loadingRestore.all ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Upload className="h-4 w-4 mr-2" />
-                    )}
-                    Restore
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Download or restore all data from the entire database.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Reset Section */}
-          <section className="bg-gray-50 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <RotateCcw className="h-6 w-6 text-gray-700" />
-              <h2 className="text-xl font-semibold">Reset Options</h2>
-            </div>
-
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-              <div className="flex">
-                <AlertCircle className="h-5 w-5 text-yellow-400" />
-                <p className="ml-3 text-sm text-yellow-700">
-                  Warning: These actions cannot be undone.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div>
+          {/* Tasks Backup/Restore */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Tasks</h3>
+              <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  onClick={() => handleResetClick('tasks')}
-                  disabled={loadingStates.tasks}
+                  onClick={() => handleBackup('tasks')}
+                  disabled={loadingBackup.tasks}
+                  className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
                 >
-                  {loadingStates.tasks && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Delete All Tasks
+                  {loadingBackup.tasks ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4 mr-2" />
+                  )}
+                  Download
                 </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Will delete{' '}
-                  <Link href="/task-management" className="text-blue-600 hover:underline">
-                    all tasks
-                  </Link>{' '}
-                  and their completion history. Existing transactions will remain unchanged. Not
-                  reversible. You will need to create new tasks.
-                </p>
-              </div>
-
-              <div>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  onClick={() => handleResetClick('users')}
-                  disabled={loadingStates.users}
+                  onClick={() => handleRestore('tasks')}
+                  disabled={loadingRestore.tasks}
+                  className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
                 >
-                  {loadingStates.users && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Delete All Users
+                  {loadingRestore.tasks ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4 mr-2" />
+                  )}
+                  Restore
                 </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Will delete{' '}
-                  <Link href="/user-management" className="text-blue-600 hover:underline">
-                    all users
-                  </Link>{' '}
-                  and all their associated data (Sparkässeli accounts, completed tasks, transaction
-                  history). Not reversible.
-                </p>
               </div>
-
-              <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  onClick={() => handleResetClick('transactions')}
-                  disabled={loadingStates.transactions}
-                >
-                  {loadingStates.transactions && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Reset Transaction History and Balances
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Will delete all transaction history from{' '}
-                  <Link href="/piggy-bank" className="text-blue-600 hover:underline">
-                    one or more Sparkässeli accounts
-                  </Link>{' '}
-                  and reset their balances to zero. Not reversible.
-                </p>
-              </div>
-
-              <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                  onClick={() => handleResetClick('all')}
-                  disabled={loadingStates.all}
-                >
-                  {loadingStates.all && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Reset Entire Database
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Will delete all data from the database. This includes all users, tasks, accounts,
-                  and their related data. Not reversible.
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Download or restore all task definitions.
+              </p>
             </div>
-          </section>
-        </div>
+
+            {/* Accounts Backup/Restore */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Sparkässeli Accounts</h3>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleBackup('piggybank')}
+                  disabled={loadingBackup.piggybank}
+                  className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
+                >
+                  {loadingBackup.piggybank ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4 mr-2" />
+                  )}
+                  Download
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleRestore('piggybank')}
+                  disabled={loadingRestore.piggybank}
+                  className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                >
+                  {loadingRestore.piggybank ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4 mr-2" />
+                  )}
+                  Restore
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Download or restore all account balances and transaction history.
+              </p>
+            </div>
+
+            {/* Entire Database Backup/Restore */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Entire Database (Full Backup)</h3>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleBackup('all')}
+                  disabled={loadingBackup.all}
+                  className="flex-1 transition-all hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
+                >
+                  {loadingBackup.all ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4 mr-2" />
+                  )}
+                  Download
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleRestore('all')}
+                  disabled={loadingRestore.all}
+                  className="flex-1 transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                >
+                  {loadingRestore.all ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4 mr-2" />
+                  )}
+                  Restore
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Download or restore all data from the entire database.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Reset Section */}
+        <section className="bg-gray-50 rounded-lg p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <RotateCcw className="h-6 w-6 text-gray-700" />
+            <h2 className="text-xl font-semibold">Reset Options</h2>
+          </div>
+
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div className="flex">
+              <AlertCircle className="h-5 w-5 text-yellow-400" />
+              <p className="ml-3 text-sm text-yellow-700">
+                Warning: These actions cannot be undone.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                onClick={() => handleResetClick('tasks')}
+                disabled={loadingStates.tasks}
+              >
+                {loadingStates.tasks && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Delete All Tasks
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                Will delete{' '}
+                <Link href="/task-management" className="text-blue-600 hover:underline">
+                  all tasks
+                </Link>{' '}
+                from the task list. Completed tasks history and existing transactions will remain
+                unchanged. Not reversible. You will need to create new tasks.
+              </p>
+            </div>
+
+            <div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                onClick={() => handleResetClick('transactions')}
+                disabled={loadingStates.transactions}
+              >
+                {loadingStates.transactions && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Reset Transaction History and Balances
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                Will delete all transaction history from{' '}
+                <Link href="/piggy-bank" className="text-blue-600 hover:underline">
+                  one or more Sparkässeli accounts
+                </Link>{' '}
+                and reset their balances to zero. Not reversible.
+              </p>
+            </div>
+
+            <div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                onClick={() => handleResetClick('all')}
+                disabled={loadingStates.all}
+              >
+                {loadingStates.all && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Reset Entire Database
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                Will delete all data from the database. This includes all users, tasks, accounts,
+                and their related data. Not reversible.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
 
       {resetDialog.type && (

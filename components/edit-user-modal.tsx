@@ -21,6 +21,8 @@ import { SelectUserSoundModal } from './select-user-sound-modal';
 import { User } from '@/app/types/user';
 import { Save, X, Play, Trash2 } from 'lucide-react';
 import { IconComponent } from './icon-component';
+import { format, parse } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -143,13 +145,17 @@ export function EditUserModal({
                     value={birthday}
                     onChange={(e) => {
                       setBirthday(e.target.value);
-                      const error = validateBirthday(e.target.value);
-                      setBirthdayError(error);
+                      // No need for format here as we're using the native date input
                     }}
                     className={birthdayError ? 'border-red-500' : ''}
                     required
+                    max={new Date().toISOString().split('T')[0]}
                   />
-                  {birthdayError && <p className="text-sm text-red-500 mt-1">{birthdayError}</p>}
+                  {birthday && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      Display format: {new Date(birthday).toLocaleDateString('de-DE')}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">

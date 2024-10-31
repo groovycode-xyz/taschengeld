@@ -42,7 +42,8 @@ import {
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 // Add validation function
 const validateBirthday = (date: string): string | null => {
@@ -211,13 +212,17 @@ export function AddUserModal({
                     value={birthday}
                     onChange={(e) => {
                       setBirthday(e.target.value);
-                      const error = validateBirthday(e.target.value);
-                      setBirthdayError(error);
+                      // No need for format here as we're using the native date input
                     }}
                     className={birthdayError ? 'border-red-500' : ''}
                     required
+                    max={new Date().toISOString().split('T')[0]}
                   />
-                  {birthdayError && <p className="text-sm text-red-500 mt-1">{birthdayError}</p>}
+                  {birthday && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      Display format: {new Date(birthday).toLocaleDateString('de-DE')}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
