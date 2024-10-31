@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CompletedTask } from '@/app/types/completedTask';
-import { formatCurrency } from '@/lib/utils';
+import { CurrencyDisplay } from '@/components/ui/currency-display';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { IconComponent } from './icon-component';
-import { SquareCheckBig } from 'lucide-react'; // Import the new icon
+import { SquareCheckBig } from 'lucide-react';
 
 interface CompletedTaskCardProps {
   task: CompletedTask;
@@ -39,7 +39,7 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
   return (
     <Card className="rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white">
       <CardHeader className="flex flex-row items-center space-x-2 p-4 bg-blue-50 rounded-t-lg">
-        <SquareCheckBig className="h-6 w-6 text-green-500" /> {/* Add the new icon here */}
+        <SquareCheckBig className="h-6 w-6 text-green-500" />
         <IconComponent icon={task.icon_name} className="h-6 w-6 text-blue-500" />
         <CardTitle className="text-blue-600">{task.task_title}</CardTitle>
       </CardHeader>
@@ -48,7 +48,9 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
           <IconComponent icon={task.user_icon} className="h-6 w-6 text-gray-500" />
           <span>Completed by: {task.user_name}</span>
         </div>
-        <p>Payout: {formatCurrency(parseFloat(task.payout_value))}</p>
+        <p className="font-bold">
+          Payout: <CurrencyDisplay value={parseFloat(task.payout_value)} />
+        </p>
         {task.comment && <p>Comment: {task.comment}</p>}
         {task.attachment && <p>Attachment: {task.attachment}</p>}
         {task.payment_status === 'Unpaid' && (
@@ -74,16 +76,28 @@ export function CompletedTaskCard({ task, onUpdateStatus, isLoading }: Completed
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Action</DialogTitle>
+            <DialogTitle>
+              {actionType === 'Approve' ? 'Approve Payment' : 'Reject Payment'}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to {actionType?.toLowerCase()} this task?
+              Are you sure you want to {actionType?.toLowerCase()} this payment of{' '}
+              <CurrencyDisplay value={parseFloat(task.payout_value)} /> for {task.task_title}?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={confirmAction}>Confirm</Button>
+            <Button
+              onClick={confirmAction}
+              className={
+                actionType === 'Approve'
+                  ? 'bg-green-500 hover:bg-green-600 text-white'
+                  : 'bg-red-500 hover:bg-red-600 text-white'
+              }
+            >
+              {actionType}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

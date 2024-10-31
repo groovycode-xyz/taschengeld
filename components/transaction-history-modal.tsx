@@ -3,7 +3,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { formatCurrency } from '@/lib/utils';
+import { CurrencyDisplay } from '@/components/ui/currency-display';
 import { IconComponent } from './icon-component';
 import { PiggyBankUser } from '@/app/types/piggyBankUser';
 
@@ -117,7 +117,10 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                           }`}
                         >
                           {transaction.transaction_type === 'deposit' ? '+' : '-'}
-                          {formatCurrency(Math.abs(parseFloat(transaction.amount)))}
+                          <CurrencyDisplay
+                            value={Math.abs(parseFloat(transaction.amount))}
+                            className="font-semibold"
+                          />
                         </span>
                       </div>
                     </div>

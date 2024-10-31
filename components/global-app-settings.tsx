@@ -137,26 +137,36 @@ export function GlobalAppSettings() {
   const [isConfigureFlashing, setIsConfigureFlashing] = useState(false);
   const [isResetTransactionsOpen, setIsResetTransactionsOpen] = useState(false);
   const [loadingCurrency, setLoadingCurrency] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState<string>('symbol');
 
   useEffect(() => {
-    const loadCurrency = async () => {
+    const loadSettings = async () => {
       try {
-        const response = await fetch('/api/settings/currency');
-        if (response.ok) {
-          const data = await response.json();
-          setSelectedCurrency(data.currency);
+        const [currencyResponse, formatResponse] = await Promise.all([
+          fetch('/api/settings/currency'),
+          fetch('/api/settings/currency-format'),
+        ]);
+
+        if (currencyResponse.ok) {
+          const { currency } = await currencyResponse.json();
+          setSelectedCurrency(currency === null ? 'none' : currency);
+        }
+
+        if (formatResponse.ok) {
+          const { format } = await formatResponse.json();
+          setSelectedFormat(format || 'symbol'); // Default to symbol if not set
         }
       } catch (error) {
-        console.error('Failed to load currency setting:', error);
+        console.error('Failed to load settings:', error);
         toast({
           title: 'Error',
-          description: 'Failed to load currency setting',
+          description: 'Failed to load settings',
           variant: 'destructive',
         });
       }
     };
 
-    loadCurrency();
+    loadSettings();
   }, []);
 
   const handleRoleEnforcementChange = (checked: boolean) => {
@@ -255,7 +265,7 @@ export function GlobalAppSettings() {
       const response = await fetch('/api/settings/currency', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currency: value }),
+        body: JSON.stringify({ currency: value === 'none' ? null : value }),
       });
 
       if (!response.ok) throw new Error('Failed to update currency');
@@ -263,7 +273,10 @@ export function GlobalAppSettings() {
       setSelectedCurrency(value);
       toast({
         title: 'Currency Updated',
-        description: `Default currency has been set to ${value}`,
+        description:
+          value === 'none'
+            ? 'Default currency has been cleared'
+            : `Default currency has been set to ${value}`,
         variant: 'default',
       });
     } catch (error) {
@@ -275,6 +288,32 @@ export function GlobalAppSettings() {
       });
     } finally {
       setLoadingCurrency(false);
+    }
+  };
+
+  const handleFormatChange = async (value: string) => {
+    try {
+      const response = await fetch('/api/settings/currency-format', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ format: value }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update currency format');
+
+      setSelectedFormat(value);
+      toast({
+        title: 'Display Format Updated',
+        description: 'Currency display format has been updated',
+        variant: 'default',
+      });
+    } catch (error) {
+      console.error('Failed to update currency format:', error);
+      toast({
+        title: 'Update Failed',
+        description: 'Failed to update display format. Please try again.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -609,24 +648,54 @@ export function GlobalAppSettings() {
             <Coins className="h-6 w-6 text-gray-700" />
             <h2 className="text-xl font-semibold">Default Currency</h2>
           </div>
-          <Select
-            onValueChange={handleCurrencyChange}
-            value={selectedCurrency}
-            disabled={loadingCurrency}
-            aria-label="Select default currency"
-          >
-            <SelectTrigger
-              className={`w-48 ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
-            >
-              <SelectValue placeholder={loadingCurrency ? 'Loading...' : 'Select Currency'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="USD">USD</SelectItem>
-              <SelectItem value="EUR">EUR</SelectItem>
-              <SelectItem value="GBP">GBP</SelectItem>
-              <SelectItem value="CHF">CHF</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-4">
+            <div>
+              <Label htmlFor="currency-select" className="text-sm text-gray-600 mb-2 block">
+                Currency
+              </Label>
+              <Select
+                onValueChange={handleCurrencyChange}
+                value={selectedCurrency}
+                disabled={loadingCurrency}
+                aria-label="Select default currency"
+              >
+                <SelectTrigger
+                  id="currency-select"
+                  className={`w-48 ${selectedCurrency ? 'border-blue-500 text-blue-700' : ''}`}
+                >
+                  <SelectValue placeholder={loadingCurrency ? 'Loading...' : 'Select Currency'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="GBP">GBP</SelectItem>
+                  <SelectItem value="CHF">CHF</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="format-select" className="text-sm text-gray-600 mb-2 block">
+                Display Format
+              </Label>
+              <Select
+                onValueChange={handleFormatChange}
+                value={selectedFormat}
+                disabled={!selectedCurrency || selectedCurrency === 'none'}
+                aria-label="Select currency display format"
+              >
+                <SelectTrigger id="format-select" className="w-48">
+                  <SelectValue placeholder="Select Format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="symbol">Symbol Only (e.g., $10.00)</SelectItem>
+                  <SelectItem value="code">Code Only (e.g., 10.00 USD)</SelectItem>
+                  <SelectItem value="both">Both (e.g., $10.00 USD)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </section>
 
         {/* Two Column Layout for Backup and Reset */}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle } from '../components/ui/card';
 import { IconComponent } from './icon-component';
-import { formatCurrency } from '../lib/utils';
+import { CurrencyDisplay } from '@/components/ui/currency-display';
 import { Button } from '../components/ui/button';
 import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
@@ -101,7 +101,10 @@ export function PiggyBank() {
               <IconComponent icon={user.icon} className="w-20 h-20 mb-2" />
               <CardTitle className="mb-2">{user.name}</CardTitle>
               <div className="text-2xl font-bold text-blue-600 mb-4">
-                {formatCurrency(parseFloat(user.account.balance))}
+                <CurrencyDisplay
+                  value={parseFloat(user.account.balance)}
+                  className="text-2xl font-bold text-blue-600"
+                />
               </div>
               <div className="flex flex-col gap-2 w-full">
                 {isParentMode && (

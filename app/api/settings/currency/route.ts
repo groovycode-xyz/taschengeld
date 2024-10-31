@@ -4,7 +4,7 @@ import { settingsService } from '../../../../lib/db/settings';
 export async function GET() {
   try {
     const currency = await settingsService.get('default_currency');
-    return NextResponse.json({ currency: currency || 'EUR' });
+    return NextResponse.json({ currency });
   } catch (error) {
     console.error('Failed to fetch currency setting:', error);
     return NextResponse.json({ error: 'Failed to fetch currency setting' }, { status: 500 });

@@ -16,6 +16,7 @@ import { AddTaskModal } from './add-task-modal';
 import { EditTaskModal } from './edit-task-modal';
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
+import { CurrencyDisplay } from '@/components/ui/currency-display';
 
 export function TaskManagement() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -189,9 +190,10 @@ export function TaskManagement() {
                   {task.title}
                 </h3>
                 <p className="text-xl font-bold text-green-600">
-                  {typeof task.payout_value === 'number'
-                    ? task.payout_value.toFixed(2)
-                    : task.payout_value}
+                  <CurrencyDisplay
+                    value={task.payout_value}
+                    className="text-xl font-bold text-green-600"
+                  />
                 </p>
               </CardContent>
             </Card>
