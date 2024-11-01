@@ -80,7 +80,7 @@ The database consists of six main tables:
 **Foreign Keys:**
 
 - user_id REFERENCES users(user_id) ON DELETE CASCADE
-- task_id REFERENCES tasks(task_id)
+- task_id REFERENCES tasks(task_id) ON DELETE CASCADE
 
 ### Piggy Bank Accounts Table
 
@@ -146,6 +146,19 @@ The database consists of six main tables:
 - global_pin: Stores the global PIN (nullable)
 - default_currency: Stores the default currency (e.g., 'CHF')
 
+## Database Functions and Triggers
+
+### check_unpaid_tasks_before_delete()
+
+**Type:** Trigger Function
+**Purpose:** Prevents deletion of tasks that have unpaid completed entries
+**Trigger:** BEFORE DELETE ON tasks
+**Behavior:**
+
+- Checks if the task being deleted has any completed tasks with payment_status = 'Unpaid'
+- Raises an exception if unpaid entries exist
+- Allows deletion if no unpaid entries exist or all entries are paid/rejected
+
 ## Relationships
 
 1. Users can have one Piggy Bank Account (one-to-one)
@@ -160,3 +173,4 @@ The following cascading deletions are configured:
 - When a user is deleted, their completed tasks are deleted
 - When a user is deleted, their piggy bank account is deleted
 - When a piggy bank account is deleted, all its transactions are deleted
+- When a task is deleted, all its completed tasks (paid/rejected) are deleted automatically

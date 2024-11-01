@@ -5,7 +5,6 @@ import { CompletedTask } from '@/app/types/completedTask';
 import { CompletedTaskCard } from './completed-task-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,

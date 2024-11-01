@@ -20,8 +20,6 @@ import {
 } from '@/components/ui/dialog';
 import { Fireworks } from './fireworks';
 
-type AnimationState = 'idle' | 'fireworks' | 'playing-task-sound' | 'playing-user-sound';
-
 export function TaskCompletion() {
   const [activeTasks, setActiveTasks] = useState<Task[]>([]);
   const [childUsers, setChildUsers] = useState<User[]>([]);
@@ -32,8 +30,8 @@ export function TaskCompletion() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [deleteTaskId, setDeleteTaskId] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [animationState, setAnimationState] = useState<AnimationState>('idle');
   const [showFireworks, setShowFireworks] = useState(false);
+  const [newestTaskId, setNewestTaskId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,17 +69,41 @@ export function TaskCompletion() {
     fetchData();
   }, []);
 
-  const handleTaskClick = (task: Task) => {
-    setSelectedTask(task);
-    setIsModalOpen(true);
+  const playTaskSound = async (task: Task) => {
+    if (task.sound_url && task.sound_url.trim() !== '') {
+      try {
+        let taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.mp3`);
+        await taskAudio.play().catch(() => {
+          taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.wav`);
+          return taskAudio.play();
+        });
+      } catch (error) {
+        console.error('Error playing task sound:', error);
+      }
+    }
   };
 
-  const playCompletionSequence = async (task: Task, userId: number) => {
-    const matchingUser = childUsers.find((user) => user.user_id === userId);
+  const playUserSound = async (user: User): Promise<void> => {
+    if (user.soundurl) {
+      try {
+        let userAudio = new Audio(`/sounds/users/${user.soundurl}.mp3`);
+        await userAudio.play().catch(() => {
+          userAudio = new Audio(`/sounds/users/${user.soundurl}.wav`);
+          return userAudio.play();
+        });
+        // Wait for the sound to complete
+        return new Promise((resolve) => {
+          userAudio.addEventListener('ended', resolve);
+        });
+      } catch (error) {
+        console.error('Error playing user sound:', error);
+      }
+    }
+    return Promise.resolve();
+  };
 
+  const playCompletionCelebration = async () => {
     setShowFireworks(true);
-    setAnimationState('fireworks');
-
     try {
       let applauseAudio = new Audio('/sounds/applause.mp3');
       await applauseAudio.play().catch(() => {
@@ -91,58 +113,32 @@ export function TaskCompletion() {
       await new Promise((resolve) => {
         applauseAudio.addEventListener('ended', resolve);
       });
-
-      setShowFireworks(false);
-
-      if (task.sound_url && task.sound_url.trim() !== '') {
-        setAnimationState('playing-task-sound');
-        console.log('Playing task sound:', task.sound_url);
-        try {
-          let taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.mp3`);
-          await taskAudio.play().catch(() => {
-            taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.wav`);
-            return taskAudio.play();
-          });
-          await new Promise((resolve) => {
-            taskAudio.addEventListener('ended', resolve);
-          });
-
-          setAnimationState('playing-user-sound');
-          if (matchingUser?.soundurl) {
-            try {
-              let userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.mp3`);
-              await userAudio.play().catch(() => {
-                userAudio = new Audio(`/sounds/users/${matchingUser.soundurl}.wav`);
-                return userAudio.play();
-              });
-              await new Promise((resolve) => {
-                userAudio.addEventListener('ended', resolve);
-              });
-              setAnimationState('idle');
-            } catch (error) {
-              console.error('Error playing user sound:', error);
-              setAnimationState('idle');
-            }
-          } else {
-            setAnimationState('idle');
-          }
-        } catch (error) {
-          console.error('Error playing task sound:', error);
-          setAnimationState('idle');
-        }
-      }
     } catch (error) {
-      console.error('Error playing sound sequence:', error);
-      setAnimationState('idle');
+      console.error('Error playing applause sound:', error);
+    } finally {
       setShowFireworks(false);
     }
   };
 
+  const handleTaskClick = (task: Task) => {
+    playTaskSound(task); // Play sound immediately
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
   const handleUserSelect = async (userId: number) => {
     if (selectedTask) {
-      try {
-        playCompletionSequence(selectedTask, userId);
+      const selectedUser = childUsers.find((user) => user.user_id === userId);
+      if (!selectedUser) return;
 
+      try {
+        // Play user sound and wait for it to complete
+        await playUserSound(selectedUser);
+
+        // Wait additional 0.2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Create the completed task
         const response = await fetch('/api/completed-tasks', {
           method: 'POST',
           headers: {
@@ -157,24 +153,34 @@ export function TaskCompletion() {
         if (!response.ok) throw new Error('Failed to create completed task');
 
         const newCompletedTask: CompletedTask = await response.json();
-        const matchingUser = childUsers.find((user) => user.user_id === userId);
+
+        // Set the newest task ID
+        setNewestTaskId(newCompletedTask.c_task_id);
+
+        // Clear the newest task ID after animation
+        setTimeout(() => {
+          setNewestTaskId(null);
+        }, 3000); // 3 seconds total animation time
+
         setCompletedTasks((prevTasks) => [
           {
             ...newCompletedTask,
             task_title: selectedTask.title,
-            user_name: matchingUser?.name || '',
+            user_name: selectedUser.name || '',
             icon_name: selectedTask.icon_name,
-            user_icon: matchingUser?.icon || '',
+            user_icon: selectedUser.icon || '',
           },
           ...prevTasks,
         ]);
 
         setIsModalOpen(false);
         setSelectedTask(null);
+
+        // Play completion celebration
+        await playCompletionCelebration();
       } catch (err) {
         setError('Error creating completed task');
         console.error(err);
-        setAnimationState('idle');
       }
     }
   };
@@ -207,7 +213,7 @@ export function TaskCompletion() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className={`space-y-6 ${animationState === 'idle' ? '' : 'pointer-events-none'}`}>
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
           <ClipboardListIcon className="mr-3 h-10 w-10" />
@@ -239,7 +245,8 @@ export function TaskCompletion() {
           {completedTasks.map((task) => (
             <Card
               key={task.c_task_id}
-              className="w-full hover:shadow-lg transition-shadow duration-300 bg-white"
+              className={`w-full hover:shadow-lg transition-shadow duration-300 bg-white
+                ${task.c_task_id === newestTaskId ? 'animate-new-task' : ''}`}
             >
               <CardContent className="flex items-center justify-between p-4">
                 <SquareCheckBig className="h-8 w-8 mr-2 text-green-500" />

@@ -32,6 +32,26 @@ export function TaskManagement() {
     fetchTasks();
   }, []);
 
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (error) {
+      timeoutId = setTimeout(() => {
+        setError(null);
+      }, 5000); // Clear error after 5 seconds
+    }
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [error]);
+
+  useEffect(() => {
+    return () => {
+      setError(null);
+    };
+  }, []);
+
   const fetchTasks = async () => {
     try {
       setIsLoading(true);
@@ -95,15 +115,32 @@ export function TaskManagement() {
 
   const handleDeleteTask = async (taskId: string) => {
     try {
-      const response = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (!response.ok) {
-        throw new Error('Failed to delete task');
+        const errorData = await response.json();
+        if (response.status === 400) {
+          setError(
+            'This task has unpaid completed entries and cannot be deleted. Please process (approve or reject) all unpaid entries for this task first.'
+          );
+          return;
+        }
+        throw new Error(errorData.error || 'Failed to delete task');
       }
+
       setTasks((prevTasks) => prevTasks.filter((task) => task.task_id !== taskId));
       setIsEditModalOpen(false);
+      setEditingTask(null);
     } catch (error) {
       console.error('Error deleting task:', error);
-      setError('Failed to delete task. Please try again.');
+      setError(
+        'Unable to delete this task. It may have unpaid completed entries that need to be processed first.'
+      );
     }
   };
 
@@ -127,6 +164,18 @@ export function TaskManagement() {
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <span className="block sm:inline">{error}</span>
+          <span
+            className="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
+            onClick={() => setError(null)}
+          >
+            ×
+          </span>
+        </div>
+      )}
+
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
           <ClipboardListIcon className="mr-3 h-10 w-10" />
