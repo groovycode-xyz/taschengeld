@@ -214,9 +214,10 @@ export function TaskManagement() {
           {filteredAndSortedTasks.map((task) => (
             <Card
               key={task.task_id}
-              className={`cursor-pointer transition-all duration-300 ${
-                task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
-              }`}
+              className={`cursor-pointer transition-all duration-300
+                ${
+                  task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
+                } shadow-md`}
               onClick={() => {
                 setEditingTask(task);
                 setIsEditModalOpen(true);

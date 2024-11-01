@@ -324,6 +324,7 @@ export function Payday() {
                     isLoading={loadingTaskIds.includes(task.c_task_id)}
                     isSelected={selectedTasks.includes(task.c_task_id)}
                     onSelect={handleSelectTask}
+                    newestTaskId={null}
                   />
                 ))}
               </div>

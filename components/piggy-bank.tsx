@@ -96,14 +96,14 @@ export function PiggyBank() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
-          <Card key={user.user_id} className="overflow-hidden">
-            <CardHeader className="bg-blue-50 flex flex-col items-center text-center">
+          <Card key={user.user_id} className="overflow-hidden bg-green-100 shadow-md">
+            <CardHeader className="bg-green-100 flex flex-col items-center text-center">
               <IconComponent icon={user.icon} className="w-20 h-20 mb-2" />
               <CardTitle className="mb-2">{user.name}</CardTitle>
-              <div className="text-2xl font-bold text-blue-600 mb-4">
+              <div className="text-2xl font-bold text-green-600 mb-4">
                 <CurrencyDisplay
                   value={parseFloat(user.account.balance)}
-                  className="text-2xl font-bold text-blue-600"
+                  className="text-2xl font-bold text-green-600"
                 />
               </div>
               <div className="flex flex-col gap-2 w-full">
@@ -114,7 +114,7 @@ export function PiggyBank() {
                         setSelectedAccount(user);
                         setIsAddFundsModalOpen(true);
                       }}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white flex-1"
+                      className="bg-green-600 hover:bg-green-700 text-white flex-1 font-semibold"
                     >
                       Deposit
                     </Button>
@@ -123,7 +123,7 @@ export function PiggyBank() {
                         setSelectedAccount(user);
                         setIsWithdrawFundsModalOpen(true);
                       }}
-                      className="bg-rose-600 hover:bg-rose-700 text-white flex-1"
+                      className="bg-red-600 hover:bg-red-700 text-white flex-1 font-semibold"
                     >
                       Withdraw
                     </Button>
@@ -134,7 +134,7 @@ export function PiggyBank() {
                     setSelectedAccount(user);
                     setIsTransactionsModalOpen(true);
                   }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                  className="bg-blue-600 hover:bg-blue-700 text-white w-full font-semibold"
                 >
                   Transactions
                 </Button>

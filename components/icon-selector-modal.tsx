@@ -1,3 +1,6 @@
+// IconSelectorModal Component
+// This modal provides a selection of user-related icons, primarily used for USER profiles or related functionalities.
+
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
 import { Button } from 'components/ui/button';

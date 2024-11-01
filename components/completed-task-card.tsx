@@ -20,6 +20,7 @@ interface CompletedTaskCardProps {
   isLoading: boolean;
   isSelected?: boolean;
   onSelect?: (taskId: number, checked: boolean) => void;
+  newestTaskId?: number | null;
 }
 
 export function CompletedTaskCard({
@@ -28,6 +29,7 @@ export function CompletedTaskCard({
   isLoading,
   isSelected,
   onSelect,
+  newestTaskId,
 }: CompletedTaskCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'Approve' | 'Reject' | null>(null);
@@ -46,7 +48,11 @@ export function CompletedTaskCard({
   };
 
   return (
-    <Card className="rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white">
+    <Card
+      className={`rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white ${
+        task.c_task_id === newestTaskId ? 'animate-new-task' : ''
+      }`}
+    >
       <CardHeader className="flex flex-row items-center space-x-2 p-4 bg-blue-50 rounded-t-lg">
         <div className="flex items-center space-x-2">
           {onSelect && (

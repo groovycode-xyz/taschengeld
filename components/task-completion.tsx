@@ -216,7 +216,7 @@ export function TaskCompletion() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
-          <ClipboardListIcon className="mr-3 h-10 w-10" />
+          <SquareCheckBig className="mr-3 h-8 w-8" />
           Task Completion
         </h1>
       </div>
@@ -227,12 +227,12 @@ export function TaskCompletion() {
           {activeTasks.map((task) => (
             <Card
               key={task.task_id}
-              className="w-full hover:shadow-lg transition-shadow duration-300 cursor-pointer bg-blue-100 hover:bg-blue-200"
+              className="w-full hover:shadow-lg transition-shadow duration-300 cursor-pointer bg-blue-100 hover:bg-blue-200 shadow-md"
               onClick={() => handleTaskClick(task)}
             >
-              <CardContent className="flex flex-col items-center p-4">
-                <IconComponent icon={task.icon_name} className="h-16 w-16 mb-2 text-blue-600" />
-                <h3 className="text-lg font-semibold mb-2 text-blue-600">{task.title}</h3>
+              <CardContent className="flex flex-col items-center p-3">
+                <IconComponent icon={task.icon_name} className="h-12 w-12 mb-1 text-blue-600" />
+                <h3 className="text-md font-semibold mb-1 text-blue-600">{task.title}</h3>
               </CardContent>
             </Card>
           ))}
@@ -245,20 +245,19 @@ export function TaskCompletion() {
           {completedTasks.map((task) => (
             <Card
               key={task.c_task_id}
-              className={`w-full hover:shadow-lg transition-shadow duration-300 bg-white
-                ${task.c_task_id === newestTaskId ? 'animate-new-task' : ''}`}
+              className={`w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md`}
             >
-              <CardContent className="flex items-center justify-between p-4">
-                <SquareCheckBig className="h-8 w-8 mr-2 text-green-500" />
+              <CardContent className="flex items-center justify-between p-3">
+                <SquareCheckBig className="h-6 w-6 mr-2 text-green-500" />
 
                 <Card className="flex-1 mr-2 bg-blue-50 shadow-sm">
                   <CardContent className="flex items-center p-2">
                     {task.icon_name ? (
-                      <IconComponent icon={task.icon_name} className="h-8 w-8 mr-2" />
+                      <IconComponent icon={task.icon_name} className="h-6 w-6 mr-2" />
                     ) : (
                       <IconComponent
                         icon="default-task-icon"
-                        className="h-8 w-8 mr-2 text-gray-400"
+                        className="h-6 w-6 mr-2 text-gray-400"
                       />
                     )}
                     <span className="text-sm font-medium">{task.task_title}</span>
@@ -268,11 +267,11 @@ export function TaskCompletion() {
                 <Card className="flex-1 mx-2 bg-green-50 shadow-sm">
                   <CardContent className="flex items-center p-2">
                     {task.user_icon ? (
-                      <IconComponent icon={task.user_icon} className="h-8 w-8 mr-2" />
+                      <IconComponent icon={task.user_icon} className="h-6 w-6 mr-2" />
                     ) : (
                       <IconComponent
                         icon="default-user-icon"
-                        className="h-8 w-8 mr-2 text-gray-400"
+                        className="h-6 w-6 mr-2 text-gray-400"
                       />
                     )}
                     <span className="text-sm font-medium">{task.user_name}</span>
