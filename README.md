@@ -11,6 +11,8 @@ Taschengeld is an allowance tracker application designed to help families manage
 3. Run the development server: `npm run dev`
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
+[![PDF Preview](tg_ug_v2.jpg)](Taschengeld-User_Guide_v2.pdf)
+
 ## Contributing
 
 Please refer to `CONTRIBUTING.md` for guidelines on contributing to this project.
