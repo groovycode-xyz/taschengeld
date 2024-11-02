@@ -1,80 +1,70 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  CheckSquareIcon,
-  HandCoinsIcon,
-  BanknoteIcon,
-  ClipboardListIcon,
-  UsersIcon,
-} from 'lucide-react';
 import { useMode } from '@/components/context/mode-context';
-import { ParentModeToggle } from '@/components/parent-mode-toggle';
+import { CheckSquare, HandCoins, Banknote, ClipboardList, Users } from 'lucide-react';
 
 export function Sidebar() {
   const { hasFullAccess } = useMode();
 
   return (
-    <div className="w-64 bg-gray-100 h-full flex flex-col">
+    <div className="w-64 bg-[#C6E7FF] h-full flex flex-col border-r border-[#A5D3FF]">
       <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {/* Always visible */}
+        <ul className="space-y-1">
+          {/* Always visible items */}
           <li>
             <Link
               href="/task-completion"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200"
+              className="flex items-center space-x-3 p-3 rounded-xl hover:bg-[#A5D3FF]/50 transition-colors duration-200"
             >
-              <CheckSquareIcon className="h-5 w-5" />
-              <span>Task Completion</span>
+              <CheckSquare className="h-5 w-5 text-[#2B4C7E]" />
+              <span className="text-[#2B4C7E] font-medium">Task Completion</span>
             </Link>
           </li>
           <li>
             <Link
               href="/piggy-bank"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200"
+              className="flex items-center space-x-3 p-3 rounded-xl hover:bg-[#A5D3FF]/50 transition-colors duration-200"
             >
-              <HandCoinsIcon className="h-5 w-5" />
-              <span>Sparkässeli</span>
+              <HandCoins className="h-5 w-5 text-[#2B4C7E]" />
+              <span className="text-[#2B4C7E] font-medium">Piggy Bank</span>
             </Link>
           </li>
 
-          {/* Only visible when roles are not enforced OR in Parent mode */}
+          {/* Parent-only items */}
           {hasFullAccess && (
             <>
               <li>
                 <Link
                   href="/payday"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200"
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-[#A5D3FF]/50 transition-colors duration-200"
                 >
-                  <BanknoteIcon className="h-5 w-5" />
-                  <span>Payday</span>
+                  <Banknote className="h-5 w-5 text-[#2B4C7E]" />
+                  <span className="text-[#2B4C7E] font-medium">Payday</span>
                 </Link>
               </li>
               <li>
                 <Link
                   href="/task-management"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200"
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-[#A5D3FF]/50 transition-colors duration-200"
                 >
-                  <ClipboardListIcon className="h-5 w-5" />
-                  <span>Task Management</span>
+                  <ClipboardList className="h-5 w-5 text-[#2B4C7E]" />
+                  <span className="text-[#2B4C7E] font-medium">Task Management</span>
                 </Link>
               </li>
               <li>
                 <Link
                   href="/user-management"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200"
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-[#A5D3FF]/50 transition-colors duration-200"
                 >
-                  <UsersIcon className="h-5 w-5" />
-                  <span>Family</span>
+                  <Users className="h-5 w-5 text-[#2B4C7E]" />
+                  <span className="text-[#2B4C7E] font-medium">Family</span>
                 </Link>
               </li>
             </>
           )}
         </ul>
       </nav>
-
-      {/* Add the mode toggle at the bottom */}
-      <ParentModeToggle />
     </div>
   );
 }

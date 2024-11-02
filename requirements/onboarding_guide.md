@@ -14,8 +14,9 @@ Read the following documents:
 /README.md
 /ARCHITECTURE.md
 /PROJECT_STATUS.md - pay special attention to the **Upcoming Tasks** and **Known Issues** sections.
-/requirements/\_planDB.md
+/database-schema.md
 /directory_tree.txt
+/API.md
 /CHANGELOG.md
 /requirements/codingPrinciples.md
 /requirements/PRD.md

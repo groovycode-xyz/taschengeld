@@ -198,7 +198,7 @@ export function Payday() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Payday</h1>
         {completedTasks.length > 0 && (
@@ -315,7 +315,7 @@ export function Payday() {
                 <IconComponent icon={tasks[0].user_icon} className="h-6 w-6 text-blue-500" />
                 {userName}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-4">
                 {tasks.map((task) => (
                   <CompletedTaskCard
                     key={task.c_task_id}

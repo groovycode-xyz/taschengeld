@@ -5,7 +5,7 @@ import { useMode } from '@/components/context/mode-context';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { AppShell } from '@/components/app-shell';
-import { MainContent } from '@/components/main-content';
+import { MainLayout } from '@/components/main-layout';
 
 type AccessState = 'checking' | 'granted' | 'denied';
 
@@ -61,7 +61,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
 
   return (
     <AppShell>
-      <MainContent>{children}</MainContent>
+      <MainLayout>{children}</MainLayout>
     </AppShell>
   );
 }

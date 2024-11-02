@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CompletedTask } from '@/app/types/completedTask';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
@@ -53,31 +53,36 @@ export function CompletedTaskCard({
         task.c_task_id === newestTaskId ? 'animate-new-task' : ''
       }`}
     >
-      <CardHeader className="flex flex-row items-center space-x-2 p-4 bg-blue-50 rounded-t-lg">
-        <div className="flex items-center space-x-2">
-          {onSelect && (
-            <Checkbox
-              checked={isSelected}
-              onCheckedChange={(checked) => onSelect(task.c_task_id, checked as boolean)}
-              disabled={isLoading}
-            />
-          )}
-          <IconComponent icon={task.icon_name} className="h-6 w-6 text-blue-500" />
-          <CardTitle className="text-blue-600">{task.task_title}</CardTitle>
+      <CardContent className="p-4 flex items-center space-x-4">
+        {/* Checkbox */}
+        {onSelect && (
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={(checked) => onSelect(task.c_task_id, checked as boolean)}
+            disabled={isLoading}
+          />
+        )}
+
+        {/* Task Icon and Title */}
+        <div className="flex items-center space-x-3 min-w-[200px]">
+          <IconComponent icon={task.icon_name} className="h-8 w-8 text-blue-500" />
+          <span className="font-semibold">{task.task_title}</span>
         </div>
-      </CardHeader>
-      <CardContent className="p-4">
-        <div className="flex items-center space-x-2 mb-2">
+
+        {/* Completed By */}
+        <div className="flex items-center space-x-2 flex-1">
           <IconComponent icon={task.user_icon} className="h-6 w-6 text-gray-500" />
-          <span>Completed by: {task.user_name}</span>
+          <span className="text-gray-600">Completed by: {task.user_name}</span>
         </div>
-        <p className="font-bold">
-          Payout: <CurrencyDisplay value={parseFloat(task.payout_value)} />
-        </p>
-        {task.comment && <p>Comment: {task.comment}</p>}
-        {task.attachment && <p>Attachment: {task.attachment}</p>}
+
+        {/* Payout Amount */}
+        <div className="font-bold text-lg min-w-[100px]">
+          <CurrencyDisplay value={parseFloat(task.payout_value)} />
+        </div>
+
+        {/* Action Buttons */}
         {task.payment_status === 'Unpaid' && (
-          <div className="mt-4 space-x-2">
+          <div className="flex space-x-2">
             <Button
               onClick={() => handleAction('Approve')}
               className="bg-green-500 hover:bg-green-600 text-white"

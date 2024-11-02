@@ -91,19 +91,34 @@ export function PiggyBank() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold">Sparkässeli</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
-          <Card key={user.user_id} className="overflow-hidden bg-green-100 shadow-md">
-            <CardHeader className="bg-green-100 flex flex-col items-center text-center">
-              <IconComponent icon={user.icon} className="w-20 h-20 mb-2" />
-              <CardTitle className="mb-2">{user.name}</CardTitle>
-              <div className="text-2xl font-bold text-green-600 mb-4">
+          <Card key={user.user_id} className="overflow-hidden shadow-md backdrop-blur-sm">
+            <CardHeader className="flex flex-col items-center text-center">
+              <IconComponent
+                icon={user.icon}
+                className={`w-20 h-20 mb-2 ${
+                  user.role === 'parent' ? 'text-blue-700' : 'text-green-700'
+                }`}
+              />
+              <CardTitle
+                className={`mb-2 ${user.role === 'parent' ? 'text-blue-900' : 'text-green-900'}`}
+              >
+                {user.name}
+              </CardTitle>
+              <div
+                className={`text-2xl font-bold mb-4 ${
+                  user.role === 'parent' ? 'text-blue-700' : 'text-green-700'
+                }`}
+              >
                 <CurrencyDisplay
                   value={parseFloat(user.account.balance)}
-                  className="text-2xl font-bold text-green-600"
+                  className={`text-2xl font-bold ${
+                    user.role === 'parent' ? 'text-blue-700' : 'text-green-700'
+                  }`}
                 />
               </div>
               <div className="flex flex-col gap-2 w-full">

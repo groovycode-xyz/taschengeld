@@ -163,9 +163,9 @@ export function TaskManagement() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
           <span className="block sm:inline">{error}</span>
           <span
             className="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
@@ -209,15 +209,13 @@ export function TaskManagement() {
         </Select>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-200px)]">
+      <ScrollArea className="h-[calc(100vh-250px)]">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredAndSortedTasks.map((task) => (
             <Card
               key={task.task_id}
-              className={`cursor-pointer transition-all duration-300
-                ${
-                  task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
-                } shadow-md`}
+              className={`cursor-pointer transition-all duration-300 backdrop-blur-sm
+                ${task.is_active ? 'hover:bg-blue-200/50' : 'hover:bg-gray-200/50'} shadow-md`}
               onClick={() => {
                 setEditingTask(task);
                 setIsEditModalOpen(true);

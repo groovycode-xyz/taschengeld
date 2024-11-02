@@ -1,14 +1,13 @@
-import React from 'react';
 import { AppShell } from '@/components/app-shell';
-import { MainContent } from '@/components/main-content';
+import { MainLayout } from '@/components/main-layout';
 import { Payday } from '@/components/payday';
 
 export default function PaydayPage() {
   return (
     <AppShell>
-      <MainContent>
+      <MainLayout>
         <Payday />
-      </MainContent>
+      </MainLayout>
     </AppShell>
   );
 }

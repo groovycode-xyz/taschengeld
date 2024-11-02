@@ -9,7 +9,7 @@ import { TimeSince } from './time-since';
 import { Task } from '@/app/types/task';
 import { User } from '@/app/types/user';
 import { CompletedTask } from '@/app/types/completedTask';
-import { ClipboardListIcon, Trash2, SquareCheckBig } from 'lucide-react';
+import { Trash2, SquareCheckBig } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -213,7 +213,7 @@ export function TaskCompletion() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold flex items-center">
           <SquareCheckBig className="mr-3 h-8 w-8" />

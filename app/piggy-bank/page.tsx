@@ -1,14 +1,13 @@
-import React from 'react';
 import { AppShell } from '@/components/app-shell';
-import { MainContent } from '@/components/main-content';
+import { MainLayout } from '@/components/main-layout';
 import { PiggyBank } from '@/components/piggy-bank';
 
 export default function PiggyBankPage() {
   return (
     <AppShell>
-      <MainContent>
+      <MainLayout>
         <PiggyBank />
-      </MainContent>
+      </MainLayout>
     </AppShell>
   );
 }

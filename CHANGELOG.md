@@ -1,5 +1,14 @@
 # Recent Changes
 
+## Layout System Refactoring
+
+- Implemented new unified layout system
+  - Created new MainLayout component for consistent page layouts
+  - Removed redundant styling from individual components
+  - Improved spacing and padding consistency across all pages
+  - Better separation of layout concerns
+  - Enhanced maintainability of layout code
+
 ## Account Management Enhancements
 
 - Added new account-specific reset functionality for transaction history
