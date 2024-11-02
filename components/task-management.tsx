@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus, ClipboardListIcon } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddTaskModal } from './add-task-modal';
 import { EditTaskModal } from './edit-task-modal';
 import { Task } from '@/app/types/task';
@@ -209,47 +208,43 @@ export function TaskManagement() {
         </Select>
       </div>
 
-      <ScrollArea className='h-[calc(100vh-250px)]'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {filteredAndSortedTasks.map((task) => (
-            <Card
-              key={task.task_id}
-              className={`cursor-pointer transition-all duration-300 shadow-md
-                ${
-                  task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
-                }`}
-              onClick={() => {
-                setEditingTask(task);
-                setIsEditModalOpen(true);
-              }}
-            >
-              <CardContent className='p-4 flex flex-col items-center text-center'>
-                <div className='h-20 w-20 mb-2'>
-                  <IconComponent
-                    icon={task.icon_name}
-                    className={`h-full w-full ${
-                      task.is_active ? 'text-blue-600' : 'text-gray-400'
-                    }`}
-                  />
-                </div>
-                <h3
-                  className={`text-lg font-semibold mb-1 ${
-                    task.is_active ? 'text-blue-600' : 'text-gray-500'
-                  } ${task.is_active ? '' : 'italic'}`}
-                >
-                  {task.title}
-                </h3>
-                <p className='text-xl font-bold text-green-600'>
-                  <CurrencyDisplay
-                    value={task.payout_value}
-                    className='text-xl font-bold text-green-600'
-                  />
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </ScrollArea>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        {filteredAndSortedTasks.map((task) => (
+          <Card
+            key={task.task_id}
+            className={`cursor-pointer transition-all duration-300 shadow-md
+              ${
+                task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            onClick={() => {
+              setEditingTask(task);
+              setIsEditModalOpen(true);
+            }}
+          >
+            <CardContent className='p-4 flex flex-col items-center text-center'>
+              <div className='h-20 w-20 mb-2'>
+                <IconComponent
+                  icon={task.icon_name}
+                  className={`h-full w-full ${task.is_active ? 'text-blue-600' : 'text-gray-400'}`}
+                />
+              </div>
+              <h3
+                className={`text-lg font-semibold mb-1 ${
+                  task.is_active ? 'text-blue-600' : 'text-gray-500'
+                } ${task.is_active ? '' : 'italic'}`}
+              >
+                {task.title}
+              </h3>
+              <p className='text-xl font-bold text-green-600'>
+                <CurrencyDisplay
+                  value={task.payout_value}
+                  className='text-xl font-bold text-green-600'
+                />
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       <AddTaskModal
         isOpen={isAddModalOpen}

@@ -1,5 +1,18 @@
 # Recent Changes
 
+## Code Style and Layout Improvements
+
+- Standardized code formatting across the codebase
+  - Configured Prettier with consistent rules (single quotes, spacing)
+  - Updated ESLint configuration to work with Prettier
+  - Added npm scripts for formatting and linting
+  - Fixed TypeScript version compatibility (5.0.4)
+- Improved TaskManagement component layout
+  - Removed fixed height ScrollArea for better content fit
+  - Enhanced grid layout responsiveness
+  - Maintained consistent styling with other components
+  - Cleaned up unnecessary wrapper elements
+
 ## Layout System Refactoring
 
 - Implemented new unified layout system

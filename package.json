@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "format": "prettier --write .",
+    "lint": "prettier --write . && next lint",
     "lint:dir": "next lint app components"
   },
   "dependencies": {
@@ -52,6 +53,6 @@
     "postcss": "^8",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
-    "typescript": "5.5.6"
+    "typescript": "5.0.4"
   }
 }

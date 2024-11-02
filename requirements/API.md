@@ -159,10 +159,10 @@ See CHANGELOG.md for API-related changes and updates.
 Purpose: Retrieves all user accounts with their recent transactions
 
 Query:
-WITH recent_transactions AS (
+WITH recent*transactions AS (
 SELECT
-t._,
-ct.task_title,
+t.*,
+ct.task*title,
 ROW_NUMBER() OVER (
 PARTITION BY t.account_id
 ORDER BY t.transaction_date DESC
@@ -182,7 +182,7 @@ json_build_object(
 ) as account,
 COALESCE(
 json_agg(
-rt._ ORDER BY rt.transaction_date DESC
+rt.* ORDER BY rt.transaction_date DESC
 ) FILTER (WHERE rt.rn <= 5),
 '[]'::json
 ) as recent_transactions
