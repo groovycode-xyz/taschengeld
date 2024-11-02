@@ -10,6 +10,7 @@ import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionHistoryModal } from './transaction-history-modal';
 import { PiggyBankUser } from '@/app/types/piggyBankUser';
 import { useMode } from '@/components/context/mode-context';
+import { HandCoins } from 'lucide-react';
 
 export function PiggyBank() {
   const { isParentMode } = useMode();
@@ -92,11 +93,19 @@ export function PiggyBank() {
 
   return (
     <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold">Sparkässeli</h1>
+      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
+        <h1 className="text-3xl font-bold flex items-center">
+          <HandCoins className="mr-3 h-10 w-10" />
+          Sparkässeli
+        </h1>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
-          <Card key={user.user_id} className="overflow-hidden shadow-md backdrop-blur-sm">
+          <Card
+            key={user.user_id}
+            className="overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200"
+          >
             <CardHeader className="flex flex-col items-center text-center">
               <IconComponent
                 icon={user.icon}

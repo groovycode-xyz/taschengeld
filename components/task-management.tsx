@@ -176,7 +176,7 @@ export function TaskManagement() {
         </div>
       )}
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
         <h1 className="text-3xl font-bold flex items-center">
           <ClipboardListIcon className="mr-3 h-10 w-10" />
           Task Management
@@ -214,8 +214,10 @@ export function TaskManagement() {
           {filteredAndSortedTasks.map((task) => (
             <Card
               key={task.task_id}
-              className={`cursor-pointer transition-all duration-300 backdrop-blur-sm
-                ${task.is_active ? 'hover:bg-blue-200/50' : 'hover:bg-gray-200/50'} shadow-md`}
+              className={`cursor-pointer transition-all duration-300 shadow-md
+                ${
+                  task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
+                }`}
               onClick={() => {
                 setEditingTask(task);
                 setIsEditModalOpen(true);
@@ -232,7 +234,7 @@ export function TaskManagement() {
                 </div>
                 <h3
                   className={`text-lg font-semibold mb-1 ${
-                    task.is_active ? 'text-black' : 'text-gray-500'
+                    task.is_active ? 'text-blue-600' : 'text-gray-500'
                   } ${task.is_active ? '' : 'italic'}`}
                 >
                   {task.title}

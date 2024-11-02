@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SortAsc, SortDesc } from 'lucide-react';
+import { SortAsc, SortDesc, Banknote } from 'lucide-react';
 import { IconComponent } from '@/components/icon-component';
 
 type SortField = 'date' | 'payout' | 'title';
@@ -199,8 +199,11 @@ export function Payday() {
 
   return (
     <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Payday</h1>
+      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
+        <h1 className="text-3xl font-bold flex items-center">
+          <Banknote className="mr-3 h-10 w-10" />
+          Payday
+        </h1>
         {completedTasks.length > 0 && (
           <div className="flex items-center space-x-4">
             <Checkbox
@@ -311,8 +314,8 @@ export function Payday() {
         <div className="space-y-8">
           {Object.entries(groupedAndSortedTasks).map(([userName, tasks]) => (
             <div key={userName} className="space-y-4">
-              <h2 className="text-xl font-semibold text-blue-600 border-b border-blue-200 pb-2 flex items-center gap-2">
-                <IconComponent icon={tasks[0].user_icon} className="h-6 w-6 text-blue-500" />
+              <h2 className="text-xl font-semibold text-green-700 border-b border-green-200 pb-2 flex items-center gap-2">
+                <IconComponent icon={tasks[0].user_icon} className="h-6 w-6 text-green-700" />
                 {userName}
               </h2>
               <div className="space-y-4">

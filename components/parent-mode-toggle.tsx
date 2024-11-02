@@ -39,15 +39,14 @@ export function ParentModeToggle() {
         }`}
         aria-label={isParentMode ? 'Switch to Child Mode' : 'Switch to Parent Mode'}
       >
-        {isParentMode ? ( // When in Parent mode
+        {isParentMode ? (
           <>
-            <LockOpen className="h-4 w-4" /> {/* Show unlocked icon */}
+            <LockOpen className="h-4 w-4" />
             <span>Switch to Child Mode</span>
           </>
         ) : (
-          // When in Child mode
           <>
-            <Lock className="h-4 w-4" /> {/* Show locked icon */}
+            <Lock className="h-4 w-4" />
             <span>Switch to Parent Mode</span>
           </>
         )}
