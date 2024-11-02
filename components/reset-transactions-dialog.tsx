@@ -87,23 +87,23 @@ export function ResetTransactionsDialog({
         </DialogHeader>
 
         {fetchLoading ? (
-          <div className="flex justify-center p-4">
-            <Loader2 className="h-6 w-6 animate-spin" />
+          <div className='flex justify-center p-4'>
+            <Loader2 className='h-6 w-6 animate-spin' />
           </div>
         ) : (
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
+          <div className='space-y-4'>
+            <div className='flex items-center space-x-2'>
               <Checkbox
-                id="select-all"
+                id='select-all'
                 checked={selectedAccounts.length === accounts.length && accounts.length > 0}
                 onCheckedChange={handleSelectAll}
               />
-              <Label htmlFor="select-all">Select All Accounts</Label>
+              <Label htmlFor='select-all'>Select All Accounts</Label>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {accounts.map((account) => (
-                <div key={account.account_id} className="flex items-center space-x-2">
+                <div key={account.account_id} className='flex items-center space-x-2'>
                   <Checkbox
                     id={`account-${account.account_id}`}
                     checked={selectedAccounts.includes(account.account_id)}
@@ -119,17 +119,17 @@ export function ResetTransactionsDialog({
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+          <Button variant='outline' onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
           <Button
             onClick={handleConfirm}
             disabled={selectedAccounts.length === 0 || isLoading}
-            variant="destructive"
+            variant='destructive'
           >
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Resetting...
               </>
             ) : (

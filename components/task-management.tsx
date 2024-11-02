@@ -163,12 +163,12 @@ export function TaskManagement() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
+    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-          <span className="block sm:inline">{error}</span>
+        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4'>
+          <span className='block sm:inline'>{error}</span>
           <span
-            className="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
+            className='absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer'
             onClick={() => setError(null)}
           >
             ×
@@ -176,41 +176,41 @@ export function TaskManagement() {
         </div>
       )}
 
-      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-        <h1 className="text-3xl font-bold flex items-center">
-          <ClipboardListIcon className="mr-3 h-10 w-10" />
+      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+        <h1 className='text-3xl font-bold flex items-center'>
+          <ClipboardListIcon className='mr-3 h-10 w-10' />
           Task Management
         </h1>
         <Button onClick={() => setIsAddModalOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add Task
+          <Plus className='mr-2 h-4 w-4' /> Add Task
         </Button>
       </div>
 
-      <div className="flex space-x-4 mb-4">
+      <div className='flex space-x-4 mb-4'>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Filter tasks" />
+          <SelectTrigger className='w-40'>
+            <SelectValue placeholder='Filter tasks' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Tasks</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value='all'>All Tasks</SelectItem>
+            <SelectItem value='active'>Active</SelectItem>
+            <SelectItem value='inactive'>Inactive</SelectItem>
           </SelectContent>
         </Select>
         <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Sort tasks" />
+          <SelectTrigger className='w-40'>
+            <SelectValue placeholder='Sort tasks' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="title">Sort by Title</SelectItem>
-            <SelectItem value="payout_value">Sort by Payout</SelectItem>
-            <SelectItem value="created_at">Sort by Created Date</SelectItem>
+            <SelectItem value='title'>Sort by Title</SelectItem>
+            <SelectItem value='payout_value'>Sort by Payout</SelectItem>
+            <SelectItem value='created_at'>Sort by Created Date</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-250px)]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <ScrollArea className='h-[calc(100vh-250px)]'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {filteredAndSortedTasks.map((task) => (
             <Card
               key={task.task_id}
@@ -223,8 +223,8 @@ export function TaskManagement() {
                 setIsEditModalOpen(true);
               }}
             >
-              <CardContent className="p-4 flex flex-col items-center text-center">
-                <div className="h-20 w-20 mb-2">
+              <CardContent className='p-4 flex flex-col items-center text-center'>
+                <div className='h-20 w-20 mb-2'>
                   <IconComponent
                     icon={task.icon_name}
                     className={`h-full w-full ${
@@ -239,10 +239,10 @@ export function TaskManagement() {
                 >
                   {task.title}
                 </h3>
-                <p className="text-xl font-bold text-green-600">
+                <p className='text-xl font-bold text-green-600'>
                   <CurrencyDisplay
                     value={task.payout_value}
-                    className="text-xl font-bold text-green-600"
+                    className='text-xl font-bold text-green-600'
                   />
                 </p>
               </CardContent>

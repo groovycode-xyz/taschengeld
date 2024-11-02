@@ -31,7 +31,6 @@ export function TaskCompletion() {
   const [deleteTaskId, setDeleteTaskId] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
-  const [newestTaskId, setNewestTaskId] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -93,8 +92,8 @@ export function TaskCompletion() {
           return userAudio.play();
         });
         // Wait for the sound to complete
-        return new Promise((resolve) => {
-          userAudio.addEventListener('ended', resolve);
+        return new Promise<void>((resolve) => {
+          userAudio.addEventListener('ended', () => resolve());
         });
       } catch (error) {
         console.error('Error playing user sound:', error);
@@ -111,8 +110,8 @@ export function TaskCompletion() {
         applauseAudio = new Audio('/sounds/applause.wav');
         return applauseAudio.play();
       });
-      await new Promise((resolve) => {
-        applauseAudio.addEventListener('ended', resolve);
+      await new Promise<void>((resolve) => {
+        applauseAudio.addEventListener('ended', () => resolve());
       });
     } catch (error) {
       console.error('Error playing applause sound:', error);
@@ -160,8 +159,6 @@ export function TaskCompletion() {
 
         const newCompletedTask: CompletedTask = await response.json();
 
-        setNewestTaskId(newCompletedTask.c_task_id);
-
         setCompletedTasks((prevTasks) => [
           {
             ...newCompletedTask,
@@ -178,7 +175,6 @@ export function TaskCompletion() {
         await playCompletionCelebration();
 
         setTimeout(() => {
-          setNewestTaskId(null);
           setIsProcessing(false);
         }, 1500);
       } catch (err) {
@@ -217,85 +213,87 @@ export function TaskCompletion() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="relative">
-      <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-          <h1 className="text-3xl font-bold flex items-center">
-            <SquareCheckBig className="mr-3 h-10 w-10" />
+    <div className='relative'>
+      <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
+        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+          <h1 className='text-3xl font-bold flex items-center'>
+            <SquareCheckBig className='mr-3 h-10 w-10' />
             Task Completion
           </h1>
         </div>
 
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Active Tasks</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className='space-y-4'>
+          <h2 className='text-2xl font-semibold'>Active Tasks</h2>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
             {activeTasks.map((task) => (
               <Card
                 key={task.task_id}
-                className="w-full hover:shadow-lg transition-shadow duration-300 cursor-pointer bg-blue-100 hover:bg-blue-200 shadow-md"
+                className='w-full hover:shadow-lg transition-shadow duration-300 cursor-pointer bg-blue-100 hover:bg-blue-200 shadow-md'
                 onClick={() => handleTaskClick(task)}
               >
-                <CardContent className="flex flex-col items-center p-3">
-                  <IconComponent icon={task.icon_name} className="h-12 w-12 mb-1 text-blue-600" />
-                  <h3 className="text-md font-semibold mb-1 text-blue-600">{task.title}</h3>
+                <CardContent className='flex flex-col items-center p-3'>
+                  <IconComponent icon={task.icon_name} className='h-12 w-12 mb-1 text-blue-600' />
+                  <h3 className='text-md font-semibold mb-1 text-blue-600'>{task.title}</h3>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Completed Tasks</h2>
-          <div className="space-y-4">
+        <div className='space-y-4'>
+          <h2 className='text-2xl font-semibold'>Completed Tasks</h2>
+          <div className='space-y-4'>
             {completedTasks.map((task) => (
               <Card
                 key={task.c_task_id}
-                className={`w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md`}
+                className={
+                  'w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md'
+                }
               >
-                <CardContent className="flex items-center justify-between p-3">
-                  <SquareCheckBig className="h-6 w-6 mr-2 text-green-500" />
+                <CardContent className='flex items-center justify-between p-3'>
+                  <SquareCheckBig className='h-6 w-6 mr-2 text-green-500' />
 
-                  <Card className="flex-1 mr-2 bg-blue-50 shadow-sm">
-                    <CardContent className="flex items-center p-2">
+                  <Card className='flex-1 mr-2 bg-blue-50 shadow-sm'>
+                    <CardContent className='flex items-center p-2'>
                       {task.icon_name ? (
-                        <IconComponent icon={task.icon_name} className="h-6 w-6 mr-2" />
+                        <IconComponent icon={task.icon_name} className='h-6 w-6 mr-2' />
                       ) : (
                         <IconComponent
-                          icon="default-task-icon"
-                          className="h-6 w-6 mr-2 text-gray-400"
+                          icon='default-task-icon'
+                          className='h-6 w-6 mr-2 text-gray-400'
                         />
                       )}
-                      <span className="text-sm font-medium">{task.task_title}</span>
+                      <span className='text-sm font-medium'>{task.task_title}</span>
                     </CardContent>
                   </Card>
 
-                  <Card className="flex-1 mx-2 bg-green-50 shadow-sm">
-                    <CardContent className="flex items-center p-2">
+                  <Card className='flex-1 mx-2 bg-green-50 shadow-sm'>
+                    <CardContent className='flex items-center p-2'>
                       {task.user_icon ? (
-                        <IconComponent icon={task.user_icon} className="h-6 w-6 mr-2" />
+                        <IconComponent icon={task.user_icon} className='h-6 w-6 mr-2' />
                       ) : (
                         <IconComponent
-                          icon="default-user-icon"
-                          className="h-6 w-6 mr-2 text-gray-400"
+                          icon='default-user-icon'
+                          className='h-6 w-6 mr-2 text-gray-400'
                         />
                       )}
-                      <span className="text-sm font-medium">{task.user_name}</span>
+                      <span className='text-sm font-medium'>{task.user_name}</span>
                     </CardContent>
                   </Card>
 
-                  <Card className="flex-1 ml-2 bg-gray-50 shadow-sm">
-                    <CardContent className="p-2 text-center">
-                      <TimeSince date={task.created_at} />
+                  <Card className='flex-1 ml-2 bg-gray-50 shadow-sm'>
+                    <CardContent className='p-2 text-center'>
+                      <TimeSince date={task.created_at.toString()} />
                     </CardContent>
                   </Card>
 
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    variant='ghost'
+                    size='icon'
                     onClick={() => handleDeleteTask(task.c_task_id)}
-                    className="ml-2"
+                    className='ml-2'
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className='h-4 w-4' />
                   </Button>
                 </CardContent>
               </Card>
@@ -319,10 +317,10 @@ export function TaskCompletion() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              <Button variant='outline' onClick={() => setIsDeleteDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={confirmDeleteTask}>
+              <Button variant='destructive' onClick={confirmDeleteTask}>
                 Delete
               </Button>
             </DialogFooter>
@@ -332,7 +330,7 @@ export function TaskCompletion() {
         {showFireworks && <Fireworks />}
       </div>
 
-      {isProcessing && <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50" />}
+      {isProcessing && <div className='fixed inset-0 bg-black/20 backdrop-blur-sm z-50' />}
     </div>
   );
 }

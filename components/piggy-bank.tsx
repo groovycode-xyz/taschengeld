@@ -92,21 +92,21 @@ export function PiggyBank() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-        <h1 className="text-3xl font-bold flex items-center">
-          <HandCoins className="mr-3 h-10 w-10" />
+    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
+      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+        <h1 className='text-3xl font-bold flex items-center'>
+          <HandCoins className='mr-3 h-10 w-10' />
           Sparkässeli
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {users.map((user) => (
           <Card
             key={user.user_id}
-            className="overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200"
+            className='overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200'
           >
-            <CardHeader className="flex flex-col items-center text-center">
+            <CardHeader className='flex flex-col items-center text-center'>
               <IconComponent
                 icon={user.icon}
                 className={`w-20 h-20 mb-2 ${
@@ -130,15 +130,15 @@ export function PiggyBank() {
                   }`}
                 />
               </div>
-              <div className="flex flex-col gap-2 w-full">
+              <div className='flex flex-col gap-2 w-full'>
                 {isParentMode && (
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     <Button
                       onClick={() => {
                         setSelectedAccount(user);
                         setIsAddFundsModalOpen(true);
                       }}
-                      className="bg-green-600 hover:bg-green-700 text-white flex-1 font-semibold"
+                      className='bg-green-600 hover:bg-green-700 text-white flex-1 font-semibold'
                     >
                       Deposit
                     </Button>
@@ -147,7 +147,7 @@ export function PiggyBank() {
                         setSelectedAccount(user);
                         setIsWithdrawFundsModalOpen(true);
                       }}
-                      className="bg-red-600 hover:bg-red-700 text-white flex-1 font-semibold"
+                      className='bg-red-600 hover:bg-red-700 text-white flex-1 font-semibold'
                     >
                       Withdraw
                     </Button>
@@ -158,7 +158,7 @@ export function PiggyBank() {
                     setSelectedAccount(user);
                     setIsTransactionsModalOpen(true);
                   }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white w-full font-semibold"
+                  className='bg-blue-600 hover:bg-blue-700 text-white w-full font-semibold'
                 >
                   Transactions
                 </Button>

@@ -31,15 +31,15 @@ export function DeleteConfirmationModal({
         <DialogFooter>
           <Button
             onClick={onClose}
-            variant="secondary"
-            className="bg-blue-600 text-white hover:bg-blue-700"
+            variant='secondary'
+            className='bg-blue-600 text-white hover:bg-blue-700'
           >
             Cancel
           </Button>
           <Button
             onClick={onConfirmDelete}
-            variant="destructive"
-            className="bg-red-600 hover:bg-red-700"
+            variant='destructive'
+            className='bg-red-600 hover:bg-red-700'
           >
             Delete
           </Button>

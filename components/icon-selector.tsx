@@ -12,16 +12,16 @@ type IconSelectorProps = {
 
 export function IconSelector({ selectedIcon, onSelectIcon }: IconSelectorProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className='flex flex-wrap gap-2'>
       {taskIcons.map((icon) => (
         <Button
           key={icon}
-          type="button"
+          type='button'
           variant={selectedIcon === icon ? 'default' : 'outline'}
-          className="p-2 h-10 w-10"
+          className='p-2 h-10 w-10'
           onClick={() => onSelectIcon(icon)}
         >
-          <IconComponent icon={icon} className="h-5 w-5" />
+          <IconComponent icon={icon} className='h-5 w-5' />
         </Button>
       ))}
     </div>

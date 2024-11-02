@@ -18,8 +18,8 @@ export function ModeToggle() {
 
   return (
     <Button
-      variant="ghost"
-      size="sm"
+      variant='ghost'
+      size='sm'
       onClick={handleToggle}
       disabled={!enforceRoles}
       className={`w-full justify-start gap-2 ${
@@ -29,17 +29,17 @@ export function ModeToggle() {
     >
       {isParentMode ? (
         <>
-          <LockOpen className="h-4 w-4" />
+          <LockOpen className='h-4 w-4' />
           <span>Child Mode</span>
         </>
       ) : (
         <>
-          <Lock className="h-4 w-4" />
+          <Lock className='h-4 w-4' />
           <span>Parent Mode</span>
         </>
       )}
       {!enforceRoles && (
-        <span className="text-xs text-muted-foreground ml-2">(Disabled in Settings)</span>
+        <span className='text-xs text-muted-foreground ml-2'>(Disabled in Settings)</span>
       )}
     </Button>
   );

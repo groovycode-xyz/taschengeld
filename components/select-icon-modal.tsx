@@ -155,22 +155,22 @@ type SelectIconModalProps = {
 export function SelectIconModal({ isOpen, onClose, onSelectIcon }: SelectIconModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className='sm:max-w-[425px] max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Select an Icon</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-6 gap-2 py-4">
+        <div className='grid grid-cols-6 gap-2 py-4'>
           {taskIcons.map((icon) => (
             <Button
               key={icon}
-              variant="outline"
-              className="h-10 w-10 p-0"
+              variant='outline'
+              className='h-10 w-10 p-0'
               onClick={() => {
                 onSelectIcon(icon);
                 onClose();
               }}
             >
-              <IconComponent icon={icon} className="h-6 w-6" />
+              <IconComponent icon={icon} className='h-6 w-6' />
             </Button>
           ))}
         </div>

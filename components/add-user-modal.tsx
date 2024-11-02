@@ -155,40 +155,40 @@ export function AddUserModal({
         squirrel: Squirrel,
         turtle: Turtle,
       }[iconName] || LucideUser;
-    return <IconComponent className="h-6 w-6" />;
+    return <IconComponent className='h-6 w-6' />;
   };
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent aria-describedby="add-user-description">
+        <DialogContent aria-describedby='add-user-description'>
           <DialogHeader>
             <DialogTitle>{user ? 'Edit User' : 'Add User'}</DialogTitle>
-            <DialogDescription id="add-user-description">
+            <DialogDescription id='add-user-description'>
               {user ? 'Update the details of the user.' : 'Fill in the details to add a new user.'}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
+            <div className='space-y-4'>
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='name' className='text-right'>
                   Name
                 </Label>
                 <Input
-                  id="name"
+                  id='name'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="col-span-3"
+                  className='col-span-3'
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="birthday" className="text-right">
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='birthday' className='text-right'>
                   Birthday
                 </Label>
-                <div className="col-span-3">
+                <div className='col-span-3'>
                   <Input
-                    id="birthday"
-                    type="date"
+                    id='birthday'
+                    type='date'
                     value={birthday}
                     onChange={(e) => {
                       setBirthday(e.target.value);
@@ -200,8 +200,8 @@ export function AddUserModal({
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="role" className="text-right">
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='role' className='text-right'>
                   Role
                 </Label>
                 <Select
@@ -209,35 +209,35 @@ export function AddUserModal({
                   value={role}
                   required
                 >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a role" />
+                  <SelectTrigger className='col-span-3'>
+                    <SelectValue placeholder='Select a role' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="parent">Parent</SelectItem>
-                    <SelectItem value="child">Child</SelectItem>
+                    <SelectItem value='parent'>Parent</SelectItem>
+                    <SelectItem value='child'>Child</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <Label>User Sound</Label>
-                <div className="flex items-center space-x-2">
+                <div className='flex items-center space-x-2'>
                   <Input
                     value={soundUrl ? soundUrl.split('.')[0].toUpperCase() : 'NO SOUND'}
                     readOnly
-                    placeholder="No sound selected"
+                    placeholder='No sound selected'
                   />
                   <Button
-                    type="button"
-                    variant="outline"
+                    type='button'
+                    variant='outline'
                     onClick={() => setIsSoundModalOpen(true)}
-                    aria-label="Select Sound"
+                    aria-label='Select Sound'
                   >
                     Select Sound
                   </Button>
                   {soundUrl && (
                     <Button
-                      type="button"
-                      variant="outline"
+                      type='button'
+                      variant='outline'
                       onClick={async () => {
                         try {
                           // Try mp3 first
@@ -251,36 +251,36 @@ export function AddUserModal({
                           console.error('Error playing sound:', error);
                         }
                       }}
-                      aria-label="Play Sound"
+                      aria-label='Play Sound'
                     >
-                      <Play className="h-4 w-4" />
+                      <Play className='h-4 w-4' />
                     </Button>
                   )}
                 </div>
               </div>
-              <div className="flex justify-center">
+              <div className='flex justify-center'>
                 <Button
-                  type="button"
-                  variant="outline"
-                  className="p-2 h-16 w-16 flex justify-center items-center"
+                  type='button'
+                  variant='outline'
+                  className='p-2 h-16 w-16 flex justify-center items-center'
                   onClick={() => setIsIconModalOpen(true)}
-                  aria-label="Select Icon"
+                  aria-label='Select Icon'
                 >
                   {getIconComponent(icon || 'user')} {/* Ensure icon is never empty */}
                 </Button>
               </div>
             </div>
-            <DialogFooter className="mt-6">
+            <DialogFooter className='mt-6'>
               {user && (
-                <Button type="button" variant="destructive" onClick={handleDelete}>
-                  <Trash2 className="h-4 w-4 mr-2" />
+                <Button type='button' variant='destructive' onClick={handleDelete}>
+                  <Trash2 className='h-4 w-4 mr-2' />
                   Delete User
                 </Button>
               )}
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button type='button' variant='outline' onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit">Save</Button>
+              <Button type='submit'>Save</Button>
             </DialogFooter>
           </form>
         </DialogContent>

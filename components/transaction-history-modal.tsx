@@ -60,28 +60,28 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl h-[80vh] flex flex-col p-0">
-        <div className="px-6 py-4 border-b">
+      <DialogContent className='max-w-2xl h-[80vh] flex flex-col p-0'>
+        <div className='px-6 py-4 border-b'>
           <DialogHeader>
-            <div className="flex items-center gap-3">
-              <IconComponent icon={user.icon} className="h-8 w-8" />
+            <div className='flex items-center gap-3'>
+              <IconComponent icon={user.icon} className='h-8 w-8' />
               <div>
                 <DialogTitle>Transaction History</DialogTitle>
-                <p className="text-sm text-gray-500">{user.name}</p>
+                <p className='text-sm text-gray-500'>{user.name}</p>
               </div>
             </div>
           </DialogHeader>
         </div>
 
-        <ScrollArea className="flex-1 p-6">
-          <div className="space-y-6">
+        <ScrollArea className='flex-1 p-6'>
+          <div className='space-y-6'>
             {user.recent_transactions.length === 0 ? (
-              <p className="text-center text-gray-500">No transactions found</p>
+              <p className='text-center text-gray-500'>No transactions found</p>
             ) : (
               groupedTransactions.map((group) => (
-                <div key={group.label} className="space-y-3">
-                  <div className="sticky top-0 bg-white py-2">
-                    <h3 className="text-sm font-medium text-gray-500 border-b pb-2">
+                <div key={group.label} className='space-y-3'>
+                  <div className='sticky top-0 bg-white py-2'>
+                    <h3 className='text-sm font-medium text-gray-500 border-b pb-2'>
                       {group.label}
                     </h3>
                   </div>
@@ -94,12 +94,12 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                           : 'bg-red-50 border-red-200'
                       }`}
                     >
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <p className="font-medium">
+                      <div className='flex justify-between items-start'>
+                        <div className='space-y-1'>
+                          <p className='font-medium'>
                             {transaction.task_title || transaction.description}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className='text-sm text-gray-600'>
                             {new Date(transaction.transaction_date).toLocaleDateString(undefined, {
                               weekday: 'long',
                               month: 'long',
@@ -119,7 +119,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                           {transaction.transaction_type === 'deposit' ? '+' : '-'}
                           <CurrencyDisplay
                             value={Math.abs(parseFloat(transaction.amount))}
-                            className="font-semibold"
+                            className='font-semibold'
                           />
                         </span>
                       </div>

@@ -28,10 +28,10 @@ export function ParentModeToggle() {
   };
 
   return (
-    <div className="mt-auto pt-4 border-t">
+    <div className='mt-auto pt-4 border-t'>
       <Button
-        variant="ghost"
-        size="sm"
+        variant='ghost'
+        size='sm'
         onClick={handleToggle}
         disabled={!enforceRoles}
         className={`w-full justify-start gap-2 ${
@@ -41,16 +41,16 @@ export function ParentModeToggle() {
       >
         {isParentMode ? (
           <>
-            <LockOpen className="h-4 w-4" />
+            <LockOpen className='h-4 w-4' />
             <span>Switch to Child Mode</span>
           </>
         ) : (
           <>
-            <Lock className="h-4 w-4" />
+            <Lock className='h-4 w-4' />
             <span>Switch to Parent Mode</span>
           </>
         )}
-        {!enforceRoles && <span className="text-xs text-muted-foreground ml-2">(Disabled)</span>}
+        {!enforceRoles && <span className='text-xs text-muted-foreground ml-2'>(Disabled)</span>}
       </Button>
     </div>
   );

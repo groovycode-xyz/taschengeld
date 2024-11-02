@@ -121,8 +121,8 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
 
 - **Markdown Style Guide**
 
-   - Use GitHub Flavored Markdown
-   - Link: https://github.github.com/gfm/
+  - Use GitHub Flavored Markdown
+  - Link: https://github.github.com/gfm/
 
 - **README:**
 
@@ -143,7 +143,7 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
 
 - **Branching Strategy:**
 
-   - origin main
+  - origin main
 
 - **Commit Messages:**
 
@@ -153,16 +153,15 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
   - Require code reviews before merging.
   - Ensure all tests pass and adhere to coding standards.
 
-
 ## Performance Optimization
 
 - **Frontend:**
-   
-   Not defined
+
+  Not defined
 
 - **Backend:**
 
-   Not defined
+  Not defined
 
 ## Accessibility
 

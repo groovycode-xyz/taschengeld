@@ -103,55 +103,55 @@ export function AddFundsModal({
         }}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center">
-            Add Funds for {userName} <IconComponent icon={userIcon} className="ml-2 h-6 w-6" />
+          <DialogTitle className='flex items-center'>
+            Add Funds for {userName} <IconComponent icon={userIcon} className='ml-2 h-6 w-6' />
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             <div>
-              <Label htmlFor="amount">Amount</Label>
+              <Label htmlFor='amount'>Amount</Label>
               <Input
-                id="amount"
-                type="number"
+                id='amount'
+                type='number'
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                placeholder="Enter amount"
-                step="0.01"
-                min="0"
+                placeholder='Enter amount'
+                step='0.01'
+                min='0'
                 required
                 disabled={isSubmitting}
               />
             </div>
             <div>
-              <Label htmlFor="comments">Comments</Label>
+              <Label htmlFor='comments'>Comments</Label>
               <Textarea
-                id="comments"
+                id='comments'
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
-                placeholder="Add any comments..."
+                placeholder='Add any comments...'
                 disabled={isSubmitting}
               />
             </div>
             <div>
-              <Label htmlFor="photo">Attach Photo</Label>
-              <div className="flex items-center space-x-2">
+              <Label htmlFor='photo'>Attach Photo</Label>
+              <div className='flex items-center space-x-2'>
                 <Button
-                  type="button"
-                  variant="outline"
+                  type='button'
+                  variant='outline'
                   onClick={triggerFileInput}
-                  className="w-full"
+                  className='w-full'
                   disabled={isSubmitting}
                 >
-                  <Camera className="mr-2 h-4 w-4" />
+                  <Camera className='mr-2 h-4 w-4' />
                   {photo ? 'Change Photo' : 'Choose File'}
                 </Button>
                 {photo && (
                   <Button
-                    type="button"
-                    variant="outline"
+                    type='button'
+                    variant='outline'
                     onClick={() => setPhoto(null)}
-                    className="text-red-500"
+                    className='text-red-500'
                     disabled={isSubmitting}
                   >
                     Remove
@@ -159,29 +159,29 @@ export function AddFundsModal({
                 )}
               </div>
               <Input
-                id="photo"
-                type="file"
-                accept="image/*"
+                id='photo'
+                type='file'
+                accept='image/*'
                 onChange={handlePhotoUpload}
-                className="hidden"
+                className='hidden'
                 ref={fileInputRef}
                 disabled={isSubmitting}
               />
               {photo && (
-                <div className="mt-2 relative w-full h-32">
+                <div className='mt-2 relative w-full h-32'>
                   <Image
                     src={photo}
-                    alt="Attached"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded"
+                    alt='Attached'
+                    layout='fill'
+                    objectFit='cover'
+                    className='rounded'
                   />
                 </div>
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'Adding Funds...' : 'Add Funds'}
             </Button>
           </DialogFooter>

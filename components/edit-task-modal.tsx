@@ -105,51 +105,51 @@ export function EditTaskModal({
             <DialogTitle>Edit Task</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <div>
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor='title'>Title</Label>
                 <Input
-                  id="title"
+                  id='title'
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
                 />
-                <p className="text-sm text-gray-500 mt-1">Recommend using 3 or fewer words</p>
+                <p className='text-sm text-gray-500 mt-1'>Recommend using 3 or fewer words</p>
               </div>
               <div>
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor='description'>Description</Label>
                 <Textarea
-                  id="description"
+                  id='description'
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
               <div>
                 <Label>Task Icon</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-12 h-12 flex items-center justify-center border rounded">
-                    <IconComponent icon={icon_name} className="h-6 w-6" />
+                <div className='flex items-center space-x-2'>
+                  <div className='w-12 h-12 flex items-center justify-center border rounded'>
+                    <IconComponent icon={icon_name} className='h-6 w-6' />
                   </div>
-                  <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
+                  <Button type='button' variant='outline' onClick={() => setIsIconModalOpen(true)}>
                     Select Icon
                   </Button>
                 </div>
               </div>
               <div>
                 <Label>Task Sound</Label>
-                <div className="flex items-center space-x-2">
+                <div className='flex items-center space-x-2'>
                   <Input
                     value={sound_url ? sound_url.toUpperCase() : 'NO SOUND'}
                     readOnly
-                    placeholder="No sound selected"
+                    placeholder='No sound selected'
                   />
-                  <Button type="button" variant="outline" onClick={() => setIsSoundModalOpen(true)}>
+                  <Button type='button' variant='outline' onClick={() => setIsSoundModalOpen(true)}>
                     Select Sound
                   </Button>
                   {sound_url && (
                     <Button
-                      type="button"
-                      variant="outline"
+                      type='button'
+                      variant='outline'
                       onClick={async () => {
                         try {
                           // Try mp3 first
@@ -164,38 +164,38 @@ export function EditTaskModal({
                         }
                       }}
                     >
-                      <Play className="h-4 w-4" />
+                      <Play className='h-4 w-4' />
                     </Button>
                   )}
                 </div>
               </div>
               <div>
-                <Label htmlFor="payoutValue">Payout Value</Label>
+                <Label htmlFor='payoutValue'>Payout Value</Label>
                 <Input
-                  id="payoutValue"
-                  type="number"
+                  id='payoutValue'
+                  type='number'
                   value={payout_value}
                   onChange={(e) => setPayoutValue(e.target.value)}
-                  step="0.01"
-                  min="0"
+                  step='0.01'
+                  min='0'
                   required
                 />
               </div>
-              <div className="flex items-center space-x-2">
-                <Switch id="isActive" checked={is_active} onCheckedChange={setIsActive} />
-                <Label htmlFor="isActive">Active</Label>
+              <div className='flex items-center space-x-2'>
+                <Switch id='isActive' checked={is_active} onCheckedChange={setIsActive} />
+                <Label htmlFor='isActive'>Active</Label>
               </div>
             </div>
-            <div className="mt-6 flex justify-between items-center">
-              <Button type="button" variant="destructive" onClick={handleDelete}>
-                <Trash2 className="h-4 w-4" />
+            <div className='mt-6 flex justify-between items-center'>
+              <Button type='button' variant='destructive' onClick={handleDelete}>
+                <Trash2 className='h-4 w-4' />
               </Button>
-              <div className="space-x-2">
-                <Button type="button" variant="outline" onClick={onClose}>
-                  <X className="h-4 w-4" />
+              <div className='space-x-2'>
+                <Button type='button' variant='outline' onClick={onClose}>
+                  <X className='h-4 w-4' />
                 </Button>
-                <Button type="submit">
-                  <Save className="h-4 w-4" />
+                <Button type='submit'>
+                  <Save className='h-4 w-4' />
                 </Button>
               </div>
             </div>

@@ -62,14 +62,14 @@ export function SelectUserSoundModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[80vh] flex flex-col">
-        <DialogHeader className="flex-shrink-0">
+      <DialogContent className='max-h-[80vh] flex flex-col'>
+        <DialogHeader className='flex-shrink-0'>
           <DialogTitle>Select a Sound</DialogTitle>
         </DialogHeader>
-        <div className="flex-grow overflow-y-auto space-y-2">
+        <div className='flex-grow overflow-y-auto space-y-2'>
           <Button
             variant={selectedSound === null ? 'default' : 'outline'}
-            className="w-full justify-between"
+            className='w-full justify-between'
             onClick={() => setSelectedSound(null)}
           >
             No Sound
@@ -78,24 +78,24 @@ export function SelectUserSoundModal({
             <Button
               key={sound.name}
               variant={selectedSound === sound.name ? 'default' : 'outline'}
-              className="w-full justify-between"
+              className='w-full justify-between'
               onClick={() => setSelectedSound(sound.name)}
             >
               {sound.name.toUpperCase()}
               <Button
-                size="sm"
-                variant="ghost"
+                size='sm'
+                variant='ghost'
                 onClick={(e) => {
                   e.stopPropagation();
                   playSound(sound);
                 }}
               >
-                <Play className="h-4 w-4" />
+                <Play className='h-4 w-4' />
               </Button>
             </Button>
           ))}
         </div>
-        <DialogFooter className="flex-shrink-0">
+        <DialogFooter className='flex-shrink-0'>
           <Button onClick={handleSave}>Save</Button>
         </DialogFooter>
       </DialogContent>

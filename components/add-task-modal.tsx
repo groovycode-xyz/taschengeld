@@ -70,21 +70,21 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
             <DialogTitle>Add New Task</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <div>
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor='title'>Title</Label>
                 <Input
-                  id="title"
+                  id='title'
                   value={taskState.title}
                   onChange={(e) => setTaskState((prev) => ({ ...prev, title: e.target.value }))}
                   required
                 />
-                <p className="text-sm text-gray-500 mt-1">Recommend using 3 or fewer words</p>
+                <p className='text-sm text-gray-500 mt-1'>Recommend using 3 or fewer words</p>
               </div>
               <div>
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor='description'>Description</Label>
                 <Textarea
-                  id="description"
+                  id='description'
                   value={taskState.description}
                   onChange={(e) =>
                     setTaskState((prev) => ({ ...prev, description: e.target.value }))
@@ -93,30 +93,30 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
               </div>
               <div>
                 <Label>Task Icon</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-12 h-12 flex items-center justify-center border rounded">
-                    <IconComponent icon={taskState.icon_name} className="h-6 w-6" />
+                <div className='flex items-center space-x-2'>
+                  <div className='w-12 h-12 flex items-center justify-center border rounded'>
+                    <IconComponent icon={taskState.icon_name} className='h-6 w-6' />
                   </div>
-                  <Button type="button" variant="outline" onClick={() => setIsIconModalOpen(true)}>
+                  <Button type='button' variant='outline' onClick={() => setIsIconModalOpen(true)}>
                     Select Icon
                   </Button>
                 </div>
               </div>
               <div>
                 <Label>Task Sound</Label>
-                <div className="flex items-center space-x-2">
+                <div className='flex items-center space-x-2'>
                   <Input
                     value={taskState.sound_url ? taskState.sound_url.toUpperCase() : 'NO SOUND'}
                     readOnly
-                    placeholder="No sound selected"
+                    placeholder='No sound selected'
                   />
-                  <Button type="button" variant="outline" onClick={() => setIsSoundModalOpen(true)}>
+                  <Button type='button' variant='outline' onClick={() => setIsSoundModalOpen(true)}>
                     Select Sound
                   </Button>
                   {taskState.sound_url && (
                     <Button
-                      type="button"
-                      variant="outline"
+                      type='button'
+                      variant='outline'
                       onClick={async () => {
                         try {
                           // Try mp3 first
@@ -131,43 +131,43 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                         }
                       }}
                     >
-                      <Play className="h-4 w-4" />
+                      <Play className='h-4 w-4' />
                     </Button>
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="payout_value" className="text-right">
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='payout_value' className='text-right'>
                   Payout Value
                 </Label>
                 <Input
-                  id="payout_value"
-                  type="number"
-                  step="0.01"
+                  id='payout_value'
+                  type='number'
+                  step='0.01'
                   value={taskState.payout_value}
                   onChange={(e) =>
                     setTaskState((prev) => ({ ...prev, payout_value: e.target.value }))
                   }
-                  className="col-span-3"
+                  className='col-span-3'
                 />
               </div>
-              <div className="flex items-center space-x-2">
+              <div className='flex items-center space-x-2'>
                 <Switch
-                  id="isActive"
+                  id='isActive'
                   checked={taskState.is_active}
                   onCheckedChange={(checked) =>
                     setTaskState((prev) => ({ ...prev, is_active: checked }))
                   }
                 />
-                <Label htmlFor="isActive">Active</Label>
+                <Label htmlFor='isActive'>Active</Label>
               </div>
             </div>
-            <DialogFooter className="mt-6">
-              <Button type="button" variant="outline" onClick={onClose}>
-                <X className="h-4 w-4" />
+            <DialogFooter className='mt-6'>
+              <Button type='button' variant='outline' onClick={onClose}>
+                <X className='h-4 w-4' />
               </Button>
-              <Button type="submit">
-                <Save className="h-4 w-4" />
+              <Button type='submit'>
+                <Save className='h-4 w-4' />
               </Button>
             </DialogFooter>
           </form>

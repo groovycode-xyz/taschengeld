@@ -120,26 +120,26 @@ export function EditUserModal({
             <DialogTitle>Edit User</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
+            <div className='space-y-4'>
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='name' className='text-right'>
                   Name
                 </Label>
                 <Input
-                  id="name"
+                  id='name'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="col-span-3"
+                  className='col-span-3'
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="birthday" className="text-right">
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='birthday' className='text-right'>
                   Birthday
                 </Label>
-                <div className="col-span-3">
+                <div className='col-span-3'>
                   <Input
-                    id="birthday"
-                    type="date"
+                    id='birthday'
+                    type='date'
                     value={birthday}
                     onChange={(e) => {
                       setBirthday(e.target.value);
@@ -150,29 +150,29 @@ export function EditUserModal({
                     max={new Date().toISOString().split('T')[0]}
                   />
                   {birthday && (
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className='text-sm text-gray-500 mt-1'>
                       Display format: {new Date(birthday).toLocaleDateString('de-DE')}
                     </p>
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="role" className="text-right">
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='role' className='text-right'>
                   Role
                 </Label>
                 <Select onValueChange={(value: 'parent' | 'child') => setRole(value)} value={role}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a role" />
+                  <SelectTrigger className='col-span-3'>
+                    <SelectValue placeholder='Select a role' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="parent">Parent</SelectItem>
-                    <SelectItem value="child">Child</SelectItem>
+                    <SelectItem value='parent'>Parent</SelectItem>
+                    <SelectItem value='child'>Child</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <Label>User Sound</Label>
-                <div className="flex items-center space-x-2">
+                <div className='flex items-center space-x-2'>
                   <Input
                     value={
                       soundurl
@@ -180,20 +180,20 @@ export function EditUserModal({
                         : 'NO SOUND'
                     }
                     readOnly
-                    placeholder="No sound selected"
+                    placeholder='No sound selected'
                   />
                   <Button
-                    type="button"
-                    variant="outline"
+                    type='button'
+                    variant='outline'
                     onClick={() => setIsSoundModalOpen(true)}
-                    aria-label="Select Sound"
+                    aria-label='Select Sound'
                   >
                     Select Sound
                   </Button>
                   {soundurl && (
                     <Button
-                      type="button"
-                      variant="outline"
+                      type='button'
+                      variant='outline'
                       onClick={async () => {
                         try {
                           // Try mp3 first
@@ -207,39 +207,39 @@ export function EditUserModal({
                           console.error('Error playing sound:', error);
                         }
                       }}
-                      aria-label="Play Sound"
+                      aria-label='Play Sound'
                     >
-                      <Play className="h-4 w-4" />
+                      <Play className='h-4 w-4' />
                     </Button>
                   )}
                 </div>
               </div>
-              <div className="flex justify-center">
+              <div className='flex justify-center'>
                 <Button
-                  type="button"
-                  variant="outline"
-                  className="p-2 h-16 w-16 flex justify-center items-center"
+                  type='button'
+                  variant='outline'
+                  className='p-2 h-16 w-16 flex justify-center items-center'
                   onClick={() => setIsIconModalOpen(true)}
-                  aria-label="Select Icon"
+                  aria-label='Select Icon'
                 >
                   <IconComponent icon={icon} />
                 </Button>
               </div>
             </div>
-            <DialogFooter className="mt-6">
+            <DialogFooter className='mt-6'>
               <Button
-                type="button"
-                variant="destructive"
+                type='button'
+                variant='destructive'
                 onClick={handleDelete}
-                aria-label="Delete User"
+                aria-label='Delete User'
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className='h-4 w-4' />
               </Button>
-              <Button type="button" variant="outline" onClick={onClose} aria-label="Cancel">
-                <X className="h-4 w-4" />
+              <Button type='button' variant='outline' onClick={onClose} aria-label='Cancel'>
+                <X className='h-4 w-4' />
               </Button>
-              <Button type="submit" aria-label="Save Changes">
-                <Save className="h-4 w-4" />
+              <Button type='submit' aria-label='Save Changes'>
+                <Save className='h-4 w-4' />
               </Button>
             </DialogFooter>
           </form>

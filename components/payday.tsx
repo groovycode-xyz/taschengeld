@@ -164,14 +164,17 @@ export function Payday() {
     });
 
     // Group by user
-    const grouped = filtered.reduce((acc, task) => {
-      const userName = task.user_name;
-      if (!acc[userName]) {
-        acc[userName] = [];
-      }
-      acc[userName].push(task);
-      return acc;
-    }, {} as Record<string, CompletedTask[]>);
+    const grouped = filtered.reduce(
+      (acc, task) => {
+        const userName = task.user_name;
+        if (!acc[userName]) {
+          acc[userName] = [];
+        }
+        acc[userName].push(task);
+        return acc;
+      },
+      {} as Record<string, CompletedTask[]>
+    );
 
     // Convert to array of entries and sort by user age (assuming younger users have higher user_id)
     const sortedEntries = Object.entries(grouped).sort(([, tasksA], [, tasksB]) => {
@@ -198,20 +201,20 @@ export function Payday() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-        <h1 className="text-3xl font-bold flex items-center">
-          <Banknote className="mr-3 h-10 w-10" />
+    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
+      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+        <h1 className='text-3xl font-bold flex items-center'>
+          <Banknote className='mr-3 h-10 w-10' />
           Payday
         </h1>
         {completedTasks.length > 0 && (
-          <div className="flex items-center space-x-4">
+          <div className='flex items-center space-x-4'>
             <Checkbox
               checked={selectedTasks.length === completedTasks.length}
               onCheckedChange={handleSelectAll}
-              id="select-all"
+              id='select-all'
             />
-            <label htmlFor="select-all" className="text-sm">
+            <label htmlFor='select-all' className='text-sm'>
               Select All
             </label>
           </div>
@@ -219,14 +222,14 @@ export function Payday() {
       </div>
 
       {completedTasks.length > 0 && (
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className='flex flex-col md:flex-row gap-4'>
           {/* User Filter */}
           <Select value={selectedUser} onValueChange={setSelectedUser}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Filter by user" />
+            <SelectTrigger className='w-[200px]'>
+              <SelectValue placeholder='Filter by user' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Users</SelectItem>
+              <SelectItem value='all'>All Users</SelectItem>
               {users.map((user) => (
                 <SelectItem key={user} value={user}>
                   {user}
@@ -236,47 +239,47 @@ export function Payday() {
           </Select>
 
           {/* Sort Controls */}
-          <div className="flex gap-2">
+          <div className='flex gap-2'>
             <Button
-              variant="outline"
-              size="sm"
+              variant='outline'
+              size='sm'
               onClick={() => toggleSort('date')}
               className={sortField === 'date' ? 'border-primary' : ''}
             >
               Date{' '}
               {sortField === 'date' &&
                 (sortDirection === 'asc' ? (
-                  <SortAsc className="ml-2 h-4 w-4" />
+                  <SortAsc className='ml-2 h-4 w-4' />
                 ) : (
-                  <SortDesc className="ml-2 h-4 w-4" />
+                  <SortDesc className='ml-2 h-4 w-4' />
                 ))}
             </Button>
             <Button
-              variant="outline"
-              size="sm"
+              variant='outline'
+              size='sm'
               onClick={() => toggleSort('payout')}
               className={sortField === 'payout' ? 'border-primary' : ''}
             >
               Payout{' '}
               {sortField === 'payout' &&
                 (sortDirection === 'asc' ? (
-                  <SortAsc className="ml-2 h-4 w-4" />
+                  <SortAsc className='ml-2 h-4 w-4' />
                 ) : (
-                  <SortDesc className="ml-2 h-4 w-4" />
+                  <SortDesc className='ml-2 h-4 w-4' />
                 ))}
             </Button>
             <Button
-              variant="outline"
-              size="sm"
+              variant='outline'
+              size='sm'
               onClick={() => toggleSort('title')}
               className={sortField === 'title' ? 'border-primary' : ''}
             >
               Title{' '}
               {sortField === 'title' &&
                 (sortDirection === 'asc' ? (
-                  <SortAsc className="ml-2 h-4 w-4" />
+                  <SortAsc className='ml-2 h-4 w-4' />
                 ) : (
-                  <SortDesc className="ml-2 h-4 w-4" />
+                  <SortDesc className='ml-2 h-4 w-4' />
                 ))}
             </Button>
           </div>
@@ -285,21 +288,21 @@ export function Payday() {
 
       {/* Bulk Actions Bar */}
       {selectedTasks.length > 0 && (
-        <div className="fixed bottom-4 right-4 left-4 md:left-auto bg-white p-4 rounded-lg shadow-lg border flex items-center justify-between gap-4">
-          <span className="text-sm font-medium">
+        <div className='fixed bottom-4 right-4 left-4 md:left-auto bg-white p-4 rounded-lg shadow-lg border flex items-center justify-between gap-4'>
+          <span className='text-sm font-medium'>
             {selectedTasks.length} task{selectedTasks.length === 1 ? '' : 's'} selected
           </span>
-          <div className="flex gap-2">
+          <div className='flex gap-2'>
             <Button
               onClick={() => handleBulkAction('Approved')}
-              className="bg-green-500 hover:bg-green-600 text-white"
+              className='bg-green-500 hover:bg-green-600 text-white'
               disabled={isLoading}
             >
               Approve Selected
             </Button>
             <Button
               onClick={() => handleBulkAction('Rejected')}
-              variant="destructive"
+              variant='destructive'
               disabled={isLoading}
             >
               Reject Selected
@@ -311,14 +314,14 @@ export function Payday() {
       {Object.keys(groupedAndSortedTasks).length === 0 ? (
         <p>No unpaid tasks available.</p>
       ) : (
-        <div className="space-y-8">
+        <div className='space-y-8'>
           {Object.entries(groupedAndSortedTasks).map(([userName, tasks]) => (
-            <div key={userName} className="space-y-4">
-              <h2 className="text-xl font-semibold text-green-700 border-b border-green-200 pb-2 flex items-center gap-2">
-                <IconComponent icon={tasks[0].user_icon} className="h-6 w-6 text-green-700" />
+            <div key={userName} className='space-y-4'>
+              <h2 className='text-xl font-semibold text-green-700 border-b border-green-200 pb-2 flex items-center gap-2'>
+                <IconComponent icon={tasks[0].user_icon} className='h-6 w-6 text-green-700' />
                 {userName}
               </h2>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {tasks.map((task) => (
                   <CompletedTaskCard
                     key={task.c_task_id}

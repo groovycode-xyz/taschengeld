@@ -102,25 +102,25 @@ export function UserManagement() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-        <h1 className="text-3xl font-bold flex items-center text-gray-900">
-          <UsersIcon className="mr-3 h-8 w-8 text-gray-700" />
+    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
+      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+        <h1 className='text-3xl font-bold flex items-center text-gray-900'>
+          <UsersIcon className='mr-3 h-8 w-8 text-gray-700' />
           Family Management
         </h1>
         <Button
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-gray-900 hover:bg-gray-700 text-white transition-colors"
+          className='bg-gray-900 hover:bg-gray-700 text-white transition-colors'
         >
-          <Plus className="mr-2 h-4 w-4" /> Add User
+          <Plus className='mr-2 h-4 w-4' /> Add User
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
         {users.map((user) => (
           <div
             key={user.user_id}
-            className="backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md hover:border-gray-300"
+            className='backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md hover:border-gray-300'
             onClick={() => {
               console.log('Opening edit modal for user:', JSON.stringify(user, null, 2));
               setEditingUser(user);

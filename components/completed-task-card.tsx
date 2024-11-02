@@ -53,7 +53,7 @@ export function CompletedTaskCard({
         task.c_task_id === newestTaskId ? 'animate-new-task' : ''
       }`}
     >
-      <CardContent className="p-4 flex items-center space-x-4">
+      <CardContent className='p-4 flex items-center space-x-4'>
         {/* Checkbox */}
         {onSelect && (
           <Checkbox
@@ -64,35 +64,35 @@ export function CompletedTaskCard({
         )}
 
         {/* Task Icon and Title */}
-        <div className="flex items-center space-x-3 min-w-[200px]">
-          <IconComponent icon={task.icon_name} className="h-8 w-8 text-blue-500" />
-          <span className="font-semibold">{task.task_title}</span>
+        <div className='flex items-center space-x-3 min-w-[200px]'>
+          <IconComponent icon={task.icon_name} className='h-8 w-8 text-blue-500' />
+          <span className='font-semibold'>{task.task_title}</span>
         </div>
 
         {/* Completed By */}
-        <div className="flex items-center space-x-2 flex-1">
-          <IconComponent icon={task.user_icon} className="h-6 w-6 text-gray-500" />
-          <span className="text-gray-600">Completed by: {task.user_name}</span>
+        <div className='flex items-center space-x-2 flex-1'>
+          <IconComponent icon={task.user_icon} className='h-6 w-6 text-gray-500' />
+          <span className='text-gray-600'>Completed by: {task.user_name}</span>
         </div>
 
         {/* Payout Amount */}
-        <div className="font-bold text-lg min-w-[100px]">
+        <div className='font-bold text-lg min-w-[100px]'>
           <CurrencyDisplay value={parseFloat(task.payout_value)} />
         </div>
 
         {/* Action Buttons */}
         {task.payment_status === 'Unpaid' && (
-          <div className="flex space-x-2">
+          <div className='flex space-x-2'>
             <Button
               onClick={() => handleAction('Approve')}
-              className="bg-green-500 hover:bg-green-600 text-white"
+              className='bg-green-500 hover:bg-green-600 text-white'
               disabled={isLoading}
             >
               {isLoading ? 'Processing...' : 'Approve'}
             </Button>
             <Button
               onClick={() => handleAction('Reject')}
-              className="bg-red-500 hover:bg-red-600 text-white"
+              className='bg-red-500 hover:bg-red-600 text-white'
               disabled={isLoading}
             >
               {isLoading ? 'Processing...' : 'Reject'}
@@ -113,7 +113,7 @@ export function CompletedTaskCard({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <Button variant='outline' onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
             <Button
