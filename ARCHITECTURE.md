@@ -45,7 +45,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 1. AppShell (`components/app-shell.tsx`)
 
    - Main layout component wrapping all pages
-   - Includes Header and Sidebar components
+   - Includes Header and Sidebar components (`components/header.tsx` and `components/sidebar.tsx`)
 
 2. Piggy Bank Interface (`components/piggy-bank.tsx`)
 
@@ -67,9 +67,13 @@ The Taschengeld project follows a Next.js-based architecture with React componen
    - Manages task approval and allowance allocation
    - Uses CompletedTaskCard component
 
-6. Task Completion Interface (does not exist yet)
+6. Task Completion Interface (`components/task-completion.tsx`)
 
    - Manages task completion
+
+7. Global Settings Interface (`components/global-settings.tsx`)
+
+   - Manages global settings
 
 ## State Management
 
@@ -84,6 +88,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 ## Authentication
 
+- No user logins
 - PIN-based system for parent/child mode switching
 
 ## Styling

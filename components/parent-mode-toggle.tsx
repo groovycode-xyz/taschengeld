@@ -28,13 +28,13 @@ export function ParentModeToggle() {
   };
 
   return (
-    <div className='mt-auto pt-4 border-t'>
+    <div className='mt-auto pt-4 border-t border-gray-800'>
       <Button
         variant='ghost'
         size='sm'
         onClick={handleToggle}
         disabled={!enforceRoles}
-        className={`w-full justify-start gap-2 ${
+        className={`w-full justify-start gap-2 text-gray-200 hover:text-white hover:bg-gray-800 ${
           !enforceRoles ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         aria-label={isParentMode ? 'Switch to Child Mode' : 'Switch to Parent Mode'}
@@ -50,7 +50,7 @@ export function ParentModeToggle() {
             <span>Switch to Parent Mode</span>
           </>
         )}
-        {!enforceRoles && <span className='text-xs text-muted-foreground ml-2'>(Disabled)</span>}
+        {!enforceRoles && <span className='text-xs text-gray-400 ml-2'>(Disabled)</span>}
       </Button>
     </div>
   );
