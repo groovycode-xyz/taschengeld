@@ -8,7 +8,7 @@ Taschengeld is a Next.js-based web application designed to manage allowances and
 
 - Frontend: Next.js 14 with React
 - Backend: Next.js API Routes
-- Database: PostgreSQL
+- Database: PostgreSQL v16 (hosted on Homebrew)
 - ORM: Direct SQL queries (no ORM used)
 - Styling: Tailwind CSS
 - UI Components: shadcn/ui
@@ -36,6 +36,8 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 ## Key Components and Their Relationships
 
+See `docs/LAYOUT_ARCHITECTURE.md` for detailed information.
+
 0. Wireframes
 
    - /requirements/TG-Wireframe-1.jpg
@@ -49,22 +51,22 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 2. Piggy Bank Interface (`components/piggy-bank.tsx`)
 
-   - Main component for the Piggy Bank feature
+   - Displays current balance and allows adding and withdrawing funds, and viewing transaction history
    - Uses AddFundsModal, WithdrawFundsModal, and TransactionsModal
 
 3. User Management Interface (`components/user-management.tsx`)
 
-   - Manages user profiles
+   - Manages user profiles creation, editing, and deletion
    - Uses UserCard, AddUserModal, and EditUserModal components
 
 4. Task Management Interface (`components/task-management.tsx`)
 
-   - Handles task creation and management
+   - Handles task creation, editing, and deletion
    - Uses AddTaskModal and EditTaskModal components
 
 5. Payday Interface (`components/payday.tsx`)
 
-   - Manages task approval and allowance allocation
+   - Manages completed task approvals and rejections
    - Uses CompletedTaskCard component
 
 6. Task Completion Interface (`components/task-completion.tsx`)
@@ -74,6 +76,11 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 7. Global Settings Interface (`components/global-settings.tsx`)
 
    - Manages global settings
+   - Enable or disable parent mode
+   - Enable or disable PIN-based authentication
+   - Set Currency
+   - Backup and Restore Database
+   - Reset selected or all data
 
 ## State Management
 
@@ -85,6 +92,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 - `/api/users`: User management endpoints
 - `/api/tasks`: Task management endpoints
 - `/api/transactions`: Transaction management for Piggy Bank
+- Refer to `/requirements/API.md` for detailed information.
 
 ## Authentication
 
@@ -95,6 +103,7 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 
 - Tailwind CSS for utility-first styling
 - shadcn/ui components for consistent UI elements
+- See `docs/color-system/README.md` and `docs/color-system/IMPLEMENTATION.md` for detailed information.
 
 ## Development Workflow
 

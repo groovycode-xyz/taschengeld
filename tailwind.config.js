@@ -1,3 +1,5 @@
+import animate from 'tailwindcss-animate';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -8,53 +10,50 @@ module.exports = {
     './src/**/*.{ts,tsx}',
   ],
   theme: {
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
-      },
-    },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+        // Background colors
+        background: {
+          primary: 'var(--background-primary)',
+          secondary: 'var(--background-secondary)',
+          tertiary: 'var(--background-tertiary)',
         },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+        // Content colors
+        content: {
+          primary: 'var(--content-primary)',
+          secondary: 'var(--content-secondary)',
+          tertiary: 'var(--content-tertiary)',
+          inverse: 'var(--content-inverse)',
         },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+        // Interactive colors
+        interactive: {
+          primary: 'var(--interactive-primary)',
+          'primary-hover': 'var(--interactive-primary-hover)',
+          secondary: 'var(--interactive-secondary)',
+          'secondary-hover': 'var(--interactive-secondary-hover)',
+          disabled: 'var(--interactive-disabled)',
         },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+        // Brand colors
+        brand: {
+          'user-base': 'var(--brand-user-base)',
+          'user-light': 'var(--brand-user-light)',
+          'user-dark': 'var(--brand-user-dark)',
+          'task-base': 'var(--brand-task-base)',
+          'task-light': 'var(--brand-task-light)',
+          'task-dark': 'var(--brand-task-dark)',
         },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+        // Border colors
+        border: {
+          primary: 'var(--border-primary)',
+          secondary: 'var(--border-secondary)',
         },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+        // Feedback colors
+        feedback: {
+          success: 'var(--feedback-success)',
+          error: 'var(--feedback-error)',
+          warning: 'var(--feedback-warning)',
+          info: 'var(--feedback-info)',
         },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
       },
       keyframes: {
         'accordion-down': {
@@ -72,5 +71,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animate],
 };
