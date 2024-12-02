@@ -25,15 +25,14 @@ CREATE FUNCTION public.check_unpaid_tasks_before_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-  IF EXISTS (
-    SELECT 1 
-    FROM completed_tasks 
-    WHERE task_id = OLD.task_id 
-    AND payment_status = 'Unpaid'
-  ) THEN
-    RAISE EXCEPTION 'Cannot delete task with unpaid completed entries';
-  END IF;
-  RETURN OLD;
+    IF EXISTS (
+        SELECT 1 FROM completed_tasks
+        WHERE task_id = OLD.task_id
+        AND payment_status = 'Unpaid'
+    ) THEN
+        RAISE EXCEPTION 'Cannot delete task with unpaid completed entries';
+    END IF;
+    RETURN OLD;
 END;
 $$;
 
@@ -396,6 +395,13 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: tasks check_unpaid_tasks; Type: TRIGGER; Schema: public; Owner: tgeld_admin
+--
+
+CREATE TRIGGER check_unpaid_tasks BEFORE DELETE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.check_unpaid_tasks_before_delete();
+
+
+--
 -- Name: tasks prevent_delete_with_unpaid_tasks; Type: TRIGGER; Schema: public; Owner: tgeld_admin
 --
 
@@ -416,6 +422,14 @@ ALTER TABLE ONLY public.completed_tasks
 
 ALTER TABLE ONLY public.completed_tasks
     ADD CONSTRAINT completed_tasks_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: users fk_piggybank_account; Type: FK CONSTRAINT; Schema: public; Owner: tgeld_admin
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT fk_piggybank_account FOREIGN KEY (piggybank_account_id) REFERENCES public.piggybank_accounts(account_id);
 
 
 --
@@ -448,6 +462,13 @@ ALTER TABLE ONLY public.piggybank_transactions
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_piggybank_account_id_fkey FOREIGN KEY (piggybank_account_id) REFERENCES public.piggybank_accounts(account_id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
+--
+
+GRANT ALL ON SCHEMA public TO tgeld_admin;
 
 
 --

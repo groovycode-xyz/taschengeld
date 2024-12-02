@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CompletedTask } from '@/app/types/completedTask';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
 import {
   Dialog,
@@ -12,23 +11,24 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { IconComponent } from './icon-component';
-import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
+import { CompletedTask } from '@/app/types/completedTask';
 
 interface CompletedTaskCardProps {
   task: CompletedTask;
-  onUpdateStatus: (cTaskId: number, newStatus: string) => void;
-  isLoading: boolean;
+  onUpdateStatus: (taskId: number, status: 'Paid' | 'Unpaid') => void;
+  onSelect?: (taskId: number) => void;
+  isLoading?: boolean;
   isSelected?: boolean;
-  onSelect?: (taskId: number, checked: boolean) => void;
-  newestTaskId?: number | null;
+  newestTaskId?: number;
 }
 
 export function CompletedTaskCard({
   task,
   onUpdateStatus,
-  isLoading,
-  isSelected,
   onSelect,
+  isLoading = false,
+  isSelected = false,
   newestTaskId,
 }: CompletedTaskCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -39,34 +39,31 @@ export function CompletedTaskCard({
     setIsDialogOpen(true);
   };
 
-  const confirmAction = () => {
+  const confirmAction = async () => {
     if (actionType) {
-      const newStatus = actionType === 'Reject' ? 'Rejected' : 'Approved';
-      onUpdateStatus(task.c_task_id, newStatus);
+      setIsDialogOpen(false);
+      // Convert UI action to payment status
+      const paymentStatus = actionType === 'Approve' ? 'Paid' : 'Unpaid';
+      onUpdateStatus(task.c_task_id, paymentStatus);
     }
-    setIsDialogOpen(false);
   };
 
   return (
     <Card
-      className={`rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white ${
-        task.c_task_id === newestTaskId ? 'animate-new-task' : ''
-      }`}
+      className={cn(
+        'w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md',
+        isSelected && 'ring-2 ring-blue-500',
+        newestTaskId === task.c_task_id && 'animate-highlight'
+      )}
+      onClick={() => onSelect?.(task.c_task_id)}
     >
-      <CardContent className='p-4 flex items-center space-x-4'>
-        {/* Checkbox */}
-        {onSelect && (
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={(checked) => onSelect(task.c_task_id, checked as boolean)}
-            disabled={isLoading}
-          />
-        )}
-
-        {/* Task Icon and Title */}
-        <div className='flex items-center space-x-3 min-w-[200px]'>
-          <IconComponent icon={task.icon_name} className='h-8 w-8 text-blue-500' />
-          <span className='font-semibold'>{task.task_title}</span>
+      <CardContent className='flex items-center justify-between p-6'>
+        <div className='flex items-center space-x-4 flex-1'>
+          <IconComponent icon={task.icon_name} className='h-8 w-8 text-gray-600' />
+          <div>
+            <h3 className='font-medium'>{task.task_title}</h3>
+            {task.comment && <p className='text-sm text-gray-500'>{task.comment}</p>}
+          </div>
         </div>
 
         {/* Completed By */}
@@ -84,14 +81,20 @@ export function CompletedTaskCard({
         {task.payment_status === 'Unpaid' && (
           <div className='flex space-x-2'>
             <Button
-              onClick={() => handleAction('Approve')}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAction('Approve');
+              }}
               className='bg-green-500 hover:bg-green-600 text-white'
               disabled={isLoading}
             >
               {isLoading ? 'Processing...' : 'Approve'}
             </Button>
             <Button
-              onClick={() => handleAction('Reject')}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAction('Reject');
+              }}
               className='bg-red-500 hover:bg-red-600 text-white'
               disabled={isLoading}
             >

@@ -8,13 +8,14 @@
         "type": "tabs",
         "children": [
           {
-            "id": "b8f80367f204b6fe",
+            "id": "f45383dedb4cd2d1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "README.md",
-                "mode": "source",
+                "mode": "preview",
+                "backlinks": true,
                 "source": false
               },
               "icon": "lucide-file",
@@ -77,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f895e2584af19da8",
@@ -162,26 +164,49 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b8f80367f204b6fe",
+  "active": "f45383dedb4cd2d1",
   "lastOpenFiles": [
-    "app/api/piggy-bank/accounts/route.ts",
-    "app/api/piggy-bank/accounts",
-    "node_modules/@radix-ui/react-radio-group/package.json",
-    "node_modules/@radix-ui/react-radio-group/README.md",
-    "node_modules/@radix-ui/react-radio-group/dist/index.mjs.map",
-    "node_modules/@radix-ui/react-radio-group/dist/index.mjs",
-    "node_modules/@radix-ui/react-radio-group/dist/index.js.map",
-    "node_modules/@radix-ui/react-radio-group/dist/index.js",
-    "node_modules/@radix-ui/react-radio-group/dist/index.d.ts",
-    "node_modules/@radix-ui/react-radio-group/dist/index.d.mts",
-    "node_modules/@radix-ui/react-radio-group/dist",
-    "node_modules/@radix-ui/react-roving-focus/package.json",
-    "node_modules/@radix-ui/react-roving-focus/README.md",
-    "node_modules/@radix-ui/react-radio-group/node_modules/@radix-ui/react-presence/README.md",
-    "node_modules/@radix-ui/react-radio-group/node_modules/@radix-ui/react-context/README.md",
-    "node_modules/@types/js-cookie/README.md",
-    "node_modules/js-cookie/README.md",
-    "global-settings-tests.md",
-    "README.md"
+    "test-backup-restore.sh",
+    "tsconfig.test.json",
+    "jest.setup.ts",
+    "jest.setup.js",
+    "jest.config.js",
+    "node_modules/@babel/types/package.json",
+    "node_modules/@babel/helpers/package.json",
+    "node_modules/istanbul-reports/README.md",
+    "node_modules/istanbul-reports/CHANGELOG.md",
+    "node_modules/istanbul-reports/package.json",
+    "node_modules/@babel/parser/package.json",
+    "node_modules/@babel/parser/typings/babel-parser.d.ts",
+    "node_modules/@babel/parser/typings",
+    "node_modules/jest-util/Readme.md",
+    "node_modules/@types/istanbul-lib-report/README.md",
+    "node_modules/expect/README.md",
+    "node_modules/jest-mock/README.md",
+    "node_modules/jest/README.md",
+    "node_modules/istanbul-lib-instrument/README.md",
+    "node_modules/@types/istanbul-lib-coverage/README.md",
+    "node_modules/@types/yargs/README.md",
+    "node_modules/istanbul-lib-instrument/CHANGELOG.md",
+    "node_modules/@types/istanbul-reports/README.md",
+    "node_modules/@types/yargs-parser/README.md",
+    "node_modules/type-detect/README.md",
+    "node_modules/jest-cli/README.md",
+    "node_modules/jest-matcher-utils/README.md",
+    "node_modules/ci-info/README.md",
+    "node_modules/ci-info/CHANGELOG.md",
+    "node_modules/jest-changed-files/README.md",
+    "node_modules/import-local/readme.md",
+    "node_modules/istanbul-lib-coverage/README.md",
+    "node_modules/exit/README.md",
+    "node_modules/istanbul-lib-coverage/CHANGELOG.md",
+    "node_modules/collect-v8-coverage/README.md",
+    "node_modules/collect-v8-coverage/CHANGELOG.md",
+    "node_modules/istanbul-reports/lib/html-spa/assets/sort-arrow-sprite.png",
+    "node_modules/istanbul-reports/lib/html/assets/sort-arrow-sprite.png",
+    "node_modules/istanbul-reports/lib/html/assets/favicon.png",
+    "node_modules/@jest/reporters/assets/jest_logo.png",
+    "pool-incorrect.jpg",
+    "pool-correct.jpg"
   ]
 }

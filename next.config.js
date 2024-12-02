@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -9,6 +9,9 @@ const nextConfig = {
         net: false,
         tls: false,
       };
+    }
+    if (dev) {
+      config.cache = false;
     }
     return config;
   },

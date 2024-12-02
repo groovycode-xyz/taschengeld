@@ -46,6 +46,14 @@ export async function PUT(request: Request) {
 
     const { c_task_id, payment_status } = body;
 
+    // Validate payment status
+    if (payment_status !== 'Paid' && payment_status !== 'Unpaid') {
+      return NextResponse.json(
+        { error: 'Invalid payment status. Must be either "Paid" or "Unpaid".' },
+        { status: 400 }
+      );
+    }
+
     // Update the payment status
     const updatedTask = await completedTaskRepository.updatePaymentStatus(
       c_task_id,
@@ -67,9 +75,9 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Failed to fetch full task details' }, { status: 500 });
     }
 
-    // Handle transaction creation if the task is approved
+    // Handle transaction creation if the task is being paid
     if (
-      payment_status === 'Approved' &&
+      payment_status === 'Paid' &&
       fullTaskDetails.piggybank_account_id &&
       fullTaskDetails.payout_value
     ) {

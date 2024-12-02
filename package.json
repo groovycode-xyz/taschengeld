@@ -8,7 +8,9 @@
     "start": "next start",
     "format": "prettier --write .",
     "lint": "prettier --write . && next lint",
-    "lint:dir": "next lint app components"
+    "lint:dir": "next lint app components",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
@@ -41,8 +43,10 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/canvas-confetti": "^1.6.4",
     "@types/file-saver": "^2.0.7",
+    "@types/jest": "^29.5.14",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -51,9 +55,11 @@
     "eslint-config-next": "14.2.13",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "jest": "^29.7.0",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.2.5",
     "typescript": "5.0.4"
   }
 }

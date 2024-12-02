@@ -15,8 +15,13 @@ export interface CompletedTask {
   user_name: string;
   user_icon: string;
   created_at: Date;
-  payment_status: 'Unpaid' | 'Approved' | 'Rejected';
+  payment_status: 'Paid' | 'Unpaid';
   payout_value: string;
   comment?: string;
   attachment?: string;
+  piggybank_account_id?: number;
+}
+
+export interface FullTaskDetails extends CompletedTask {
+  piggybank_account_id: number;
 }
