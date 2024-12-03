@@ -15,20 +15,37 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const updatedUser = await request.json();
-    console.log('Received user update request:', updatedUser);
-    const user = await userRepository.update(Number(params.id), updatedUser);
-    if (user) {
-      console.log('Updated user in database:', user);
-      return NextResponse.json(user);
-    } else {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    const userId = parseInt(params.id);
+    if (isNaN(userId)) {
+      return NextResponse.json(
+        { error: 'Invalid user ID' },
+        { status: 400 }
+      );
     }
+
+    const userData = await request.json();
+    console.log('Received user update request:', userData);
+
+    const updatedUser = await userRepository.update(userId, userData);
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Failed to update user:', error);
-    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to update user. Please try again.' },
+      { status: 500 }
+    );
   }
 }
 

@@ -12,7 +12,7 @@ export interface User {
   icon: string;
 
   /** Sound URL associated with the user */
-  soundurl: string | null;
+  sound_url: string | null;
 
   /** User's birthday in YYYY-MM-DD format */
   birthday: string;
@@ -22,9 +22,6 @@ export interface User {
 
   /** When the user was created */
   created_at: string;
-
-  /** Sound associated with the user */
-  sound: string | null;
 }
 
 export type CreateUserInput = Omit<User, 'user_id' | 'piggybank_account_id' | 'created_at'>;

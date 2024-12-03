@@ -155,7 +155,7 @@ type SelectIconModalProps = {
 export function SelectIconModal({ isOpen, onClose, onSelectIcon }: SelectIconModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-[425px] max-h-[80vh] overflow-y-auto'>
+      <DialogContent className='bg-white sm:max-w-[425px] max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Select an Icon</DialogTitle>
         </DialogHeader>

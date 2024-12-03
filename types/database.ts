@@ -2,11 +2,10 @@ export interface User {
   user_id: number;
   name: string;
   icon: string;
-  soundurl: string | null;
+  sound_url: string | null;
   birthday: Date;
   piggybank_account_id: number | null;
   created_at: Date;
-  sound: string | null;
 }
 
 export interface Task {

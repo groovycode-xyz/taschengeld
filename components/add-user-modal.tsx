@@ -47,13 +47,6 @@ interface AddUserModalProps {
   onUserAdded?: () => void;
 }
 
-const defaultUserState = {
-  name: '',
-  icon: 'user',
-  soundurl: '',
-  birthday: new Date().toISOString().split('T')[0],
-};
-
 export function AddUserModal({
   isOpen,
   onClose,
@@ -63,53 +56,55 @@ export function AddUserModal({
   onUserAdded,
 }: AddUserModalProps) {
   const { addToast } = useToast();
-  const [name, setName] = useState(defaultUserState.name);
-  const [icon, setIcon] = useState(defaultUserState.icon);
-  const [soundUrl, setSoundUrl] = useState(defaultUserState.soundurl);
-  const [birthday, setBirthday] = useState(defaultUserState.birthday);
+  const [name, setName] = useState('');
+  const [icon, setIcon] = useState('default');
+  const [soundUrl, setSoundUrl] = useState<string | null>(null);
+  const [birthday, setBirthday] = useState(new Date().toISOString().split('T')[0]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
 
-  // Reset form when modal opens/closes or when user prop changes
+  const defaultUserState = {
+    name: '',
+    icon: 'default',
+    sound_url: null,
+    birthday: new Date().toISOString().split('T')[0],
+  };
+
   useEffect(() => {
     if (user) {
-      // Edit mode - populate with user data
       setName(user.name);
       setIcon(user.icon || defaultUserState.icon);
-      setSoundUrl(user.soundurl || defaultUserState.soundurl);
+      setSoundUrl(user.sound_url);
       setBirthday(typeof user.birthday === 'string' ? user.birthday : user.birthday.toISOString().split('T')[0]);
     } else if (!isOpen) {
       // Reset to defaults when modal closes
       setName(defaultUserState.name);
       setIcon(defaultUserState.icon);
-      setSoundUrl(defaultUserState.soundurl);
+      setSoundUrl(defaultUserState.sound_url);
       setBirthday(defaultUserState.birthday);
-      setBirthdayError(null);
     }
-  }, [user, isOpen]);
+  }, [isOpen, user]);
 
   const resetForm = () => {
     setName(defaultUserState.name);
     setIcon(defaultUserState.icon);
-    setSoundUrl(defaultUserState.soundurl);
+    setSoundUrl(defaultUserState.sound_url);
     setBirthday(new Date().toISOString().split('T')[0]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!birthday) return;
-
-    const trimmedName = name.trim();
+    setIsSubmitting(true);
 
     try {
       const userData = {
-        name: trimmedName,
+        name,
         icon,
-        soundurl: soundUrl || null,
+        sound_url: soundUrl,
         birthday,
-        sound: soundUrl,
       };
 
       const response = await onAddUser(userData);
@@ -296,7 +291,7 @@ export function AddUserModal({
       <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setSoundUrl(selectedSound || '')}
+        onSelect={(selectedSound) => setSoundUrl(selectedSound)}
         currentSound={soundUrl}
       />
       <DeleteConfirmationDialog

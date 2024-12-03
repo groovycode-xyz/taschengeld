@@ -100,8 +100,8 @@ export function EditTaskModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className='bg-white border-none shadow-lg max-h-[80vh] flex flex-col'>
+          <DialogHeader className='flex-shrink-0'>
             <DialogTitle>Edit Task</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
@@ -182,22 +182,38 @@ export function EditTaskModal({
                 />
               </div>
               <div className='flex items-center space-x-2'>
-                <Switch id='isActive' checked={is_active} onCheckedChange={setIsActive} />
-                <Label htmlFor='isActive'>Active</Label>
+                <Label htmlFor='is_active' className='text-base'>Active</Label>
+                <Switch
+                  id='is_active'
+                  checked={is_active}
+                  onCheckedChange={setIsActive}
+                />
               </div>
             </div>
-            <div className='mt-6 flex justify-between items-center'>
-              <Button type='button' variant='destructive' onClick={handleDelete}>
+            <div className='flex justify-end space-x-2 mt-4'>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={handleDelete}
+                className='border-2 border-red-500 hover:bg-red-50 text-red-500 hover:text-red-600'
+              >
                 <Trash2 className='h-4 w-4' />
               </Button>
-              <div className='space-x-2'>
-                <Button type='button' variant='outline' onClick={onClose}>
-                  <X className='h-4 w-4' />
-                </Button>
-                <Button type='submit'>
-                  <Save className='h-4 w-4' />
-                </Button>
-              </div>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={onClose}
+                className='border-2 border-gray-300 hover:bg-gray-50'
+              >
+                <X className='h-4 w-4' />
+              </Button>
+              <Button
+                type='submit'
+                variant='outline'
+                className='border-2 border-green-500 hover:bg-green-50 text-green-500 hover:text-green-600'
+              >
+                <Save className='h-4 w-4' />
+              </Button>
             </div>
           </form>
         </DialogContent>

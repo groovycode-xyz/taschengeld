@@ -42,10 +42,12 @@ export function EditUserModal({
   const initialBirthday = formatDate(user.birthday);
   console.log('Formatted birthday value:', initialBirthday);
 
-  const [name, setName] = useState(user.name);
-  const [icon, setIcon] = useState(user.icon);
-  const [soundurl, setSoundurl] = useState(user.soundurl || '');
-  const [birthday, setBirthday] = useState(initialBirthday);
+  const [name, setName] = useState(user?.name || '');
+  const [icon, setIcon] = useState(user?.icon || '');
+  const [soundUrl, setSoundUrl] = useState<string | null>(user?.sound_url || null);
+  const [birthday, setBirthday] = useState(
+    user?.birthday || new Date().toISOString().split('T')[0]
+  );
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
@@ -56,10 +58,12 @@ export function EditUserModal({
     console.log('Birthday in useEffect:', user.birthday);
     console.log('Formatted birthday:', formatDate(user.birthday));
     
-    setName(user.name);
-    setIcon(user.icon);
-    setSoundurl(user.soundurl || '');
-    setBirthday(formatDate(user.birthday));
+    if (user) {
+      setName(user.name);
+      setIcon(user.icon);
+      setSoundUrl(user.sound_url);
+      setBirthday(formatDate(user.birthday));
+    }
   }, [user]);
 
   const validateBirthday = (date: string): string | null => {
@@ -80,8 +84,17 @@ export function EditUserModal({
     return null;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
+
+    const userData = {
+      ...user,  // Include all existing user data
+      name,
+      icon,
+      sound_url: soundUrl,
+      birthday,
+    };
 
     // Validate birthday
     if (!birthday) {
@@ -95,15 +108,8 @@ export function EditUserModal({
       return;
     }
 
-    const updatedUser = {
-      ...user,
-      name,
-      icon,
-      soundurl,
-      birthday,
-    };
-    console.log('Submitting updated user:', updatedUser);
-    onEditUser(updatedUser);
+    console.log('Submitting updated user:', userData);
+    await onEditUser(userData);
     onClose();
   };
 
@@ -163,8 +169,8 @@ export function EditUserModal({
                 <div className='flex items-center space-x-2'>
                   <Input
                     value={
-                      soundurl
-                        ? soundurl.split('/').pop()?.replace('.mp3', '').toUpperCase()
+                      soundUrl
+                        ? soundUrl.split('/').pop()?.replace(/\.(mp3|wav)$/, '').toUpperCase()
                         : 'NO SOUND'
                     }
                     readOnly
@@ -178,19 +184,14 @@ export function EditUserModal({
                   >
                     Select Sound
                   </Button>
-                  {soundurl && (
+                  {soundUrl && (
                     <Button
                       type='button'
                       variant='outline'
                       onClick={async () => {
                         try {
-                          // Try mp3 first
-                          let audio = new Audio(`/sounds/users/${soundurl}.mp3`);
-                          await audio.play().catch(() => {
-                            // If mp3 fails, try wav
-                            audio = new Audio(`/sounds/users/${soundurl}.wav`);
-                            return audio.play();
-                          });
+                          const audio = new Audio(`/sounds/users/${soundUrl}`);
+                          await audio.play();
                         } catch (error) {
                           console.error('Error playing sound:', error);
                         }
@@ -256,7 +257,7 @@ export function EditUserModal({
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
         onSelect={(selectedSound) => {
-          setSoundurl(selectedSound);
+          setSoundUrl(selectedSound);
           setIsSoundModalOpen(false);
         }}
       />

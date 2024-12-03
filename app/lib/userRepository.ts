@@ -9,11 +9,10 @@ export const userRepository = {
         user_id,
         name,
         icon,
-        soundurl,
+        sound_url,
         birthday::text as birthday,
         piggybank_account_id,
-        created_at,
-        sound
+        created_at
       FROM users 
       ORDER BY name ASC
     `);
@@ -26,11 +25,10 @@ export const userRepository = {
         user_id,
         name,
         icon,
-        soundurl,
+        sound_url,
         birthday::text as birthday,
         piggybank_account_id,
-        created_at,
-        sound
+        created_at
       FROM users 
       WHERE user_id = $1
     `, [id]);
@@ -39,20 +37,25 @@ export const userRepository = {
 
   async create(user: CreateUserInput): Promise<User> {
     const result = await pool.query(
-      'INSERT INTO users (name, icon, soundurl, birthday) VALUES ($1, $2, $3, $4) RETURNING *',
-      [user.name, user.icon, user.soundurl, user.birthday]
+      'INSERT INTO users (name, icon, sound_url, birthday) VALUES ($1, $2, $3, $4) RETURNING *',
+      [user.name, user.icon, user.sound_url, user.birthday]
     );
     return result.rows[0];
   },
 
   async update(id: number, data: Partial<User>): Promise<User | null> {
-    console.log('Updating user with data:', data); // Debug log
-    const result = await pool.query(
-      'UPDATE users SET name = COALESCE($1, name), icon = COALESCE($2, icon), soundurl = COALESCE($3, soundurl), birthday = COALESCE($4, birthday) WHERE user_id = $5 RETURNING *',
-      [data.name, data.icon, data.soundurl, data.birthday, id]
-    );
-    console.log('Update result:', result.rows[0]); // Debug log
-    return result.rows[0] || null;
+    console.log('Updating user with data:', data);
+    try {
+      const result = await pool.query(
+        'UPDATE users SET name = COALESCE($1, name), icon = COALESCE($2, icon), sound_url = COALESCE($3, sound_url), birthday = COALESCE($4, birthday) WHERE user_id = $5 RETURNING *',
+        [data.name, data.icon, data.sound_url, data.birthday, id]
+      );
+      console.log('Update result:', result.rows[0]);
+      return result.rows[0] || null;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
   },
 
   async delete(id: number): Promise<boolean> {
@@ -67,14 +70,14 @@ export const userRepository = {
 
       // Create user
       const userQuery = `
-        INSERT INTO users (name, icon, soundurl, birthday)
+        INSERT INTO users (name, icon, sound_url, birthday)
         VALUES ($1, $2, $3, $4)
         RETURNING *
       `;
       const userResult = await client.query(userQuery, [
         user.name,
         user.icon,
-        user.soundurl,
+        user.sound_url,
         user.birthday,
       ]);
       const newUser = userResult.rows[0];

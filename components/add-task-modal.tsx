@@ -65,8 +65,8 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className='bg-white border-none shadow-lg max-h-[80vh] flex flex-col'>
+          <DialogHeader className='flex-shrink-0'>
             <DialogTitle>Add New Task</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
@@ -152,24 +152,31 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 />
               </div>
               <div className='flex items-center space-x-2'>
+                <Label htmlFor='is_active' className='text-base'>Active</Label>
                 <Switch
-                  id='isActive'
+                  id='is_active'
                   checked={taskState.is_active}
-                  onCheckedChange={(checked) =>
-                    setTaskState((prev) => ({ ...prev, is_active: checked }))
-                  }
+                  onCheckedChange={(checked) => setTaskState((prev) => ({ ...prev, is_active: checked }))}
                 />
-                <Label htmlFor='isActive'>Active</Label>
+              </div>
+              <div className='flex justify-end space-x-2 mt-4'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={onClose}
+                  className='border-2 border-gray-300 hover:bg-gray-50'
+                >
+                  <X className='h-4 w-4' />
+                </Button>
+                <Button
+                  type='submit'
+                  variant='outline'
+                  className='border-2 border-green-500 hover:bg-green-50 text-green-500 hover:text-green-600'
+                >
+                  <Save className='h-4 w-4' />
+                </Button>
               </div>
             </div>
-            <DialogFooter className='mt-6'>
-              <Button type='button' variant='outline' onClick={onClose}>
-                <X className='h-4 w-4' />
-              </Button>
-              <Button type='submit'>
-                <Save className='h-4 w-4' />
-              </Button>
-            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
