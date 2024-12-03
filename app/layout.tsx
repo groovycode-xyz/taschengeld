@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import ClientLayout from 'components/client-layout';
 import { ToastProvider } from '@/components/ui/use-toast';
+import { Toaster } from '@/components/ui/toaster';
 import { ModeProvider } from '@/components/context/mode-context';
 import { ThemeProvider } from '@/contexts/theme-context';
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ClientLayout>{children}</ClientLayout>
             </ThemeProvider>
           </ModeProvider>
+          <Toaster />
         </ToastProvider>
       </body>
     </html>

@@ -13,12 +13,28 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const userData = await request.json();
-    const newUser = await userRepository.createUser(userData);
+    const data = await request.json();
+    const { name } = data;
+
+    // Check for existing user with same name
+    const existingUser = await userRepository.findByName(name);
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'A user with this name already exists' },
+        { status: 409 }
+      );
+    }
+
+    // If no duplicate, proceed with user creation
+    const newUser = await userRepository.createUser(data);
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
     console.error('Failed to create user:', error);
-    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create user' },
+      { status: 500 }
+    );
   }
 }
 

@@ -50,15 +50,7 @@ export function UserManagement() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser),
       });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to add user');
-      }
-      
-      await fetchUsers();
-      setIsAddModalOpen(false);
-      router.refresh();
+      return response;
     } catch (error) {
       console.error('Error adding user:', error);
       throw error;
@@ -150,13 +142,9 @@ export function UserManagement() {
 
       <AddUserModal
         isOpen={isAddModalOpen}
-        onClose={() => {
-          setIsAddModalOpen(false);
-          setEditingUser(null);
-        }}
+        onClose={() => setIsAddModalOpen(false)}
         onAddUser={handleAddUser}
         onDeleteUser={handleDeleteUser}
-        user={undefined}
       />
 
       {editingUser && (

@@ -131,4 +131,12 @@ export const userRepository = {
       client.release();
     }
   },
+
+  async findByName(name: string): Promise<User | null> {
+    const result = await pool.query(
+      'SELECT * FROM users WHERE LOWER(name) = LOWER($1)',
+      [name]
+    );
+    return result.rows[0] || null;
+  },
 };

@@ -10,6 +10,7 @@ import {
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
 import { IconSelectorModal } from './icon-selector-modal';
 import {
   Baby,
@@ -30,19 +31,17 @@ import {
   Squirrel,
   Turtle,
   Play,
-  Trash2,
-  X,
   Save,
+  X,
 } from 'lucide-react';
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
-import { useToast } from 'components/ui/use-toast';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddUser: (user: CreateUserInput) => void;
+  onAddUser: (user: CreateUserInput) => Promise<Response>;
   onDeleteUser: (userId: number) => void;
   user?: User;
   onUserAdded?: () => void;
@@ -63,6 +62,7 @@ export function AddUserModal({
   user,
   onUserAdded,
 }: AddUserModalProps) {
+  const { addToast } = useToast();
   const [name, setName] = useState(defaultUserState.name);
   const [icon, setIcon] = useState(defaultUserState.icon);
   const [soundUrl, setSoundUrl] = useState(defaultUserState.soundurl);
@@ -71,7 +71,6 @@ export function AddUserModal({
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
-  const { addToast: toast } = useToast();
 
   // Reset form when modal opens/closes or when user prop changes
   useEffect(() => {
@@ -102,20 +101,28 @@ export function AddUserModal({
     e.preventDefault();
     if (!birthday) return;
 
+    const trimmedName = name.trim();
+
     try {
       const userData = {
-        name,
+        name: trimmedName,
         icon,
         soundurl: soundUrl || null,
         birthday,
+        sound: soundUrl,
       };
 
-      await onAddUser(userData);
+      const response = await onAddUser(userData);
+      const data = await response.json();
       
-      toast({
-        title: 'Success',
-        description: 'User created successfully',
-      });
+      if (!response.ok) {
+        addToast({
+          variant: 'destructive',
+          title: 'Error',
+          description: data.error,
+        });
+        return;
+      }
 
       resetForm();
       onClose();
@@ -124,16 +131,12 @@ export function AddUserModal({
       }
     } catch (error) {
       console.error('Error creating user:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to create user',
+      addToast({
         variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to create user. Please try again.',
       });
     }
-  };
-
-  const handleDelete = () => {
-    setIsDeleteConfirmationOpen(true);
   };
 
   const confirmDelete = () => {
@@ -184,12 +187,17 @@ export function AddUserModal({
                 <Label htmlFor='name' className='text-right'>
                   Name
                 </Label>
-                <Input
-                  id='name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className='col-span-3'
-                />
+                <div className='col-span-3'>
+                  <Input
+                    id='name'
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                    className=''
+                    required
+                  />
+                </div>
               </div>
               <div className='grid grid-cols-4 items-center gap-4'>
                 <Label htmlFor='birthday' className='text-right'>
