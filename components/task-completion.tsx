@@ -38,12 +38,12 @@ export function TaskCompletion() {
       try {
         const [tasksRes, usersRes, completedRes] = await Promise.all([
           fetch('/api/active-tasks'),
-          fetch('/api/child-users'),
+          fetch('/api/users'),
           fetch('/api/completed-tasks'),
         ]);
 
         if (!tasksRes.ok) throw new Error('Failed to fetch active tasks');
-        if (!usersRes.ok) throw new Error('Failed to fetch child users');
+        if (!usersRes.ok) throw new Error('Failed to fetch users');
         if (!completedRes.ok) throw new Error('Failed to fetch completed tasks');
 
         const [tasksData, usersData, completedData] = await Promise.all([

@@ -4,7 +4,6 @@ export interface User {
   icon: string;
   soundurl: string | null;
   birthday: Date;
-  role: 'parent' | 'child';
   piggybank_account_id: number | null;
   created_at: Date;
   sound: string | null;
@@ -16,7 +15,7 @@ export interface Task {
   description: string | null;
   icon_name: string | null;
   sound_url: string | null;
-  payout_value: string;  // numeric(15,2)
+  payout_value: string;
   is_active: boolean;
   created_at: Date;
   updated_at: Date;
@@ -27,7 +26,7 @@ export interface CompletedTask {
   user_id: number;
   task_id: number;
   description: string | null;
-  payout_value: string;  // numeric(15,2)
+  payout_value: string;
   created_at: Date;
   comment: string | null;
   attachment: string | null;
@@ -38,14 +37,14 @@ export interface PiggybankAccount {
   account_id: number;
   user_id: number;
   account_number: string;
-  balance: string;  // numeric(15,2)
+  balance: string;
   created_at: Date;
 }
 
 export interface PiggybankTransaction {
   transaction_id: number;
   account_id: number;
-  amount: string;  // numeric(15,2)
+  amount: string;
   transaction_type: 'deposit' | 'withdrawal';
   transaction_date: Date;
   description: string | null;

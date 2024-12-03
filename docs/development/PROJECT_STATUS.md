@@ -2,44 +2,25 @@
 
 ## Recent Updates
 
-- Enhanced Reset Transaction History functionality
-  - Added account selection dialog
-  - Added ability to reset specific accounts
-  - Improved user feedback and loading states
-- Completed Global App Settings UI implementation
-- Added toast notification system
-- Added backup/restore functionality UI
-- Improved layout and user feedback in settings
+- Enhanced Backup/Restore functionality and fully tested.
 
 ## Current Focus
 
-- [x] Global App Settings page implementation complete
-  - [x] Role enforcement toggle with PIN
-  - [x] Currency selection
-  - [x] Reset functionality with account selection
-  - [x] Backup/Restore UI
-  - [x] Toast notifications
-- [x] Visual feedback enhancements
-- [x] Accessibility improvements
-- [x] UX improvements for PIN management
+- [ ] Remove Role column from Users table
 
 ## Upcoming Tasks
 
-[x] Complete Parent/Child mode role based access functionality
-
-- [x] Role-based access implementation
-- [x] Toggle switch visibility control
-- [x] PIN validation and storage
-- [x] User feedback for role switching
-
-[ ] Complete Payday Interface features
-
-- [ ] Bulk Actions: Approve/reject multiple tasks
-- [ ] Grouping and Filtering: Organize tasks by various criteria
+- [ ] Fix Known Issues
+- [ ] Implement color theme functionality including dark mode
+- [ ] Fully implement Docker-Compose support for development and production environments
 
 ## Known Issues
 
-- No critical issues at the moment
+- Add User and Edit User forms
+  - address the Save button not displaying a frame around it.
+  - address the default date of birth being pre-populated (it should be empty)
+- Add User modal
+  - create a validation rule to prevent duplicate user names.
 
 ## Next Steps
 

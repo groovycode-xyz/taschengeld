@@ -1,176 +1,142 @@
-# Database Schema Documentation
+# Database Schema and Design
 
-This document provides a comprehensive overview of the database schema for the Taschengeld project.
-As of 2024-10-24
+## Overview
+The application uses PostgreSQL as its database system. The schema is designed to support task management, user roles, and piggy bank functionality with a focus on data integrity and consistency.
 
-## Tables Overview
+## Tables
 
-The database consists of six main tables:
+### users
+```sql
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  icon VARCHAR(50),
+  soundurl VARCHAR(255),
+  birthday TIMESTAMP WITH TIME ZONE,
+  role VARCHAR(10) CHECK (role IN ('parent', 'child')),
+  piggybank_account_id INTEGER,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_user_piggybank_account 
+    FOREIGN KEY (piggybank_account_id) 
+    REFERENCES piggybank_accounts(account_id)
+);
+```
 
-- users
-- tasks
-- completed_tasks
-- piggybank_accounts
-- piggybank_transactions
-- app_settings
+### tasks
+```sql
+CREATE TABLE tasks (
+  task_id SERIAL PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  description TEXT,
+  icon_name VARCHAR(50),
+  sound_url VARCHAR(255),
+  payout_value NUMERIC(15,2),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-## Detailed Table Structures
+### completed_tasks
+```sql
+CREATE TABLE completed_tasks (
+  c_task_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  task_id INTEGER NOT NULL,
+  description TEXT,
+  payout_value NUMERIC(15,2),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  comment TEXT,
+  attachment VARCHAR(255),
+  payment_status VARCHAR(10) CHECK (payment_status IN ('Paid', 'Unpaid')),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (task_id) REFERENCES tasks(task_id) ON DELETE CASCADE
+);
+```
 
-### Users Table
+### piggybank_accounts
+```sql
+CREATE TABLE piggybank_accounts (
+  account_id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  account_number VARCHAR(20) UNIQUE NOT NULL,
+  balance NUMERIC(15,2) DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+```
 
-**Table:** `public.users`
+### piggybank_transactions
+```sql
+CREATE TABLE piggybank_transactions (
+  transaction_id SERIAL PRIMARY KEY,
+  account_id INTEGER,
+  amount NUMERIC(15,2) NOT NULL,
+  transaction_type VARCHAR(10) CHECK (transaction_type IN ('deposit', 'withdrawal')),
+  transaction_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  description TEXT,
+  photo VARCHAR(255),
+  completed_task_id INTEGER,
+  FOREIGN KEY (account_id) REFERENCES piggybank_accounts(account_id) ON DELETE CASCADE,
+  FOREIGN KEY (completed_task_id) REFERENCES completed_tasks(c_task_id) ON DELETE SET NULL
+);
+```
 
-| Column               | Type         | Nullable | Default                      | Description                            |
-| -------------------- | ------------ | -------- | ---------------------------- | -------------------------------------- |
-| user_id              | integer      | not null | nextval('users_user_id_seq') | Primary key                            |
-| name                 | varchar(100) | not null | -                            | User's name                            |
-| icon                 | varchar(50)  | not null | -                            | User's icon identifier                 |
-| soundurl             | varchar(255) | yes      | -                            | URL to user's sound effect             |
-| birthday             | date         | not null | -                            | User's birth date                      |
-| role                 | varchar(20)  | not null | -                            | User's role (e.g., 'parent', 'child')  |
-| piggybank_account_id | integer      | yes      | -                            | Reference to user's piggy bank account |
-| created_at           | timestamp    | yes      | CURRENT_TIMESTAMP            | Record creation timestamp              |
-| sound                | text         | yes      | -                            | Legacy sound field                     |
+### app_settings
+```sql
+CREATE TABLE app_settings (
+  setting_id SERIAL PRIMARY KEY,
+  setting_key VARCHAR(50) UNIQUE NOT NULL,
+  setting_value TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-**Indexes:**
+## Key Features
 
-- PRIMARY KEY on (user_id)
-- UNIQUE CONSTRAINT on (piggybank_account_id)
+### Data Integrity
+- All timestamps use `TIMESTAMP WITH TIME ZONE` for consistent timezone handling
+- Numeric values use standardized precision (15,2) for currency amounts
+- Foreign key constraints ensure referential integrity
+- Check constraints enforce valid values for status fields
 
-**Foreign Keys:**
+### Circular References
+The schema handles a circular reference between `users` and `piggybank_accounts`:
+1. `users.piggybank_account_id` references `piggybank_accounts(account_id)`
+2. `piggybank_accounts.user_id` references `users(user_id)`
 
-- piggybank_account_id REFERENCES piggybank_accounts(account_id)
+This is managed during backup/restore operations by:
+1. Temporarily disabling the foreign key constraint
+2. Performing the restore in the correct order
+3. Re-establishing the constraint
 
-### Tasks Table
+### Backup and Restore
+The database supports full and partial backup/restore operations:
+- Tasks backup: Tasks and completed tasks
+- Piggybank backup: Accounts and transactions
+- Full system backup: All tables with proper relationship handling
 
-**Table:** `public.tasks`
+### Cascading Deletes
+- Deleting a user cascades to their completed tasks and piggybank account
+- Deleting a task cascades to its completed tasks
+- Deleting an account cascades to its transactions
+- Completed task deletion sets related transaction references to NULL
 
-| Column       | Type          | Nullable | Default                      | Description               |
-| ------------ | ------------- | -------- | ---------------------------- | ------------------------- |
-| task_id      | integer       | not null | nextval('tasks_task_id_seq') | Primary key               |
-| title        | varchar(100)  | not null | -                            | Task title                |
-| description  | text          | yes      | -                            | Task description          |
-| icon_name    | varchar(50)   | yes      | -                            | Task icon identifier      |
-| sound_url    | varchar(255)  | yes      | -                            | URL to task sound effect  |
-| payout_value | numeric(10,2) | not null | -                            | Task completion reward    |
-| is_active    | boolean       | yes      | true                         | Task availability status  |
-| created_at   | timestamp     | yes      | CURRENT_TIMESTAMP            | Record creation timestamp |
-| updated_at   | timestamp     | yes      | CURRENT_TIMESTAMP            | Record update timestamp   |
+### Status Constraints
+- Payment status: Limited to 'Paid' or 'Unpaid'
+- Transaction type: Limited to 'deposit' or 'withdrawal'
+- User role: Limited to 'parent' or 'child'
 
-**Indexes:**
+## TypeScript Integration
+The database schema is reflected in TypeScript interfaces (see `types/database.ts`), ensuring type safety throughout the application. These types are used for:
+- API request/response typing
+- Data validation
+- Backup/restore operations
 
-- PRIMARY KEY on (task_id)
-
-### Completed Tasks Table
-
-**Table:** `public.completed_tasks`
-
-| Column         | Type          | Nullable | Default                                  | Description                  |
-| -------------- | ------------- | -------- | ---------------------------------------- | ---------------------------- |
-| c_task_id      | integer       | not null | nextval('completed_tasks_c_task_id_seq') | Primary key                  |
-| user_id        | integer       | yes      | -                                        | Reference to completing user |
-| task_id        | integer       | yes      | -                                        | Reference to completed task  |
-| description    | text          | yes      | -                                        | Completion description       |
-| payout_value   | numeric(15,2) | yes      | -                                        | Actual payout amount         |
-| created_at     | timestamp     | yes      | CURRENT_TIMESTAMP                        | Completion timestamp         |
-| comment        | text          | yes      | -                                        | Additional comments          |
-| attachment     | varchar(255)  | yes      | -                                        | Path to attached file        |
-| payment_status | varchar(20)   | yes      | 'Unpaid'                                 | Payment status               |
-
-**Foreign Keys:**
-
-- user_id REFERENCES users(user_id) ON DELETE CASCADE
-- task_id REFERENCES tasks(task_id) ON DELETE CASCADE
-
-### Piggy Bank Accounts Table
-
-**Table:** `public.piggybank_accounts`
-
-| Column         | Type          | Nullable | Default                                      | Description                |
-| -------------- | ------------- | -------- | -------------------------------------------- | -------------------------- |
-| account_id     | integer       | not null | nextval('piggybank_accounts_account_id_seq') | Primary key                |
-| user_id        | integer       | yes      | -                                            | Reference to account owner |
-| account_number | varchar(20)   | not null | -                                            | Unique account number      |
-| balance        | numeric(15,2) | yes      | 0                                            | Current account balance    |
-| created_at     | timestamp     | yes      | CURRENT_TIMESTAMP                            | Account creation timestamp |
-
-**Indexes:**
-
-- PRIMARY KEY on (account_id)
-- UNIQUE CONSTRAINT on (account_number)
-
-**Foreign Keys:**
-
-- user_id REFERENCES users(user_id) ON DELETE CASCADE
-
-### Piggy Bank Transactions Table
-
-**Table:** `public.piggybank_transactions`
-
-| Column            | Type          | Nullable | Default                                              | Description                     |
-| ----------------- | ------------- | -------- | ---------------------------------------------------- | ------------------------------- |
-| transaction_id    | integer       | not null | nextval('piggybank_transactions_transaction_id_seq') | Primary key                     |
-| account_id        | integer       | yes      | -                                                    | Reference to piggy bank account |
-| amount            | numeric(15,2) | not null | -                                                    | Transaction amount              |
-| transaction_type  | varchar(10)   | not null | -                                                    | Type of transaction             |
-| transaction_date  | timestamp     | yes      | CURRENT_TIMESTAMP                                    | Transaction timestamp           |
-| description       | text          | yes      | -                                                    | Transaction description         |
-| photo             | varchar(255)  | yes      | -                                                    | Path to transaction photo       |
-| completed_task_id | integer       | yes      | -                                                    | Reference to completed task     |
-
-**Foreign Keys:**
-
-- account_id REFERENCES piggybank_accounts(account_id) ON DELETE CASCADE
-- completed_task_id REFERENCES completed_tasks(c_task_id)
-
-### App Settings Table
-
-**Table:** `public.app_settings`
-
-| Column        | Type        | Nullable | Default                   | Description               |
-| ------------- | ----------- | -------- | ------------------------- | ------------------------- |
-| setting_id    | integer     | not null | nextval('setting_id_seq') | Primary key               |
-| setting_key   | varchar(50) | not null | -                         | Unique setting identifier |
-| setting_value | text        | yes      | -                         | Setting value             |
-| created_at    | timestamp   | yes      | CURRENT_TIMESTAMP         | Record creation timestamp |
-| updated_at    | timestamp   | yes      | CURRENT_TIMESTAMP         | Record update timestamp   |
-
-**Indexes:**
-
-- PRIMARY KEY on (setting_id)
-- UNIQUE CONSTRAINT on (setting_key)
-
-**Current Settings:**
-
-- enforce_roles: Controls role-based access ('true'/'false')
-- global_pin: Stores the global PIN (nullable)
-- default_currency: Stores the default currency (e.g., 'CHF')
-
-## Database Functions and Triggers
-
-### check_unpaid_tasks_before_delete()
-
-**Type:** Trigger Function
-**Purpose:** Prevents deletion of tasks that have unpaid completed entries
-**Trigger:** BEFORE DELETE ON tasks
-**Behavior:**
-
-- Checks if the task being deleted has any completed tasks with payment_status = 'Unpaid'
-- Raises an exception if unpaid entries exist
-- Allows deletion if no unpaid entries exist or all entries are paid/rejected
-
-## Relationships
-
-1. Users can have one Piggy Bank Account (one-to-one)
-2. Users can complete many Tasks (many-to-many through completed_tasks)
-3. Piggy Bank Accounts can have many Transactions (one-to-many)
-4. Completed Tasks can be linked to Transactions (one-to-many)
-
-## Cascading Deletions
-
-The following cascading deletions are configured:
-
-- When a user is deleted, their completed tasks are deleted
-- When a user is deleted, their piggy bank account is deleted
-- When a piggy bank account is deleted, all its transactions are deleted
-- When a task is deleted, all its completed tasks (paid/rejected) are deleted automatically
+## Migrations
+Database changes are managed through numbered migration files in the `migrations/` directory. The current schema was standardized in `001_schema_consistency.sql`, which:
+1. Standardized timestamp fields
+2. Fixed numeric precision
+3. Added proper constraints
+4. Cleaned up status values

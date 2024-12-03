@@ -9,7 +9,10 @@ Taschengeld is a Next.js-based web application designed to manage allowances and
 - Frontend: Next.js 14 with React
 - Backend: Next.js API Routes
 - Database: PostgreSQL v16 (hosted on Homebrew)
-- ORM: Direct SQL queries (no ORM used)
+  - Schema management through migrations
+  - Direct SQL queries (no ORM)
+  - Full backup/restore capabilities
+  - Strict data integrity constraints
 - Styling: Tailwind CSS
 - UI Components: shadcn/ui
 - Authentication: Custom PIN-based system
@@ -20,19 +23,45 @@ Taschengeld is a Next.js-based web application designed to manage allowances and
 The Taschengeld project follows a Next.js-based architecture with React components and App Router. Here's an overview of the main directories and their purposes:
 
 - `/app`: Contains the main application logic and page components.
+  - `/api`: API routes for data operations
+    - `/backup`: Endpoints for database backup operations
+    - `/restore`: Endpoints for database restore operations
   - `/lib`: Houses utility functions and database connection logic.
   - `/types`: Stores TypeScript type definitions for consistent data structures.
   - `/components`: Contains reusable React components used across the application.
+- `/migrations`: Database migration files for schema management
 - `/components`: Reusable UI components that are used in various parts of the application.
-  - `Button.tsx`: A styled button component.
-  - `Header.tsx`: The application header component.
-- `/tests`: Includes unit and integration tests to ensure code reliability.
-  - `userRepository.test.ts`: Tests for user repository functions.
-- `/public`: Static assets like images, icons, and fonts.
-- `/styles`: Global and component-specific styles.
-- `/pages`: Next.js page components for routing.
-- `/requirements`: Project requirements and documentation
-  - `architecture_overview.md`: This document providing an architecture overview of the project.
+- `/tests`: Includes unit and integration tests.
+  - `backup-restore.test.ts`: Tests for database backup/restore functionality
+- `/docs`: Project documentation
+  - `/architecture`: System architecture documentation
+    - `DATABASE.md`: Detailed database schema and operations
+    - `OVERVIEW.md`: This file
+- `/types`: TypeScript type definitions
+  - `database.ts`: Database schema type definitions
+
+## Database Architecture
+
+### Schema Management
+- Migrations-based schema evolution
+- Standardized data types and constraints
+- Proper foreign key relationships
+- Check constraints for data validity
+
+### Data Operations
+- Direct SQL queries for performance
+- Prepared statements for security
+- Transaction support for data integrity
+- Backup/restore functionality for data safety
+
+### Key Features
+- Timezone-aware timestamps
+- Standardized numeric precision for currency
+- Cascading deletes for referential integrity
+- Circular reference handling
+- Full and partial backup/restore support
+
+For detailed database information, see `docs/architecture/DATABASE.md`.
 
 ## Key Components and Their Relationships
 

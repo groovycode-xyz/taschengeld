@@ -10,10 +10,8 @@ export async function GET() {
         name,
         icon,
         soundurl,
-        birthday,
-        role
+        birthday
       FROM users
-      WHERE role = 'child'
       ORDER BY name;
     `);
 

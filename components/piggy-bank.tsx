@@ -109,25 +109,15 @@ export function PiggyBank() {
             <CardHeader className='flex flex-col items-center text-center'>
               <IconComponent
                 icon={user.icon}
-                className={`w-20 h-20 mb-2 ${
-                  user.role === 'parent' ? 'text-blue-700' : 'text-green-700'
-                }`}
+                className='w-20 h-20 mb-2 text-green-700'
               />
-              <CardTitle
-                className={`mb-2 ${user.role === 'parent' ? 'text-blue-900' : 'text-green-900'}`}
-              >
+              <CardTitle className='mb-2 text-green-900'>
                 {user.name}
               </CardTitle>
-              <div
-                className={`text-2xl font-bold mb-4 ${
-                  user.role === 'parent' ? 'text-blue-700' : 'text-green-700'
-                }`}
-              >
+              <div className='text-2xl font-bold mb-4 text-green-700'>
                 <CurrencyDisplay
                   value={parseFloat(user.account.balance)}
-                  className={`text-2xl font-bold ${
-                    user.role === 'parent' ? 'text-blue-700' : 'text-green-700'
-                  }`}
+                  className='text-2xl font-bold text-green-700'
                 />
               </div>
               <div className='flex flex-col gap-2 w-full'>

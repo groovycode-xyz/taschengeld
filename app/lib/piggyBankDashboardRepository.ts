@@ -5,7 +5,7 @@ export const piggyBankDashboardRepository = {
   async getDashboardData(): Promise<PiggyBankUser[]> {
     const client = await pool.connect();
     try {
-      // Get all child users with their piggy bank accounts
+      // Get all users with their piggy bank accounts
       const query = `
         WITH recent_transactions AS (
           SELECT 
@@ -51,8 +51,6 @@ export const piggyBankDashboardRepository = {
           piggybank_accounts pa ON u.user_id = pa.user_id
         LEFT JOIN 
           recent_transactions rt ON pa.account_id = rt.account_id
-        WHERE 
-          u.role = 'child'
         GROUP BY 
           u.user_id, u.name, u.icon, pa.account_id, pa.account_number, pa.balance
         ORDER BY 
@@ -78,5 +76,5 @@ export const piggyBankDashboardRepository = {
     } finally {
       client.release();
     }
-  },
+  }
 };

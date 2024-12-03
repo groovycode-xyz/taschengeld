@@ -34,11 +34,11 @@ export async function POST(request: Request) {
     for (const user of users) {
       const result = await client.query(
         `
-        INSERT INTO users (name, icon, soundurl, birthday, role)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO users (name, icon, soundurl, birthday)
+        VALUES ($1, $2, $3, $4)
         RETURNING user_id
         `,
-        [user.name, user.icon, user.soundurl, user.birthday, user.role]
+        [user.name, user.icon, user.soundurl, user.birthday]
       );
       userMappings.set(user.name, result.rows[0].user_id);
     }
