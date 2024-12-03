@@ -1,16 +1,30 @@
+/**
+ * Represents a user in the Tascheged system.
+ */
 export interface User {
+  /** Unique identifier for the user */
   user_id: number;
+
+  /** User's display name */
   name: string;
+
+  /** Name of the icon representing the user */
   icon: string;
-  soundurl?: string;
+
+  /** Sound URL associated with the user */
+  soundurl: string | null;
+
+  /** User's birthday in YYYY-MM-DD format */
   birthday: string;
-  role: 'parent' | 'child';
+
+  /** ID of the user's piggy bank account */
+  piggybank_account_id: number | null;
+
+  /** When the user was created */
+  created_at: string;
+
+  /** Sound associated with the user */
+  sound: string | null;
 }
 
-export interface CreateUserInput {
-  name: string;
-  icon: string;
-  soundurl?: string;
-  birthday: string;
-  role: 'parent' | 'child';
-}
+export type CreateUserInput = Omit<User, 'user_id' | 'piggybank_account_id' | 'created_at'>;

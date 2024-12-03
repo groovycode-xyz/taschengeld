@@ -4,40 +4,60 @@ import { piggyBankAccountRepository } from './piggyBankAccountRepository';
 
 export const userRepository = {
   async getAll(): Promise<User[]> {
-    const result = await pool.query('SELECT * FROM users ORDER BY name ASC');
+    const result = await pool.query(`
+      SELECT 
+        user_id,
+        name,
+        icon,
+        soundurl,
+        birthday::text as birthday,
+        piggybank_account_id,
+        created_at,
+        sound
+      FROM users 
+      ORDER BY name ASC
+    `);
     return result.rows;
   },
 
   async getById(id: number): Promise<User | null> {
-    const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
+    const result = await pool.query(`
+      SELECT 
+        user_id,
+        name,
+        icon,
+        soundurl,
+        birthday::text as birthday,
+        piggybank_account_id,
+        created_at,
+        sound
+      FROM users 
+      WHERE user_id = $1
+    `, [id]);
     return result.rows[0] || null;
   },
 
   async create(user: CreateUserInput): Promise<User> {
     const result = await pool.query(
-      'INSERT INTO users (name, icon, soundurl, birthday, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [user.name, user.icon, user.soundurl, user.birthday, user.role]
+      'INSERT INTO users (name, icon, soundurl, birthday) VALUES ($1, $2, $3, $4) RETURNING *',
+      [user.name, user.icon, user.soundurl, user.birthday]
     );
     return result.rows[0];
   },
 
   async update(id: number, data: Partial<User>): Promise<User | null> {
+    console.log('Updating user with data:', data); // Debug log
     const result = await pool.query(
-      'UPDATE users SET name = COALESCE($1, name), icon = COALESCE($2, icon), soundurl = COALESCE($3, soundurl), birthday = COALESCE($4, birthday), role = COALESCE($5, role) WHERE user_id = $6 RETURNING *',
-      [data.name, data.icon, data.soundurl, data.birthday, data.role, id]
+      'UPDATE users SET name = COALESCE($1, name), icon = COALESCE($2, icon), soundurl = COALESCE($3, soundurl), birthday = COALESCE($4, birthday) WHERE user_id = $5 RETURNING *',
+      [data.name, data.icon, data.soundurl, data.birthday, id]
     );
+    console.log('Update result:', result.rows[0]); // Debug log
     return result.rows[0] || null;
   },
 
   async delete(id: number): Promise<boolean> {
     const result = await pool.query('DELETE FROM users WHERE user_id = $1', [id]);
-    return (result.rowCount ?? 0) > 0; // Use nullish coalescing to handle null
-  },
-
-  async getChildUsers(): Promise<User[]> {
-    const query = 'SELECT * FROM users WHERE role = $1 ORDER BY name';
-    const result = await pool.query(query, ['child']);
-    return result.rows;
+    return (result.rowCount ?? 0) > 0;
   },
 
   async createUser(user: Omit<User, 'user_id'>): Promise<User> {
@@ -47,8 +67,8 @@ export const userRepository = {
 
       // Create user
       const userQuery = `
-        INSERT INTO users (name, icon, soundurl, birthday, role)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO users (name, icon, soundurl, birthday)
+        VALUES ($1, $2, $3, $4)
         RETURNING *
       `;
       const userResult = await client.query(userQuery, [
@@ -56,7 +76,6 @@ export const userRepository = {
         user.icon,
         user.soundurl,
         user.birthday,
-        user.role,
       ]);
       const newUser = userResult.rows[0];
 

@@ -9,13 +9,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { IconSelectorModal } from './icon-selector-modal';
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { User } from '@/app/types/user';
@@ -38,25 +31,35 @@ export function EditUserModal({
   user,
 }: EditUserModalProps) {
   console.log('EditUserModal received user:', JSON.stringify(user, null, 2));
+  console.log('Raw birthday value:', user.birthday);
+
+  // Get just the YYYY-MM-DD part of any date string
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    return dateString.split('T')[0];
+  };
+
+  const initialBirthday = formatDate(user.birthday);
+  console.log('Formatted birthday value:', initialBirthday);
 
   const [name, setName] = useState(user.name);
   const [icon, setIcon] = useState(user.icon);
   const [soundurl, setSoundurl] = useState(user.soundurl || '');
-  const [birthday, setBirthday] = useState(user.birthday ? user.birthday.split('T')[0] : '');
-  const [role, setRole] = useState(user.role);
+  const [birthday, setBirthday] = useState(initialBirthday);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('EditUserModal useEffect triggered with user:', user);
-    console.log('Setting birthday:', user.birthday ? user.birthday.split('T')[0] : '');
-    console.log('Setting soundurl:', user.soundurl || '');
+    console.log('EditUserModal useEffect triggered');
+    console.log('User in useEffect:', JSON.stringify(user, null, 2));
+    console.log('Birthday in useEffect:', user.birthday);
+    console.log('Formatted birthday:', formatDate(user.birthday));
+    
     setName(user.name);
     setIcon(user.icon);
     setSoundurl(user.soundurl || '');
-    setBirthday(user.birthday ? user.birthday.split('T')[0] : '');
-    setRole(user.role);
+    setBirthday(formatDate(user.birthday));
   }, [user]);
 
   const validateBirthday = (date: string): string | null => {
@@ -97,8 +100,7 @@ export function EditUserModal({
       name,
       icon,
       soundurl,
-      birthday, // Will always have a value
-      role,
+      birthday,
     };
     console.log('Submitting updated user:', updatedUser);
     onEditUser(updatedUser);
@@ -115,7 +117,7 @@ export function EditUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
+        <DialogContent className="bg-white border-none shadow-lg">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
           </DialogHeader>
@@ -132,6 +134,7 @@ export function EditUserModal({
                   className='col-span-3'
                 />
               </div>
+              
               <div className='grid grid-cols-4 items-center gap-4'>
                 <Label htmlFor='birthday' className='text-right'>
                   Birthday
@@ -142,34 +145,19 @@ export function EditUserModal({
                     type='date'
                     value={birthday}
                     onChange={(e) => {
+                      console.log('Birthday input changed to:', e.target.value);
                       setBirthday(e.target.value);
-                      // No need for format here as we're using the native date input
                     }}
                     className={birthdayError ? 'border-red-500' : ''}
                     required
                     max={new Date().toISOString().split('T')[0]}
                   />
-                  {birthday && (
-                    <p className='text-sm text-gray-500 mt-1'>
-                      Display format: {new Date(birthday).toLocaleDateString('de-DE')}
-                    </p>
+                  {birthdayError && (
+                    <div className='text-red-500 text-sm mt-1'>{birthdayError}</div>
                   )}
                 </div>
               </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='role' className='text-right'>
-                  Role
-                </Label>
-                <Select onValueChange={(value: 'parent' | 'child') => setRole(value)} value={role}>
-                  <SelectTrigger className='col-span-3'>
-                    <SelectValue placeholder='Select a role' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='parent'>Parent</SelectItem>
-                    <SelectItem value='child'>Child</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
               <div>
                 <Label>User Sound</Label>
                 <div className='flex items-center space-x-2'>
@@ -229,16 +217,27 @@ export function EditUserModal({
             <DialogFooter className='mt-6'>
               <Button
                 type='button'
-                variant='destructive'
+                variant='outline'
                 onClick={handleDelete}
+                className='border-red-500 hover:bg-red-50'
                 aria-label='Delete User'
               >
                 <Trash2 className='h-4 w-4' />
               </Button>
-              <Button type='button' variant='outline' onClick={onClose} aria-label='Cancel'>
+              <Button 
+                type='button' 
+                variant='outline' 
+                onClick={onClose} 
+                aria-label='Cancel'
+              >
                 <X className='h-4 w-4' />
               </Button>
-              <Button type='submit' aria-label='Save Changes'>
+              <Button 
+                type='submit' 
+                variant='outline'
+                className='border-green-500 hover:bg-green-50'
+                aria-label='Save Changes'
+              >
                 <Save className='h-4 w-4' />
               </Button>
             </DialogFooter>
@@ -248,13 +247,18 @@ export function EditUserModal({
       <IconSelectorModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
+        onSelect={(selectedIcon) => {
+          setIcon(selectedIcon);
+          setIsIconModalOpen(false);
+        }}
       />
       <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setSoundurl(selectedSound || '')}
-        currentSound={soundurl}
+        onSelect={(selectedSound) => {
+          setSoundurl(selectedSound);
+          setIsSoundModalOpen(false);
+        }}
       />
     </>
   );

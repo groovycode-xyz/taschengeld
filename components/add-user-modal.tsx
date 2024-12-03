@@ -10,13 +10,6 @@ import {
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from 'components/ui/select';
 import { IconSelectorModal } from './icon-selector-modal';
 import {
   Baby,
@@ -38,26 +31,28 @@ import {
   Turtle,
   Play,
   Trash2,
+  X,
+  Save,
 } from 'lucide-react';
 import { SelectUserSoundModal } from './select-user-sound-modal';
 import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
-import { format } from 'date-fns';
+import { useToast } from 'components/ui/use-toast';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddUser: (user: CreateUserInput | User) => void;
+  onAddUser: (user: CreateUserInput) => void;
   onDeleteUser: (userId: number) => void;
   user?: User;
+  onUserAdded?: () => void;
 }
 
 const defaultUserState = {
   name: '',
   icon: 'user',
   soundurl: '',
-  birthday: '',
-  role: 'child' as const,
+  birthday: new Date().toISOString().split('T')[0],
 };
 
 export function AddUserModal({
@@ -66,16 +61,17 @@ export function AddUserModal({
   onAddUser,
   onDeleteUser,
   user,
+  onUserAdded,
 }: AddUserModalProps) {
   const [name, setName] = useState(defaultUserState.name);
   const [icon, setIcon] = useState(defaultUserState.icon);
   const [soundUrl, setSoundUrl] = useState(defaultUserState.soundurl);
   const [birthday, setBirthday] = useState(defaultUserState.birthday);
-  const [role, setRole] = useState(defaultUserState.role);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
+  const { addToast: toast } = useToast();
 
   // Reset form when modal opens/closes or when user prop changes
   useEffect(() => {
@@ -84,42 +80,56 @@ export function AddUserModal({
       setName(user.name);
       setIcon(user.icon || defaultUserState.icon);
       setSoundUrl(user.soundurl || defaultUserState.soundurl);
-      setBirthday(format(new Date(user.birthday), 'yyyy-MM-dd'));
-      setRole(user.role);
+      setBirthday(typeof user.birthday === 'string' ? user.birthday : user.birthday.toISOString().split('T')[0]);
     } else if (!isOpen) {
       // Reset to defaults when modal closes
       setName(defaultUserState.name);
       setIcon(defaultUserState.icon);
       setSoundUrl(defaultUserState.soundurl);
       setBirthday(defaultUserState.birthday);
-      setRole(defaultUserState.role);
       setBirthdayError(null);
     }
   }, [user, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const resetForm = () => {
+    setName(defaultUserState.name);
+    setIcon(defaultUserState.icon);
+    setSoundUrl(defaultUserState.soundurl);
+    setBirthday(new Date().toISOString().split('T')[0]);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!birthday) return;
 
-    // Validate birthday
-    if (!birthday) {
-      setBirthdayError('Birthday is required');
-      return;
-    }
+    try {
+      const userData = {
+        name,
+        icon,
+        soundurl: soundUrl || null,
+        birthday,
+      };
 
-    const formattedBirthday = new Date(birthday).toISOString();
-    const userData: CreateUserInput = {
-      name,
-      icon: icon || 'user',
-      soundurl: soundUrl,
-      birthday: formattedBirthday, // Will always have a value
-      role,
-    };
-    if (user) {
-      onAddUser({ ...userData, user_id: user.user_id });
-    } else {
-      onAddUser(userData);
+      await onAddUser(userData);
+      
+      toast({
+        title: 'Success',
+        description: 'User created successfully',
+      });
+
+      resetForm();
+      onClose();
+      if (onUserAdded) {
+        onUserAdded();
+      }
+    } catch (error) {
+      console.error('Error creating user:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to create user',
+        variant: 'destructive',
+      });
     }
-    onClose();
   };
 
   const handleDelete = () => {
@@ -161,7 +171,7 @@ export function AddUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent aria-describedby='add-user-description'>
+        <DialogContent className="bg-white border-none shadow-lg" aria-describedby='add-user-description'>
           <DialogHeader>
             <DialogTitle>{user ? 'Edit User' : 'Add User'}</DialogTitle>
             <DialogDescription id='add-user-description'>
@@ -190,33 +200,12 @@ export function AddUserModal({
                     id='birthday'
                     type='date'
                     value={birthday}
-                    onChange={(e) => {
-                      setBirthday(e.target.value);
-                      // No need for format here as we're using the native date input
-                    }}
+                    onChange={(e) => setBirthday(e.target.value)}
                     className={birthdayError ? 'border-red-500' : ''}
                     required
                     max={new Date().toISOString().split('T')[0]}
                   />
                 </div>
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='role' className='text-right'>
-                  Role
-                </Label>
-                <Select
-                  onValueChange={(value: 'parent' | 'child') => setRole(value)}
-                  value={role}
-                  required
-                >
-                  <SelectTrigger className='col-span-3'>
-                    <SelectValue placeholder='Select a role' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='parent'>Parent</SelectItem>
-                    <SelectItem value='child'>Child</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
               <div>
                 <Label>User Sound</Label>
@@ -271,16 +260,22 @@ export function AddUserModal({
               </div>
             </div>
             <DialogFooter className='mt-6'>
-              {user && (
-                <Button type='button' variant='destructive' onClick={handleDelete}>
-                  <Trash2 className='h-4 w-4 mr-2' />
-                  Delete User
-                </Button>
-              )}
-              <Button type='button' variant='outline' onClick={onClose}>
-                Cancel
+              <Button 
+                type='button' 
+                variant='outline' 
+                onClick={onClose} 
+                aria-label='Cancel'
+              >
+                <X className='h-4 w-4' />
               </Button>
-              <Button type='submit'>Save</Button>
+              <Button 
+                type='submit' 
+                variant='outline'
+                className='border-green-500 hover:bg-green-50'
+                aria-label='Save User'
+              >
+                <Save className='h-4 w-4' />
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
