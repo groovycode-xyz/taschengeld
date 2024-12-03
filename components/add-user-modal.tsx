@@ -174,7 +174,7 @@ export function AddUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-white border-none shadow-lg" aria-describedby='add-user-description'>
+        <DialogContent className="bg-white border-none shadow-lg sm:max-w-[425px]" aria-describedby='add-user-description'>
           <DialogHeader>
             <DialogTitle>{user ? 'Edit User' : 'Add User'}</DialogTitle>
             <DialogDescription id='add-user-description'>

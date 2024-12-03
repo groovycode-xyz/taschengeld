@@ -62,7 +62,7 @@ export function SelectUserSoundModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='max-h-[80vh] flex flex-col'>
+      <DialogContent className='bg-white border-none shadow-lg max-h-[80vh] flex flex-col'>
         <DialogHeader className='flex-shrink-0'>
           <DialogTitle>Select a Sound</DialogTitle>
         </DialogHeader>

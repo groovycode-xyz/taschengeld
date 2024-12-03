@@ -122,7 +122,7 @@ export function UserManagement() {
         {users.map((user) => (
           <div
             key={user.user_id}
-            className='backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md hover:border-gray-300'
+            className='bg-white rounded-2xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md hover:border-gray-300'
             onClick={() => {
               console.log('Opening edit modal for user:', JSON.stringify(user, null, 2));
               setEditingUser(user);
