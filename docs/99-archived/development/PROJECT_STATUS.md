@@ -3,6 +3,8 @@
 ## Recent Updates
 
 - Enhanced Backup/Restore functionality and fully tested.
+- Fully implement Docker-Compose support for development and production environments
+- Improved Payday interface and added functionality to select multiple tasks for payment
 
 ## Current Focus
 
@@ -10,9 +12,8 @@
 
 ## Upcoming Tasks
 
-- [X ] Fix Known Issues
+- [X] Fix Known Issues
 - [ ] Implement color theme functionality including dark mode
-- [ ] Fully implement Docker-Compose support for development and production environments
 
 ## Known Issues
 

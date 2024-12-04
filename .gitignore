@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+*.lcov
+.nyc_output/
 
 # next.js
 /.next/
@@ -19,6 +21,13 @@
 
 # misc
 .DS_Store
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
 *.pem
 /.vscode
 
@@ -26,10 +35,12 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
 # local env files
 .env
-.env.local
+.env.*
+!.env.example
 
 # vercel
 .vercel
@@ -38,14 +49,34 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Database
+# Database and backups
 *.sql
+/postgres/data/
+*.backup
+*_backup*.sql
+schema_*.sql
+backup_*.sql
+
+# Docker
+docker-compose.override.yml
+/docker/data/
 
 # IDEs and editors
 .idea/
 *.swp
 *.swo
 *~
+.obsidian/
+
+# Development files
+.cursorrules
+test-backup-restore.sh
+
+# Temporary and cache files
+*.tmp
+.cache/
+tmp/
+temp/
 
 # OS
 Thumbs.db
