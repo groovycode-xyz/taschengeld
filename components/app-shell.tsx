@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sidebar } from 'components/sidebar';
+import { Sidebar } from '@/components/sidebar';
 import { Settings } from 'lucide-react';
 
 interface AppShellProps {
@@ -23,7 +23,9 @@ export function AppShell({ children }: AppShellProps) {
       </header>
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />
-        {children}
+        <main className='flex-1 bg-gray-50'>
+          {children}
+        </main>
       </div>
     </div>
   );

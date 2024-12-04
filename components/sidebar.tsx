@@ -32,7 +32,7 @@ export function Sidebar() {
             </Link>
           </li>
 
-          {/* Divider */}
+          {/* First divider */}
           <li className='py-2'>
             <div className='border-t border-border-primary'></div>
           </li>
@@ -49,6 +49,12 @@ export function Sidebar() {
                   <span className='text-content-primary font-medium'>Payday</span>
                 </Link>
               </li>
+
+              {/* Divider between Payday and Task Management */}
+              <li className='py-2'>
+                <div className='border-t border-border-primary'></div>
+              </li>
+
               <li>
                 <Link
                   href='/task-management'
@@ -72,7 +78,7 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className='p-4 border-t border-border-primary'>
+      <div className='p-4'>
         <ParentModeToggle />
       </div>
     </div>

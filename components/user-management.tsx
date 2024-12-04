@@ -50,6 +50,14 @@ export function UserManagement() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to add user');
+      }
+
+      await fetchUsers(); // Refresh the users list
+      setIsAddModalOpen(false);
+      router.refresh();
       return response;
     } catch (error) {
       console.error('Error adding user:', error);
@@ -119,7 +127,9 @@ export function UserManagement() {
       </div>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-        {users.map((user) => (
+        {users
+          .sort((a, b) => new Date(a.birthday).getTime() - new Date(b.birthday).getTime())
+          .map((user) => (
           <div
             key={user.user_id}
             className='bg-white rounded-2xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md hover:border-gray-300'

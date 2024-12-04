@@ -108,13 +108,13 @@ export function AddUserModal({
       };
 
       const response = await onAddUser(userData);
-      const data = await response.json();
       
       if (!response.ok) {
+        const data = await response.json();
         addToast({
           variant: 'destructive',
           title: 'Error',
-          description: data.error,
+          description: data.error || 'Failed to create user',
         });
         return;
       }
@@ -131,6 +131,8 @@ export function AddUserModal({
         title: 'Error',
         description: 'Failed to create user. Please try again.',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -213,18 +215,14 @@ export function AddUserModal({
               <div>
                 <Label>User Sound</Label>
                 <div className='flex items-center space-x-2'>
-                  <Input
-                    value={soundUrl ? soundUrl.split('.')[0].toUpperCase() : 'NO SOUND'}
-                    readOnly
-                    placeholder='No sound selected'
-                  />
                   <Button
                     type='button'
                     variant='outline'
+                    className='flex-1'
                     onClick={() => setIsSoundModalOpen(true)}
                     aria-label='Select Sound'
                   >
-                    Select Sound
+                    {soundUrl ? soundUrl.toUpperCase() : 'Select Sound'}
                   </Button>
                   {soundUrl && (
                     <Button

@@ -65,117 +65,119 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className='bg-white border-none shadow-lg max-h-[80vh] flex flex-col'>
+        <DialogContent className='sm:max-w-[500px]'>
           <DialogHeader className='flex-shrink-0'>
             <DialogTitle>Add New Task</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit}>
+          <form id='addTaskForm' onSubmit={handleSubmit}>
             <div className='space-y-4'>
-              <div>
-                <Label htmlFor='title'>Title</Label>
-                <Input
-                  id='title'
-                  value={taskState.title}
-                  onChange={(e) => setTaskState((prev) => ({ ...prev, title: e.target.value }))}
-                  required
-                />
-                <p className='text-sm text-gray-500 mt-1'>Recommend using 3 or fewer words</p>
-              </div>
-              <div>
-                <Label htmlFor='description'>Description</Label>
-                <Textarea
-                  id='description'
-                  value={taskState.description}
-                  onChange={(e) =>
-                    setTaskState((prev) => ({ ...prev, description: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label>Task Icon</Label>
-                <div className='flex items-center space-x-2'>
-                  <div className='w-12 h-12 flex items-center justify-center border rounded'>
-                    <IconComponent icon={taskState.icon_name} className='h-6 w-6' />
-                  </div>
-                  <Button type='button' variant='outline' onClick={() => setIsIconModalOpen(true)}>
-                    Select Icon
-                  </Button>
+              <div className='space-y-4'>
+                <div>
+                  <Label htmlFor='title'>Title</Label>
+                  <Input
+                    id='title'
+                    value={taskState.title}
+                    onChange={(e) => setTaskState((prev) => ({ ...prev, title: e.target.value }))}
+                    required
+                  />
+                  <p className='text-sm text-gray-500 mt-1'>Recommend using 3 or fewer words</p>
+                </div>
+                <div>
+                  <Label htmlFor='description'>Description</Label>
+                  <Textarea
+                    id='description'
+                    value={taskState.description}
+                    onChange={(e) => setTaskState((prev) => ({ ...prev, description: e.target.value }))
+                    }
+                    className='h-20'
+                  />
                 </div>
               </div>
-              <div>
-                <Label>Task Sound</Label>
-                <div className='flex items-center space-x-2'>
-                  <Input
-                    value={taskState.sound_url ? taskState.sound_url.toUpperCase() : 'NO SOUND'}
-                    readOnly
-                    placeholder='No sound selected'
-                  />
-                  <Button type='button' variant='outline' onClick={() => setIsSoundModalOpen(true)}>
-                    Select Sound
-                  </Button>
-                  {taskState.sound_url && (
+
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <Label>Task Icon</Label>
+                  <div className='flex justify-start mt-2'>
                     <Button
                       type='button'
                       variant='outline'
-                      onClick={async () => {
-                        try {
-                          // Try mp3 first
-                          let audio = new Audio(`/sounds/tasks/${taskState.sound_url}.mp3`);
-                          await audio.play().catch(() => {
-                            // If mp3 fails, try wav
-                            audio = new Audio(`/sounds/tasks/${taskState.sound_url}.wav`);
-                            return audio.play();
-                          });
-                        } catch (error) {
-                          console.error('Error playing sound:', error);
-                        }
-                      }}
+                      className='p-2 h-16 w-16 flex justify-center items-center'
+                      onClick={() => setIsIconModalOpen(true)}
+                      aria-label='Select Icon'
                     >
-                      <Play className='h-4 w-4' />
+                      <IconComponent icon={taskState.icon_name} className='h-8 w-8' />
                     </Button>
-                  )}
+                  </div>
+                </div>
+                <div>
+                  <Label>Task Sound</Label>
+                  <div className='flex items-center space-x-2 mt-2'>
+                    <Button type='button' variant='outline' onClick={() => setIsSoundModalOpen(true)} className='flex-1'>
+                      {taskState.sound_url ? taskState.sound_url.toUpperCase() : 'Select Sound'}
+                    </Button>
+                    {taskState.sound_url && (
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={async () => {
+                          try {
+                            // Try mp3 first
+                            let audio = new Audio(`/sounds/tasks/${taskState.sound_url}.mp3`);
+                            await audio.play().catch(() => {
+                              // If mp3 fails, try wav
+                              audio = new Audio(`/sounds/tasks/${taskState.sound_url}.wav`);
+                              return audio.play();
+                            });
+                          } catch (error) {
+                            console.error('Error playing sound:', error);
+                          }
+                        }}
+                      >
+                        <Play className='h-4 w-4' />
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='payout_value' className='text-right'>
-                  Payout Value
-                </Label>
-                <Input
-                  id='payout_value'
-                  type='number'
-                  step='0.01'
-                  value={taskState.payout_value}
-                  onChange={(e) =>
-                    setTaskState((prev) => ({ ...prev, payout_value: e.target.value }))
-                  }
-                  className='col-span-3'
-                />
+
+              <div className='grid grid-cols-2 gap-4 items-center'>
+                <div>
+                  <Label htmlFor='payout_value'>Payout Value</Label>
+                  <Input
+                    id='payout_value'
+                    type='number'
+                    step='0.01'
+                    value={taskState.payout_value}
+                    onChange={(e) => setTaskState((prev) => ({ ...prev, payout_value: e.target.value }))}
+                  />
+                </div>
+                <div className='flex items-center space-x-2 pt-6'>
+                  <Label htmlFor='is_active' className='text-base'>Active</Label>
+                  <Switch
+                    id='is_active'
+                    checked={taskState.is_active}
+                    onCheckedChange={(checked) => setTaskState((prev) => ({ ...prev, is_active: checked }))}
+                  />
+                </div>
               </div>
-              <div className='flex items-center space-x-2'>
-                <Label htmlFor='is_active' className='text-base'>Active</Label>
-                <Switch
-                  id='is_active'
-                  checked={taskState.is_active}
-                  onCheckedChange={(checked) => setTaskState((prev) => ({ ...prev, is_active: checked }))}
-                />
-              </div>
-              <div className='flex justify-end space-x-2 mt-4'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  onClick={onClose}
-                  className='border-2 border-gray-300 hover:bg-gray-50'
-                >
-                  <X className='h-4 w-4' />
-                </Button>
-                <Button
-                  type='submit'
-                  variant='outline'
-                  className='border-2 border-green-500 hover:bg-green-50 text-green-500 hover:text-green-600'
-                >
-                  <Save className='h-4 w-4' />
-                </Button>
-              </div>
+            </div>
+
+            <div className='flex justify-end space-x-2 mt-6 pt-4 border-t'>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={onClose}
+                className='border-2 border-gray-300 hover:bg-gray-50'
+              >
+                <X className='h-4 w-4' />
+              </Button>
+              <Button
+                type='submit'
+                variant='outline'
+                className='border-2 border-green-500 hover:bg-green-50 text-green-500 hover:text-green-600'
+              >
+                <Save className='h-4 w-4' />
+              </Button>
             </div>
           </form>
         </DialogContent>

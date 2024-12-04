@@ -167,22 +167,14 @@ export function EditUserModal({
               <div>
                 <Label>User Sound</Label>
                 <div className='flex items-center space-x-2'>
-                  <Input
-                    value={
-                      soundUrl
-                        ? soundUrl.split('/').pop()?.replace(/\.(mp3|wav)$/, '').toUpperCase()
-                        : 'NO SOUND'
-                    }
-                    readOnly
-                    placeholder='No sound selected'
-                  />
                   <Button
                     type='button'
                     variant='outline'
                     onClick={() => setIsSoundModalOpen(true)}
+                    className='flex-1'
                     aria-label='Select Sound'
                   >
-                    Select Sound
+                    {soundUrl ? soundUrl.toUpperCase() : 'Select Sound'}
                   </Button>
                   {soundUrl && (
                     <Button
@@ -190,8 +182,13 @@ export function EditUserModal({
                       variant='outline'
                       onClick={async () => {
                         try {
-                          const audio = new Audio(`/sounds/users/${soundUrl}`);
-                          await audio.play();
+                          // Try mp3 first
+                          let audio = new Audio(`/sounds/users/${soundUrl}.mp3`);
+                          await audio.play().catch(() => {
+                            // If mp3 fails, try wav
+                            audio = new Audio(`/sounds/users/${soundUrl}.wav`);
+                            return audio.play();
+                          });
                         } catch (error) {
                           console.error('Error playing sound:', error);
                         }

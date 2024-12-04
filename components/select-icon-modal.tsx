@@ -5,6 +5,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { IconComponent } from './icon-component';
+import { cn } from '@/lib/utils';
 
 const taskIcons = [
   'asterisk',
@@ -150,29 +151,50 @@ type SelectIconModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSelectIcon: (icon: string) => void;
+  currentIcon: string;
 };
 
-export function SelectIconModal({ isOpen, onClose, onSelectIcon }: SelectIconModalProps) {
+export function SelectIconModal({
+  isOpen,
+  onClose,
+  onSelectIcon,
+  currentIcon,
+}: SelectIconModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='bg-white sm:max-w-[425px] max-h-[80vh] overflow-y-auto'>
-        <DialogHeader>
+      <DialogContent className='sm:max-w-[600px] flex flex-col h-[80vh]'>
+        <DialogHeader className='flex-shrink-0'>
           <DialogTitle>Select an Icon</DialogTitle>
         </DialogHeader>
-        <div className='grid grid-cols-6 gap-2 py-4'>
-          {taskIcons.map((icon) => (
-            <Button
-              key={icon}
-              variant='outline'
-              className='h-10 w-10 p-0'
-              onClick={() => {
-                onSelectIcon(icon);
-                onClose();
-              }}
-            >
-              <IconComponent icon={icon} className='h-6 w-6' />
-            </Button>
-          ))}
+        
+        <div className='flex-1 overflow-y-auto overflow-x-hidden'>
+          <div className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 py-4 px-1'>
+            {taskIcons.map((icon) => (
+              <Button
+                key={icon}
+                type='button'
+                variant='outline'
+                onClick={() => {
+                  onSelectIcon(icon);
+                  onClose();
+                }}
+                className={cn(
+                  'p-2 h-16 w-16 flex justify-center items-center border-2',
+                  currentIcon === icon 
+                    ? 'border-blue-600 bg-blue-100 shadow-md ring-2 ring-blue-400 ring-offset-2' 
+                    : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+                )}
+              >
+                <IconComponent 
+                  icon={icon} 
+                  className={cn(
+                    'h-8 w-8',
+                    currentIcon === icon && 'text-blue-600'
+                  )} 
+                />
+              </Button>
+            ))}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

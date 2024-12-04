@@ -180,8 +180,12 @@ export function TaskManagement() {
           <ClipboardListIcon className='mr-3 h-10 w-10' />
           Task Management
         </h1>
-        <Button onClick={() => setIsAddModalOpen(true)}>
-          <Plus className='mr-2 h-4 w-4' /> Add Task
+        <Button 
+          onClick={() => setIsAddModalOpen(true)}
+          className='bg-blue-500 hover:bg-blue-600 text-white'
+        >
+          <Plus className='h-4 w-4 mr-2' />
+          Add Task
         </Button>
       </div>
 
