@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
 import {
   Dialog,
@@ -16,7 +17,7 @@ import { CompletedTask } from '@/app/types/completedTask';
 
 interface CompletedTaskCardProps {
   task: CompletedTask;
-  onUpdateStatus: (taskId: number, status: 'Paid' | 'Unpaid') => void;
+  onUpdateStatus: (taskId: number, status: 'Paid' | 'Unpaid', isRejection?: boolean) => void;
   onSelect?: (taskId: number) => void;
   isLoading?: boolean;
   isSelected?: boolean;
@@ -42,9 +43,9 @@ export function CompletedTaskCard({
   const confirmAction = async () => {
     if (actionType) {
       setIsDialogOpen(false);
-      // Convert UI action to payment status
-      const paymentStatus = actionType === 'Approve' ? 'Paid' : 'Unpaid';
-      onUpdateStatus(task.c_task_id, paymentStatus);
+      const paymentStatus = 'Paid';
+      const isRejection = actionType === 'Reject';
+      onUpdateStatus(task.c_task_id, paymentStatus, isRejection);
     }
   };
 
@@ -52,12 +53,19 @@ export function CompletedTaskCard({
     <Card
       className={cn(
         'w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md',
-        isSelected && 'ring-2 ring-blue-500',
         newestTaskId === task.c_task_id && 'animate-highlight'
       )}
-      onClick={() => onSelect?.(task.c_task_id)}
     >
       <CardContent className='flex items-center justify-between p-6'>
+        {/* Checkbox for multi-select */}
+        <div className='flex-none mr-4'>
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={() => onSelect?.(task.c_task_id)}
+            className='mt-1'
+          />
+        </div>
+
         <div className='flex items-center space-x-4 flex-1'>
           <IconComponent icon={task.icon_name} className='h-8 w-8 text-gray-600' />
           <div>
@@ -72,6 +80,13 @@ export function CompletedTaskCard({
           <span className='text-gray-600'>Completed by: {task.user_name}</span>
         </div>
 
+        {/* Completion Date */}
+        <div className='flex items-center space-x-2 flex-1'>
+          <span className='text-gray-500 text-sm'>
+            Completed: {new Date(task.created_at).toLocaleDateString()}
+          </span>
+        </div>
+
         {/* Payout Amount */}
         <div className='font-bold text-lg min-w-[100px]'>
           <CurrencyDisplay value={parseFloat(task.payout_value)} />
@@ -81,20 +96,14 @@ export function CompletedTaskCard({
         {task.payment_status === 'Unpaid' && (
           <div className='flex space-x-2'>
             <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAction('Approve');
-              }}
+              onClick={() => handleAction('Approve')}
               className='bg-green-500 hover:bg-green-600 text-white'
               disabled={isLoading}
             >
               {isLoading ? 'Processing...' : 'Approve'}
             </Button>
             <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAction('Reject');
-              }}
+              onClick={() => handleAction('Reject')}
               className='bg-red-500 hover:bg-red-600 text-white'
               disabled={isLoading}
             >
@@ -105,7 +114,7 @@ export function CompletedTaskCard({
       </CardContent>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle>
               {actionType === 'Approve' ? 'Approve Payment' : 'Reject Payment'}
