@@ -234,6 +234,19 @@ export function Payday() {
     organizedTasks[groupKey] = sortTasks(organizedTasks[groupKey], secondarySortField);
   });
 
+  // Add this new function to handle select all
+  const handleSelectAllTasks = (checked: boolean) => {
+    if (checked) {
+      // Get all task IDs from all groups
+      const allTaskIds = Object.values(organizedTasks)
+        .flat()
+        .map(task => task.c_task_id);
+      setSelectedTasks(allTaskIds);
+    } else {
+      setSelectedTasks([]);
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -263,60 +276,78 @@ export function Payday() {
           )}
         </div>
 
-        <div className='flex flex-wrap gap-4 items-center pt-6'>
-          <Select value={viewOption} onValueChange={(value) => setViewOption(value as ViewOption)}>
-            <SelectTrigger className='w-[200px]'>
-              <SelectValue placeholder='View tasks' />
-            </SelectTrigger>
-            <SelectContent className='bg-white'>
-              <SelectItem value='by_user'>Group by User</SelectItem>
-              <SelectItem value='by_date'>Group by Date</SelectItem>
-              <SelectItem value='no_groups'>No Grouping</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className='space-y-4'>
+          <div className='flex flex-wrap gap-4 items-center pt-6'>
+            <Select value={viewOption} onValueChange={(value) => setViewOption(value as ViewOption)}>
+              <SelectTrigger className='w-[200px]'>
+                <SelectValue placeholder='View tasks' />
+              </SelectTrigger>
+              <SelectContent className='bg-white'>
+                <SelectItem value='by_user'>Group by User</SelectItem>
+                <SelectItem value='by_date'>Group by Date</SelectItem>
+                <SelectItem value='no_groups'>No Grouping</SelectItem>
+              </SelectContent>
+            </Select>
 
-          {filterUser !== 'all' && viewOption === 'by_user' && (
-            <div className='text-sm text-gray-500'>
-              Note: User filter is ignored when grouping by user
+            {filterUser !== 'all' && viewOption === 'by_user' && (
+              <div className='text-sm text-gray-500'>
+                Note: User filter is ignored when grouping by user
+              </div>
+            )}
+
+            {viewOption !== 'by_user' && (
+              <Select value={filterUser} onValueChange={setFilterUser}>
+                <SelectTrigger className='w-[200px]'>
+                  <SelectValue placeholder='Filter by user' />
+                </SelectTrigger>
+                <SelectContent className='bg-white'>
+                  <SelectItem value='all'>All Users</SelectItem>
+                  {Array.from(new Set(completedTasks.map((task) => task.user_name))).map((userName) => (
+                    <SelectItem key={userName} value={userName}>
+                      {userName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            <div className='flex items-center gap-2'>
+              <Select value={secondarySortField} onValueChange={(value) => setSecondarySortField(value as SortField)}>
+                <SelectTrigger className='w-[200px]'>
+                  <SelectValue placeholder='Sort within groups' />
+                </SelectTrigger>
+                <SelectContent className='bg-white'>
+                  <SelectItem value='date'>By Date</SelectItem>
+                  <SelectItem value='title'>By Task Name</SelectItem>
+                  <SelectItem value='amount'>By Amount</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button
+                variant='outline'
+                onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+                className='px-3'
+              >
+                {sortDirection === 'asc' ? '↑' : '↓'}
+              </Button>
+            </div>
+          </div>
+
+          {Object.values(organizedTasks).flat().length > 0 && (
+            <div className='flex items-center gap-2 pt-2'>
+              <Checkbox
+                checked={
+                  Object.values(organizedTasks).flat().length > 0 &&
+                  Object.values(organizedTasks)
+                    .flat()
+                    .every(task => selectedTasks.includes(task.c_task_id))
+                }
+                onCheckedChange={handleSelectAllTasks}
+                className='mr-2'
+              />
+              <span className='text-sm text-gray-500'>Select All Visible Tasks</span>
             </div>
           )}
-
-          {viewOption !== 'by_user' && (
-            <Select value={filterUser} onValueChange={setFilterUser}>
-              <SelectTrigger className='w-[200px]'>
-                <SelectValue placeholder='Filter by user' />
-              </SelectTrigger>
-              <SelectContent className='bg-white'>
-                <SelectItem value='all'>All Users</SelectItem>
-                {Array.from(new Set(completedTasks.map((task) => task.user_name))).map((userName) => (
-                  <SelectItem key={userName} value={userName}>
-                    {userName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-
-          <div className='flex items-center gap-2'>
-            <Select value={secondarySortField} onValueChange={(value) => setSecondarySortField(value as SortField)}>
-              <SelectTrigger className='w-[200px]'>
-                <SelectValue placeholder='Sort within groups' />
-              </SelectTrigger>
-              <SelectContent className='bg-white'>
-                <SelectItem value='date'>By Date</SelectItem>
-                <SelectItem value='title'>By Task Name</SelectItem>
-                <SelectItem value='amount'>By Amount</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button
-              variant='outline'
-              onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-              className='px-3'
-            >
-              {sortDirection === 'asc' ? '↑' : '↓'}
-            </Button>
-          </div>
         </div>
       </div>
 

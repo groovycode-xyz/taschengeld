@@ -1,5 +1,7 @@
 # Recent Changes
 
+## Multi-select improvements for Payday interface (2024_1205_1736)
+
 ## Scroll Area Improvements (2024_1205)
 
 - Added scroll area to user management and account management pages

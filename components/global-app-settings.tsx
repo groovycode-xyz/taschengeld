@@ -545,6 +545,7 @@ export function GlobalAppSettings() {
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
         <div className='space-y-8'>
+          {/* Access Control and Currency Grid */}
           <div className='grid grid-cols-3 gap-8'>
             {/* Access Control Section */}
             <section className='col-span-2 bg-white rounded-2xl p-8 shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg'>
@@ -698,7 +699,7 @@ export function GlobalAppSettings() {
             </section>
           </div>
 
-          {/* Backup and Reset Sections */}
+          {/* Backup and Reset Grid */}
           <div className='grid grid-cols-2 gap-8'>
             {/* Backup Section */}
             <section className='bg-white rounded-2xl p-8 shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg'>
