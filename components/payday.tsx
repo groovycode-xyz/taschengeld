@@ -238,124 +238,128 @@ export function Payday() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
-      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-        <h1 className='text-2xl font-bold'>Payday</h1>
-        {selectedTasks.length > 0 && (
-          <div className='flex items-center gap-4'>
-            <span className='text-sm font-medium text-gray-500'>
-              {selectedTasks.length} item{selectedTasks.length !== 1 ? 's' : ''} selected
-            </span>
-            <Button
-              onClick={() => handleBulkActionClick('Paid')}
-              className='bg-green-500 hover:bg-green-600 text-white'
-            >
-              Approve Selected ({selectedTasks.length})
-            </Button>
-            <Button
-              onClick={() => handleBulkActionClick('Unpaid')}
-              className='bg-red-500 hover:bg-red-600 text-white'
-            >
-              Reject Selected ({selectedTasks.length})
-            </Button>
-          </div>
-        )}
-      </div>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
+      <div className='p-8 bg-[#FBFBFB]'>
+        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+          <h1 className='text-2xl font-bold'>Payday</h1>
+          {selectedTasks.length > 0 && (
+            <div className='flex items-center gap-4'>
+              <span className='text-sm font-medium text-gray-500'>
+                {selectedTasks.length} item{selectedTasks.length !== 1 ? 's' : ''} selected
+              </span>
+              <Button
+                onClick={() => handleBulkActionClick('Paid')}
+                className='bg-green-500 hover:bg-green-600 text-white'
+              >
+                Approve Selected ({selectedTasks.length})
+              </Button>
+              <Button
+                onClick={() => handleBulkActionClick('Unpaid')}
+                className='bg-red-500 hover:bg-red-600 text-white'
+              >
+                Reject Selected ({selectedTasks.length})
+              </Button>
+            </div>
+          )}
+        </div>
 
-      <div className='flex flex-wrap gap-4 items-center'>
-        <Select value={viewOption} onValueChange={(value) => setViewOption(value as ViewOption)}>
-          <SelectTrigger className='w-[200px]'>
-            <SelectValue placeholder='View tasks' />
-          </SelectTrigger>
-          <SelectContent className='bg-white'>
-            <SelectItem value='by_user'>Group by User</SelectItem>
-            <SelectItem value='by_date'>Group by Date</SelectItem>
-            <SelectItem value='no_groups'>No Grouping</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {filterUser !== 'all' && viewOption === 'by_user' && (
-          <div className='text-sm text-gray-500'>
-            Note: User filter is ignored when grouping by user
-          </div>
-        )}
-
-        {viewOption !== 'by_user' && (
-          <Select value={filterUser} onValueChange={setFilterUser}>
+        <div className='flex flex-wrap gap-4 items-center pt-6'>
+          <Select value={viewOption} onValueChange={(value) => setViewOption(value as ViewOption)}>
             <SelectTrigger className='w-[200px]'>
-              <SelectValue placeholder='Filter by user' />
+              <SelectValue placeholder='View tasks' />
             </SelectTrigger>
             <SelectContent className='bg-white'>
-              <SelectItem value='all'>All Users</SelectItem>
-              {Array.from(new Set(completedTasks.map((task) => task.user_name))).map((userName) => (
-                <SelectItem key={userName} value={userName}>
-                  {userName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-
-        <div className='flex items-center gap-2'>
-          <Select value={secondarySortField} onValueChange={(value) => setSecondarySortField(value as SortField)}>
-            <SelectTrigger className='w-[200px]'>
-              <SelectValue placeholder='Sort within groups' />
-            </SelectTrigger>
-            <SelectContent className='bg-white'>
-              <SelectItem value='date'>By Date</SelectItem>
-              <SelectItem value='title'>By Task Name</SelectItem>
-              <SelectItem value='amount'>By Amount</SelectItem>
+              <SelectItem value='by_user'>Group by User</SelectItem>
+              <SelectItem value='by_date'>Group by Date</SelectItem>
+              <SelectItem value='no_groups'>No Grouping</SelectItem>
             </SelectContent>
           </Select>
 
-          <Button
-            variant='outline'
-            onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-            className='px-3'
-          >
-            {sortDirection === 'asc' ? '↑' : '↓'}
-          </Button>
+          {filterUser !== 'all' && viewOption === 'by_user' && (
+            <div className='text-sm text-gray-500'>
+              Note: User filter is ignored when grouping by user
+            </div>
+          )}
+
+          {viewOption !== 'by_user' && (
+            <Select value={filterUser} onValueChange={setFilterUser}>
+              <SelectTrigger className='w-[200px]'>
+                <SelectValue placeholder='Filter by user' />
+              </SelectTrigger>
+              <SelectContent className='bg-white'>
+                <SelectItem value='all'>All Users</SelectItem>
+                {Array.from(new Set(completedTasks.map((task) => task.user_name))).map((userName) => (
+                  <SelectItem key={userName} value={userName}>
+                    {userName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          <div className='flex items-center gap-2'>
+            <Select value={secondarySortField} onValueChange={(value) => setSecondarySortField(value as SortField)}>
+              <SelectTrigger className='w-[200px]'>
+                <SelectValue placeholder='Sort within groups' />
+              </SelectTrigger>
+              <SelectContent className='bg-white'>
+                <SelectItem value='date'>By Date</SelectItem>
+                <SelectItem value='title'>By Task Name</SelectItem>
+                <SelectItem value='amount'>By Amount</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button
+              variant='outline'
+              onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+              className='px-3'
+            >
+              {sortDirection === 'asc' ? '↑' : '↓'}
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className='space-y-8'>
-        {Object.entries(organizedTasks).map(([groupName, tasks]) => (
-          <div key={groupName} className='space-y-4'>
-            <div className='flex justify-between items-center border-b pb-2'>
-              <div className='flex items-center gap-4'>
-                <h2 className='text-xl font-semibold'>{groupName}</h2>
-                {tasks.length > 0 && (
-                  <Checkbox
-                    checked={tasks.every((task) => selectedTasks.includes(task.c_task_id))}
-                    onCheckedChange={() => handleSelectAll(tasks)}
-                    className='ml-2'
-                  />
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+        <div className='space-y-8'>
+          {Object.entries(organizedTasks).map(([groupName, tasks]) => (
+            <div key={groupName} className='space-y-4'>
+              <div className='flex justify-between items-center border-b pb-2'>
+                <div className='flex items-center gap-4'>
+                  <h2 className='text-xl font-semibold'>{groupName}</h2>
+                  {tasks.length > 0 && (
+                    <Checkbox
+                      checked={tasks.every((task) => selectedTasks.includes(task.c_task_id))}
+                      onCheckedChange={() => handleSelectAll(tasks)}
+                      className='ml-2'
+                    />
+                  )}
+                </div>
+                {tasks.filter((task) => selectedTasks.includes(task.c_task_id)).length > 0 && (
+                  <span className='text-sm text-gray-500'>
+                    {tasks.filter((task) => selectedTasks.includes(task.c_task_id)).length} of{' '}
+                    {tasks.length} selected
+                  </span>
                 )}
               </div>
-              {tasks.filter((task) => selectedTasks.includes(task.c_task_id)).length > 0 && (
-                <span className='text-sm text-gray-500'>
-                  {tasks.filter((task) => selectedTasks.includes(task.c_task_id)).length} of{' '}
-                  {tasks.length} selected
-                </span>
-              )}
+              <div className='space-y-4'>
+                {tasks.map((task) => (
+                  <CompletedTaskCard
+                    key={task.c_task_id}
+                    task={task}
+                    onUpdateStatus={handleUpdatePaymentStatus}
+                    isLoading={loadingTaskIds.includes(task.c_task_id)}
+                    isSelected={selectedTasks.includes(task.c_task_id)}
+                    onSelect={handleTaskSelect}
+                  />
+                ))}
+              </div>
             </div>
-            <div className='space-y-4'>
-              {tasks.map((task) => (
-                <CompletedTaskCard
-                  key={task.c_task_id}
-                  task={task}
-                  onUpdateStatus={handleUpdatePaymentStatus}
-                  isLoading={loadingTaskIds.includes(task.c_task_id)}
-                  isSelected={selectedTasks.includes(task.c_task_id)}
-                  onSelect={handleTaskSelect}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-        {Object.keys(organizedTasks).length === 0 && (
-          <div className='text-center text-gray-500 py-8'>No tasks to display</div>
-        )}
+          ))}
+          {Object.keys(organizedTasks).length === 0 && (
+            <div className='text-center text-gray-500 py-8'>No tasks to display</div>
+          )}
+        </div>
       </div>
 
       <Dialog open={isBulkConfirmOpen} onOpenChange={setIsBulkConfirmOpen}>

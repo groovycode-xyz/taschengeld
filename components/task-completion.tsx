@@ -213,15 +213,19 @@ export function TaskCompletion() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='relative'>
-      <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF] relative'>
+      {/* Fixed Header */}
+      <div className='p-8 bg-[#FBFBFB]'>
         <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
           <h1 className='text-3xl font-bold flex items-center'>
             <SquareCheckBig className='mr-3 h-10 w-10' />
             Task Completion
           </h1>
         </div>
+      </div>
 
+      {/* Scrollable Content */}
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
         <div className='space-y-4'>
           <h2 className='text-2xl font-semibold'>Active Tasks</h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
@@ -240,7 +244,7 @@ export function TaskCompletion() {
           </div>
         </div>
 
-        <div className='space-y-4'>
+        <div className='space-y-4 mt-8'>
           <h2 className='text-2xl font-semibold'>Completed Tasks</h2>
           <div className='space-y-4'>
             {completedTasks.map((task) => (
@@ -300,36 +304,36 @@ export function TaskCompletion() {
             ))}
           </div>
         </div>
-
-        <ChildUserSelectionModal
-          isOpen={isModalOpen && !isProcessing}
-          onClose={() => setIsModalOpen(false)}
-          onSelectUser={handleUserSelect}
-          childUsers={childUsers}
-        />
-
-        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Confirm Deletion</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete this completed task? This action cannot be undone.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button variant='outline' onClick={() => setIsDeleteDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button variant='destructive' onClick={confirmDeleteTask}>
-                Delete
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {showFireworks && <Fireworks />}
       </div>
 
+      {/* Modals */}
+      <ChildUserSelectionModal
+        isOpen={isModalOpen && !isProcessing}
+        onClose={() => setIsModalOpen(false)}
+        onSelectUser={handleUserSelect}
+        childUsers={childUsers}
+      />
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this completed task? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant='destructive' onClick={confirmDeleteTask}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {showFireworks && <Fireworks />}
       {isProcessing && <div className='fixed inset-0 bg-black/20 backdrop-blur-sm z-50' />}
     </div>
   );

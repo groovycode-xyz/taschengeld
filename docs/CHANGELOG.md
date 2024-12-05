@@ -1,5 +1,10 @@
 # Recent Changes
 
+## Scroll Area Improvements (2024_1205)
+
+- Added scroll area to user management and account management pages
+- Improved layout and spacing
+
 ## Color System Documentation and Audit (2024-03-19)
 
 - Completed comprehensive color system audit

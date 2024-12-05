@@ -162,94 +162,101 @@ export function TaskManagement() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
-      {error && (
-        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4'>
-          <span className='block sm:inline'>{error}</span>
-          <span
-            className='absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer'
-            onClick={() => setError(null)}
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
+      {/* Fixed Header Section */}
+      <div className='p-8 bg-[#FBFBFB]'>
+        {error && (
+          <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4'>
+            <span className='block sm:inline'>{error}</span>
+            <span
+              className='absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer'
+              onClick={() => setError(null)}
+            >
+              ×
+            </span>
+          </div>
+        )}
+
+        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+          <h1 className='text-3xl font-bold flex items-center'>
+            <ClipboardListIcon className='mr-3 h-10 w-10' />
+            Task Management
+          </h1>
+          <Button 
+            onClick={() => setIsAddModalOpen(true)}
+            className='bg-blue-500 hover:bg-blue-600 text-white'
           >
-            ×
-          </span>
+            <Plus className='h-4 w-4 mr-2' />
+            Add Task
+          </Button>
         </div>
-      )}
 
-      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-        <h1 className='text-3xl font-bold flex items-center'>
-          <ClipboardListIcon className='mr-3 h-10 w-10' />
-          Task Management
-        </h1>
-        <Button 
-          onClick={() => setIsAddModalOpen(true)}
-          className='bg-blue-500 hover:bg-blue-600 text-white'
-        >
-          <Plus className='h-4 w-4 mr-2' />
-          Add Task
-        </Button>
+        <div className='flex space-x-4 pt-6'>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className='w-40'>
+              <SelectValue placeholder='Filter tasks' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Tasks</SelectItem>
+              <SelectItem value='active'>Active</SelectItem>
+              <SelectItem value='inactive'>Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className='w-40'>
+              <SelectValue placeholder='Sort tasks' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='title'>Sort by Title</SelectItem>
+              <SelectItem value='payout_value'>Sort by Payout</SelectItem>
+              <SelectItem value='created_at'>Sort by Created Date</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <div className='flex space-x-4 mb-4'>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className='w-40'>
-            <SelectValue placeholder='Filter tasks' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='all'>All Tasks</SelectItem>
-            <SelectItem value='active'>Active</SelectItem>
-            <SelectItem value='inactive'>Inactive</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className='w-40'>
-            <SelectValue placeholder='Sort tasks' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='title'>Sort by Title</SelectItem>
-            <SelectItem value='payout_value'>Sort by Payout</SelectItem>
-            <SelectItem value='created_at'>Sort by Created Date</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Scrollable Content Section */}
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+          {filteredAndSortedTasks.map((task) => (
+            <Card
+              key={task.task_id}
+              className={`cursor-pointer transition-all duration-300 shadow-md
+                ${
+                  task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+              onClick={() => {
+                setEditingTask(task);
+                setIsEditModalOpen(true);
+              }}
+            >
+              <CardContent className='p-4 flex flex-col items-center text-center'>
+                <div className='h-20 w-20 mb-2'>
+                  <IconComponent
+                    icon={task.icon_name}
+                    className={`h-full w-full ${task.is_active ? 'text-blue-600' : 'text-gray-400'}`}
+                  />
+                </div>
+                <h3
+                  className={`text-lg font-semibold mb-1 ${
+                    task.is_active ? 'text-blue-600' : 'text-gray-500'
+                  } ${task.is_active ? '' : 'italic'}`}
+                >
+                  {task.title}
+                </h3>
+                <p className='text-xl font-bold text-green-600'>
+                  <CurrencyDisplay
+                    value={task.payout_value}
+                    className='text-xl font-bold text-green-600'
+                  />
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-        {filteredAndSortedTasks.map((task) => (
-          <Card
-            key={task.task_id}
-            className={`cursor-pointer transition-all duration-300 shadow-md
-              ${
-                task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
-              }`}
-            onClick={() => {
-              setEditingTask(task);
-              setIsEditModalOpen(true);
-            }}
-          >
-            <CardContent className='p-4 flex flex-col items-center text-center'>
-              <div className='h-20 w-20 mb-2'>
-                <IconComponent
-                  icon={task.icon_name}
-                  className={`h-full w-full ${task.is_active ? 'text-blue-600' : 'text-gray-400'}`}
-                />
-              </div>
-              <h3
-                className={`text-lg font-semibold mb-1 ${
-                  task.is_active ? 'text-blue-600' : 'text-gray-500'
-                } ${task.is_active ? '' : 'italic'}`}
-              >
-                {task.title}
-              </h3>
-              <p className='text-xl font-bold text-green-600'>
-                <CurrencyDisplay
-                  value={task.payout_value}
-                  className='text-xl font-bold text-green-600'
-                />
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
+      {/* Modals */}
       <AddTaskModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

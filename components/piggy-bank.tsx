@@ -92,70 +92,74 @@ export function PiggyBank() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='p-8 bg-[#FBFBFB] rounded-2xl space-y-8 max-w-7xl mx-auto'>
-      <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-        <h1 className='text-3xl font-bold flex items-center'>
-          <HandCoins className='mr-3 h-10 w-10' />
-          Sparkässeli
-        </h1>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
+      <div className='p-8 bg-[#FBFBFB]'>
+        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
+          <h1 className='text-3xl font-bold flex items-center'>
+            <HandCoins className='mr-3 h-10 w-10' />
+            Sparkässeli
+          </h1>
+        </div>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {users.map((user) => (
-          <Card
-            key={user.user_id}
-            className='overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200'
-          >
-            <CardHeader className='flex flex-col items-center text-center'>
-              <IconComponent
-                icon={user.icon}
-                className='w-20 h-20 mb-2 text-green-700'
-              />
-              <CardTitle className='mb-2 text-green-900'>
-                {user.name}
-              </CardTitle>
-              <div className='text-2xl font-bold mb-4 text-green-700'>
-                <CurrencyDisplay
-                  value={parseFloat(user.account.balance)}
-                  className='text-2xl font-bold text-green-700'
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {users.map((user) => (
+            <Card
+              key={user.user_id}
+              className='overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200'
+            >
+              <CardHeader className='flex flex-col items-center text-center'>
+                <IconComponent
+                  icon={user.icon}
+                  className='w-20 h-20 mb-2 text-green-700'
                 />
-              </div>
-              <div className='flex flex-col gap-2 w-full'>
-                {isParentMode && (
-                  <div className='flex gap-2'>
-                    <Button
-                      onClick={() => {
-                        setSelectedAccount(user);
-                        setIsAddFundsModalOpen(true);
-                      }}
-                      className='bg-green-600 hover:bg-green-700 text-white flex-1 font-semibold'
-                    >
-                      Deposit
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setSelectedAccount(user);
-                        setIsWithdrawFundsModalOpen(true);
-                      }}
-                      className='bg-red-600 hover:bg-red-700 text-white flex-1 font-semibold'
-                    >
-                      Withdraw
-                    </Button>
-                  </div>
-                )}
-                <Button
-                  onClick={() => {
-                    setSelectedAccount(user);
-                    setIsTransactionsModalOpen(true);
-                  }}
-                  className='bg-blue-600 hover:bg-blue-700 text-white w-full font-semibold'
-                >
-                  Transactions
-                </Button>
-              </div>
-            </CardHeader>
-          </Card>
-        ))}
+                <CardTitle className='mb-2 text-green-900'>
+                  {user.name}
+                </CardTitle>
+                <div className='text-2xl font-bold mb-4 text-green-700'>
+                  <CurrencyDisplay
+                    value={parseFloat(user.account.balance)}
+                    className='text-2xl font-bold text-green-700'
+                  />
+                </div>
+                <div className='flex flex-col gap-2 w-full'>
+                  {isParentMode && (
+                    <div className='flex gap-2'>
+                      <Button
+                        onClick={() => {
+                          setSelectedAccount(user);
+                          setIsAddFundsModalOpen(true);
+                        }}
+                        className='bg-green-600 hover:bg-green-700 text-white flex-1 font-semibold'
+                      >
+                        Deposit
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSelectedAccount(user);
+                          setIsWithdrawFundsModalOpen(true);
+                        }}
+                        className='bg-red-600 hover:bg-red-700 text-white flex-1 font-semibold'
+                      >
+                        Withdraw
+                      </Button>
+                    </div>
+                  )}
+                  <Button
+                    onClick={() => {
+                      setSelectedAccount(user);
+                      setIsTransactionsModalOpen(true);
+                    }}
+                    className='bg-blue-600 hover:bg-blue-700 text-white w-full font-semibold'
+                  >
+                    Transactions
+                  </Button>
+                </div>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {selectedAccount && (

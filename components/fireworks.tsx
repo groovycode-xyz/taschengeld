@@ -9,7 +9,7 @@ interface FireworksProps {
 
 export function Fireworks({ onComplete }: FireworksProps) {
   useEffect(() => {
-    const duration = 3000;
+    const duration = 2400;
     const animationEnd = Date.now() + duration;
 
     const randomInRange = (min: number, max: number) => {
