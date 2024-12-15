@@ -16,6 +16,9 @@ const DEFAULT_PROPS = {
   showZeroDecimals: true,
 };
 
+// Add a list of currencies that use their code as symbol
+const CURRENCIES_WITHOUT_SYMBOL = ['CHF'];
+
 export function CurrencyDisplay({
   value,
   className = '',
@@ -33,6 +36,18 @@ export function CurrencyDisplay({
   // Handle no currency or 'none' selected
   if (!currency || currency === 'none') {
     return <span className={className}>{value.toFixed(showZeroDecimals ? 2 : 0)}</span>;
+  }
+
+  // For currencies that use their code as symbol, always use code format
+  if (CURRENCIES_WITHOUT_SYMBOL.includes(currency)) {
+    const formattedValue = value.toFixed(showZeroDecimals ? 2 : 0);
+    return (
+      <span className={className}>
+        {symbolPosition === 'before'
+          ? `${currency} ${formattedValue}`
+          : `${formattedValue} ${currency}`}
+      </span>
+    );
   }
 
   // Format the number based on saved format preference
