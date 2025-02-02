@@ -4,112 +4,259 @@
 
 @layer base {
   :root {
-    /* Base HSL Colors - Light Theme Defaults */
-    --color-base-50-hsl: 0 0% 100%; /* White */
-    --color-base-100-hsl: 210 40% 96.1%; /* Light Gray */
-    --color-base-200-hsl: 214 32% 91%; /* Lighter Gray */
-    --color-base-300-hsl: 213 27% 84%; /* Medium Gray */
-    --color-base-400-hsl: 215 20% 65%; /* Gray */
-    --color-base-500-hsl: 215 16% 47%; /* Dark Gray */
-    --color-base-900-hsl: 222 47% 11%; /* Nearly Black */
+    /* Base Theme Colors */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    
+    --background-primary: hsl(var(--background));
+    --background-secondary: hsl(210 40% 96.1%);
+    --background-tertiary: hsl(214 32% 91%);
+    
+    --content-primary: hsl(var(--foreground));
+    --content-secondary: hsl(215 16% 47%);
+    --content-tertiary: hsl(215 20% 65%);
+    --content-inverse: hsl(var(--background));
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+ 
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222 47% 11%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 47% 11%;
+ 
+    --radius: 0.5rem;
 
     /* Brand Colors (consistent across themes) */
-    --color-green-500-hsl: 142 72% 29%; /* User Brand */
-    --color-blue-500-hsl: 201 89% 48%; /* Task Brand */
+    --brand-user-base: hsl(142 72% 29%);
+    --brand-user-light: hsl(142 72% 29% / 0.1);
+    --brand-user-dark: hsl(142 72% 29% / 1.1);
+
+    --brand-task-base: hsl(201 89% 48%);
+    --brand-task-light: hsl(201 89% 48% / 0.1);
+    --brand-task-dark: hsl(201 89% 48% / 1.1);
 
     /* Feedback Colors */
-    --color-success-hsl: 142 72% 29%; /* Success Green */
-    --color-error-hsl: 0 84% 60%; /* Error Red */
-    --color-warning-hsl: 38 92% 50%; /* Warning Orange */
-    --color-info-hsl: 201 89% 48%; /* Info Blue */
-
-    /* Semantic Mappings - Light Theme */
-    --background-primary: hsl(var(--color-base-50-hsl));
-    --background-secondary: hsl(var(--color-base-100-hsl));
-    --background-tertiary: hsl(var(--color-base-200-hsl));
-
-    --content-primary: hsl(var(--color-base-900-hsl));
-    --content-secondary: hsl(var(--color-base-500-hsl));
-    --content-tertiary: hsl(var(--color-base-400-hsl));
-    --content-inverse: hsl(var(--color-base-50-hsl));
-
-    --border-primary: hsl(var(--color-base-200-hsl));
-    --border-secondary: hsl(var(--color-base-300-hsl));
-
-    --interactive-primary: hsl(var(--color-blue-500-hsl));
-    --interactive-primary-hover: hsl(var(--color-blue-500-hsl) / 0.9);
-    --interactive-secondary: hsl(var(--color-base-200-hsl));
-    --interactive-secondary-hover: hsl(var(--color-base-300-hsl));
-    --interactive-disabled: hsl(var(--color-base-200-hsl) / 0.5);
-
-    /* Brand Colors (consistent across themes) */
-    --brand-user-base: hsl(var(--color-green-500-hsl));
-    --brand-user-light: hsl(var(--color-green-500-hsl) / 0.1);
-    --brand-user-dark: hsl(var(--color-green-500-hsl) / 1.1);
-
-    --brand-task-base: hsl(var(--color-blue-500-hsl));
-    --brand-task-light: hsl(var(--color-blue-500-hsl) / 0.1);
-    --brand-task-dark: hsl(var(--color-blue-500-hsl) / 1.1);
-
-    /* Feedback Colors */
-    --feedback-success: hsl(var(--color-success-hsl));
-    --feedback-error: hsl(var(--color-error-hsl));
-    --feedback-warning: hsl(var(--color-warning-hsl));
-    --feedback-info: hsl(var(--color-info-hsl));
+    --feedback-success: hsl(142 72% 29%);
+    --feedback-error: hsl(0 84% 60%);
+    --feedback-warning: hsl(38 92% 50%);
+    --feedback-info: hsl(201 89% 48%);
   }
 
-  /* Ocean Theme */
-  .theme-ocean {
-    --color-base-50-hsl: 201 100% 95%; /* Light Blue */
-    --color-base-100-hsl: 199 100% 90%; /* Seafoam */
-    --color-base-200-hsl: 200 85% 85%; /* Ocean Mist */
-    --color-base-900-hsl: 201 100% 15%; /* Deep Ocean */
-
-    --interactive-primary: hsl(12 76% 61%); /* Coral */
-    --interactive-primary-hover: hsl(12 76% 56%);
-  }
-
-  /* Forest Theme */
-  .theme-forest {
-    --color-base-50-hsl: 120 100% 95%; /* Light Green */
-    --color-base-100-hsl: 120 50% 90%; /* Sage */
-    --color-base-200-hsl: 120 40% 85%; /* Forest Mist */
-    --color-base-900-hsl: 120 100% 15%; /* Deep Forest */
-
-    --interactive-primary: hsl(27 87% 67%); /* Autumn */
-    --interactive-primary-hover: hsl(27 87% 62%);
-  }
-
-  /* Sunset Theme */
-  .theme-sunset {
-    --color-base-50-hsl: 39 100% 95%; /* Light Orange */
-    --color-base-100-hsl: 45 100% 90%; /* Golden */
-    --color-base-200-hsl: 42 85% 85%; /* Sunset Glow */
-    --color-base-900-hsl: 39 100% 15%; /* Deep Sunset */
-
-    --interactive-primary: hsl(280 65% 60%); /* Purple */
-    --interactive-primary-hover: hsl(280 65% 55%);
-  }
-
-  /* Dark Theme */
   .theme-dark {
-    --color-base-50-hsl: 222 47% 11%; /* Dark Blue */
-    --color-base-100-hsl: 217 33% 17%; /* Dark Gray */
-    --color-base-200-hsl: 215 28% 17%; /* Darker Gray */
-    --color-base-900-hsl: 0 0% 100%; /* White */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 92%;
+    
+    --background-primary: hsl(var(--background));
+    --background-secondary: hsl(222, 47%, 17%);
+    --background-tertiary: hsl(222, 47%, 25%);
+    
+    --content-primary: hsl(var(--foreground));
+    --content-secondary: hsl(210, 40%, 75%);
+    --content-tertiary: hsl(210, 40%, 60%);
+    --content-inverse: hsl(var(--background));
+ 
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 92%;
+ 
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 92%;
+ 
+    --primary: 210 40% 92%;
+    --primary-foreground: 222 47% 11%;
+ 
+    --secondary: hsl(210, 40%, 75%);
+    --secondary-foreground: 222 47% 11%;
+ 
+    --muted: hsl(222, 47%, 17%);
+    --muted-foreground: hsl(210, 40%, 75%);
+ 
+    --accent: hsl(210, 40%, 92%);
+    --accent-foreground: 210 40% 92%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 92%;
+ 
+    --border: hsl(222, 47%, 17%);
+    --input: hsl(222, 47%, 17%);
+    --ring: 212.7 26.8% 83.9%;
+  }
 
-    /* Invert text colors for dark theme */
-    --content-primary: hsl(var(--color-base-900-hsl));
-    --content-secondary: hsl(var(--color-base-300-hsl));
-    --content-tertiary: hsl(var(--color-base-400-hsl));
-    --content-inverse: hsl(var(--color-base-50-hsl));
+  .theme-ocean {
+    --background: 201 100% 95%;
+    --foreground: 201 100% 15%;
+    
+    --background-primary: hsl(var(--background));
+    --background-secondary: hsl(199 100% 90%);
+    --background-tertiary: hsl(200 85% 85%);
+    
+    --content-primary: hsl(var(--foreground));
+    --content-secondary: hsl(201 70% 35%);
+    --content-tertiary: hsl(201 60% 45%);
+    --content-inverse: hsl(var(--background));
+ 
+    --card: 199 100% 90%;
+    --card-foreground: 201 100% 15%;
+ 
+    --popover: 199 100% 90%;
+    --popover-foreground: 201 100% 15%;
+ 
+    --primary: 201 89% 48%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 200 85% 85%;
+    --secondary-foreground: 201 100% 15%;
+ 
+    --muted: 200 85% 85%;
+    --muted-foreground: 201 70% 35%;
+ 
+    --accent: 12 76% 61%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 200 85% 85%;
+    --input: 200 85% 85%;
+    --ring: 201 89% 48%;
+  }
 
-    --interactive-primary: hsl(212 100% 85%); /* Ice Blue */
-    --interactive-primary-hover: hsl(212 100% 80%);
+  .theme-forest {
+    --background: 120 100% 95%;
+    --foreground: 120 100% 15%;
+    
+    --background-primary: hsl(var(--background));
+    --background-secondary: hsl(120 50% 90%);
+    --background-tertiary: hsl(120 40% 85%);
+    
+    --content-primary: hsl(var(--foreground));
+    --content-secondary: hsl(120 70% 35%);
+    --content-tertiary: hsl(120 60% 45%);
+    --content-inverse: hsl(var(--background));
+ 
+    --card: 120 50% 90%;
+    --card-foreground: 120 100% 15%;
+ 
+    --popover: 120 50% 90%;
+    --popover-foreground: 120 100% 15%;
+ 
+    --primary: 142 72% 29%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 120 40% 85%;
+    --secondary-foreground: 120 100% 15%;
+ 
+    --muted: 120 40% 85%;
+    --muted-foreground: 120 70% 35%;
+ 
+    --accent: 27 87% 67%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 120 40% 85%;
+    --input: 120 40% 85%;
+    --ring: 142 72% 29%;
+  }
 
-    /* Adjust borders for dark theme */
-    --border-primary: hsl(var(--color-base-100-hsl));
-    --border-secondary: hsl(var(--color-base-200-hsl));
+  .theme-sunset {
+    --background: 39 100% 95%;
+    --foreground: 39 100% 15%;
+    
+    --background-primary: hsl(var(--background));
+    --background-secondary: hsl(45 100% 90%);
+    --background-tertiary: hsl(42 85% 85%);
+    
+    --content-primary: hsl(var(--foreground));
+    --content-secondary: hsl(39 70% 35%);
+    --content-tertiary: hsl(39 60% 45%);
+    --content-inverse: hsl(var(--background));
+ 
+    --card: 45 100% 90%;
+    --card-foreground: 39 100% 15%;
+ 
+    --popover: 45 100% 90%;
+    --popover-foreground: 39 100% 15%;
+ 
+    --primary: 27 87% 67%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 42 85% 85%;
+    --secondary-foreground: 39 100% 15%;
+ 
+    --muted: 42 85% 85%;
+    --muted-foreground: 39 70% 35%;
+ 
+    --accent: 280 65% 60%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 42 85% 85%;
+    --input: 42 85% 85%;
+    --ring: 27 87% 67%;
+  }
+
+  .theme-flabbergasted {
+    --background: 280 30% 96%;
+    --foreground: 280 35% 15%;
+    
+    --background-primary: hsl(var(--background));
+    --background-secondary: hsl(280 25% 92%);
+    --background-tertiary: hsl(280 20% 88%);
+    
+    --content-primary: hsl(var(--foreground));
+    --content-secondary: hsl(280 12% 65%);
+    --content-tertiary: hsl(280 10% 45%);
+    --content-inverse: hsl(var(--background));
+ 
+    --card: 280 25% 92%;
+    --card-foreground: 280 35% 15%;
+ 
+    --popover: 280 25% 92%;
+    --popover-foreground: 280 35% 15%;
+ 
+    --primary: 320 80% 60%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 280 20% 88%;
+    --secondary-foreground: 280 35% 15%;
+ 
+    --muted: 280 20% 88%;
+    --muted-foreground: 280 12% 65%;
+ 
+    --accent: 250 70% 60%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 350 90% 60%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 280 20% 88%;
+    --input: 280 20% 88%;
+    --ring: 320 80% 60%;
+  }
+
+  .theme-dark .text-black {
+    color: hsl(var(--foreground)) !important;
   }
 }
 
@@ -118,4 +265,18 @@
   transition-property: background-color, border-color, color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+/* Add dark mode text color overrides */
+.theme-dark body,
+.theme-dark p,
+.theme-dark span,
+.theme-dark h1,
+.theme-dark h2,
+.theme-dark h3,
+.theme-dark h4,
+.theme-dark h5,
+.theme-dark h6,
+.theme-dark a {
+  color: var(--content-primary) !important;
 }

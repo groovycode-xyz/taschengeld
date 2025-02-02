@@ -6,7 +6,7 @@ import { UserCard } from './user-card';
 import { AddUserModal } from './add-user-modal';
 import { EditUserModal } from './edit-user-modal';
 import { User, CreateUserInput } from '@/app/types/user';
-import { Plus, UsersIcon } from 'lucide-react';
+import { Plus, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // UserManagement component: Handles user profile management
@@ -112,25 +112,17 @@ export function UserManagement() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
-      <div className='p-8 bg-[#FBFBFB]'>
-        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-          <h1 className='text-3xl font-bold flex items-center text-gray-900'>
-            <UsersIcon className='mr-3 h-8 w-8 text-gray-700' />
-            Family Management
-          </h1>
-          <Button
-            onClick={() => setIsAddModalOpen(true)}
-            className='bg-gray-900 hover:bg-gray-700 text-white transition-colors'
-          >
-            <Plus className='mr-2 h-4 w-4' /> Add User
-          </Button>
+      <div className='p-8 bg-background-secondary'>
+        <div className='flex items-center space-x-4 pb-6 border-b border-border'>
+          <Users className='h-8 w-8 text-content-primary' />
+          <h1 className='text-3xl font-medium text-content-primary'>User Management</h1>
         </div>
       </div>
 
       {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {users
             .sort((a, b) => new Date(a.birthday).getTime() - new Date(b.birthday).getTime())

@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
+import { Banknote } from 'lucide-react';
 
 type SortField = 'title' | 'user' | 'amount' | 'date';
 type SortDirection = 'asc' | 'desc';
@@ -251,13 +252,17 @@ export function Payday() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
-      <div className='p-8 bg-[#FBFBFB]'>
-        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-          <h1 className='text-2xl font-bold'>Payday</h1>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
+      {/* Fixed Header */}
+      <div className='p-8 bg-background-secondary'>
+        <div className='flex justify-between items-center pb-6 border-b border-border'>
+          <div className='flex items-center space-x-4'>
+            <Banknote className='h-8 w-8 text-content-primary' />
+            <h1 className='text-3xl font-medium text-content-primary'>Payday</h1>
+          </div>
           {selectedTasks.length > 0 && (
             <div className='flex items-center gap-4'>
-              <span className='text-sm font-medium text-gray-500'>
+              <span className='text-sm font-medium text-content-secondary'>
                 {selectedTasks.length} item{selectedTasks.length !== 1 ? 's' : ''} selected
               </span>
               <Button
@@ -268,7 +273,7 @@ export function Payday() {
               </Button>
               <Button
                 onClick={() => handleBulkActionClick('Unpaid')}
-                className='bg-red-500 hover:bg-red-600 text-white'
+                variant="destructive"
               >
                 Reject Selected ({selectedTasks.length})
               </Button>
@@ -282,7 +287,7 @@ export function Payday() {
               <SelectTrigger className='w-[200px]'>
                 <SelectValue placeholder='View tasks' />
               </SelectTrigger>
-              <SelectContent className='bg-white'>
+              <SelectContent>
                 <SelectItem value='by_user'>Group by User</SelectItem>
                 <SelectItem value='by_date'>Group by Date</SelectItem>
                 <SelectItem value='no_groups'>No Grouping</SelectItem>
@@ -290,7 +295,7 @@ export function Payday() {
             </Select>
 
             {filterUser !== 'all' && viewOption === 'by_user' && (
-              <div className='text-sm text-gray-500'>
+              <div className='text-sm text-content-secondary'>
                 Note: User filter is ignored when grouping by user
               </div>
             )}
@@ -300,7 +305,7 @@ export function Payday() {
                 <SelectTrigger className='w-[200px]'>
                   <SelectValue placeholder='Filter by user' />
                 </SelectTrigger>
-                <SelectContent className='bg-white'>
+                <SelectContent>
                   <SelectItem value='all'>All Users</SelectItem>
                   {Array.from(new Set(completedTasks.map((task) => task.user_name))).map((userName) => (
                     <SelectItem key={userName} value={userName}>
@@ -316,7 +321,7 @@ export function Payday() {
                 <SelectTrigger className='w-[200px]'>
                   <SelectValue placeholder='Sort within groups' />
                 </SelectTrigger>
-                <SelectContent className='bg-white'>
+                <SelectContent>
                   <SelectItem value='date'>By Date</SelectItem>
                   <SelectItem value='title'>By Task Name</SelectItem>
                   <SelectItem value='amount'>By Amount</SelectItem>
@@ -345,13 +350,14 @@ export function Payday() {
                 onCheckedChange={handleSelectAllTasks}
                 className='mr-2'
               />
-              <span className='text-sm text-gray-500'>Select All Visible Tasks</span>
+              <span className='text-sm text-content-secondary'>Select All Visible Tasks</span>
             </div>
           )}
         </div>
       </div>
 
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+      {/* Scrollable Content */}
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
         <div className='space-y-8'>
           {Object.entries(organizedTasks).map(([groupName, tasks]) => (
             <div key={groupName} className='space-y-4'>

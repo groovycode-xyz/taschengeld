@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 // Define available themes
-export type Theme = 'light' | 'ocean' | 'forest' | 'sunset' | 'dark' | 'system';
+export type Theme = 'light' | 'dark' | 'ocean' | 'forest' | 'sunset' | 'system';
 
 interface ThemeContextType {
   theme: Theme;
@@ -20,11 +20,20 @@ interface ThemeProviderProps {
   defaultTheme?: Theme;
 }
 
+function getStoredTheme(): Theme | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('theme-preference') as Theme | null;
+}
+
 export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<Exclude<Theme, 'system'>>(
-    defaultTheme === 'system' ? 'light' : (defaultTheme as Exclude<Theme, 'system'>)
-  );
+  // Initialize theme from localStorage or default
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = getStoredTheme();
+    return stored || defaultTheme;
+  });
+  
+  // Track the resolved theme (actual theme being applied)
+  const resolvedTheme: Exclude<Theme, 'system'> = theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : (theme as Exclude<Theme, 'system'>);
 
   // Handle system theme preference changes
   useEffect(() => {
@@ -32,9 +41,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
 
     const updateResolvedTheme = () => {
       if (theme === 'system') {
-        setResolvedTheme(mediaQuery.matches ? 'dark' : 'light');
-      } else {
-        setResolvedTheme(theme as Exclude<Theme, 'system'>);
+        setTheme(mediaQuery.matches ? 'dark' : 'light');
       }
     };
 
@@ -44,7 +51,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     // Listen for system theme changes
     const listener = (e: MediaQueryListEvent) => {
       if (theme === 'system') {
-        setResolvedTheme(e.matches ? 'dark' : 'light');
+        setTheme(e.matches ? 'dark' : 'light');
       }
     };
 
@@ -52,25 +59,24 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     return () => mediaQuery.removeEventListener('change', listener);
   }, [theme]);
 
-  // Apply theme class to document root
+  // Apply theme to document root and store preference
   useEffect(() => {
     const root = document.documentElement;
-    const themeClass = `theme-${resolvedTheme}`;
-
-    // Remove all theme classes
+    // Remove all theme classes and data attributes
     root.classList.remove(
       'theme-light',
+      'theme-dark',
       'theme-ocean',
       'theme-forest',
-      'theme-sunset',
-      'theme-dark'
+      'theme-sunset'
     );
+    root.removeAttribute('data-theme');
 
-    // Add new theme class
-    root.classList.add(themeClass);
+    // Add the new theme class and set the data attribute
+    root.classList.add(`theme-${resolvedTheme}`);
+    root.setAttribute('data-theme', resolvedTheme);
 
-    // Store preference
-    localStorage.setItem('theme-preference', theme);
+    console.log('Theme updated:', { theme, resolvedTheme }); // Debug log
   }, [resolvedTheme, theme]);
 
   return (
@@ -80,10 +86,10 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
   );
 }
 
-// Custom hook for using the theme
+// Custom hook to use the theme context
 export function useTheme() {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;

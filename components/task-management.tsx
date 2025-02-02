@@ -10,7 +10,7 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, ClipboardListIcon } from 'lucide-react';
+import { Plus, ListTodo } from 'lucide-react';
 import { AddTaskModal } from './add-task-modal';
 import { EditTaskModal } from './edit-task-modal';
 import { Task } from '@/app/types/task';
@@ -162,11 +162,11 @@ export function TaskManagement() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
-      {/* Fixed Header Section */}
-      <div className='p-8 bg-[#FBFBFB]'>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
+      {/* Fixed Header */}
+      <div className='p-8 bg-background-secondary'>
         {error && (
-          <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4'>
+          <div className='bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded relative mb-4'>
             <span className='block sm:inline'>{error}</span>
             <span
               className='absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer'
@@ -177,15 +177,12 @@ export function TaskManagement() {
           </div>
         )}
 
-        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-          <h1 className='text-3xl font-bold flex items-center'>
-            <ClipboardListIcon className='mr-3 h-10 w-10' />
-            Task Management
-          </h1>
-          <Button 
-            onClick={() => setIsAddModalOpen(true)}
-            className='bg-blue-500 hover:bg-blue-600 text-white'
-          >
+        <div className='flex justify-between items-center pb-6 border-b border-border'>
+          <div className='flex items-center space-x-4'>
+            <ListTodo className='h-8 w-8 text-content-primary' />
+            <h1 className='text-3xl font-medium text-content-primary'>Task Management</h1>
+          </div>
+          <Button onClick={() => setIsAddModalOpen(true)} variant='default'>
             <Plus className='h-4 w-4 mr-2' />
             Add Task
           </Button>
@@ -215,8 +212,8 @@ export function TaskManagement() {
         </div>
       </div>
 
-      {/* Scrollable Content Section */}
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+      {/* Scrollable Content */}
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {filteredAndSortedTasks.map((task) => (
             <Card

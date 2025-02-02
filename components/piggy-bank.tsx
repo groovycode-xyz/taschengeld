@@ -92,17 +92,15 @@ export function PiggyBank() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
-      <div className='p-8 bg-[#FBFBFB]'>
-        <div className='flex justify-between items-center pb-6 border-b border-gray-200'>
-          <h1 className='text-3xl font-bold flex items-center'>
-            <HandCoins className='mr-3 h-10 w-10' />
-            Sparkässeli
-          </h1>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
+      <div className='p-8 bg-background-secondary'>
+        <div className='flex items-center space-x-4 pb-6 border-b border-border'>
+          <HandCoins className='h-8 w-8 text-content-primary' />
+          <h1 className='text-3xl font-medium text-content-primary'>Sparkässeli</h1>
         </div>
       </div>
 
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {users.map((user) => (
             <Card

@@ -9,14 +9,14 @@ export function Sidebar() {
   const { hasFullAccess } = useMode();
 
   return (
-    <div className='w-64 bg-background-primary h-full flex flex-col border-r border-border-primary'>
+    <div className='w-64 bg-[var(--background-primary)] h-full flex flex-col border-r border-[var(--border)]'>
       <nav className='flex-1 p-4'>
         <ul className='space-y-1'>
           {/* Always visible items */}
           <li>
             <Link
               href='/task-completion'
-              className='flex items-center space-x-3 p-3 rounded-xl hover:bg-background-secondary transition-colors duration-200'
+              className='flex items-center space-x-3 p-3 rounded-xl hover:bg-[var(--background-secondary)] transition-colors duration-200'
             >
               <CheckSquare className='h-5 w-5 text-content-primary' />
               <span className='text-content-primary font-medium'>Task Completion</span>
@@ -25,7 +25,7 @@ export function Sidebar() {
           <li>
             <Link
               href='/piggy-bank'
-              className='flex items-center space-x-3 p-3 rounded-xl hover:bg-background-secondary transition-colors duration-200'
+              className='flex items-center space-x-3 p-3 rounded-xl hover:bg-[var(--background-secondary)] transition-colors duration-200'
             >
               <HandCoins className='h-5 w-5 text-content-primary' />
               <span className='text-content-primary font-medium'>Sparkässeli</span>
@@ -43,7 +43,7 @@ export function Sidebar() {
               <li>
                 <Link
                   href='/payday'
-                  className='flex items-center space-x-3 p-3 rounded-xl hover:bg-background-secondary transition-colors duration-200'
+                  className='flex items-center space-x-3 p-3 rounded-xl hover:bg-[var(--background-secondary)] transition-colors duration-200'
                 >
                   <Banknote className='h-5 w-5 text-content-primary' />
                   <span className='text-content-primary font-medium'>Payday</span>
@@ -58,7 +58,7 @@ export function Sidebar() {
               <li>
                 <Link
                   href='/task-management'
-                  className='flex items-center space-x-3 p-3 rounded-xl hover:bg-background-secondary transition-colors duration-200'
+                  className='flex items-center space-x-3 p-3 rounded-xl hover:bg-[var(--background-secondary)] transition-colors duration-200'
                 >
                   <ClipboardList className='h-5 w-5 text-content-primary' />
                   <span className='text-content-primary font-medium'>Task Management</span>
@@ -67,7 +67,7 @@ export function Sidebar() {
               <li>
                 <Link
                   href='/user-management'
-                  className='flex items-center space-x-3 p-3 rounded-xl hover:bg-background-secondary transition-colors duration-200'
+                  className='flex items-center space-x-3 p-3 rounded-xl hover:bg-[var(--background-secondary)] transition-colors duration-200'
                 >
                   <Users className='h-5 w-5 text-content-primary' />
                   <span className='text-content-primary font-medium'>Family</span>

@@ -533,34 +533,34 @@ export function GlobalAppSettings() {
   };
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col bg-[#EFF5FF]'>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
-      <div className='p-8 bg-[#FBFBFB]'>
-        <div className='flex items-center space-x-4 pb-6 border-b border-gray-200'>
-          <Settings2 className='h-8 w-8 text-gray-700' />
-          <h1 className='text-3xl font-medium text-gray-800'>Global Application Settings</h1>
+      <div className='p-8 bg-background-secondary'>
+        <div className='flex items-center space-x-4 pb-6 border-b border-border'>
+          <Settings2 className='h-8 w-8 text-content-primary' />
+          <h1 className='text-3xl font-medium text-content-primary'>Global Application Settings</h1>
         </div>
       </div>
 
       {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-[#FBFBFB]'>
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
         <div className='space-y-8'>
           {/* Access Control and Currency Grid */}
           <div className='grid grid-cols-3 gap-8'>
             {/* Access Control Section */}
-            <section className='col-span-2 bg-white rounded-2xl p-8 shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg'>
+            <section className='col-span-2 bg-background-primary rounded-2xl p-8 shadow-md border border-border transition-all duration-200 hover:shadow-lg'>
               <div className='flex items-center gap-4 mb-8'>
-                <Shield className='h-6 w-6 text-gray-700' />
-                <h2 className='text-xl font-medium text-gray-800'>Access Control</h2>
+                <Shield className='h-6 w-6 text-content-primary' />
+                <h2 className='text-xl font-medium text-content-primary'>Access Control</h2>
               </div>
 
               <div className='space-y-8'>
-                <div className='flex items-center justify-between space-x-4 p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
+                <div className='flex items-center justify-between space-x-4 p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
                   <div>
-                    <Label htmlFor='role-enforcement' className='text-base font-medium text-gray-700'>
+                    <Label htmlFor='role-enforcement' className='text-base font-medium text-content-primary'>
                       Enforce Parent/Child Roles
                     </Label>
-                    <p className='text-sm text-gray-600'>
+                    <p className='text-sm text-content-secondary'>
                       Prevent accidental access to parent-only features
                     </p>
                   </div>
@@ -568,13 +568,13 @@ export function GlobalAppSettings() {
                     id='role-enforcement'
                     checked={enforceRoles}
                     onCheckedChange={handleRoleEnforcementChange}
-                    className='data-[state=checked]:bg-blue-600'
+                    className='data-[state=checked]:bg-primary'
                   />
                 </div>
 
                 {enforceRoles && (
-                  <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
-                    <h3 className='text-base font-medium text-gray-700 mb-4'>Global PIN</h3>
+                  <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
+                    <h3 className='text-base font-medium text-content-primary mb-4'>Global PIN</h3>
                     <div className='flex items-center space-x-3'>
                       <div className='relative'>
                         <Input
@@ -636,17 +636,17 @@ export function GlobalAppSettings() {
             </section>
 
             {/* Currency Section */}
-            <section className='bg-white rounded-2xl p-8 shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg'>
+            <section className='bg-background-primary rounded-2xl p-8 shadow-md border border-border transition-all duration-200 hover:shadow-lg'>
               <div className='flex items-center gap-4 mb-8'>
-                <Coins className='h-6 w-6 text-gray-700' />
-                <h2 className='text-xl font-medium text-gray-800'>Currency</h2>
+                <Coins className='h-6 w-6 text-content-primary' />
+                <h2 className='text-xl font-medium text-content-primary'>Currency</h2>
               </div>
 
               <div className='space-y-6'>
                 <div>
                   <Label
                     htmlFor='currency-select'
-                    className='text-sm font-medium text-gray-700 mb-2 block'
+                    className='text-sm font-medium text-content-primary mb-2 block'
                   >
                     Default Currency
                   </Label>
@@ -676,7 +676,7 @@ export function GlobalAppSettings() {
                 <div>
                   <Label
                     htmlFor='format-select'
-                    className='text-sm font-medium text-gray-700 mb-2 block'
+                    className='text-sm font-medium text-content-primary mb-2 block'
                   >
                     Display Format
                   </Label>
@@ -702,23 +702,23 @@ export function GlobalAppSettings() {
           {/* Backup and Reset Grid */}
           <div className='grid grid-cols-2 gap-8'>
             {/* Backup Section */}
-            <section className='bg-white rounded-2xl p-8 shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg'>
+            <section className='bg-background-primary rounded-2xl p-8 shadow-md border border-border transition-all duration-200 hover:shadow-lg'>
               <div className='flex items-center gap-4 mb-8'>
-                <Save className='h-6 w-6 text-gray-700' />
-                <h2 className='text-xl font-medium text-gray-800'>Backup and Restore</h2>
+                <Save className='h-6 w-6 text-content-primary' />
+                <h2 className='text-xl font-medium text-content-primary'>Backup and Restore</h2>
               </div>
 
               <div className='space-y-8'>
                 {/* Tasks Backup/Restore */}
-                <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
-                  <h3 className='text-base font-medium text-gray-700 mb-4'>Tasks</h3>
+                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
+                  <h3 className='text-base font-medium text-content-primary mb-4'>Tasks</h3>
                   <div className='flex gap-3'>
                     <Button
                       variant='outline'
                       size='sm'
                       onClick={() => handleBackup('tasks')}
                       disabled={loadingBackup.tasks}
-                      className='flex-1 border-gray-200 text-gray-700 hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
+                      className='flex-1 border-gray-200 text-content-primary hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
                     >
                       {loadingBackup.tasks ? (
                         <Loader2 className='h-4 w-4 animate-spin' />
@@ -732,7 +732,7 @@ export function GlobalAppSettings() {
                       size='sm'
                       onClick={() => handleRestore('tasks')}
                       disabled={loadingRestore.tasks}
-                      className='flex-1 border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                      className='flex-1 border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                     >
                       {loadingRestore.tasks ? (
                         <Loader2 className='h-4 w-4 animate-spin' />
@@ -742,19 +742,19 @@ export function GlobalAppSettings() {
                       Restore
                     </Button>
                   </div>
-                  <p className='text-sm text-gray-600 mt-2'>Download or restore all task definitions</p>
+                  <p className='text-sm text-content-secondary mt-2'>Download or restore all task definitions</p>
                 </div>
 
                 {/* Accounts Backup/Restore */}
-                <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
-                  <h3 className='text-base font-medium text-gray-700 mb-4'>Sparkässeli Accounts</h3>
+                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
+                  <h3 className='text-base font-medium text-content-primary mb-4'>Sparkässeli Accounts</h3>
                   <div className='flex gap-3'>
                     <Button
                       variant='outline'
                       size='sm'
                       onClick={() => handleBackup('piggybank')}
                       disabled={loadingBackup.piggybank}
-                      className='flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors'
+                      className='flex-1 border-gray-200 text-content-primary hover:bg-gray-50 hover:border-gray-300 transition-colors'
                     >
                       {loadingBackup.piggybank ? (
                         <Loader2 className='h-4 w-4 animate-spin' />
@@ -768,7 +768,7 @@ export function GlobalAppSettings() {
                       size='sm'
                       onClick={() => handleRestore('piggybank')}
                       disabled={loadingRestore.piggybank}
-                      className='flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors'
+                      className='flex-1 border-gray-200 text-content-primary hover:bg-gray-50 hover:border-gray-300 transition-colors'
                     >
                       {loadingRestore.piggybank ? (
                         <Loader2 className='h-4 w-4 animate-spin' />
@@ -778,21 +778,21 @@ export function GlobalAppSettings() {
                       Restore
                     </Button>
                   </div>
-                  <p className='text-sm text-gray-600 mt-2'>
+                  <p className='text-sm text-content-secondary mt-2'>
                     Download or restore all account balances and transaction history
                   </p>
                 </div>
 
                 {/* Full Database Backup/Restore */}
-                <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
-                  <h3 className='text-base font-medium text-gray-700 mb-4'>Full Database Backup</h3>
+                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
+                  <h3 className='text-base font-medium text-content-primary mb-4'>Full Database Backup</h3>
                   <div className='flex gap-3'>
                     <Button
                       variant='outline'
                       size='sm'
                       onClick={() => handleBackup('all')}
                       disabled={loadingBackup.all}
-                      className='flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors'
+                      className='flex-1 border-gray-200 text-content-primary hover:bg-gray-50 hover:border-gray-300 transition-colors'
                     >
                       {loadingBackup.all ? (
                         <Loader2 className='h-4 w-4 animate-spin' />
@@ -806,7 +806,7 @@ export function GlobalAppSettings() {
                       size='sm'
                       onClick={() => handleRestore('all')}
                       disabled={loadingRestore.all}
-                      className='flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors'
+                      className='flex-1 border-gray-200 text-content-primary hover:bg-gray-50 hover:border-gray-300 transition-colors'
                     >
                       {loadingRestore.all ? (
                         <Loader2 className='h-4 w-4 animate-spin' />
@@ -816,16 +816,16 @@ export function GlobalAppSettings() {
                       Restore
                     </Button>
                   </div>
-                  <p className='text-sm text-gray-600 mt-2'>Download or restore the entire database</p>
+                  <p className='text-sm text-content-secondary mt-2'>Download or restore the entire database</p>
                 </div>
               </div>
             </section>
 
             {/* Reset Section */}
-            <section className='bg-white rounded-2xl p-8 shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg'>
+            <section className='bg-background-primary rounded-2xl p-8 shadow-md border border-border transition-all duration-200 hover:shadow-lg'>
               <div className='flex items-center gap-4 mb-8'>
-                <RotateCcw className='h-6 w-6 text-gray-700' />
-                <h2 className='text-xl font-medium text-gray-800'>Reset Options</h2>
+                <RotateCcw className='h-6 w-6 text-content-primary' />
+                <h2 className='text-xl font-medium text-content-primary'>Reset Options</h2>
               </div>
 
               {/* Warning Box */}
@@ -840,51 +840,51 @@ export function GlobalAppSettings() {
               </div>
 
               <div className='space-y-6'>
-                <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
+                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
                   <Button
                     variant='outline'
                     size='sm'
-                    className='w-full border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                    className='w-full border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                     onClick={() => handleResetClick('tasks')}
                     disabled={loadingStates.tasks}
                   >
                     {loadingStates.tasks && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
                     Delete All Tasks
                   </Button>
-                  <p className='text-sm text-gray-600 mt-2'>
+                  <p className='text-sm text-content-secondary mt-2'>
                     Removes all tasks from the task list. Completed tasks and transactions remain
                     unchanged.
                   </p>
                 </div>
 
-                <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
+                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
                   <Button
                     variant='outline'
                     size='sm'
-                    className='w-full border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                    className='w-full border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                     onClick={() => handleResetClick('transactions')}
                     disabled={loadingStates.transactions}
                   >
                     {loadingStates.transactions && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
                     Reset Transaction History
                   </Button>
-                  <p className='text-sm text-gray-600 mt-2'>
+                  <p className='text-sm text-content-secondary mt-2'>
                     Clears all transaction history and resets account balances to zero.
                   </p>
                 </div>
 
-                <div className='p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200'>
+                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
                   <Button
                     variant='outline'
                     size='sm'
-                    className='w-full border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                    className='w-full border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                     onClick={() => handleResetClick('all')}
                     disabled={loadingStates.all}
                   >
                     {loadingStates.all && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
                     Reset Entire Database
                   </Button>
-                  <p className='text-sm text-gray-600 mt-2'>
+                  <p className='text-sm text-content-secondary mt-2'>
                     Removes all data including users, tasks, accounts, and related data.
                   </p>
                 </div>

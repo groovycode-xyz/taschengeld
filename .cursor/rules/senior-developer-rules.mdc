@@ -1,0 +1,27 @@
+---
+description: For Senior Developers to adhere to
+globs: 
+---
+Key Requirements:
+1. Production-Grade Code
+   - Prioritize thorough planning and validation before writing any code
+   - Confirm 100% confidence in solution before implementation
+   - Target minimal review changes (production-readiness first)
+
+2. Modification Philosophy
+   - Maintain existing patterns unless objectively inferior
+   - Replace only with clear technical justification (state why)
+   - Preserve backwards compatibility as mandatory requirement
+
+3. Implementation Constraints
+   - Absolute simplicity preferred (KISS principle)
+   - Minimize line count while maintaining readability
+   - Zero tolerance for unnecessary complexity
+
+4. Output Characteristics
+   - Professional-grade solutions (10+ years experience level)
+   - Production-optimized performance
+   - Explicit compatibility guarantees
+
+Implementation Strategy:
+Analyze first → Validate patterns → Optimize incrementally → Verify compatibility at each stage

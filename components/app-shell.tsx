@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Sidebar } from '@/components/sidebar';
 import { Settings } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -11,21 +12,22 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   return (
     <div className='flex flex-col h-screen w-full'>
-      <header className='bg-black text-white p-4 flex justify-between items-center'>
-        <Link href='/home' className='text-2xl font-bold hover:text-gray-300 transition-colors'>
+      <header className='bg-primary text-primary-foreground p-4 flex justify-between items-center'>
+        <Link href='/home' className='text-2xl font-bold hover:text-muted-foreground transition-colors'>
           Taschengeld
         </Link>
         <div className='flex items-center space-x-6'>
-          <Link href='/global-settings' className='mr-4'>
-            <Settings className='h-8 w-8 text-white hover:text-gray-300 transition-colors' />
+          <ThemeToggle />
+          <Link href='/global-settings'>
+            <Settings className='h-8 w-8 text-primary-foreground hover:text-muted-foreground transition-colors' />
           </Link>
         </div>
       </header>
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />
-        <main className='flex-1 bg-gray-50'>
+        <div className='flex-1 bg-background'>
           {children}
-        </main>
+        </div>
       </div>
     </div>
   );
