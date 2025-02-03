@@ -14,12 +14,14 @@ This guide covers deploying Taschengeld in a production environment using Docker
 ### 1. Initial Server Setup
 
 1. Install Docker:
+
 ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 ```
 
 2. Install Docker Compose:
+
 ```bash
 sudo apt-get update
 sudo apt-get install docker-compose-plugin
@@ -28,17 +30,20 @@ sudo apt-get install docker-compose-plugin
 ### 2. Application Setup
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/tgeld.git
 cd tgeld
 ```
 
 2. Configure environment:
+
 ```bash
 cp .env.example .env.production
 ```
 
 Edit `.env.production` with your production values:
+
 ```env
 NODE_ENV=production
 NEXT_PUBLIC_PORT=21971
@@ -63,11 +68,13 @@ ENABLE_BACKUP=true
 #### Option A: Using Containerized Database
 
 1. Start all services:
+
 ```bash
 docker compose -f docker-compose.prod.yml up -d
 ```
 
 2. Initialize database:
+
 ```bash
 docker compose exec app npm run migrate
 ```
@@ -76,6 +83,7 @@ docker compose exec app npm run migrate
 
 1. Update `.env.production` with external database details
 2. Start application without database service:
+
 ```bash
 docker compose -f docker-compose.prod.yml up -d app
 ```
@@ -83,6 +91,7 @@ docker compose -f docker-compose.prod.yml up -d app
 ### 4. SSL/TLS Configuration
 
 1. Using Nginx Proxy:
+
 ```bash
 # Install nginx
 sudo apt-get install nginx
@@ -92,6 +101,7 @@ sudo nano /etc/nginx/sites-available/tgeld
 ```
 
 Add configuration:
+
 ```nginx
 server {
     listen 80;
@@ -118,6 +128,7 @@ server {
 ```
 
 2. Enable site:
+
 ```bash
 sudo ln -s /etc/nginx/sites-available/tgeld /etc/nginx/sites-enabled/
 sudo nginx -t
@@ -127,6 +138,7 @@ sudo systemctl restart nginx
 ### 5. Backup Configuration
 
 1. Create backup script:
+
 ```bash
 #!/bin/bash
 BACKUP_DIR="/path/to/backups"
@@ -143,6 +155,7 @@ find "$BACKUP_DIR" -type f -mtime +7 -delete
 ```
 
 2. Set up cron job:
+
 ```bash
 0 0 * * * /path/to/backup.sh
 ```
@@ -150,6 +163,7 @@ find "$BACKUP_DIR" -type f -mtime +7 -delete
 ### 6. Monitoring
 
 1. Basic monitoring with Docker:
+
 ```bash
 # View logs
 docker compose logs -f
@@ -159,6 +173,7 @@ docker stats
 ```
 
 2. Advanced monitoring (recommended):
+
 - Set up Prometheus and Grafana
 - Configure alerting
 - Monitor system resources
@@ -168,11 +183,13 @@ docker stats
 #### Updates
 
 1. Pull latest changes:
+
 ```bash
 git pull origin main
 ```
 
 2. Rebuild and restart:
+
 ```bash
 docker compose -f docker-compose.prod.yml build
 docker compose -f docker-compose.prod.yml up -d
@@ -181,11 +198,13 @@ docker compose -f docker-compose.prod.yml up -d
 #### Database Maintenance
 
 1. Backup before maintenance:
+
 ```bash
 docker compose exec db pg_dump -U postgres tgeld > backup.sql
 ```
 
 2. Perform maintenance:
+
 ```bash
 docker compose exec db psql -U postgres tgeld
 ```
@@ -193,6 +212,7 @@ docker compose exec db psql -U postgres tgeld
 ### 8. Security Considerations
 
 1. **Firewall Configuration**
+
 ```bash
 # Allow only necessary ports
 sudo ufw allow ssh
@@ -202,12 +222,14 @@ sudo ufw enable
 ```
 
 2. **Docker Security**
+
 - Use non-root user in containers
 - Implement resource limits
 - Regular security updates
 - Scan images for vulnerabilities
 
 3. **Application Security**
+
 - Keep dependencies updated
 - Implement rate limiting
 - Use secure headers
@@ -216,6 +238,7 @@ sudo ufw enable
 ### 9. Troubleshooting
 
 1. **Container Issues**
+
 ```bash
 # Check container status
 docker compose ps
@@ -225,6 +248,7 @@ docker compose logs -f app
 ```
 
 2. **Database Issues**
+
 ```bash
 # Check database logs
 docker compose logs db
@@ -234,6 +258,7 @@ docker compose exec app npm run db:check
 ```
 
 3. **Performance Issues**
+
 - Monitor resource usage
 - Check application logs
 - Review database queries
@@ -242,11 +267,13 @@ docker compose exec app npm run db:check
 ### 10. Rollback Procedure
 
 1. Stop services:
+
 ```bash
 docker compose down
 ```
 
 2. Restore from backup:
+
 ```bash
 # Restore database
 docker compose exec -T db psql -U postgres tgeld < backup.sql
@@ -256,7 +283,8 @@ tar -xzf uploads_backup.tar.gz
 ```
 
 3. Start previous version:
+
 ```bash
 git checkout <previous-version>
 docker compose -f docker-compose.prod.yml up -d
-``` 
+```

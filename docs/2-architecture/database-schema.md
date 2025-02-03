@@ -9,6 +9,7 @@ The database uses PostgreSQL and consists of several interconnected tables that 
 ## Tables
 
 ### users
+
 Primary table for all user accounts (both parents and children).
 
 ```sql
@@ -24,10 +25,12 @@ CREATE TABLE users (
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY` on `user_id`
 - Foreign key index on `piggybank_account_id`
 
 ### tasks
+
 Defines available tasks that can be assigned and completed.
 
 ```sql
@@ -45,10 +48,12 @@ CREATE TABLE tasks (
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY` on `task_id`
 - Index on `is_active`
 
 ### completed_tasks
+
 Records task completions by users.
 
 ```sql
@@ -67,11 +72,13 @@ CREATE TABLE completed_tasks (
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY` on `c_task_id`
 - Foreign key indexes on `user_id`, `task_id`, `piggybank_account_id`
 - Index on `payment_status`
 
 ### piggybank_accounts
+
 Manages user payment accounts.
 
 ```sql
@@ -85,6 +92,7 @@ CREATE TABLE piggybank_accounts (
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY` on `account_id`
 - `UNIQUE` on `user_id`
 - `UNIQUE` on `account_number`
@@ -100,6 +108,7 @@ erDiagram
 ```
 
 ### Key Relationships:
+
 1. User → Completed Tasks (1:Many)
 2. Task → Completed Tasks (1:Many)
 3. User → Piggybank Account (1:1)
@@ -108,6 +117,7 @@ erDiagram
 ## Data Types
 
 ### Common Fields
+
 - **IDs**: `SERIAL` (auto-incrementing integer)
 - **Names/Titles**: `VARCHAR(100)`
 - **Descriptions**: `TEXT`
@@ -116,12 +126,14 @@ erDiagram
 - **Status Flags**: `BOOLEAN`
 
 ### Enums and Constants
+
 - Payment Status: `'Paid'`, `'Unpaid'`
 - Active Status: `true`, `false`
 
 ## Constraints
 
 ### Foreign Keys
+
 ```sql
 ALTER TABLE users
     ADD CONSTRAINT fk_user_piggybank
@@ -140,6 +152,7 @@ ALTER TABLE completed_tasks
 ```
 
 ### Check Constraints
+
 ```sql
 ALTER TABLE piggybank_accounts
     ADD CONSTRAINT check_balance_non_negative
@@ -153,10 +166,12 @@ ALTER TABLE tasks
 ## Migrations
 
 Migration files are stored in `/migrations` directory. Each migration includes:
+
 - Up migration (changes to apply)
 - Down migration (how to reverse changes)
 
 Example:
+
 ```sql
 -- Up Migration
 CREATE TABLE users (/*...*/);
@@ -168,6 +183,7 @@ DROP TABLE users;
 ## Backup and Recovery
 
 See [Backup and Restore Guide](../5-maintenance/backup-restore.md) for:
+
 - Backup procedures
 - Recovery procedures
 - Backup schedule
@@ -176,11 +192,13 @@ See [Backup and Restore Guide](../5-maintenance/backup-restore.md) for:
 ## Performance Considerations
 
 1. **Indexes**
+
    - Primary keys
    - Foreign keys
    - Frequently queried fields
 
 2. **Partitioning**
+
    - Consider partitioning `completed_tasks` by date for large datasets
 
 3. **Archiving**
@@ -190,6 +208,7 @@ See [Backup and Restore Guide](../5-maintenance/backup-restore.md) for:
 ## Security
 
 1. **Access Control**
+
    - Row-level security
    - User permissions
    - Audit logging
@@ -202,6 +221,7 @@ See [Backup and Restore Guide](../5-maintenance/backup-restore.md) for:
 ## Maintenance
 
 Regular maintenance tasks:
+
 1. Update statistics
 2. Reindex tables
 3. Vacuum analyze
@@ -209,4 +229,4 @@ Regular maintenance tasks:
 
 See [Monitoring Guide](../5-maintenance/monitoring.md) for details.
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

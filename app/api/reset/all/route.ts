@@ -6,15 +6,10 @@ export async function POST() {
   try {
     await client.query('BEGIN');
 
-    // Delete child users first (preserves parent user)
-    await client.query(`
-      DELETE FROM users 
-      WHERE role = 'child';
-    `);
-
-    // Then truncate all other tables
+    // Truncate all tables in the correct order
     await client.query(`
       TRUNCATE TABLE 
+        users,
         tasks,
         completed_tasks,
         piggybank_accounts,

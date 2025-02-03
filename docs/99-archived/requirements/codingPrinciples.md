@@ -137,7 +137,7 @@ Adhering to consistent coding standards ensures code quality, maintainability, a
   - Avoid using testing tools like Jest, Mocha, etc.
   - Use simple test scripts to test critical functionalities.
   - Use manual testing for as much as possible.
-  - See actual test-backup-restore.sh for examples.   
+  - See actual test-backup-restore.sh for examples.
 
 - **Test Naming:**
   - Use descriptive names for test cases to clearly indicate their purpose.

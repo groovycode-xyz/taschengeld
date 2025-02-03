@@ -5,6 +5,7 @@ This document outlines the testing strategies, tools, and best practices for the
 ## Testing Stack
 
 ### Core Testing Tools
+
 - Jest - Test runner and assertion library
 - React Testing Library - Component testing
 - Cypress - End-to-end testing
@@ -12,6 +13,7 @@ This document outlines the testing strategies, tools, and best practices for the
 - Supertest - API integration testing
 
 ### Additional Tools
+
 - jest-axe - Accessibility testing
 - jest-coverage - Code coverage
 - jest-snapshot - UI snapshot testing
@@ -78,7 +80,7 @@ Integration tests verify that multiple components or systems work together.
 // API Integration Test
 describe('Task API', () => {
   const testDb = new TestDatabase();
-  
+
   beforeEach(async () => {
     await testDb.migrate();
     await testDb.seed();
@@ -158,9 +160,7 @@ describe('Task Management', () => {
     cy.get('[data-testid="save-task"]').click();
 
     // Verify task creation
-    cy.get('[data-testid="task-list"]')
-      .should('contain', 'Clean Garage')
-      .and('contain', '10.00 €');
+    cy.get('[data-testid="task-list"]').should('contain', 'Clean Garage').and('contain', '10.00 €');
 
     // Switch to child account
     cy.login('child@example.com', 'password123');
@@ -174,8 +174,7 @@ describe('Task Management', () => {
       .click();
 
     // Verify completion
-    cy.get('[data-testid="balance"]')
-      .should('contain', '10.00 €');
+    cy.get('[data-testid="balance"]').should('contain', '10.00 €');
   });
 });
 ```
@@ -194,15 +193,11 @@ describe('POST /api/tasks', () => {
       .set('Authorization', `Bearer ${testToken}`);
 
     expect(response.status).toBe(400);
-    expect(response.body.errors).toContain(
-      'title is required'
-    );
+    expect(response.body.errors).toContain('title is required');
   });
 
   it('handles authentication', async () => {
-    const response = await request(app)
-      .post('/api/tasks')
-      .send({ title: 'Test' });
+    const response = await request(app).post('/api/tasks').send({ title: 'Test' });
 
     expect(response.status).toBe(401);
   });
@@ -212,6 +207,7 @@ describe('POST /api/tasks', () => {
 ## Test Organization
 
 ### Directory Structure
+
 ```
 tests/
 ├── unit/
@@ -229,6 +225,7 @@ tests/
 ```
 
 ### Naming Conventions
+
 ```
 ✅ Good:
 - user-registration.spec.ts
@@ -244,11 +241,13 @@ tests/
 ## Test Coverage
 
 ### Coverage Goals
+
 - Unit Tests: 80%+ coverage
 - Integration Tests: 70%+ coverage
 - E2E Tests: Critical paths covered
 
 ### Running Coverage Reports
+
 ```bash
 # Unit and Integration Tests
 npm run test:coverage
@@ -260,28 +259,24 @@ npm run cypress:coverage
 ## Mocking
 
 ### API Mocking with MSW
+
 ```typescript
 // Handler Setup
 const handlers = [
   rest.get('/api/tasks', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json([
-        { id: 1, title: 'Mock Task' }
-      ])
-    );
+    return res(ctx.status(200), ctx.json([{ id: 1, title: 'Mock Task' }]));
   }),
-  
+
   rest.post('/api/tasks', (req, res, ctx) => {
     const { title } = req.body;
     return res(
       ctx.status(201),
       ctx.json({
         id: 2,
-        title
+        title,
       })
     );
-  })
+  }),
 ];
 
 // Test Setup
@@ -291,6 +286,7 @@ afterAll(() => server.close());
 ```
 
 ### Component Mocking
+
 ```typescript
 // Mock Component
 jest.mock('../components/TaskCard', () => {
@@ -312,6 +308,7 @@ jest.mock('../hooks/useTask', () => ({
 ## Testing Best Practices
 
 ### Do's
+
 1. Test behavior, not implementation
 2. Use meaningful assertions
 3. Keep tests independent
@@ -319,6 +316,7 @@ jest.mock('../hooks/useTask', () => ({
 5. Use appropriate test doubles
 
 ### Don'ts
+
 1. Don't test implementation details
 2. Don't use snapshot tests for everything
 3. Don't mock everything
@@ -328,6 +326,7 @@ jest.mock('../hooks/useTask', () => ({
 ## Continuous Integration
 
 ### CI Pipeline
+
 ```yaml
 test:
   script:
@@ -342,6 +341,7 @@ test:
 ```
 
 ### Pre-commit Hooks
+
 ```json
 {
   "husky": {
@@ -360,4 +360,7 @@ test:
 4. [MSW Documentation](https://mswjs.io/docs/)
 
 Last Updated: December 4, 2024
-``` 
+
+```
+
+```

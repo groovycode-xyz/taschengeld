@@ -29,6 +29,7 @@ Authorization: Bearer <jwt_token>
 ## Common Response Format
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -44,6 +45,7 @@ Authorization: Bearer <jwt_token>
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -60,7 +62,9 @@ Authorization: Bearer <jwt_token>
 ### Authentication
 
 #### POST /auth/login
+
 Login with username and password
+
 ```json
 {
   "username": "string",
@@ -69,7 +73,9 @@ Login with username and password
 ```
 
 #### POST /auth/refresh
+
 Refresh JWT token
+
 ```json
 {
   "refreshToken": "string"
@@ -79,7 +85,9 @@ Refresh JWT token
 ### Users
 
 #### GET /users
+
 List users with pagination
+
 ```
 Query Parameters:
 - page (default: 1)
@@ -89,7 +97,9 @@ Query Parameters:
 ```
 
 #### POST /users
+
 Create new user
+
 ```json
 {
   "username": "string",
@@ -100,7 +110,9 @@ Create new user
 ```
 
 #### GET /users/:id
+
 Get user details
+
 ```
 Path Parameters:
 - id: User ID
@@ -109,7 +121,9 @@ Path Parameters:
 ### Tasks
 
 #### GET /tasks
+
 List available tasks
+
 ```
 Query Parameters:
 - page
@@ -119,7 +133,9 @@ Query Parameters:
 ```
 
 #### POST /tasks
+
 Create new task
+
 ```json
 {
   "title": "string",
@@ -131,7 +147,9 @@ Create new task
 ```
 
 #### PUT /tasks/:id/complete
+
 Mark task as completed
+
 ```json
 {
   "completionNotes": "string",
@@ -142,14 +160,18 @@ Mark task as completed
 ### Piggybank
 
 #### GET /piggybank/balance
+
 Get current balance
+
 ```
 Query Parameters:
 - userId (optional)
 ```
 
 #### POST /piggybank/transfer
+
 Transfer funds
+
 ```json
 {
   "fromUserId": "number",
@@ -168,12 +190,14 @@ Transfer funds
 ## Caching
 
 ### Cache Headers
+
 ```http
 Cache-Control: private, max-age=3600
 ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 ```
 
 ### Cached Endpoints
+
 - GET /tasks
 - GET /users
 - GET /piggybank/balance
@@ -181,12 +205,14 @@ ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 ## Versioning
 
 ### Version Format
+
 ```
 /v{major_version}/
 Example: /v1/users
 ```
 
 ### Version Lifecycle
+
 1. Current: v1
 2. Beta: v2-beta
 3. Deprecated: none
@@ -194,6 +220,7 @@ Example: /v1/users
 ## Error Codes
 
 ### Common Errors
+
 - `AUTH_REQUIRED`: Authentication required
 - `INVALID_CREDENTIALS`: Invalid login credentials
 - `PERMISSION_DENIED`: Insufficient permissions
@@ -201,6 +228,7 @@ Example: /v1/users
 - `VALIDATION_ERROR`: Invalid input data
 
 ### HTTP Status Codes
+
 - 200: Success
 - 201: Created
 - 400: Bad Request
@@ -213,11 +241,13 @@ Example: /v1/users
 ## Webhooks
 
 ### Available Events
+
 - `user.created`
 - `task.completed`
 - `payment.processed`
 
 ### Webhook Format
+
 ```json
 {
   "event": "string",
@@ -229,28 +259,31 @@ Example: /v1/users
 ## API Clients
 
 ### Official SDKs
+
 - JavaScript/TypeScript
 - Python
 - Mobile (iOS/Android)
 
 ### Example Usage (TypeScript)
+
 ```typescript
 import { TaschengeldClient } from '@taschengeld/sdk';
 
 const client = new TaschengeldClient({
   apiKey: 'your_api_key',
-  environment: 'production'
+  environment: 'production',
 });
 
 const tasks = await client.tasks.list({
   page: 1,
-  perPage: 20
+  perPage: 20,
 });
 ```
 
 ## Integration Patterns
 
 ### Recommended Practices
+
 1. Implement exponential backoff
 2. Handle rate limiting
 3. Validate responses
@@ -258,6 +291,7 @@ const tasks = await client.tasks.list({
 5. Cache responses
 
 ### Security Considerations
+
 1. Store API keys securely
 2. Use HTTPS only
 3. Validate webhook signatures
@@ -267,6 +301,7 @@ const tasks = await client.tasks.list({
 ## Monitoring
 
 ### Metrics Tracked
+
 - Request volume
 - Response times
 - Error rates
@@ -274,6 +309,7 @@ const tasks = await client.tasks.list({
 - API usage by endpoint
 
 ### Health Checks
+
 - GET /health
 - GET /health/db
 - GET /health/cache
@@ -285,4 +321,4 @@ const tasks = await client.tasks.list({
 3. [SDK Documentation](../3-development/sdk.md)
 4. [Webhook Guide](../3-development/webhooks.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

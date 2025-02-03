@@ -5,25 +5,28 @@ This document outlines the user management features and functionality in Taschen
 ## User Types
 
 ### Admin Users
+
 ```typescript
 interface AdminUser {
   role: 'admin';
   permissions: AdminPermissions[];
-  managedFamilies?: number[];  // Family IDs
+  managedFamilies?: number[]; // Family IDs
 }
 ```
 
 ### Parent Users
+
 ```typescript
 interface ParentUser {
   role: 'parent';
   familyId: number;
-  children: number[];  // Child user IDs
+  children: number[]; // Child user IDs
   preferences: ParentPreferences;
 }
 ```
 
 ### Child Users
+
 ```typescript
 interface ChildUser {
   role: 'child';
@@ -37,6 +40,7 @@ interface ChildUser {
 ## User Permissions
 
 ### Admin Permissions
+
 - System configuration
 - Family management
 - User management
@@ -44,6 +48,7 @@ interface ChildUser {
 - Analytics access
 
 ### Parent Permissions
+
 - Child account management
 - Task creation/management
 - Payment approval
@@ -51,6 +56,7 @@ interface ChildUser {
 - Report generation
 
 ### Child Permissions
+
 - Task viewing/completion
 - Balance checking
 - Profile customization
@@ -60,6 +66,7 @@ interface ChildUser {
 ## User Profiles
 
 ### Profile Information
+
 ```typescript
 interface UserProfile {
   id: number;
@@ -74,6 +81,7 @@ interface UserProfile {
 ```
 
 ### Profile Management
+
 - Avatar upload/update
 - Display name changes
 - Password management
@@ -83,6 +91,7 @@ interface UserProfile {
 ## Family Management
 
 ### Family Structure
+
 ```typescript
 interface Family {
   id: number;
@@ -94,6 +103,7 @@ interface Family {
 ```
 
 ### Family Features
+
 - Multiple parent support
 - Child account linking
 - Shared task management
@@ -103,6 +113,7 @@ interface Family {
 ## Account Security
 
 ### Authentication
+
 - Password requirements
 - Two-factor authentication
 - Session management
@@ -110,6 +121,7 @@ interface Family {
 - Device management
 
 ### Authorization
+
 - Role-based access
 - Permission inheritance
 - Action auditing
@@ -119,6 +131,7 @@ interface Family {
 ## User Settings
 
 ### Application Settings
+
 ```typescript
 interface UserSettings {
   notifications: NotificationPreferences;
@@ -129,6 +142,7 @@ interface UserSettings {
 ```
 
 ### Notification Preferences
+
 - Email notifications
 - Push notifications
 - In-app alerts
@@ -138,6 +152,7 @@ interface UserSettings {
 ## User Interface
 
 ### Parent Dashboard
+
 - Child account overview
 - Task management
 - Payment approval
@@ -145,6 +160,7 @@ interface UserSettings {
 - Settings access
 
 ### Child Dashboard
+
 - Available tasks
 - Balance/history
 - Achievement tracking
@@ -154,6 +170,7 @@ interface UserSettings {
 ## User Analytics
 
 ### Parent Analytics
+
 - Task approval rates
 - Payment patterns
 - Child progress
@@ -161,6 +178,7 @@ interface UserSettings {
 - Time management
 
 ### Child Analytics
+
 - Task completion
 - Earning history
 - Goal progress
@@ -170,6 +188,7 @@ interface UserSettings {
 ## Account Lifecycle
 
 ### Creation
+
 1. Initial signup
 2. Role assignment
 3. Profile setup
@@ -177,6 +196,7 @@ interface UserSettings {
 5. Preference configuration
 
 ### Maintenance
+
 1. Regular updates
 2. Password changes
 3. Permission adjustments
@@ -184,6 +204,7 @@ interface UserSettings {
 5. Setting modifications
 
 ### Deactivation
+
 1. Account suspension
 2. Data archival
 3. Family unlinking
@@ -193,6 +214,7 @@ interface UserSettings {
 ## Integration
 
 ### API Endpoints
+
 - `POST /api/users` - Create user
 - `GET /api/users/:id` - Get user
 - `PUT /api/users/:id` - Update user
@@ -200,6 +222,7 @@ interface UserSettings {
 - `GET /api/families/:id` - Get family
 
 ### External Systems
+
 - Authentication providers
 - Email services
 - Storage services
@@ -209,6 +232,7 @@ interface UserSettings {
 ## Privacy & Compliance
 
 ### Data Protection
+
 - Personal data handling
 - Data minimization
 - Consent management
@@ -216,6 +240,7 @@ interface UserSettings {
 - Access controls
 
 ### Compliance Features
+
 - GDPR compliance
 - Data portability
 - Right to be forgotten
@@ -225,6 +250,7 @@ interface UserSettings {
 ## Best Practices
 
 ### Account Management
+
 1. Regular security reviews
 2. Permission audits
 3. Profile updates
@@ -232,6 +258,7 @@ interface UserSettings {
 5. Activity monitoring
 
 ### Family Setup
+
 1. Clear role definition
 2. Appropriate permissions
 3. Regular reviews
@@ -241,6 +268,7 @@ interface UserSettings {
 ## Troubleshooting
 
 ### Common Issues
+
 1. Login problems
 2. Permission errors
 3. Profile updates
@@ -248,6 +276,7 @@ interface UserSettings {
 5. Settings sync
 
 ### Solutions
+
 1. Password reset process
 2. Permission verification
 3. Cache clearing
@@ -261,4 +290,4 @@ interface UserSettings {
 3. [Task Management](task-management.md)
 4. [Payment System](payment-system.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

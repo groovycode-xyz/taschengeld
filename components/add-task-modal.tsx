@@ -4,16 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
-import { SelectSoundModal } from './select-sound-modal';
+import { SelectUserSoundModal } from './select-user-sound-modal';
 import { Save, X, Play } from 'lucide-react';
 
 type AddTaskModalProps = {
@@ -87,7 +81,8 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                   <Textarea
                     id='description'
                     value={taskState.description}
-                    onChange={(e) => setTaskState((prev) => ({ ...prev, description: e.target.value }))
+                    onChange={(e) =>
+                      setTaskState((prev) => ({ ...prev, description: e.target.value }))
                     }
                     className='h-20'
                   />
@@ -112,7 +107,12 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                 <div>
                   <Label>Task Sound</Label>
                   <div className='flex items-center space-x-2 mt-2'>
-                    <Button type='button' variant='outline' onClick={() => setIsSoundModalOpen(true)} className='flex-1'>
+                    <Button
+                      type='button'
+                      variant='outline'
+                      onClick={() => setIsSoundModalOpen(true)}
+                      className='flex-1'
+                    >
                       {taskState.sound_url ? taskState.sound_url.toUpperCase() : 'Select Sound'}
                     </Button>
                     {taskState.sound_url && (
@@ -148,15 +148,21 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                     type='number'
                     step='0.01'
                     value={taskState.payout_value}
-                    onChange={(e) => setTaskState((prev) => ({ ...prev, payout_value: e.target.value }))}
+                    onChange={(e) =>
+                      setTaskState((prev) => ({ ...prev, payout_value: e.target.value }))
+                    }
                   />
                 </div>
                 <div className='flex items-center space-x-2 pt-6'>
-                  <Label htmlFor='is_active' className='text-base'>Active</Label>
+                  <Label htmlFor='is_active' className='text-base'>
+                    Active
+                  </Label>
                   <Switch
                     id='is_active'
                     checked={taskState.is_active}
-                    onCheckedChange={(checked) => setTaskState((prev) => ({ ...prev, is_active: checked }))}
+                    onCheckedChange={(checked) =>
+                      setTaskState((prev) => ({ ...prev, is_active: checked }))
+                    }
                   />
                 </div>
               </div>
@@ -188,11 +194,12 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
         onSelectIcon={(selectedIcon) =>
           setTaskState((prev) => ({ ...prev, icon_name: selectedIcon }))
         }
+        currentIcon={taskState.icon_name}
       />
-      <SelectSoundModal
+      <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) =>
+        onSelect={(selectedSound: string | null) =>
           setTaskState((prev) => ({ ...prev, sound_url: selectedSound }))
         }
         currentSound={taskState.sound_url}

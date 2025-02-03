@@ -557,7 +557,10 @@ export function GlobalAppSettings() {
               <div className='space-y-8'>
                 <div className='flex items-center justify-between space-x-4 p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
                   <div>
-                    <Label htmlFor='role-enforcement' className='text-base font-medium text-content-primary'>
+                    <Label
+                      htmlFor='role-enforcement'
+                      className='text-base font-medium text-content-primary'
+                    >
                       Enforce Parent/Child Roles
                     </Label>
                     <p className='text-sm text-content-secondary'>
@@ -661,7 +664,9 @@ export function GlobalAppSettings() {
                         selectedCurrency ? 'text-gray-900' : 'text-gray-500'
                       }`}
                     >
-                      <SelectValue placeholder={loadingCurrency ? 'Loading...' : 'Select Currency'} />
+                      <SelectValue
+                        placeholder={loadingCurrency ? 'Loading...' : 'Select Currency'}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value='none'>None</SelectItem>
@@ -742,12 +747,16 @@ export function GlobalAppSettings() {
                       Restore
                     </Button>
                   </div>
-                  <p className='text-sm text-content-secondary mt-2'>Download or restore all task definitions</p>
+                  <p className='text-sm text-content-secondary mt-2'>
+                    Download or restore all task definitions
+                  </p>
                 </div>
 
                 {/* Accounts Backup/Restore */}
                 <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                  <h3 className='text-base font-medium text-content-primary mb-4'>Sparkässeli Accounts</h3>
+                  <h3 className='text-base font-medium text-content-primary mb-4'>
+                    Sparkässeli Accounts
+                  </h3>
                   <div className='flex gap-3'>
                     <Button
                       variant='outline'
@@ -785,7 +794,9 @@ export function GlobalAppSettings() {
 
                 {/* Full Database Backup/Restore */}
                 <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                  <h3 className='text-base font-medium text-content-primary mb-4'>Full Database Backup</h3>
+                  <h3 className='text-base font-medium text-content-primary mb-4'>
+                    Full Database Backup
+                  </h3>
                   <div className='flex gap-3'>
                     <Button
                       variant='outline'
@@ -816,7 +827,9 @@ export function GlobalAppSettings() {
                       Restore
                     </Button>
                   </div>
-                  <p className='text-sm text-content-secondary mt-2'>Download or restore the entire database</p>
+                  <p className='text-sm text-content-secondary mt-2'>
+                    Download or restore the entire database
+                  </p>
                 </div>
               </div>
             </section>
@@ -865,7 +878,9 @@ export function GlobalAppSettings() {
                     onClick={() => handleResetClick('transactions')}
                     disabled={loadingStates.transactions}
                   >
-                    {loadingStates.transactions && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+                    {loadingStates.transactions && (
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    )}
                     Reset Transaction History
                   </Button>
                   <p className='text-sm text-content-secondary mt-2'>

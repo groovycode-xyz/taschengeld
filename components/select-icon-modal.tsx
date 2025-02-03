@@ -166,7 +166,7 @@ export function SelectIconModal({
         <DialogHeader className='flex-shrink-0'>
           <DialogTitle>Select an Icon</DialogTitle>
         </DialogHeader>
-        
+
         <div className='flex-1 overflow-y-auto overflow-x-hidden'>
           <div className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 py-4 px-1'>
             {taskIcons.map((icon) => (
@@ -180,17 +180,14 @@ export function SelectIconModal({
                 }}
                 className={cn(
                   'p-2 h-16 w-16 flex justify-center items-center border-2',
-                  currentIcon === icon 
-                    ? 'border-blue-600 bg-blue-100 shadow-md ring-2 ring-blue-400 ring-offset-2' 
+                  currentIcon === icon
+                    ? 'border-blue-600 bg-blue-100 shadow-md ring-2 ring-blue-400 ring-offset-2'
                     : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
                 )}
               >
-                <IconComponent 
-                  icon={icon} 
-                  className={cn(
-                    'h-8 w-8',
-                    currentIcon === icon && 'text-blue-600'
-                  )} 
+                <IconComponent
+                  icon={icon}
+                  className={cn('h-8 w-8', currentIcon === icon && 'text-blue-600')}
                 />
               </Button>
             ))}

@@ -93,7 +93,7 @@ export async function POST(request: Request) {
       for (const ct of completed_tasks) {
         const userId = userMappings.get(ct.user_name);
         const taskId = taskMappings.get(ct.task_title);
-        
+
         if (userId && taskId) {
           await client.query(
             `
@@ -152,10 +152,13 @@ export async function POST(request: Request) {
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Error restoring all data:', error);
-    return NextResponse.json({ 
-      error: 'Failed to restore all data',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to restore all data',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   } finally {
     client.release();
   }

@@ -43,18 +43,21 @@ The Taschengeld project follows a Next.js-based architecture with React componen
 ## Database Architecture
 
 ### Schema Management
+
 - Migrations-based schema evolution
 - Standardized data types and constraints
 - Proper foreign key relationships
 - Check constraints for data validity
 
 ### Data Operations
+
 - Direct SQL queries for performance
 - Prepared statements for security
 - Transaction support for data integrity
 - Backup/restore functionality for data safety
 
 ### Key Features
+
 - Timezone-aware timestamps
 - Standardized numeric precision for currency
 - Cascading deletes for referential integrity

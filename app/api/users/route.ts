@@ -20,10 +20,7 @@ export async function POST(request: Request) {
     const existingUser = await userRepository.findByName(name);
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: 'A user with this name already exists' },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: 'A user with this name already exists' }, { status: 409 });
     }
 
     // If no duplicate, proceed with user creation
@@ -31,10 +28,7 @@ export async function POST(request: Request) {
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
     console.error('Failed to create user:', error);
-    return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
   }
 }
 

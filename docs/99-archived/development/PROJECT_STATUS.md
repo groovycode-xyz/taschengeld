@@ -8,17 +8,17 @@
 
 ## Current Focus
 
-- [X] Remove Role column from Users table
+- [x] Remove Role column from Users table
 
 ## Upcoming Tasks
 
-- [X] Fix Known Issues
+- [x] Fix Known Issues
 - [ ] Implement color theme functionality including dark mode
 
 ## Known Issues
 
 - Add User and Edit User forms
-  
+
   - create a validation rule to prevent duplicate user names.
 
 ## Next Steps

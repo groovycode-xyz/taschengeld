@@ -22,7 +22,8 @@ class ThemeManager {
     this.setTheme(theme);
 
     // Initialize color theme if needed
-    const storedColorTheme = (localStorage.getItem('colorTheme') as ColorTheme) || defaultColorTheme;
+    const storedColorTheme =
+      (localStorage.getItem('colorTheme') as ColorTheme) || defaultColorTheme;
     this.setColorTheme(storedColorTheme);
 
     // Listen for system theme changes if using 'auto'
@@ -65,4 +66,4 @@ class ThemeManager {
   }
 }
 
-export default ThemeManager; 
+export default ThemeManager;

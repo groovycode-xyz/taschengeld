@@ -108,13 +108,8 @@ export function PiggyBank() {
               className='overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200'
             >
               <CardHeader className='flex flex-col items-center text-center'>
-                <IconComponent
-                  icon={user.icon}
-                  className='w-20 h-20 mb-2 text-green-700'
-                />
-                <CardTitle className='mb-2 text-green-900'>
-                  {user.name}
-                </CardTitle>
+                <IconComponent icon={user.icon} className='w-20 h-20 mb-2 text-green-700' />
+                <CardTitle className='mb-2 text-green-900'>{user.name}</CardTitle>
                 <div className='text-2xl font-bold mb-4 text-green-700'>
                   <CurrencyDisplay
                     value={parseFloat(user.account.balance)}

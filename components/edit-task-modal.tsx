@@ -146,7 +146,12 @@ export function EditTaskModal({
                 <div>
                   <Label>Task Sound</Label>
                   <div className='flex items-center space-x-2 mt-2'>
-                    <Button type='button' variant='outline' onClick={() => setIsSoundModalOpen(true)} className='flex-1'>
+                    <Button
+                      type='button'
+                      variant='outline'
+                      onClick={() => setIsSoundModalOpen(true)}
+                      className='flex-1'
+                    >
                       {sound_url ? sound_url.toUpperCase() : 'Select Sound'}
                     </Button>
                     {sound_url && (
@@ -188,12 +193,10 @@ export function EditTaskModal({
                   />
                 </div>
                 <div className='flex items-center space-x-2 pt-6'>
-                  <Label htmlFor='is_active' className='text-base'>Active</Label>
-                  <Switch
-                    id='is_active'
-                    checked={is_active}
-                    onCheckedChange={setIsActive}
-                  />
+                  <Label htmlFor='is_active' className='text-base'>
+                    Active
+                  </Label>
+                  <Switch id='is_active' checked={is_active} onCheckedChange={setIsActive} />
                 </div>
               </div>
             </div>

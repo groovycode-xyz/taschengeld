@@ -44,6 +44,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with production values:
+
 ```env
 NODE_ENV=production
 DB_PASSWORD=secure_password
@@ -111,6 +112,7 @@ GRANT ALL PRIVILEGES ON DATABASE tgeld TO tgeld;
 ### 4. Process Management
 
 Create systemd service file `/etc/systemd/system/tgeld.service`:
+
 ```ini
 [Unit]
 Description=Taschengeld Application
@@ -130,6 +132,7 @@ WantedBy=multi-user.target
 ```
 
 Start service:
+
 ```bash
 sudo systemctl enable tgeld
 sudo systemctl start tgeld
@@ -140,11 +143,13 @@ sudo systemctl start tgeld
 ### Docker-based Platforms
 
 1. **Setup**
+
    - Configure container registry
    - Set environment variables
    - Configure database connection
 
 2. **Deployment**
+
 ```bash
 # Build production image
 docker build -t tgeld:prod .
@@ -157,11 +162,13 @@ docker push registry.example.com/tgeld
 ### Platform-specific Instructions
 
 1. **AWS**
+
    - Use ECS or EKS for containers
    - RDS for database
    - Route 53 for DNS
 
 2. **Google Cloud**
+
    - Cloud Run for containers
    - Cloud SQL for database
    - Cloud DNS for domain
@@ -176,11 +183,13 @@ docker push registry.example.com/tgeld
 ### 1. Using Nginx
 
 Install Nginx:
+
 ```bash
 sudo apt install -y nginx
 ```
 
 Configure Nginx (`/etc/nginx/sites-available/tgeld`):
+
 ```nginx
 server {
     listen 80;
@@ -281,11 +290,13 @@ tar -czf uploads_backup.tar.gz uploads/
 ### Common Issues
 
 1. **502 Bad Gateway**
+
    - Check if application is running
    - Verify Nginx configuration
    - Check logs: `journalctl -u tgeld`
 
 2. **Database Connection**
+
    - Verify credentials
    - Check network access
    - Review connection pool settings
@@ -300,6 +311,7 @@ tar -czf uploads_backup.tar.gz uploads/
 ### Regular Tasks
 
 1. **Updates**
+
 ```bash
 # Update system
 sudo apt update && sudo apt upgrade -y
@@ -311,6 +323,7 @@ npm run build
 ```
 
 2. **Monitoring**
+
 ```bash
 # Check status
 sudo systemctl status tgeld
@@ -321,6 +334,7 @@ journalctl -u tgeld -f
 ```
 
 3. **Backup Verification**
+
 ```bash
 # Test backup restore
 psql -U postgres -d tgeld_test < backup.sql
@@ -332,4 +346,4 @@ psql -U postgres -d tgeld_test < backup.sql
 2. [Backup Guide](../5-maintenance/backup-restore.md)
 3. [Security Guide](../2-architecture/security.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

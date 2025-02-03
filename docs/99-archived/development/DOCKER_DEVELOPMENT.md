@@ -32,6 +32,7 @@ docker compose -f docker-compose.dev.yml up -d
 #### Hot Reload
 
 The development environment is configured for hot reload:
+
 - Next.js changes are automatically detected
 - Changes to server-side code trigger automatic rebuilds
 - Database changes are reflected immediately
@@ -75,19 +76,19 @@ Add to `.vscode/launch.json`:
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Docker: Attach to Node",
-            "port": 9229,
-            "address": "localhost",
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "/app",
-            "protocol": "inspector"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Docker: Attach to Node",
+      "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
+      "protocol": "inspector"
+    }
+  ]
 }
 ```
 
@@ -137,16 +138,19 @@ docker compose exec app npm run migrate:down
 ### Best Practices
 
 1. **Environment Variables**
+
    - Never commit `.env.local`
    - Keep `.env.example` updated
    - Use development-specific values in `.env.development`
 
 2. **Volume Management**
+
    - Use named volumes for persistence
    - Clean up unused volumes regularly
    - Back up important data
 
 3. **Performance**
+
    - Use volume mounts for development
    - Keep image sizes small
    - Use multi-stage builds
@@ -159,11 +163,13 @@ docker compose exec app npm run migrate:down
 ### Troubleshooting Development Issues
 
 1. **Container Won't Start**
+
    - Check logs: `docker compose logs app`
    - Verify port availability
    - Check environment variables
 
 2. **Hot Reload Not Working**
+
    - Verify volume mounts
    - Check file permissions
    - Restart containers
@@ -187,4 +193,4 @@ docker image prune
 
 # Remove all unused Docker resources
 docker system prune
-``` 
+```

@@ -78,7 +78,7 @@ export function AddUserModal({
       setName(user.name);
       setIcon(user.icon || defaultUserState.icon);
       setSoundUrl(user.sound_url);
-      setBirthday(typeof user.birthday === 'string' ? user.birthday : user.birthday.toISOString().split('T')[0]);
+      setBirthday(user.birthday);
     } else if (!isOpen) {
       // Reset to defaults when modal closes
       setName(defaultUserState.name);
@@ -108,7 +108,7 @@ export function AddUserModal({
       };
 
       const response = await onAddUser(userData);
-      
+
       if (!response.ok) {
         const data = await response.json();
         addToast({
@@ -171,7 +171,10 @@ export function AddUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-white border-none shadow-lg sm:max-w-[425px]" aria-describedby='add-user-description'>
+        <DialogContent
+          className='bg-white border-none shadow-lg sm:max-w-[425px]'
+          aria-describedby='add-user-description'
+        >
           <DialogHeader>
             <DialogTitle>{user ? 'Edit User' : 'Add User'}</DialogTitle>
             <DialogDescription id='add-user-description'>
@@ -261,16 +264,11 @@ export function AddUserModal({
               </div>
             </div>
             <DialogFooter className='mt-6'>
-              <Button 
-                type='button' 
-                variant='outline' 
-                onClick={onClose} 
-                aria-label='Cancel'
-              >
+              <Button type='button' variant='outline' onClick={onClose} aria-label='Cancel'>
                 <X className='h-4 w-4' />
               </Button>
-              <Button 
-                type='submit' 
+              <Button
+                type='submit'
                 variant='outline'
                 className='border-green-500 hover:bg-green-50'
                 aria-label='Save User'

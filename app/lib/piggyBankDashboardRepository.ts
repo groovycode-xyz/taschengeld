@@ -76,5 +76,5 @@ export const piggyBankDashboardRepository = {
     } finally {
       client.release();
     }
-  }
+  },
 };

@@ -9,6 +9,7 @@ The monitoring system provides comprehensive visibility into system health, perf
 ## Monitoring Stack
 
 ### Core Components
+
 - Prometheus - Metrics collection
 - Grafana - Visualization
 - ELK Stack - Log management
@@ -16,6 +17,7 @@ The monitoring system provides comprehensive visibility into system health, perf
 - Node Exporter - System metrics
 
 ### Integration Points
+
 ```yaml
 prometheus:
   scrape_interval: 15s
@@ -32,6 +34,7 @@ prometheus:
 ## System Metrics
 
 ### Application Metrics
+
 ```typescript
 interface AppMetrics {
   activeUsers: Gauge;
@@ -43,6 +46,7 @@ interface AppMetrics {
 ```
 
 ### Infrastructure Metrics
+
 - CPU usage
 - Memory utilization
 - Disk I/O
@@ -52,17 +56,19 @@ interface AppMetrics {
 ## Performance Monitoring
 
 ### Response Times
+
 ```typescript
 interface LatencyMetrics {
   endpoint: string;
   method: string;
-  p50: number;  // milliseconds
+  p50: number; // milliseconds
   p90: number;
   p99: number;
 }
 ```
 
 ### Resource Usage
+
 ```yaml
 resource_alerts:
   cpu_high:
@@ -79,6 +85,7 @@ resource_alerts:
 ## Log Management
 
 ### Log Sources
+
 - Application logs
 - System logs
 - Access logs
@@ -86,6 +93,7 @@ resource_alerts:
 - Audit logs
 
 ### Log Format
+
 ```json
 {
   "timestamp": "2024-12-04T10:00:00Z",
@@ -104,6 +112,7 @@ resource_alerts:
 ## Alert Configuration
 
 ### Alert Rules
+
 ```yaml
 groups:
   - name: app_alerts
@@ -115,7 +124,7 @@ groups:
           severity: critical
         annotations:
           summary: High error rate detected
-          
+
       - alert: SlowResponses
         expr: http_request_duration_seconds{quantile="0.9"} > 2
         for: 10m
@@ -126,6 +135,7 @@ groups:
 ```
 
 ### Notification Channels
+
 - Email notifications
 - Slack alerts
 - PagerDuty
@@ -135,6 +145,7 @@ groups:
 ## Dashboard Templates
 
 ### System Dashboard
+
 ```yaml
 panels:
   - title: System Overview
@@ -143,7 +154,7 @@ panels:
       - expr: system_cpu_usage
       - expr: system_memory_usage
       - expr: system_disk_usage
-      
+
   - title: Application Health
     type: graph
     targets:
@@ -152,13 +163,14 @@ panels:
 ```
 
 ### Application Dashboard
+
 ```yaml
 panels:
   - title: Active Users
     type: gauge
     targets:
       - expr: active_users_total
-      
+
   - title: Task Completion
     type: graph
     targets:
@@ -168,6 +180,7 @@ panels:
 ## Health Checks
 
 ### Endpoint Health
+
 ```typescript
 interface HealthCheck {
   service: string;
@@ -182,6 +195,7 @@ interface HealthCheck {
 ```
 
 ### Component Health
+
 - Database connectivity
 - Cache availability
 - Queue processing
@@ -191,6 +205,7 @@ interface HealthCheck {
 ## Performance Testing
 
 ### Load Testing
+
 ```bash
 #!/bin/bash
 # Load test script
@@ -203,13 +218,14 @@ k6 run \
 ```
 
 ### Stress Testing
+
 ```javascript
 // k6 stress test
-export default function() {
+export default function () {
   const responses = http.batch([
     ['GET', 'http://app/api/tasks'],
     ['POST', 'http://app/api/tasks'],
-    ['GET', 'http://app/api/users']
+    ['GET', 'http://app/api/users'],
   ]);
 }
 ```
@@ -217,6 +233,7 @@ export default function() {
 ## Tracing
 
 ### Trace Configuration
+
 ```yaml
 opentelemetry:
   service_name: tgeld
@@ -228,6 +245,7 @@ opentelemetry:
 ```
 
 ### Span Details
+
 ```typescript
 interface TraceSpan {
   name: string;
@@ -244,6 +262,7 @@ interface TraceSpan {
 ## Capacity Planning
 
 ### Resource Tracking
+
 - CPU trends
 - Memory growth
 - Storage usage
@@ -251,6 +270,7 @@ interface TraceSpan {
 - User growth
 
 ### Scaling Triggers
+
 ```yaml
 scaling_rules:
   cpu_scale:
@@ -266,6 +286,7 @@ scaling_rules:
 ## Security Monitoring
 
 ### Security Metrics
+
 - Failed logins
 - Permission changes
 - API key usage
@@ -273,6 +294,7 @@ scaling_rules:
 - Data access
 
 ### Audit Logging
+
 ```typescript
 interface AuditLog {
   timestamp: Date;
@@ -287,6 +309,7 @@ interface AuditLog {
 ## Backup Monitoring
 
 ### Backup Metrics
+
 - Backup success rate
 - Backup duration
 - Storage usage
@@ -294,6 +317,7 @@ interface AuditLog {
 - Data integrity
 
 ### Backup Alerts
+
 ```yaml
 backup_alerts:
   failed_backup:
@@ -307,6 +331,7 @@ backup_alerts:
 ## Best Practices
 
 ### Monitoring
+
 1. Regular review
 2. Alert tuning
 3. Dashboard updates
@@ -314,6 +339,7 @@ backup_alerts:
 5. Documentation
 
 ### Alerting
+
 1. Clear severity levels
 2. Actionable alerts
 3. Proper routing
@@ -323,6 +349,7 @@ backup_alerts:
 ## Troubleshooting
 
 ### Common Issues
+
 1. False positives
 2. Missing data
 3. Alert storms
@@ -330,6 +357,7 @@ backup_alerts:
 5. Integration issues
 
 ### Solutions
+
 1. Alert tuning
 2. Data validation
 3. Alert grouping
@@ -343,4 +371,4 @@ backup_alerts:
 3. [Security Guidelines](../2-architecture/security.md)
 4. [API Reference](../2-architecture/api-reference.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

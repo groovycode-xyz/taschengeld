@@ -14,6 +14,7 @@ This guide covers setting up your development environment for contributing to Ta
 ### Prerequisites
 
 1. **Required Software**
+
    - Node.js 18+
    - npm or yarn
    - Docker and Docker Compose
@@ -30,6 +31,7 @@ This guide covers setting up your development environment for contributing to Ta
 ### Initial Setup
 
 1. **Clone and Install**
+
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/tgeld.git
@@ -43,6 +45,7 @@ npm run prepare
 ```
 
 2. **Environment Setup**
+
 ```bash
 # Copy environment file
 cp .env.example .env.local
@@ -52,6 +55,7 @@ cp .vscode/settings.example.json .vscode/settings.json
 ```
 
 3. **Database Setup**
+
 ```bash
 # Start database
 docker compose -f docker-compose.dev.yml up -d db
@@ -66,11 +70,13 @@ npm run db:seed
 ### Development Workflow
 
 1. **Start Development Server**
+
 ```bash
 npm run dev
 ```
 
 2. **Run Tests**
+
 ```bash
 # Run all tests
 npm test
@@ -83,6 +89,7 @@ npm run test:coverage
 ```
 
 3. **Code Quality**
+
 ```bash
 # Lint code
 npm run lint
@@ -123,11 +130,13 @@ tgeld/
 ### Testing
 
 1. **Unit Tests**
+
    - Test individual components
    - Test utility functions
    - Mock external dependencies
 
 2. **Integration Tests**
+
    - Test component interactions
    - Test API endpoints
    - Test database operations
@@ -140,6 +149,7 @@ tgeld/
 ### Git Workflow
 
 1. **Branches**
+
    - `main`: Production-ready code
    - `develop`: Development branch
    - `feature/*`: New features
@@ -147,6 +157,7 @@ tgeld/
    - `docs/*`: Documentation updates
 
 2. **Commits**
+
    - Use conventional commits
    - Include ticket numbers
    - Keep commits focused
@@ -162,11 +173,13 @@ tgeld/
 ### Local Database
 
 1. **Access PostgreSQL**
+
 ```bash
 docker compose exec db psql -U postgres -d tgeld
 ```
 
 2. **Reset Database**
+
 ```bash
 npm run db:reset
 ```
@@ -174,16 +187,19 @@ npm run db:reset
 ### Migrations
 
 1. **Create Migration**
+
 ```bash
 npm run db:migration:create name_of_migration
 ```
 
 2. **Run Migrations**
+
 ```bash
 npm run db:migrate
 ```
 
 3. **Rollback Migration**
+
 ```bash
 npm run db:rollback
 ```
@@ -219,6 +235,7 @@ npm run db:rollback
 ## Common Development Tasks
 
 1. **Adding a New Feature**
+
    - Create feature branch
    - Implement changes
    - Add tests
@@ -226,6 +243,7 @@ npm run db:rollback
    - Create pull request
 
 2. **Fixing Bugs**
+
    - Create fix branch
    - Reproduce issue
    - Implement fix
@@ -251,4 +269,4 @@ npm run db:rollback
 2. [Testing Guide](testing.md)
 3. [Contributing Guidelines](contributing.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

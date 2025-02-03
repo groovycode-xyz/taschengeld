@@ -6,11 +6,6 @@
 .pnp.js
 .yarn/install-state.gz
 
-# testing
-/coverage
-*.lcov
-.nyc_output/
-
 # next.js
 /.next/
 /out/
@@ -70,7 +65,6 @@ docker-compose.override.yml
 
 # Development files
 .cursorrules
-test-backup-restore.sh
 
 # Temporary and cache files
 *.tmp

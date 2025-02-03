@@ -7,6 +7,7 @@ This document provides solutions for common issues and troubleshooting procedure
 ### Application Issues
 
 #### 1. Application Not Starting
+
 ```bash
 # Check application logs
 docker-compose logs app
@@ -19,6 +20,7 @@ docker-compose config
 ```
 
 **Common Causes:**
+
 - Missing environment variables
 - Database connection issues
 - Port conflicts
@@ -26,6 +28,7 @@ docker-compose config
 - Resource constraints
 
 **Solutions:**
+
 1. Verify `.env` file
 2. Check database connectivity
 3. Release conflicting ports
@@ -33,6 +36,7 @@ docker-compose config
 5. Increase resources
 
 #### 2. Slow Performance
+
 ```bash
 # Check resource usage
 docker stats
@@ -45,6 +49,7 @@ curl http://localhost:3000/metrics
 ```
 
 **Common Causes:**
+
 - High database load
 - Memory leaks
 - Slow queries
@@ -52,6 +57,7 @@ curl http://localhost:3000/metrics
 - Resource exhaustion
 
 **Solutions:**
+
 1. Optimize queries
 2. Increase caching
 3. Scale resources
@@ -61,6 +67,7 @@ curl http://localhost:3000/metrics
 ### Database Issues
 
 #### 1. Connection Errors
+
 ```sql
 -- Check active connections
 SELECT * FROM pg_stat_activity;
@@ -69,12 +76,13 @@ SELECT * FROM pg_stat_activity;
 SHOW max_connections;
 
 -- Reset stuck connections
-SELECT pg_terminate_backend(pid) 
-FROM pg_stat_activity 
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
 WHERE state = 'idle';
 ```
 
 **Common Causes:**
+
 - Connection pool exhaustion
 - Authentication failures
 - Network issues
@@ -82,6 +90,7 @@ WHERE state = 'idle';
 - Resource limits
 
 **Solutions:**
+
 1. Adjust pool size
 2. Verify credentials
 3. Check network
@@ -89,6 +98,7 @@ WHERE state = 'idle';
 5. Increase limits
 
 #### 2. Performance Issues
+
 ```sql
 -- Find slow queries
 SELECT query, calls, total_time, rows
@@ -101,6 +111,7 @@ SELECT * FROM pg_stat_user_indexes;
 ```
 
 **Common Causes:**
+
 - Missing indexes
 - Table bloat
 - Poor query design
@@ -108,6 +119,7 @@ SELECT * FROM pg_stat_user_indexes;
 - Outdated statistics
 
 **Solutions:**
+
 1. Add indexes
 2. Vacuum tables
 3. Optimize queries
@@ -117,6 +129,7 @@ SELECT * FROM pg_stat_user_indexes;
 ### Authentication Issues
 
 #### 1. Login Failures
+
 ```typescript
 interface AuthError {
   type: 'auth_error';
@@ -128,6 +141,7 @@ interface AuthError {
 ```
 
 **Common Causes:**
+
 - Invalid credentials
 - Expired tokens
 - Session issues
@@ -135,6 +149,7 @@ interface AuthError {
 - System time sync
 
 **Solutions:**
+
 1. Reset password
 2. Clear tokens
 3. Restart session
@@ -142,17 +157,15 @@ interface AuthError {
 5. Sync time
 
 #### 2. Permission Errors
+
 ```typescript
 interface PermissionCheck {
-  checkPermission(
-    userId: number,
-    resource: string,
-    action: string
-  ): Promise<boolean>;
+  checkPermission(userId: number, resource: string, action: string): Promise<boolean>;
 }
 ```
 
 **Common Causes:**
+
 - Missing roles
 - Incorrect permissions
 - Cache inconsistency
@@ -160,6 +173,7 @@ interface PermissionCheck {
 - Configuration errors
 
 **Solutions:**
+
 1. Verify roles
 2. Update permissions
 3. Clear cache
@@ -169,6 +183,7 @@ interface PermissionCheck {
 ### API Issues
 
 #### 1. Request Failures
+
 ```typescript
 interface APIError {
   status: number;
@@ -179,6 +194,7 @@ interface APIError {
 ```
 
 **Common Causes:**
+
 - Invalid input
 - Rate limiting
 - Service unavailable
@@ -186,6 +202,7 @@ interface APIError {
 - Version mismatch
 
 **Solutions:**
+
 1. Validate input
 2. Check limits
 3. Verify service
@@ -193,15 +210,15 @@ interface APIError {
 5. Update version
 
 #### 2. Response Issues
+
 ```typescript
 interface ResponseCheck {
-  validateResponse(
-    response: APIResponse
-  ): ValidationResult;
+  validateResponse(response: APIResponse): ValidationResult;
 }
 ```
 
 **Common Causes:**
+
 - Data format
 - Serialization
 - Timeout
@@ -209,6 +226,7 @@ interface ResponseCheck {
 - Encoding issues
 
 **Solutions:**
+
 1. Check format
 2. Fix serialization
 3. Adjust timeout
@@ -218,6 +236,7 @@ interface ResponseCheck {
 ## Diagnostic Tools
 
 ### System Diagnostics
+
 ```bash
 #!/bin/bash
 # System diagnostic script
@@ -239,6 +258,7 @@ tail -n 100 /var/log/app.log
 ```
 
 ### Application Diagnostics
+
 ```typescript
 interface DiagnosticReport {
   system: SystemHealth;
@@ -250,6 +270,7 @@ interface DiagnosticReport {
 ```
 
 ### Network Diagnostics
+
 ```bash
 # Network diagnostic commands
 netstat -tuln
@@ -261,6 +282,7 @@ traceroute api.example.com
 ## Recovery Procedures
 
 ### Service Recovery
+
 ```bash
 #!/bin/bash
 # Service recovery script
@@ -280,6 +302,7 @@ curl http://localhost:3000/health
 ```
 
 ### Data Recovery
+
 ```sql
 -- Data recovery queries
 BEGIN;
@@ -294,6 +317,7 @@ COMMIT;
 ## Monitoring Tools
 
 ### Log Analysis
+
 ```bash
 # Search error logs
 grep -r "ERROR" /var/log/app*
@@ -306,6 +330,7 @@ tail -f error.log | grep -c "ERROR"
 ```
 
 ### Performance Monitoring
+
 ```yaml
 monitoring:
   metrics:
@@ -320,6 +345,7 @@ monitoring:
 ## Prevention Measures
 
 ### System Maintenance
+
 1. Regular updates
 2. Resource monitoring
 3. Log rotation
@@ -327,6 +353,7 @@ monitoring:
 5. Security patches
 
 ### Performance Optimization
+
 1. Query optimization
 2. Cache tuning
 3. Resource allocation
@@ -336,6 +363,7 @@ monitoring:
 ## Best Practices
 
 ### Debugging
+
 1. Isolate the issue
 2. Check logs first
 3. Verify configuration
@@ -343,6 +371,7 @@ monitoring:
 5. Document findings
 
 ### Maintenance
+
 1. Regular backups
 2. Update schedule
 3. Monitoring setup
@@ -356,4 +385,4 @@ monitoring:
 3. [API Reference](../2-architecture/api-reference.md)
 4. [Security Guidelines](../2-architecture/security.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

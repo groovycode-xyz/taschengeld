@@ -60,9 +60,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className="max-w-2xl h-[80vh] flex flex-col p-0"
-      >
+      <DialogContent className='max-w-2xl h-[80vh] flex flex-col p-0'>
         <div className='px-6 py-4 border-b'>
           <DialogHeader>
             <div className='flex items-center gap-3'>

@@ -11,12 +11,14 @@ This guide will help you get Taschengeld up and running quickly using Docker.
 ## Quick Setup
 
 1. **Clone the Repository**
+
 ```bash
 git clone https://github.com/yourusername/tgeld.git
 cd tgeld
 ```
 
 2. **Set Up Environment**
+
 ```bash
 # Copy example environment file
 cp .env.example .env.local
@@ -29,12 +31,14 @@ JWT_SECRET=your_secret_key
 ```
 
 3. **Start the Application**
+
 ```bash
 # Start development environment
 docker compose -f docker-compose.dev.yml up -d
 ```
 
 4. **Access the Application**
+
 - Open [http://localhost:21971](http://localhost:21971) in your browser
 - Default admin credentials:
   - Username: `admin`
@@ -44,14 +48,18 @@ docker compose -f docker-compose.dev.yml up -d
 ## Verify Installation
 
 1. **Check Services**
+
 ```bash
 docker compose ps
 ```
+
 You should see these services running:
+
 - `tgeld-app` (Next.js application)
 - `tgeld-db` (PostgreSQL database)
 
 2. **Check Logs**
+
 ```bash
 docker compose logs -f
 ```
@@ -66,10 +74,12 @@ docker compose logs -f
 ## Common Issues
 
 1. **Port Conflicts**
+
    - Error: `port 21971 already in use`
    - Solution: Change the port in `docker-compose.dev.yml`
 
 2. **Database Connection**
+
    - Error: `connection refused`
    - Solution: Check database credentials in `.env.local`
 
@@ -80,8 +90,9 @@ docker compose logs -f
 ## Getting Help
 
 If you encounter issues:
+
 1. Check the [Troubleshooting Guide](../5-maintenance/troubleshooting.md)
 2. Review [Common Issues](#common-issues) above
 3. Search or create an issue on [GitHub](https://github.com/yourusername/tgeld/issues)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

@@ -57,7 +57,7 @@ export function EditUserModal({
     console.log('User in useEffect:', JSON.stringify(user, null, 2));
     console.log('Birthday in useEffect:', user.birthday);
     console.log('Formatted birthday:', formatDate(user.birthday));
-    
+
     if (user) {
       setName(user.name);
       setIcon(user.icon);
@@ -89,7 +89,7 @@ export function EditUserModal({
     if (!user) return;
 
     const userData = {
-      ...user,  // Include all existing user data
+      ...user, // Include all existing user data
       name,
       icon,
       sound_url: soundUrl,
@@ -123,7 +123,7 @@ export function EditUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-white border-none shadow-lg sm:max-w-[425px]">
+        <DialogContent className='bg-white border-none shadow-lg sm:max-w-[425px]'>
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
           </DialogHeader>
@@ -140,7 +140,7 @@ export function EditUserModal({
                   className='col-span-3'
                 />
               </div>
-              
+
               <div className='grid grid-cols-4 items-center gap-4'>
                 <Label htmlFor='birthday' className='text-right'>
                   Birthday
@@ -222,16 +222,11 @@ export function EditUserModal({
               >
                 <Trash2 className='h-4 w-4' />
               </Button>
-              <Button 
-                type='button' 
-                variant='outline' 
-                onClick={onClose} 
-                aria-label='Cancel'
-              >
+              <Button type='button' variant='outline' onClick={onClose} aria-label='Cancel'>
                 <X className='h-4 w-4' />
               </Button>
-              <Button 
-                type='submit' 
+              <Button
+                type='submit'
                 variant='outline'
                 className='border-green-500 hover:bg-green-50'
                 aria-label='Save Changes'
@@ -245,7 +240,7 @@ export function EditUserModal({
       <IconSelectorModal
         isOpen={isIconModalOpen}
         onClose={() => setIsIconModalOpen(false)}
-        onSelect={(selectedIcon) => {
+        onSelectIcon={(selectedIcon) => {
           setIcon(selectedIcon);
           setIsIconModalOpen(false);
         }}
@@ -253,10 +248,8 @@ export function EditUserModal({
       <SelectUserSoundModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelect={(selectedSound) => {
-          setSoundUrl(selectedSound);
-          setIsSoundModalOpen(false);
-        }}
+        onSelect={(selectedSound: string | null) => setSoundUrl(selectedSound)}
+        currentSound={soundUrl}
       />
     </>
   );

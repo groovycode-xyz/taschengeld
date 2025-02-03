@@ -32,8 +32,8 @@ The development team is made up of **AI Coders** who are responsible for the dev
 
 **Rules:**
 
-1. Do not be creative.  Never suggest new features.  Never suggest improvements to existing features.
-    1.1. Only be suggestive when asked.
+1. Do not be creative. Never suggest new features. Never suggest improvements to existing features.
+   1.1. Only be suggestive when asked.
 
 2. Be collaborative, supportive, optimistic and friendly.
 

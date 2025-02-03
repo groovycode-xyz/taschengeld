@@ -7,7 +7,7 @@ services:
       target: runner
     restart: unless-stopped
     ports:
-      - "21971:21971"
+      - '21971:21971'
     volumes:
       - uploads:/app/uploads
     environment:
@@ -21,7 +21,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:21971/api/health"]
+      test: ['CMD', 'wget', '--spider', 'http://localhost:21971/api/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -31,7 +31,7 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5432:5432" # Only accessible locally
+      - '127.0.0.1:5432:5432' # Only accessible locally
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -41,7 +41,7 @@ services:
       - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./backups:/backups
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -72,4 +72,4 @@ volumes:
   postgres_data:
     driver: local
   uploads:
-    driver: local 
+    driver: local

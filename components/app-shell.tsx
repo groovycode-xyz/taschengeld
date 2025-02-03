@@ -13,7 +13,10 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className='flex flex-col h-screen w-full'>
       <header className='bg-primary text-primary-foreground p-4 flex justify-between items-center'>
-        <Link href='/home' className='text-2xl font-bold hover:text-muted-foreground transition-colors'>
+        <Link
+          href='/home'
+          className='text-2xl font-bold hover:text-muted-foreground transition-colors'
+        >
           Taschengeld
         </Link>
         <div className='flex items-center space-x-6'>
@@ -25,9 +28,7 @@ export function AppShell({ children }: AppShellProps) {
       </header>
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />
-        <div className='flex-1 bg-background'>
-          {children}
-        </div>
+        <div className='flex-1 bg-background'>{children}</div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 Thank you for your interest in contributing to Taschengeld! This document provides guidelines and instructions for contributing to the project.
 
 ## Table of Contents
+
 1. [Code of Conduct](#code-of-conduct)
 2. [Getting Started](#getting-started)
 3. [Development Process](#development-process)
@@ -15,7 +16,9 @@ Thank you for your interest in contributing to Taschengeld! This document provid
 ## Code of Conduct
 
 ### Our Pledge
+
 We pledge to make participation in our project a harassment-free experience for everyone, regardless of:
+
 - Age
 - Body size
 - Disability
@@ -29,6 +32,7 @@ We pledge to make participation in our project a harassment-free experience for 
 - Sexual identity/orientation
 
 ### Expected Behavior
+
 - Use welcoming and inclusive language
 - Be respectful of differing viewpoints
 - Accept constructive criticism gracefully
@@ -36,6 +40,7 @@ We pledge to make participation in our project a harassment-free experience for 
 - Show empathy towards other community members
 
 ### Unacceptable Behavior
+
 - Trolling, insulting/derogatory comments
 - Public or private harassment
 - Publishing others' private information
@@ -44,12 +49,14 @@ We pledge to make participation in our project a harassment-free experience for 
 ## Getting Started
 
 ### Prerequisites
+
 1. Node.js 18+
 2. Docker and Docker Compose
 3. Git
 4. PostgreSQL (for local development)
 
 ### Setup Steps
+
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/tgeld.git
@@ -66,6 +73,7 @@ docker compose -f docker-compose.dev.yml up -d
 ```
 
 ### First Time Contributors
+
 1. Look for issues labeled `good-first-issue`
 2. Read the documentation
 3. Join our community chat
@@ -74,6 +82,7 @@ docker compose -f docker-compose.dev.yml up -d
 ## Development Process
 
 ### Branching Strategy
+
 ```
 main
 ├── feature/task-management
@@ -82,6 +91,7 @@ main
 ```
 
 ### Branch Naming
+
 - `feature/` - New features
 - `bugfix/` - Bug fixes
 - `docs/` - Documentation changes
@@ -89,6 +99,7 @@ main
 - `refactor/` - Code refactoring
 
 ### Commit Messages
+
 ```
 type(scope): description
 
@@ -98,6 +109,7 @@ type(scope): description
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation
@@ -107,6 +119,7 @@ Types:
 - `chore`: Maintenance
 
 Example:
+
 ```
 feat(tasks): add task completion notification
 
@@ -120,6 +133,7 @@ Closes #123
 ## Pull Request Process
 
 ### Before Submitting
+
 1. Update documentation
 2. Add/update tests
 3. Ensure CI passes
@@ -127,22 +141,27 @@ Closes #123
 5. Rebase on main
 
 ### PR Template
+
 ```markdown
 ## Description
+
 [Description of changes]
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] Manually tested
 
 ## Checklist
+
 - [ ] Code follows style guidelines
 - [ ] Documentation updated
 - [ ] Tests passing
@@ -151,6 +170,7 @@ Closes #123
 ```
 
 ### Review Process
+
 1. Automated checks must pass
 2. One approval required
 3. No blocking comments
@@ -159,6 +179,7 @@ Closes #123
 ## Coding Standards
 
 ### TypeScript
+
 ```typescript
 // Follow interface naming convention
 interface ITaskService {
@@ -180,6 +201,7 @@ interface User {
 ```
 
 ### React Components
+
 ```typescript
 // Use functional components
 const TaskCard: React.FC<TaskCardProps> = ({
@@ -199,14 +221,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
 // Use hooks appropriately
 const useTaskStatus = (taskId: string) => {
   const [status, setStatus] = useState<TaskStatus>('pending');
-  
+
   useEffect(() => {
     // Effect implementation
     return () => {
       // Cleanup
     };
   }, [taskId]);
-  
+
   return status;
 };
 ```
@@ -214,6 +236,7 @@ const useTaskStatus = (taskId: string) => {
 ## Documentation
 
 ### Code Documentation
+
 ```typescript
 /**
  * Calculates the total balance for a user
@@ -222,15 +245,13 @@ const useTaskStatus = (taskId: string) => {
  * @returns The total balance in cents
  * @throws {UserNotFoundError} If user doesn't exist
  */
-async function calculateBalance(
-  userId: number,
-  includeCompleted = false
-): Promise<number> {
+async function calculateBalance(userId: number, includeCompleted = false): Promise<number> {
   // Implementation
 }
 ```
 
 ### API Documentation
+
 ```typescript
 /**
  * @api {post} /tasks Create Task
@@ -252,12 +273,14 @@ async function calculateBalance(
 ## Testing
 
 ### Test Requirements
+
 1. Unit tests for new code
 2. Integration tests for API endpoints
 3. E2E tests for critical paths
 4. Maintain coverage thresholds
 
 ### Example Test
+
 ```typescript
 describe('TaskService', () => {
   let service: TaskService;
@@ -271,12 +294,12 @@ describe('TaskService', () => {
   it('should create task', async () => {
     const task = {
       title: 'Test Task',
-      value: 1000
+      value: 1000,
     };
 
     mockRepo.save.mockResolvedValue({
       id: 1,
-      ...task
+      ...task,
     });
 
     const result = await service.createTask(task);
@@ -288,6 +311,7 @@ describe('TaskService', () => {
 ## Security
 
 ### Security Checklist
+
 1. No secrets in code
 2. Input validation
 3. Output encoding
@@ -295,6 +319,7 @@ describe('TaskService', () => {
 5. Authorization checks
 
 ### Reporting Security Issues
+
 1. Do not create public issues
 2. Email security@taschengeld.com
 3. Include detailed description
@@ -308,4 +333,7 @@ describe('TaskService', () => {
 4. [Security Guidelines](../2-architecture/security.md)
 
 Last Updated: December 4, 2024
-``` 
+
+```
+
+```

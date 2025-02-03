@@ -75,9 +75,9 @@ export function UserManagement() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedUser),
       });
-      
+
       if (!response.ok) throw new Error('Failed to update user');
-      
+
       await fetchUsers();
       setIsEditModalOpen(false);
       setEditingUser(null);
@@ -96,9 +96,9 @@ export function UserManagement() {
       const response = await fetch(`/api/users/${userId}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) throw new Error('Failed to delete user');
-      
+
       await fetchUsers();
       setIsEditModalOpen(false);
       router.refresh();
@@ -144,7 +144,7 @@ export function UserManagement() {
                   }}
                 />
               </div>
-          ))}
+            ))}
         </div>
       </div>
 

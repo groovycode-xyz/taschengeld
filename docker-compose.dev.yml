@@ -7,7 +7,7 @@ services:
       target: builder
     command: npm run dev
     ports:
-      - "21971:21971"
+      - '21971:21971'
     volumes:
       - .:/app
       - /app/node_modules
@@ -35,4 +35,4 @@ services:
 
 volumes:
   postgres_data_dev:
-    driver: local 
+    driver: local

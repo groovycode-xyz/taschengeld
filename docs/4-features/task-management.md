@@ -9,26 +9,31 @@ The task management system allows parents to create, assign, and manage tasks fo
 ## Task Lifecycle
 
 ### 1. Task Creation
+
 - Parents create tasks with title, description, and value
 - Optional settings: due date, required proof, age restrictions
 - Task templates for common activities
 
 ### 2. Task Assignment
+
 - Assign to specific child or make available to all
 - Set visibility and availability windows
 - Define completion requirements
 
 ### 3. Task Completion
+
 - Child marks task as complete
 - Optional photo/proof upload
 - Completion notes and timestamp
 
 ### 4. Task Verification
+
 - Parent reviews completed task
 - Approve or reject with feedback
 - Automatic approval options
 
 ### 5. Reward Processing
+
 - Automatic credit to child's balance
 - Transaction record creation
 - Optional bonus/penalty adjustments
@@ -36,26 +41,29 @@ The task management system allows parents to create, assign, and manage tasks fo
 ## Task Types
 
 ### Regular Tasks
+
 ```typescript
 interface RegularTask {
   title: string;
   description: string;
-  value: number;        // in cents
+  value: number; // in cents
   frequency?: 'once' | 'daily' | 'weekly' | 'monthly';
   dueDate?: Date;
 }
 ```
 
 ### Special Tasks
+
 ```typescript
 interface SpecialTask extends RegularTask {
-  bonusValue?: number;  // additional reward
+  bonusValue?: number; // additional reward
   requirements?: string[];
   proofRequired: boolean;
 }
 ```
 
 ### Recurring Tasks
+
 ```typescript
 interface RecurringTask extends RegularTask {
   recurrencePattern: {
@@ -69,31 +77,37 @@ interface RecurringTask extends RegularTask {
 ## Task States
 
 1. **Draft**
+
    - Task created but not published
    - Editable by parent
    - Not visible to children
 
 2. **Active**
+
    - Published and available
    - Visible to assigned children
    - Can be started/completed
 
 3. **In Progress**
+
    - Child has started the task
    - Progress can be updated
    - Parent can monitor status
 
 4. **Completed**
+
    - Child has marked as done
    - Awaiting parent verification
    - Proof/notes attached
 
 5. **Verified**
+
    - Parent has approved completion
    - Reward processed
    - Added to history
 
 6. **Rejected**
+
    - Parent has rejected completion
    - Feedback provided
    - Can be retried
@@ -106,6 +120,7 @@ interface RecurringTask extends RegularTask {
 ## Task Management Interface
 
 ### Parent View
+
 ```typescript
 interface ParentTaskView {
   createTask(task: TaskInput): Promise<Task>;
@@ -116,6 +131,7 @@ interface ParentTaskView {
 ```
 
 ### Child View
+
 ```typescript
 interface ChildTaskView {
   viewAvailableTasks(): Promise<Task[]>;
@@ -128,6 +144,7 @@ interface ChildTaskView {
 ## Task Notifications
 
 ### Event Types
+
 - Task created
 - Task assigned
 - Task started
@@ -137,6 +154,7 @@ interface ChildTaskView {
 - Reward processed
 
 ### Notification Methods
+
 - In-app notifications
 - Email notifications (optional)
 - Push notifications (mobile)
@@ -145,6 +163,7 @@ interface ChildTaskView {
 ## Task Analytics
 
 ### Parent Analytics
+
 - Completion rates
 - Average verification time
 - Popular task types
@@ -152,6 +171,7 @@ interface ChildTaskView {
 - Child performance
 
 ### Child Analytics
+
 - Tasks completed
 - Total earnings
 - Completion streaks
@@ -161,6 +181,7 @@ interface ChildTaskView {
 ## Task Templates
 
 ### Household Chores
+
 ```json
 {
   "title": "Clean Room",
@@ -173,6 +194,7 @@ interface ChildTaskView {
 ```
 
 ### Academic Tasks
+
 ```json
 {
   "title": "Complete Homework",
@@ -187,6 +209,7 @@ interface ChildTaskView {
 ## Integration Points
 
 ### API Endpoints
+
 - `POST /api/tasks` - Create task
 - `GET /api/tasks` - List tasks
 - `PUT /api/tasks/:id` - Update task
@@ -194,11 +217,13 @@ interface ChildTaskView {
 - `POST /api/tasks/:id/verify` - Verify task
 
 ### Webhooks
+
 - Task state changes
 - Reward processing
 - Bulk operations
 
 ### External Systems
+
 - Calendar integration
 - Reward systems
 - Educational platforms
@@ -206,6 +231,7 @@ interface ChildTaskView {
 ## Best Practices
 
 ### Task Creation
+
 1. Clear, actionable titles
 2. Detailed descriptions
 3. Appropriate value assignment
@@ -213,6 +239,7 @@ interface ChildTaskView {
 5. Age-appropriate tasks
 
 ### Task Management
+
 1. Regular review schedule
 2. Consistent verification
 3. Constructive feedback
@@ -222,6 +249,7 @@ interface ChildTaskView {
 ## Troubleshooting
 
 ### Common Issues
+
 1. Task not appearing for child
 2. Completion proof not uploading
 3. Reward not processing
@@ -229,6 +257,7 @@ interface ChildTaskView {
 5. State transition errors
 
 ### Solutions
+
 1. Check assignment settings
 2. Verify file size/format
 3. Check balance/limits
@@ -242,4 +271,4 @@ interface ChildTaskView {
 3. [Payment System](payment-system.md)
 4. [Task API Documentation](../2-architecture/api.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

@@ -88,7 +88,11 @@ export function Payday() {
     }
   };
 
-  const handleUpdatePaymentStatus = async (cTaskId: number, paymentStatus: 'Paid' | 'Unpaid', isRejection: boolean = false) => {
+  const handleUpdatePaymentStatus = async (
+    cTaskId: number,
+    paymentStatus: 'Paid' | 'Unpaid',
+    isRejection: boolean = false
+  ) => {
     setLoadingTaskIds((prev) => [...prev, cTaskId]);
     try {
       if (!isRejection && paymentStatus === 'Paid') {
@@ -102,10 +106,10 @@ export function Payday() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          c_task_id: cTaskId, 
+        body: JSON.stringify({
+          c_task_id: cTaskId,
           payment_status: paymentStatus,
-          is_rejected: isRejection 
+          is_rejected: isRejection,
         }),
       });
 
@@ -139,7 +143,7 @@ export function Payday() {
       if (groupTaskIds.every((id) => prev.includes(id))) {
         return prev.filter((id) => !groupTaskIds.includes(id));
       }
-      return [...new Set([...prev, ...groupTaskIds])];
+      return Array.from(new Set([...prev, ...groupTaskIds]));
     });
   };
 
@@ -153,11 +157,7 @@ export function Payday() {
       try {
         const tasksToProcess = [...selectedTasks];
         for (const taskId of tasksToProcess) {
-          await handleUpdatePaymentStatus(
-            taskId,
-            'Paid',
-            bulkActionType === 'Unpaid'
-          );
+          await handleUpdatePaymentStatus(taskId, 'Paid', bulkActionType === 'Unpaid');
         }
       } catch (error) {
         console.error('Error in bulk action:', error);
@@ -173,7 +173,7 @@ export function Payday() {
 
   // Calculate total amount for selected tasks
   const selectedTasksTotal = selectedTasks
-    .map(taskId => completedTasks.find(task => task.c_task_id === taskId)?.payout_value || '0')
+    .map((taskId) => completedTasks.find((task) => task.c_task_id === taskId)?.payout_value || '0')
     .reduce((sum, value) => sum + parseFloat(value), 0);
 
   const sortTasks = (tasks: CompletedTask[], sortField: SortField) => {
@@ -199,9 +199,8 @@ export function Payday() {
 
   const organizeTasksByView = (tasks: CompletedTask[]) => {
     // First filter by user if needed
-    const filteredTasks = filterUser === 'all' 
-      ? tasks 
-      : tasks.filter(task => task.user_name === filterUser);
+    const filteredTasks =
+      filterUser === 'all' ? tasks : tasks.filter((task) => task.user_name === filterUser);
 
     // Then organize based on view option
     switch (viewOption) {
@@ -231,7 +230,7 @@ export function Payday() {
   // Organize and sort tasks
   const organizedTasks = organizeTasksByView(completedTasks);
   // Sort tasks within each group
-  Object.keys(organizedTasks).forEach(groupKey => {
+  Object.keys(organizedTasks).forEach((groupKey) => {
     organizedTasks[groupKey] = sortTasks(organizedTasks[groupKey], secondarySortField);
   });
 
@@ -241,7 +240,7 @@ export function Payday() {
       // Get all task IDs from all groups
       const allTaskIds = Object.values(organizedTasks)
         .flat()
-        .map(task => task.c_task_id);
+        .map((task) => task.c_task_id);
       setSelectedTasks(allTaskIds);
     } else {
       setSelectedTasks([]);
@@ -271,10 +270,7 @@ export function Payday() {
               >
                 Approve Selected ({selectedTasks.length})
               </Button>
-              <Button
-                onClick={() => handleBulkActionClick('Unpaid')}
-                variant="destructive"
-              >
+              <Button onClick={() => handleBulkActionClick('Unpaid')} variant='destructive'>
                 Reject Selected ({selectedTasks.length})
               </Button>
             </div>
@@ -283,7 +279,10 @@ export function Payday() {
 
         <div className='space-y-4'>
           <div className='flex flex-wrap gap-4 items-center pt-6'>
-            <Select value={viewOption} onValueChange={(value) => setViewOption(value as ViewOption)}>
+            <Select
+              value={viewOption}
+              onValueChange={(value) => setViewOption(value as ViewOption)}
+            >
               <SelectTrigger className='w-[200px]'>
                 <SelectValue placeholder='View tasks' />
               </SelectTrigger>
@@ -307,17 +306,22 @@ export function Payday() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='all'>All Users</SelectItem>
-                  {Array.from(new Set(completedTasks.map((task) => task.user_name))).map((userName) => (
-                    <SelectItem key={userName} value={userName}>
-                      {userName}
-                    </SelectItem>
-                  ))}
+                  {Array.from(new Set(completedTasks.map((task) => task.user_name))).map(
+                    (userName) => (
+                      <SelectItem key={userName} value={userName}>
+                        {userName}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
             )}
 
             <div className='flex items-center gap-2'>
-              <Select value={secondarySortField} onValueChange={(value) => setSecondarySortField(value as SortField)}>
+              <Select
+                value={secondarySortField}
+                onValueChange={(value) => setSecondarySortField(value as SortField)}
+              >
                 <SelectTrigger className='w-[200px]'>
                   <SelectValue placeholder='Sort within groups' />
                 </SelectTrigger>
@@ -345,7 +349,7 @@ export function Payday() {
                   Object.values(organizedTasks).flat().length > 0 &&
                   Object.values(organizedTasks)
                     .flat()
-                    .every(task => selectedTasks.includes(task.c_task_id))
+                    .every((task) => selectedTasks.includes(task.c_task_id))
                 }
                 onCheckedChange={handleSelectAllTasks}
                 className='mr-2'
@@ -400,15 +404,15 @@ export function Payday() {
       </div>
 
       <Dialog open={isBulkConfirmOpen} onOpenChange={setIsBulkConfirmOpen}>
-        <DialogContent className="bg-white">
+        <DialogContent className='bg-white'>
           <DialogHeader>
             <DialogTitle>
               {bulkActionType === 'Paid' ? 'Approve' : 'Reject'} Multiple Tasks
             </DialogTitle>
             <DialogDescription>
               Are you sure you want to {bulkActionType === 'Paid' ? 'approve' : 'reject'}{' '}
-              {selectedTasks.length} task{selectedTasks.length !== 1 ? 's' : ''} with a total value of{' '}
-              <CurrencyDisplay value={selectedTasksTotal} />?
+              {selectedTasks.length} task{selectedTasks.length !== 1 ? 's' : ''} with a total value
+              of <CurrencyDisplay value={selectedTasksTotal} />?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

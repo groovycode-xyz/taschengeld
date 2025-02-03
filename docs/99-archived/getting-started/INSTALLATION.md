@@ -9,23 +9,28 @@
 ## Setup Instructions
 
 1. Clone the repository
+
 ```bash
 git clone [repository-url]
 cd taschengeld
 ```
 
 2. Install dependencies
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables
+
 ```bash
 cp .env.example .env.local
 ```
+
 Edit `.env.local` with your database credentials and other configuration.
 
 4. Initialize the database
+
 ```bash
 # If using Docker
 docker-compose up -d db
@@ -35,6 +40,7 @@ psql -U postgres -f db/init.sql
 ```
 
 5. Run the development server
+
 ```bash
 npm run dev
 ```

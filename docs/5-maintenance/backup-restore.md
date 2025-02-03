@@ -9,18 +9,21 @@ The backup system ensures data safety through automated and manual backup proced
 ## Backup Types
 
 ### Full Backup
+
 - Complete database dump
 - File system backup
 - Configuration backup
 - Logs archive
 
 ### Incremental Backup
+
 - Transaction logs
 - Changed files only
 - Differential backups
 - Point-in-time recovery
 
 ### System State
+
 - Environment variables
 - Configuration files
 - SSL certificates
@@ -29,6 +32,7 @@ The backup system ensures data safety through automated and manual backup proced
 ## Backup Schedule
 
 ### Automated Backups
+
 ```bash
 # Daily backup at 2 AM
 0 2 * * * /usr/local/bin/backup-daily.sh
@@ -41,6 +45,7 @@ The backup system ensures data safety through automated and manual backup proced
 ```
 
 ### Retention Policy
+
 - Daily: 7 days
 - Weekly: 4 weeks
 - Monthly: 12 months
@@ -49,6 +54,7 @@ The backup system ensures data safety through automated and manual backup proced
 ## Backup Procedures
 
 ### Database Backup
+
 ```bash
 #!/bin/bash
 # Database backup script
@@ -70,6 +76,7 @@ find $BACKUP_DIR -name "db_*.backup.gz" -mtime +7 -delete
 ```
 
 ### File System Backup
+
 ```bash
 #!/bin/bash
 # File system backup script
@@ -92,6 +99,7 @@ find $BACKUP_DIR -name "files_*.tar.gz" -mtime +7 -delete
 ## Restore Procedures
 
 ### Database Restore
+
 ```bash
 #!/bin/bash
 # Database restore script
@@ -112,6 +120,7 @@ docker-compose up -d
 ```
 
 ### File System Restore
+
 ```bash
 #!/bin/bash
 # File system restore script
@@ -136,6 +145,7 @@ docker-compose up -d
 ## Verification Procedures
 
 ### Backup Verification
+
 ```bash
 #!/bin/bash
 # Backup verification script
@@ -158,6 +168,7 @@ fi
 ```
 
 ### Restore Testing
+
 1. Restore to test environment
 2. Run integrity checks
 3. Verify application startup
@@ -167,12 +178,14 @@ fi
 ## Storage Management
 
 ### Storage Locations
+
 - Local backup directory
 - Remote backup server
 - Cloud storage (AWS S3)
 - Offsite storage
 
 ### Space Management
+
 ```bash
 #!/bin/bash
 # Storage management script
@@ -189,6 +202,7 @@ fi
 ## Disaster Recovery
 
 ### Recovery Plan
+
 1. Assess data loss
 2. Select restore point
 3. Stop services
@@ -198,6 +212,7 @@ fi
 7. Run tests
 
 ### Recovery Time Objectives
+
 - Database: < 1 hour
 - Files: < 2 hours
 - Full system: < 4 hours
@@ -206,6 +221,7 @@ fi
 ## Monitoring
 
 ### Backup Monitoring
+
 - Backup completion
 - Storage space
 - Backup integrity
@@ -213,19 +229,21 @@ fi
 - Error logging
 
 ### Alert Configuration
+
 ```yaml
 alerts:
   backup_failed:
-    condition: "exit_code != 0"
-    severity: "critical"
+    condition: 'exit_code != 0'
+    severity: 'critical'
     notification:
-      - email: "admin@taschengeld.com"
-      - slack: "#backup-alerts"
+      - email: 'admin@taschengeld.com'
+      - slack: '#backup-alerts'
 ```
 
 ## Security
 
 ### Encryption
+
 - AES-256 encryption
 - Key management
 - Secure transfer
@@ -233,6 +251,7 @@ alerts:
 - Audit logging
 
 ### Access Control
+
 ```yaml
 backup_permissions:
   admin:
@@ -249,6 +268,7 @@ backup_permissions:
 ## Best Practices
 
 ### Backup Best Practices
+
 1. Regular testing
 2. Multiple locations
 3. Encryption
@@ -256,6 +276,7 @@ backup_permissions:
 5. Automation
 
 ### Restore Best Practices
+
 1. Regular drills
 2. Documented procedures
 3. Access control
@@ -265,6 +286,7 @@ backup_permissions:
 ## Troubleshooting
 
 ### Common Issues
+
 1. Backup failure
 2. Storage full
 3. Corruption
@@ -272,6 +294,7 @@ backup_permissions:
 5. Network issues
 
 ### Solutions
+
 1. Retry mechanism
 2. Space cleanup
 3. Integrity check
@@ -285,4 +308,4 @@ backup_permissions:
 3. [Security Guidelines](../2-architecture/security.md)
 4. [Database Schema](../2-architecture/database-schema.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

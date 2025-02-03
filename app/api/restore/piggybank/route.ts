@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     for (const account of accounts) {
       console.log('Processing account:', JSON.stringify(account, null, 2));
       let userId = account.user_id;
-      
+
       // If no user_id but have user_name, try to find user_id
       if (!userId && account.user_name) {
         const userResult = await client.query('SELECT user_id FROM users WHERE name = $1', [
@@ -52,11 +52,11 @@ export async function POST(request: Request) {
            RETURNING account_id`,
           [userId, account.account_number, account.balance]
         );
-        
+
         // Store the mapping of old account_id to new account_id
         const newAccountId = result.rows[0].account_id;
         accountMappings.set(account.account_id, newAccountId);
-        
+
         // Update the user's piggybank_account_id
         await client.query(
           `UPDATE users 
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
       for (const transaction of transactions) {
         console.log('Processing transaction:', JSON.stringify(transaction, null, 2));
         let accountId = accountMappings.get(transaction.account_id);
-        
+
         // If no mapped account_id but have user_name, try to find account_id
         if (!accountId && transaction.user_name) {
           const accountResult = await client.query(
@@ -124,10 +124,13 @@ export async function POST(request: Request) {
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Error restoring piggy bank data:', error);
-    return NextResponse.json({ 
-      error: 'Failed to restore piggy bank data',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to restore piggy bank data',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   } finally {
     client.release();
   }

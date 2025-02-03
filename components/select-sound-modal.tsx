@@ -80,7 +80,7 @@ export function SelectSoundModal({
           <Button
             variant={selectedSound === null ? 'default' : 'outline'}
             className={`w-full justify-between ${
-              selectedSound === null 
+              selectedSound === null
                 ? 'bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600'
                 : 'hover:bg-gray-100'
             }`}
@@ -93,7 +93,7 @@ export function SelectSoundModal({
               key={sound.name}
               variant={selectedSound === sound.name ? 'default' : 'outline'}
               className={`w-full justify-between ${
-                selectedSound === sound.name 
+                selectedSound === sound.name
                   ? 'bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600'
                   : 'hover:bg-gray-100'
               }`}
@@ -108,7 +108,7 @@ export function SelectSoundModal({
                   playSound(sound);
                 }}
                 className={`ml-2 ${
-                  selectedSound === sound.name 
+                  selectedSound === sound.name
                     ? 'text-white hover:bg-blue-700'
                     : 'text-blue-600 hover:bg-gray-100'
                 }`}
@@ -119,8 +119,12 @@ export function SelectSoundModal({
           ))}
         </div>
         <DialogFooter className='flex-shrink-0 px-4 py-2 space-x-2'>
-          <Button variant='outline' onClick={handleCancel}>Cancel</Button>
-          <Button variant='outline' onClick={handleSave}>Save</Button>
+          <Button variant='outline' onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button variant='outline' onClick={handleSave}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

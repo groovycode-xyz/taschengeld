@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AppSetting {
+  setting_id    Int       @id @default(autoincrement())
+  setting_key   String    @unique @db.VarChar(50)
+  setting_value String?
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@map("app_settings")
+}
+
+model CompletedTask {
+  c_task_id      Int                    @id @default(autoincrement())
+  user_id        Int?
+  task_id        Int?
+  description    String?
+  payout_value   Decimal?               @db.Decimal(15, 2)
+  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
+  comment        String?
+  attachment     String?                @db.VarChar(255)
+  payment_status String?                @default("Unpaid") @db.VarChar(20)
+  task           Task?                  @relation(fields: [task_id], references: [task_id], onDelete: Cascade, onUpdate: NoAction)
+  user           User?                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  transactions   PiggybankTransaction[]
+
+  @@map("completed_tasks")
+}
+
+model PiggybankAccount {
+  account_id                                           Int                    @id @default(autoincrement())
+  user_id                                              Int?
+  account_number                                       String                 @unique @db.VarChar(20)
+  balance                                              Decimal?               @default(0) @db.Decimal(15, 2)
+  created_at                                           DateTime?              @default(now()) @db.Timestamptz(6)
+  user                                                 User?                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  transactions                                         PiggybankTransaction[]
+  users_users_piggybank_account_idTopiggybank_accounts User?                  @relation("users_piggybank_account_idTopiggybank_accounts")
+
+  @@map("piggybank_accounts")
+}
+
+model PiggybankTransaction {
+  transaction_id    Int               @id @default(autoincrement())
+  account_id        Int?
+  amount            Decimal           @db.Decimal(15, 2)
+  transaction_type  String            @db.VarChar(10)
+  transaction_date  DateTime?         @default(now()) @db.Timestamptz(6)
+  description       String?
+  photo             String?           @db.VarChar(255)
+  completed_task_id Int?
+  account           PiggybankAccount? @relation(fields: [account_id], references: [account_id], onDelete: Cascade, onUpdate: NoAction)
+  completed_task    CompletedTask?    @relation(fields: [completed_task_id], references: [c_task_id], onUpdate: NoAction)
+
+  @@map("piggybank_transactions")
+}
+
+model Task {
+  task_id         Int             @id @default(autoincrement())
+  title           String          @db.VarChar(100)
+  description     String?
+  icon_name       String?         @db.VarChar(50)
+  sound_url       String?         @db.VarChar(255)
+  payout_value    Decimal         @db.Decimal(15, 2)
+  is_active       Boolean?        @default(true)
+  created_at      DateTime?       @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime?       @default(now()) @db.Timestamptz(6)
+  completed_tasks CompletedTask[]
+
+  @@map("tasks")
+}
+
+model User {
+  user_id                                                           Int                @id @default(autoincrement())
+  name                                                              String             @db.VarChar(100)
+  icon                                                              String             @db.VarChar(50)
+  birthday                                                          DateTime           @db.Date
+  piggybank_account_id                                              Int?               @unique
+  created_at                                                        DateTime?          @default(now()) @db.Timestamptz(6)
+  sound_url                                                         String?            @db.VarChar(255)
+  completed_tasks                                                   CompletedTask[]
+  piggybank_accounts                                                PiggybankAccount[]
+  piggybank_accounts_users_piggybank_account_idTopiggybank_accounts PiggybankAccount?  @relation("users_piggybank_account_idTopiggybank_accounts", fields: [piggybank_account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_piggybank_account")
+
+  @@map("users")
+}

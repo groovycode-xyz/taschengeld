@@ -114,7 +114,7 @@ export function CompletedTaskCard({
       </CardContent>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-white">
+        <DialogContent className='bg-white'>
           <DialogHeader>
             <DialogTitle>
               {actionType === 'Approve' ? 'Approve Payment' : 'Reject Payment'}

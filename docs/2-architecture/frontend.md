@@ -5,6 +5,7 @@ This document outlines the frontend architecture, components, and design pattern
 ## Technology Stack
 
 ### Core Technologies
+
 - Next.js 14
 - React 18
 - TypeScript 5
@@ -12,6 +13,7 @@ This document outlines the frontend architecture, components, and design pattern
 - SWR for data fetching
 
 ### Build Tools
+
 - Webpack
 - PostCSS
 - ESLint
@@ -39,16 +41,19 @@ src/
 ### Component Categories
 
 1. **Page Components**
+
    - Complete pages
    - Route-level components
    - Data fetching logic
 
 2. **Feature Components**
+
    - Task management
    - Piggybank interface
    - User management
 
 3. **Common Components**
+
    - Buttons
    - Forms
    - Cards
@@ -63,12 +68,14 @@ src/
 ## State Management
 
 ### Client State
+
 - React Context for global UI state
 - SWR for server state
 - Local component state
 - Form state with React Hook Form
 
 ### Server State
+
 - SWR for caching and revalidation
 - Optimistic updates
 - Error boundaries
@@ -77,6 +84,7 @@ src/
 ## Routing
 
 ### Page Structure
+
 ```
 pages/
 ├── index.tsx
@@ -87,6 +95,7 @@ pages/
 ```
 
 ### Route Guards
+
 - Authentication check
 - Role-based access
 - Redirect logic
@@ -94,22 +103,24 @@ pages/
 ## Data Fetching
 
 ### SWR Configuration
+
 ```typescript
 const config = {
-  fetcher: (url: string) => fetch(url).then(r => r.json()),
+  fetcher: (url: string) => fetch(url).then((r) => r.json()),
   revalidateOnFocus: false,
-  revalidateOnReconnect: true
+  revalidateOnReconnect: true,
 };
 ```
 
 ### Custom Hooks
+
 ```typescript
 const useTask = (taskId: string) => {
   const { data, error } = useSWR(`/api/tasks/${taskId}`);
   return {
     task: data,
     isLoading: !error && !data,
-    isError: error
+    isError: error,
   };
 };
 ```
@@ -117,6 +128,7 @@ const useTask = (taskId: string) => {
 ## Styling
 
 ### Tailwind Configuration
+
 ```javascript
 module.exports = {
   theme: {
@@ -132,6 +144,7 @@ module.exports = {
 ```
 
 ### Component Styling
+
 ```typescript
 const Button = styled.button`
   ${tw`bg-primary-500 text-white px-4 py-2 rounded`}
@@ -141,6 +154,7 @@ const Button = styled.button`
 ## Performance
 
 ### Optimization Techniques
+
 1. Code splitting
 2. Image optimization
 3. Bundle size analysis
@@ -148,6 +162,7 @@ const Button = styled.button`
 5. Memoization
 
 ### Monitoring
+
 - Core Web Vitals
 - Lighthouse scores
 - Error tracking
@@ -156,12 +171,14 @@ const Button = styled.button`
 ## Testing
 
 ### Testing Stack
+
 - Jest
 - React Testing Library
 - Cypress
 - MSW for API mocking
 
 ### Test Categories
+
 1. Unit tests
 2. Integration tests
 3. E2E tests
@@ -170,12 +187,14 @@ const Button = styled.button`
 ## Accessibility
 
 ### Standards
+
 - WCAG 2.1 AA compliance
 - Semantic HTML
 - ARIA attributes
 - Keyboard navigation
 
 ### Implementation
+
 ```typescript
 const Button = ({ children, ...props }) => (
   <button
@@ -192,6 +211,7 @@ const Button = ({ children, ...props }) => (
 ## Error Handling
 
 ### Error Boundaries
+
 ```typescript
 class ErrorBoundary extends React.Component {
   static getDerivedStateFromError(error) {
@@ -208,6 +228,7 @@ class ErrorBoundary extends React.Component {
 ```
 
 ### Error States
+
 - Loading states
 - Error messages
 - Retry mechanisms
@@ -216,16 +237,17 @@ class ErrorBoundary extends React.Component {
 ## Internationalization
 
 ### i18n Setup
+
 ```typescript
 const i18n = {
   defaultLocale: 'en',
   locales: ['en', 'de'],
-  loadLocaleFrom: (locale, namespace) =>
-    import(`./locales/${locale}/${namespace}.json`)
+  loadLocaleFrom: (locale, namespace) => import(`./locales/${locale}/${namespace}.json`),
 };
 ```
 
 ### Usage
+
 ```typescript
 const { t } = useTranslation();
 return <h1>{t('welcome.title')}</h1>;
@@ -234,18 +256,20 @@ return <h1>{t('welcome.title')}</h1>;
 ## Security
 
 ### Frontend Security
+
 1. XSS prevention
 2. CSRF protection
 3. Content Security Policy
 4. Secure data handling
 
 ### Authentication Flow
+
 ```typescript
 const useAuth = () => {
   const { data: session } = useSWR('/api/auth/session');
   return {
     user: session?.user,
-    isAuthenticated: !!session?.user
+    isAuthenticated: !!session?.user,
   };
 };
 ```
@@ -253,12 +277,14 @@ const useAuth = () => {
 ## Development Workflow
 
 ### Code Standards
+
 1. TypeScript strict mode
 2. ESLint rules
 3. Prettier config
 4. Git hooks
 
 ### CI/CD Pipeline
+
 1. Lint checking
 2. Type checking
 3. Unit tests
@@ -268,6 +294,7 @@ const useAuth = () => {
 ## Component Examples
 
 ### Task Card Component
+
 ```typescript
 interface TaskCardProps {
   task: Task;
@@ -296,4 +323,4 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onComplete }) => {
 3. [Testing Guide](../3-development/testing.md)
 4. [Performance Guide](../3-development/performance.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

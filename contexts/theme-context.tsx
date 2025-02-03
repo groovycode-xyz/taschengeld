@@ -31,9 +31,14 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     const stored = getStoredTheme();
     return stored || defaultTheme;
   });
-  
+
   // Track the resolved theme (actual theme being applied)
-  const resolvedTheme: Exclude<Theme, 'system'> = theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : (theme as Exclude<Theme, 'system'>);
+  const resolvedTheme: Exclude<Theme, 'system'> =
+    theme === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : (theme as Exclude<Theme, 'system'>);
 
   // Handle system theme preference changes
   useEffect(() => {

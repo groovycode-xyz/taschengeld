@@ -20,7 +20,8 @@ export const userRepository = {
   },
 
   async getById(id: number): Promise<User | null> {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT 
         user_id,
         name,
@@ -31,7 +32,9 @@ export const userRepository = {
         created_at
       FROM users 
       WHERE user_id = $1
-    `, [id]);
+    `,
+      [id]
+    );
     return result.rows[0] || null;
   },
 
@@ -136,10 +139,7 @@ export const userRepository = {
   },
 
   async findByName(name: string): Promise<User | null> {
-    const result = await pool.query(
-      'SELECT * FROM users WHERE LOWER(name) = LOWER($1)',
-      [name]
-    );
+    const result = await pool.query('SELECT * FROM users WHERE LOWER(name) = LOWER($1)', [name]);
     return result.rows[0] || null;
   },
 };

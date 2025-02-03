@@ -71,8 +71,6 @@ export function CurrencyDisplay({ value, className = '' }: CurrencyDisplayProps)
   };
 
   return (
-    <span className={`${className} ${isLoading ? 'opacity-70' : ''}`}>
-      {formatCurrency(value)}
-    </span>
+    <span className={`${className} ${isLoading ? 'opacity-70' : ''}`}>{formatCurrency(value)}</span>
   );
-} 
+}

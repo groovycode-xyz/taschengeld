@@ -9,11 +9,12 @@ The payment system manages task rewards, allowances, and balance tracking for ch
 ## Account Types
 
 ### Child Account
+
 ```typescript
 interface ChildAccount {
   id: number;
   userId: number;
-  balance: number;     // in cents
+  balance: number; // in cents
   pendingBalance: number;
   savingsGoals: SavingsGoal[];
   transactions: Transaction[];
@@ -21,11 +22,12 @@ interface ChildAccount {
 ```
 
 ### Parent Account
+
 ```typescript
 interface ParentAccount {
   id: number;
   userId: number;
-  childAccounts: number[];  // Child account IDs
+  childAccounts: number[]; // Child account IDs
   paymentMethods: PaymentMethod[];
   transactionHistory: Transaction[];
 }
@@ -34,6 +36,7 @@ interface ParentAccount {
 ## Transaction Types
 
 ### Task Rewards
+
 ```typescript
 interface TaskReward {
   type: 'task_reward';
@@ -46,6 +49,7 @@ interface TaskReward {
 ```
 
 ### Regular Allowance
+
 ```typescript
 interface Allowance {
   type: 'allowance';
@@ -57,12 +61,13 @@ interface Allowance {
 ```
 
 ### Bonus Payments
+
 ```typescript
 interface Bonus {
   type: 'bonus';
   amount: number;
   reason: string;
-  approvedBy: number;  // Parent user ID
+  approvedBy: number; // Parent user ID
   createdAt: Date;
 }
 ```
@@ -70,6 +75,7 @@ interface Bonus {
 ## Payment Processing
 
 ### Transaction Flow
+
 1. Transaction initiated
 2. Amount validation
 3. Balance check
@@ -79,6 +85,7 @@ interface Bonus {
 7. Record keeping
 
 ### Processing States
+
 ```typescript
 type TransactionState =
   | 'initiated'
@@ -92,6 +99,7 @@ type TransactionState =
 ## Balance Management
 
 ### Balance Operations
+
 ```typescript
 interface BalanceOperations {
   credit(amount: number): Promise<Transaction>;
@@ -103,6 +111,7 @@ interface BalanceOperations {
 ```
 
 ### Balance Calculations
+
 ```typescript
 interface BalanceCalculator {
   getCurrentBalance(): number;
@@ -115,6 +124,7 @@ interface BalanceCalculator {
 ## Savings Goals
 
 ### Goal Structure
+
 ```typescript
 interface SavingsGoal {
   id: number;
@@ -127,6 +137,7 @@ interface SavingsGoal {
 ```
 
 ### Goal Features
+
 - Progress tracking
 - Auto-contributions
 - Parent matching
@@ -136,11 +147,12 @@ interface SavingsGoal {
 ## Payment Schedule
 
 ### Allowance Schedule
+
 ```typescript
 interface AllowanceSchedule {
   frequency: 'weekly' | 'monthly';
   amount: number;
-  dayOfWeek?: number;  // 0-6 for weekly
+  dayOfWeek?: number; // 0-6 for weekly
   dayOfMonth?: number; // 1-31 for monthly
   startDate: Date;
   endDate?: Date;
@@ -148,6 +160,7 @@ interface AllowanceSchedule {
 ```
 
 ### Payment Rules
+
 - Regular payment times
 - Minimum balances
 - Maximum limits
@@ -157,6 +170,7 @@ interface AllowanceSchedule {
 ## Reward System
 
 ### Basic Rewards
+
 - Task completion
 - Goal achievement
 - Bonus payments
@@ -164,6 +178,7 @@ interface AllowanceSchedule {
 - Milestone rewards
 
 ### Bonus System
+
 ```typescript
 interface BonusSystem {
   calculateBonus(baseAmount: number): number;
@@ -175,6 +190,7 @@ interface BonusSystem {
 ## Transaction History
 
 ### Transaction Record
+
 ```typescript
 interface Transaction {
   id: number;
@@ -190,6 +206,7 @@ interface Transaction {
 ```
 
 ### History Features
+
 - Filtering options
 - Export capability
 - Search functionality
@@ -199,6 +216,7 @@ interface Transaction {
 ## Payment Analytics
 
 ### Transaction Analytics
+
 - Payment patterns
 - Spending trends
 - Saving rates
@@ -206,6 +224,7 @@ interface Transaction {
 - Category breakdown
 
 ### Reports
+
 - Monthly statements
 - Earnings reports
 - Goal tracking
@@ -215,6 +234,7 @@ interface Transaction {
 ## Security Measures
 
 ### Transaction Security
+
 - Amount limits
 - Velocity checks
 - Fraud detection
@@ -222,6 +242,7 @@ interface Transaction {
 - Audit trails
 
 ### Access Control
+
 - Parent approval
 - Child restrictions
 - System limits
@@ -231,6 +252,7 @@ interface Transaction {
 ## Integration Points
 
 ### API Endpoints
+
 - `POST /api/transactions` - Create transaction
 - `GET /api/accounts/:id/balance` - Get balance
 - `POST /api/goals` - Create savings goal
@@ -238,6 +260,7 @@ interface Transaction {
 - `GET /api/reports` - Generate reports
 
 ### External Systems
+
 - Banking systems
 - Payment processors
 - Notification services
@@ -247,6 +270,7 @@ interface Transaction {
 ## Notifications
 
 ### Event Types
+
 - Transaction completed
 - Balance updates
 - Goal progress
@@ -254,6 +278,7 @@ interface Transaction {
 - Reward earned
 
 ### Delivery Methods
+
 - In-app notifications
 - Email alerts
 - Push notifications
@@ -263,6 +288,7 @@ interface Transaction {
 ## Error Handling
 
 ### Common Errors
+
 1. Insufficient funds
 2. Invalid amount
 3. Account restrictions
@@ -270,6 +296,7 @@ interface Transaction {
 5. System limits
 
 ### Resolution Steps
+
 1. Error notification
 2. Automatic retry
 3. Manual review
@@ -279,6 +306,7 @@ interface Transaction {
 ## Best Practices
 
 ### Payment Processing
+
 1. Validate amounts
 2. Check balances
 3. Handle errors
@@ -286,6 +314,7 @@ interface Transaction {
 5. Notify users
 
 ### Account Management
+
 1. Regular audits
 2. Balance reconciliation
 3. Limit monitoring
@@ -299,4 +328,4 @@ interface Transaction {
 3. [Task Management](task-management.md)
 4. [Security Guidelines](../2-architecture/security.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

@@ -1,63 +1,71 @@
-# Dependencies
+# Node
 node_modules
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Next.js build output
+# Next.js
 .next
 out
 
-# Environment files
-.env*
+# Environment
+.env
+.env.*
 !.env.example
 
-# Version control
+# Development
 .git
 .gitignore
-
-# IDE
-.idea
 .vscode
-*.swp
-*.swo
-
-# OS
+.idea
+*.md
+.cursorrules
 .DS_Store
+._*
 Thumbs.db
 
-# Testing
-coverage
-.nyc_output
-__tests__
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
 
-# Temporary files
+# Build
+dist
+build
+coverage
+
+# Temporary
 *.log
 *.tmp
+.cache
+tmp
+temp
 
-# Docker
-Dockerfile*
-docker-compose*
-.docker
+# Database
+*.sql
+*.backup
+*_backup*.sql
+schema_*.sql
+backup_*.sql
+/postgres/data/
+/docker/data/
+
+# IDEs and editors
+.obsidian/
+*.swp
+*.swo
+*~
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Documentation
 README.md
 docs
 *.pdf
-*.jpg
-
-# Development
-*.test.js
-*.spec.js
-jest.config.js
-.eslintrc*
-.prettier*
-.cursorrules
-
-# Backups
-backups/
-*.sql
-*.dump
-
-# Uploads (handled by volume)
-uploads/ 
+*.jpg 

@@ -84,11 +84,11 @@ export function TaskCompletion() {
   };
 
   const playUserSound = async (user: User): Promise<void> => {
-    if (user.soundurl) {
+    if (user.sound_url) {
       try {
-        let userAudio = new Audio(`/sounds/users/${user.soundurl}.mp3`);
+        let userAudio = new Audio(`/sounds/users/${user.sound_url}.mp3`);
         await userAudio.play().catch(() => {
-          userAudio = new Audio(`/sounds/users/${user.soundurl}.wav`);
+          userAudio = new Audio(`/sounds/users/${user.sound_url}.wav`);
           return userAudio.play();
         });
         // Wait for the sound to complete

@@ -48,19 +48,25 @@ CACHE_TTL=3600
 ## Configuration Files
 
 ### Development
+
 `.env.local`:
+
 - Used for local development
 - Not committed to version control
 - Overrides default settings
 
 ### Production
+
 `.env`:
+
 - Production settings
 - Committed to version control
 - Contains default values
 
 ### Testing
+
 `.env.test`:
+
 - Used during test runs
 - Specific test database
 - Mock external services
@@ -68,6 +74,7 @@ CACHE_TTL=3600
 ## Database Configuration
 
 ### Connection Pool
+
 ```env
 DB_POOL_MIN=2
 DB_POOL_MAX=10
@@ -75,6 +82,7 @@ DB_IDLE_TIMEOUT=10000
 ```
 
 ### SSL Options
+
 ```env
 DB_SSL=true
 DB_SSL_CA=/path/to/ca.crt
@@ -85,6 +93,7 @@ DB_SSL_CERT=/path/to/client-cert.pem
 ## Security Settings
 
 ### Authentication
+
 ```env
 # JWT Configuration
 JWT_SECRET=your_secure_jwt_secret
@@ -98,6 +107,7 @@ PASSWORD_EXPIRY_DAYS=90
 ```
 
 ### API Security
+
 ```env
 # Rate Limiting
 RATE_LIMIT_WINDOW=15m
@@ -111,6 +121,7 @@ CORS_METHODS=GET,POST,PUT,DELETE
 ## File Upload Configuration
 
 ### Basic Settings
+
 ```env
 ENABLE_FILE_UPLOAD=true
 MAX_UPLOAD_SIZE=5242880  # 5MB
@@ -118,6 +129,7 @@ ALLOWED_FILE_TYPES=image/jpeg,image/png,application/pdf
 ```
 
 ### Storage Options
+
 ```env
 # Local Storage
 UPLOAD_DIR=/app/uploads
@@ -133,6 +145,7 @@ S3_SECRET_KEY=your-secret-key
 ## Logging Configuration
 
 ### Log Settings
+
 ```env
 # Logging Level
 LOG_LEVEL=info
@@ -146,6 +159,7 @@ LOG_FILE=/app/logs/app.log
 ```
 
 ### Error Tracking
+
 ```env
 # Error Reporting
 SENTRY_DSN=your-sentry-dsn
@@ -155,6 +169,7 @@ SENTRY_ENVIRONMENT=production
 ## Performance Tuning
 
 ### Caching
+
 ```env
 CACHE_ENABLED=true
 CACHE_TTL=3600
@@ -162,6 +177,7 @@ CACHE_MAX_SIZE=1000
 ```
 
 ### Database Performance
+
 ```env
 DB_POOL_MIN=2
 DB_POOL_MAX=10
@@ -171,6 +187,7 @@ DB_STATEMENT_TIMEOUT=30000
 ## Development Tools
 
 ### Debug Settings
+
 ```env
 DEBUG=app:*
 DEBUG_COLORS=true
@@ -178,6 +195,7 @@ DEBUG_HIDE_DATE=false
 ```
 
 ### Hot Reload
+
 ```env
 WATCH_ENABLED=true
 WATCH_IGNORE=node_modules,*.test.ts
@@ -186,6 +204,7 @@ WATCH_IGNORE=node_modules,*.test.ts
 ## Configuration Hierarchy
 
 The application loads configuration in this order:
+
 1. Default values
 2. Environment-specific file (`.env.local`, `.env.test`)
 3. System environment variables
@@ -194,6 +213,7 @@ The application loads configuration in this order:
 ## Validation
 
 The application validates configuration on startup:
+
 1. Required variables
 2. Value formats
 3. Dependency checks
@@ -202,11 +222,13 @@ The application validates configuration on startup:
 ## Best Practices
 
 1. **Security**
+
    - Never commit sensitive values
    - Use strong secrets
    - Rotate credentials regularly
 
 2. **Development**
+
    - Use `.env.local` for local settings
    - Document new variables
    - Keep test configuration separate
@@ -221,10 +243,12 @@ The application validates configuration on startup:
 ### Common Issues
 
 1. **Missing Variables**
+
    - Error: `Required environment variable X is not set`
    - Solution: Check `.env` file and environment
 
 2. **Invalid Values**
+
    - Error: `Invalid value for X`
    - Solution: Review variable format requirements
 
@@ -235,11 +259,13 @@ The application validates configuration on startup:
 ## Configuration Management
 
 ### Version Control
+
 - Keep `.env.example` updated
 - Document changes in CHANGELOG
 - Review in pull requests
 
 ### Deployment
+
 - Use deployment platform features
 - Implement secret management
 - Validate before deploy
@@ -250,4 +276,4 @@ The application validates configuration on startup:
 2. [Security Guide](../2-architecture/security.md)
 3. [Monitoring Guide](../5-maintenance/monitoring.md)
 
-Last Updated: December 4, 2024 
+Last Updated: December 4, 2024

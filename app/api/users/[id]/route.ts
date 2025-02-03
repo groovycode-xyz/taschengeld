@@ -15,17 +15,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const userId = parseInt(params.id);
     if (isNaN(userId)) {
-      return NextResponse.json(
-        { error: 'Invalid user ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
     }
 
     const userData = await request.json();
@@ -33,10 +27,7 @@ export async function PUT(
 
     const updatedUser = await userRepository.update(userId, userData);
     if (!updatedUser) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     return NextResponse.json(updatedUser);

@@ -27,6 +27,7 @@ open http://localhost:21971
 📚 [View Full Documentation](docs/README.md)
 
 ### Key Documentation Sections
+
 - 🚀 [Getting Started Guide](docs/1-getting-started/quick-start.md)
 - 🏗️ [Architecture Overview](docs/2-architecture/overview.md)
 - 💻 [Development Guide](docs/3-development/setup.md)
@@ -36,11 +37,13 @@ open http://localhost:21971
 ## Features
 
 - 📋 Task Management
+
   - Create and manage tasks
   - Set task values and requirements
   - Track task completion
 
 - 👥 User Management
+
   - Parent and child accounts
   - User profiles and preferences
   - Access control
@@ -53,6 +56,7 @@ open http://localhost:21971
 ## Development
 
 ### Prerequisites
+
 - Docker Engine 24.0.0 or later
 - Docker Compose V2 or later
 - Node.js 18+ (for local development)
@@ -60,11 +64,13 @@ open http://localhost:21971
 ### Environment Options
 
 1. **Development Environment**
+
 ```bash
 docker compose -f docker-compose.dev.yml up -d
 ```
 
 2. **Production Environment**
+
 ```bash
 docker compose up -d
 ```
@@ -85,6 +91,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 Need help? Check out our:
+
 - [Documentation](docs/README.md)
 - [Troubleshooting Guide](docs/5-maintenance/troubleshooting.md)
 - [GitHub Issues](https://github.com/yourusername/tgeld/issues)
+
+For detailed documentation, please refer to the `docs` directory:
+
+- Getting Started: `docs/1-getting-started/`
+- Architecture: `docs/2-architecture/`
+- Development: `docs/3-development/`
+  - [Database Management](docs/3-development/database-management.md)
+- Features: `docs/4-features/`
+- Maintenance: `docs/5-maintenance/`
