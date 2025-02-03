@@ -7,16 +7,48 @@
 
 ## Quick Start
 
+### Development (Local)
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/tgeld.git
+cd tgeld
+
+# Install PostgreSQL (macOS)
+brew install postgresql@16
+brew services start postgresql@16
+
+# Create database
+createdb tgeld
+
+# Set up environment
+cp .env.example .env.local
+
+# Install dependencies
+npm install
+
+# Run migrations
+npm run db:migrate
+
+# Start development server
+npm run dev
+
+# Access the application
+open http://localhost:21971
+```
+
+### Production (Docker)
+
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/tgeld.git
 cd tgeld
 
 # Set up environment
-cp .env.example .env.local
+cp .env.example .env
 
-# Start with Docker
-docker compose -f docker-compose.dev.yml up -d
+# Start the application
+docker compose up -d
 
 # Access the application
 open http://localhost:21971
@@ -57,28 +89,32 @@ open http://localhost:21971
 
 ### Prerequisites
 
+For local development:
+- Node.js 20 or later
+- PostgreSQL 16 or later
+- npm 10 or later
+
+For production:
 - Docker Engine 24.0.0 or later
 - Docker Compose V2 or later
-- Node.js 18+ (for local development)
 
-### Environment Options
+### Deployment Options
 
-1. **Development Environment**
+1. **Development (Recommended)**
+   - Local setup without Docker
+   - Direct PostgreSQL connection
+   - Fastest feedback loop
+   - Best for development
 
-```bash
-docker compose -f docker-compose.dev.yml up -d
-```
-
-2. **Production Environment**
-
-```bash
-docker compose up -d
-```
+2. **Production**
+   - Docker Compose deployment
+   - Includes both application and database
+   - Optional backup service
+   - Production-ready configuration
 
 ### Database Options
 
-- **Default**: Built-in PostgreSQL database
-- **Alternative**: External database (configure in .env)
+The default docker-compose configuration includes PostgreSQL. For detailed information about database configuration options and backup strategies, see our [Database Management](docs/3-development/database-management.md) and [Backup and Restore](docs/5-maintenance/backup-restore.md) documentation.
 
 ## Contributing
 
