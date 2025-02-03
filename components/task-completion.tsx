@@ -87,10 +87,12 @@ export function TaskCompletion() {
     if (user.sound_url) {
       try {
         let userAudio = new Audio(`/sounds/users/${user.sound_url}.mp3`);
-        await userAudio.play().catch(() => {
+        try {
+          await userAudio.play();
+        } catch {
           userAudio = new Audio(`/sounds/users/${user.sound_url}.wav`);
-          return userAudio.play();
-        });
+          await userAudio.play();
+        }
         // Wait for the sound to complete
         return new Promise<void>((resolve) => {
           userAudio.addEventListener('ended', () => resolve());
@@ -140,9 +142,8 @@ export function TaskCompletion() {
       try {
         setIsModalOpen(false);
 
+        // Wait for the user sound to complete before continuing
         await playUserSound(selectedUser);
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
 
         const response = await fetch('/api/completed-tasks', {
           method: 'POST',
@@ -176,7 +177,7 @@ export function TaskCompletion() {
 
         setTimeout(() => {
           setIsProcessing(false);
-        }, 1500);
+        }, 100);
       } catch (err) {
         setError('Error creating completed task');
         console.error(err);
