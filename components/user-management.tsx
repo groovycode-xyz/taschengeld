@@ -115,9 +115,18 @@ export function UserManagement() {
     <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
       <div className='p-8 bg-background-secondary'>
-        <div className='flex items-center space-x-4 pb-6 border-b border-border'>
-          <Users className='h-8 w-8 text-content-primary' />
-          <h1 className='text-3xl font-medium text-content-primary'>User Management</h1>
+        <div className='flex items-center justify-between pb-6 border-b border-border'>
+          <div className='flex items-center space-x-4'>
+            <Users className='h-8 w-8 text-content-primary' />
+            <h1 className='text-3xl font-medium text-content-primary'>User Management</h1>
+          </div>
+          <Button
+            onClick={() => setIsAddModalOpen(true)}
+            className='flex items-center gap-2'
+          >
+            <Plus className='h-4 w-4' />
+            Add User
+          </Button>
         </div>
       </div>
 
