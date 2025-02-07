@@ -5,6 +5,7 @@ This document outlines the procedures for managing the database schema and keepi
 ## Database Configuration
 
 The database connection is configured through environment variables in `.env`:
+
 ```env
 DATABASE_URL="postgresql://jamespace@localhost:5432/tgeld"
 ```
@@ -12,6 +13,7 @@ DATABASE_URL="postgresql://jamespace@localhost:5432/tgeld"
 ## Workflow Scenarios
 
 ### 1. When Database Changes First (Database-First Approach)
+
 Use this approach when changes are made directly to the PostgreSQL database (e.g., through SQL migrations).
 
 ```bash
@@ -23,6 +25,7 @@ npx prisma generate
 ```
 
 ### 2. When Prisma Schema Changes First (Schema-First Approach)
+
 Use this approach when you want to make database changes through Prisma.
 
 ```bash
@@ -31,6 +34,7 @@ npx prisma migrate dev --name description_of_changes
 ```
 
 The `migrate dev` command will:
+
 - Create a new migration file
 - Apply the migration to your database
 - Regenerate the Prisma Client
@@ -38,13 +42,16 @@ The `migrate dev` command will:
 ## Important Notes
 
 ### Check Constraints
+
 Our database includes check constraints that Prisma doesn't fully support:
+
 - `valid_payment_status` on `CompletedTask`
 - `valid_transaction_type` on `PiggybankTransaction`
 
 These constraints are enforced at the database level but not by Prisma Client.
 
 ### Best Practices
+
 1. **Always commit migration files** to version control
 2. **Never modify existing migrations** that have been applied to any environment
 3. **Use meaningful names** for migrations (e.g., `add_user_birthday_field`)
@@ -54,6 +61,7 @@ These constraints are enforced at the database level but not by Prisma Client.
 ### Common Issues and Solutions
 
 1. **Database Connection Issues**
+
    ```bash
    # Verify database connection
    psql -d tgeld
@@ -80,4 +88,4 @@ These constraints are enforced at the database level but not by Prisma Client.
 
 - [Prisma Documentation](https://www.prisma.io/docs/)
 - [Prisma Migration Guide](https://www.prisma.io/docs/concepts/components/prisma-migrate)
-- [Database Check Constraints](https://www.prisma.io/docs/concepts/components/prisma-schema/constraints#check-constraints) 
+- [Database Check Constraints](https://www.prisma.io/docs/concepts/components/prisma-schema/constraints#check-constraints)

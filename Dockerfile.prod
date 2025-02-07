@@ -1,0 +1,61 @@
+# Production Dockerfile for tgeld
+# Includes Next.js, PostgreSQL, and Prisma in a single container
+
+# Build stage
+FROM node:20-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine
+
+# Install PostgreSQL and runtime dependencies
+RUN apk add --no-cache \
+    postgresql \
+    postgresql-contrib \
+    postgresql-client \
+    curl \
+    wget
+
+# Create app directory
+WORKDIR /app
+
+# Copy production dependencies and build output
+COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+
+# Initialize PostgreSQL
+RUN mkdir -p /run/postgresql && \
+    chown postgres:postgres /run/postgresql && \
+    mkdir -p /var/lib/postgresql/data && \
+    chown postgres:postgres /var/lib/postgresql/data
+
+# Switch to postgres user to initialize database
+USER postgres
+RUN initdb -D /var/lib/postgresql/data && \
+    echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
+    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+
+# Create startup script
+USER root
+RUN echo '#!/bin/sh' > /start.sh && \
+    echo 'pg_ctl start -D /var/lib/postgresql/data' >> /start.sh && \
+    echo 'psql -U postgres -c "ALTER USER postgres WITH PASSWORD '"'\$DB_PASSWORD'"';"' >> /start.sh && \
+    echo 'createdb -U postgres tgeld || true' >> /start.sh && \
+    echo 'npm start' >> /start.sh && \
+    chmod +x /start.sh
+
+EXPOSE 21971 5432
+
+CMD ["/start.sh"] 

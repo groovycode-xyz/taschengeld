@@ -60,18 +60,19 @@ export function AddUserModal({
   const [icon, setIcon] = useState('default');
   const [soundUrl, setSoundUrl] = useState<string | null>(null);
   const [birthday, setBirthday] = useState(new Date().toISOString().split('T')[0]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-  const [birthdayError, setBirthdayError] = useState<string | null>(null);
 
-  const defaultUserState = {
-    name: '',
-    icon: 'default',
-    sound_url: null,
-    birthday: new Date().toISOString().split('T')[0],
-  };
+  const defaultUserState = React.useMemo(
+    () => ({
+      name: '',
+      icon: 'default',
+      sound_url: null,
+      birthday: new Date().toISOString().split('T')[0],
+    }),
+    []
+  );
 
   useEffect(() => {
     if (user) {
@@ -86,7 +87,7 @@ export function AddUserModal({
       setSoundUrl(defaultUserState.sound_url);
       setBirthday(defaultUserState.birthday);
     }
-  }, [isOpen, user]);
+  }, [isOpen, user, defaultUserState]);
 
   const resetForm = () => {
     setName(defaultUserState.name);
@@ -97,7 +98,6 @@ export function AddUserModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     try {
       const userData = {
@@ -131,8 +131,6 @@ export function AddUserModal({
         title: 'Error',
         description: 'Failed to create user. Please try again.',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -209,7 +207,7 @@ export function AddUserModal({
                     type='date'
                     value={birthday}
                     onChange={(e) => setBirthday(e.target.value)}
-                    className={birthdayError ? 'border-red-500' : ''}
+                    className=''
                     required
                     max={new Date().toISOString().split('T')[0]}
                   />

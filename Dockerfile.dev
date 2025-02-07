@@ -1,0 +1,54 @@
+# Development Dockerfile for tgeld
+# Includes Next.js, PostgreSQL, and development tools
+
+# Use Node.js as base
+FROM node:20-alpine
+
+# Install PostgreSQL and development dependencies
+RUN apk add --no-cache \
+    postgresql \
+    postgresql-contrib \
+    postgresql-client \
+    python3 \
+    make \
+    g++ \
+    curl \
+    wget
+
+# Create app directory
+WORKDIR /app
+
+# Install Node.js dependencies first (for better caching)
+COPY package*.json ./
+RUN npm install
+
+# Copy application files
+COPY . .
+
+# Initialize PostgreSQL and create database
+RUN mkdir -p /run/postgresql && \
+    chown postgres:postgres /run/postgresql && \
+    mkdir -p /var/lib/postgresql/data && \
+    chown postgres:postgres /var/lib/postgresql/data
+
+# Switch to postgres user to initialize database
+USER postgres
+RUN initdb -D /var/lib/postgresql/data && \
+    echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
+    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf && \
+    pg_ctl start -D /var/lib/postgresql/data && \
+    psql -c "ALTER USER postgres WITH PASSWORD 'tgeld_dev_password';" && \
+    createdb tgeld
+
+# Switch back to root for final setup
+USER root
+
+# Create startup script
+RUN echo '#!/bin/sh' > /start.sh && \
+    echo 'pg_ctl start -D /var/lib/postgresql/data' >> /start.sh && \
+    echo 'npm run dev' >> /start.sh && \
+    chmod +x /start.sh
+
+EXPOSE 21971 5432
+
+CMD ["/start.sh"] 

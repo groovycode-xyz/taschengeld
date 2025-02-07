@@ -5,39 +5,35 @@
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
 
-## Quick Start
+## Development Environments
 
-### Development (Local)
+This project supports two development environments, both using Docker with a single-container approach that includes Next.js, PostgreSQL, and Prisma:
+
+### 1. Development Environment
+
+Uses Docker for development with hot reloading:
 
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/tgeld.git
 cd tgeld
 
-# Install PostgreSQL (macOS)
-brew install postgresql@16
-brew services start postgresql@16
-
-# Create database
-createdb tgeld
-
-# Set up environment
-cp .env.example .env.local
-
-# Install dependencies
-npm install
-
-# Run migrations
-npm run db:migrate
-
-# Start development server
-npm run dev
+# Start development environment
+docker compose -f docker-compose.dev.yml up
 
 # Access the application
 open http://localhost:21971
 ```
 
-### Production (Docker)
+The development environment includes:
+- Next.js in development mode with hot reloading
+- PostgreSQL database in the same container
+- Source code mounted for live updates
+- Development tools and dependencies
+
+### 2. Production Environment
+
+Uses Docker for production deployment:
 
 ```bash
 # Clone the repository
@@ -46,13 +42,62 @@ cd tgeld
 
 # Set up environment
 cp .env.example .env
+# Edit .env and set a secure password
 
-# Start the application
+# Start production environment
 docker compose up -d
 
 # Access the application
 open http://localhost:21971
 ```
+
+The production environment includes:
+- Optimized Next.js build
+- PostgreSQL database in the same container
+- Production-ready configuration
+- Health monitoring
+
+## Environment Setup
+
+The application uses different environment files for different purposes:
+
+- `.env.example` - Template file, copy to create other env files
+- `.env` - Production environment configuration
+- `.env.docker` - Production Docker configuration
+- `.env.local` - Local development configuration (if needed)
+
+### Environment Switching
+
+Use the provided script to switch between environments:
+
+```bash
+# Switch to development mode
+./switch-mode.sh local
+
+# Switch to production mode
+./switch-mode.sh docker
+```
+
+### Database Configuration
+
+The database runs in the same container as the application. Configuration includes:
+
+- PostgreSQL 17.2
+- Automatic database initialization
+- Persistent data storage
+- Health checks
+
+### Security Notes
+
+1. Database Password:
+   - Set a secure password in your `.env` file
+   - Minimum 12 characters
+   - Mix of uppercase, lowercase, numbers, and special characters
+   - Avoid characters that need URL escaping
+
+2. Port Exposure:
+   - Next.js: 21971 (required)
+   - PostgreSQL: 5432 (optional, can be disabled)
 
 ## Documentation
 
@@ -90,17 +135,20 @@ open http://localhost:21971
 ### Prerequisites
 
 For local development:
+
 - Node.js 20 or later
 - PostgreSQL 16 or later
 - npm 10 or later
 
 For production:
+
 - Docker Engine 24.0.0 or later
 - Docker Compose V2 or later
 
 ### Deployment Options
 
 1. **Development (Recommended)**
+
    - Local setup without Docker
    - Direct PostgreSQL connection
    - Fastest feedback loop

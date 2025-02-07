@@ -1,38 +1,38 @@
+# Development configuration for tgeld
+# This runs Next.js in development mode with hot reloading
 version: '3.8'
 
 services:
-  app:
+  dev:
     build:
       context: .
-      target: builder
-    command: npm run dev
+      dockerfile: Dockerfile.dev
     ports:
-      - '21971:21971'
+      - '21971:21971'  # Next.js
+      - '5432:5432'    # PostgreSQL
     volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-      - ./uploads:/app/uploads
+      - .:/app        # Mount source code for development
+      - uploads:/app/uploads
+      - db:/var/lib/postgresql/data
     environment:
+      # Development environment variables
       - NODE_ENV=development
-      - DB_HOST=db
+      - NEXT_PUBLIC_PORT=21971
+      # Database configuration (internal)
+      - DB_HOST=localhost
       - DB_PORT=5432
       - DB_USER=postgres
-      - DB_PASSWORD=development_password
+      - DB_PASSWORD=tgeld_dev_password
       - DB_DATABASE=tgeld
-    depends_on:
-      - db
-
-  db:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=development_password
-      - POSTGRES_DB=tgeld
-    volumes:
-      - postgres_data_dev:/var/lib/postgresql/data
-      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Prisma database URL
+      - DATABASE_URL=postgresql://postgres:tgeld_dev_password@localhost:5432/tgeld?schema=public
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres && wget --spider http://localhost:21971/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 volumes:
-  postgres_data_dev:
-    driver: local
+  uploads:
+  db:

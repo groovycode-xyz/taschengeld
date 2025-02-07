@@ -15,4 +15,4 @@ Please visit our [GitHub Wiki](https://github.com/barneephife/tgeld/wiki) for th
 
 ## Archive Contents
 
-This archive contains the documentation as it existed before the migration to GitHub Wiki. It is kept for historical reference only and should not be used as a current source of information. 
+This archive contains the documentation as it existed before the migration to GitHub Wiki. It is kept for historical reference only and should not be used as a current source of information.

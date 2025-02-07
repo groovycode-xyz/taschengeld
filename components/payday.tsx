@@ -25,7 +25,6 @@ import { Banknote } from 'lucide-react';
 
 type SortField = 'title' | 'user' | 'amount' | 'date';
 type SortDirection = 'asc' | 'desc';
-type GroupByField = 'user' | 'date' | 'none';
 type ViewOption = 'by_user' | 'by_date' | 'no_groups';
 
 export function Payday() {

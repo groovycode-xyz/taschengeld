@@ -120,10 +120,7 @@ export function UserManagement() {
             <Users className='h-8 w-8 text-content-primary' />
             <h1 className='text-3xl font-medium text-content-primary'>User Management</h1>
           </div>
-          <Button
-            onClick={() => setIsAddModalOpen(true)}
-            className='flex items-center gap-2'
-          >
+          <Button onClick={() => setIsAddModalOpen(true)} className='flex items-center gap-2'>
             <Plus className='h-4 w-4' />
             Add User
           </Button>
