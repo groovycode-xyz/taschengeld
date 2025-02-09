@@ -16,14 +16,22 @@ const nextConfig = {
     return config;
   },
   output: 'standalone',
-  // Skip static generation for API routes
-  generateBuildId: async () => 'build',
+  experimental: {
+    workerThreads: false,
+    cpus: 1
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
-};
+  // Disable static exports for API routes
+  staticPageGenerationTimeout: 0,
+  env: {
+    // Add dummy database URL for build time
+    DATABASE_URL: process.env.DATABASE_URL || "postgresql://dummy:dummy@localhost:5432/dummy"
+  }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

@@ -1,61 +1,102 @@
-# Production Dockerfile for tgeld
-# Includes Next.js, PostgreSQL, and Prisma in a single container
-
-# Build stage
-FROM node:20-alpine AS builder
-
-# Install build dependencies
-RUN apk add --no-cache python3 make g++
+# Development dependencies stage
+FROM node:20-alpine AS deps
 
 WORKDIR /app
+
+# Copy package files
 COPY package*.json ./
+
+# Install ALL dependencies (including dev dependencies)
 RUN npm ci
 
-COPY . .
-RUN npm run build
+# Install PostgreSQL client
+RUN apk add --no-cache postgresql-client
 
-# Production stage
-FROM node:20-alpine
+# Source stage
+FROM node:20-alpine AS source
 
-# Install PostgreSQL and runtime dependencies
-RUN apk add --no-cache \
-    postgresql \
-    postgresql-contrib \
-    postgresql-client \
-    curl \
-    wget
-
-# Create app directory
 WORKDIR /app
 
-# Copy production dependencies and build output
-COPY --from=builder /app/package*.json ./
-RUN npm ci --only=production
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
+# Copy source files and dependencies
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
 
-# Initialize PostgreSQL
-RUN mkdir -p /run/postgresql && \
-    chown postgres:postgres /run/postgresql && \
-    mkdir -p /var/lib/postgresql/data && \
-    chown postgres:postgres /var/lib/postgresql/data
+# Create uploads directory and set permissions
+RUN mkdir -p /app/uploads && chown -R node:node /app
 
-# Switch to postgres user to initialize database
-USER postgres
-RUN initdb -D /var/lib/postgresql/data && \
-    echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
-    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+# Use non-root user
+USER node
 
-# Create startup script
-USER root
-RUN echo '#!/bin/sh' > /start.sh && \
-    echo 'pg_ctl start -D /var/lib/postgresql/data' >> /start.sh && \
-    echo 'psql -U postgres -c "ALTER USER postgres WITH PASSWORD '"'\$DB_PASSWORD'"';"' >> /start.sh && \
-    echo 'createdb -U postgres tgeld || true' >> /start.sh && \
-    echo 'npm start' >> /start.sh && \
-    chmod +x /start.sh
+# Expose port
+EXPOSE 21971
 
-EXPOSE 21971 5432
+# Start script that will build and run the app
+COPY --chown=node:node docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
-CMD ["/start.sh"] 
+# Next.js build step
+FROM node:18-alpine AS builder
+
+# Install dependencies only when needed
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Install dependencies
+RUN npm ci
+
+# Copy source files
+COPY . .
+
+# Run type check and lint
+RUN npm run lint
+
+# Set environment variables for build time
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
+# Build application
+RUN npm run build
+
+# Production image, copy all the files and run next
+FROM node:18-alpine AS runner
+
+# Install PostgreSQL client for health checks
+RUN apk add --no-cache postgresql-client
+
+WORKDIR /app
+
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    mkdir -p /app/uploads && \
+    chown -R nextjs:nodejs /app
+
+# Copy only the necessary files
+COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+
+# Switch to non-root user
+USER nextjs
+
+# Install only production dependencies
+RUN npm ci --only=production && \
+    npx prisma generate
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER || exit 1
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+EXPOSE 3000
+
+# Start the application
+CMD ["node", "server.js", "-H", "0.0.0.0"]

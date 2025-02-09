@@ -36,21 +36,28 @@ export function TaskCompletion() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('Fetching data...');
         const [tasksRes, usersRes, completedRes] = await Promise.all([
-          fetch('/api/active-tasks'),
-          fetch('/api/users'),
-          fetch('/api/completed-tasks'),
+          fetch('./api/active-tasks'),
+          fetch('./api/users'),
+          fetch('./api/completed-tasks'),
         ]);
+
+        console.log('Active tasks response status:', tasksRes.status);
+        console.log('Users response status:', usersRes.status);
+        console.log('Completed tasks response status:', completedRes.status);
 
         if (!tasksRes.ok) throw new Error('Failed to fetch active tasks');
         if (!usersRes.ok) throw new Error('Failed to fetch users');
         if (!completedRes.ok) throw new Error('Failed to fetch completed tasks');
 
-        const [tasksData, usersData, completedData] = await Promise.all([
-          tasksRes.json(),
-          usersRes.json(),
-          completedRes.json(),
-        ]);
+        const tasksData = await tasksRes.json();
+        const usersData = await usersRes.json();
+        const completedData = await completedRes.json();
+
+        console.log('Active tasks data:', tasksData);
+        console.log('Users data:', usersData);
+        console.log('Completed tasks data:', completedData);
 
         setActiveTasks(tasksData);
         setChildUsers(usersData);
@@ -59,8 +66,8 @@ export function TaskCompletion() {
         );
       } catch (err) {
         const error = err as Error;
+        console.error('Error details:', error);
         setError(error.message || 'An error occurred');
-        console.error(error);
       } finally {
         setIsLoading(false);
       }
@@ -72,9 +79,9 @@ export function TaskCompletion() {
   const playTaskSound = async (task: Task) => {
     if (task.sound_url && task.sound_url.trim() !== '') {
       try {
-        let taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.mp3`);
+        let taskAudio = new Audio(`./sounds/tasks/${task.sound_url}.mp3`);
         await taskAudio.play().catch(() => {
-          taskAudio = new Audio(`/sounds/tasks/${task.sound_url}.wav`);
+          taskAudio = new Audio(`./sounds/tasks/${task.sound_url}.wav`);
           return taskAudio.play();
         });
       } catch (error) {
@@ -86,11 +93,11 @@ export function TaskCompletion() {
   const playUserSound = async (user: User): Promise<void> => {
     if (user.sound_url) {
       try {
-        let userAudio = new Audio(`/sounds/users/${user.sound_url}.mp3`);
+        let userAudio = new Audio(`./sounds/users/${user.sound_url}.mp3`);
         try {
           await userAudio.play();
         } catch {
-          userAudio = new Audio(`/sounds/users/${user.sound_url}.wav`);
+          userAudio = new Audio(`./sounds/users/${user.sound_url}.wav`);
           await userAudio.play();
         }
         // Wait for the sound to complete
@@ -99,6 +106,7 @@ export function TaskCompletion() {
         });
       } catch (error) {
         console.error('Error playing user sound:', error);
+        return Promise.resolve();
       }
     }
     return Promise.resolve();
@@ -107,9 +115,9 @@ export function TaskCompletion() {
   const playCompletionCelebration = async () => {
     setShowFireworks(true);
     try {
-      let applauseAudio = new Audio('/sounds/applause.mp3');
+      let applauseAudio = new Audio('./sounds/applause.mp3');
       await applauseAudio.play().catch(() => {
-        applauseAudio = new Audio('/sounds/applause.wav');
+        applauseAudio = new Audio('./sounds/applause.wav');
         return applauseAudio.play();
       });
       await new Promise<void>((resolve) => {
@@ -145,7 +153,7 @@ export function TaskCompletion() {
         // Wait for the user sound to complete before continuing
         await playUserSound(selectedUser);
 
-        const response = await fetch('/api/completed-tasks', {
+        const response = await fetch('./api/completed-tasks', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -194,7 +202,7 @@ export function TaskCompletion() {
   const confirmDeleteTask = async () => {
     if (deleteTaskId) {
       try {
-        const response = await fetch(`/api/completed-tasks/${deleteTaskId}`, {
+        const response = await fetch(`./api/completed-tasks/${deleteTaskId}`, {
           method: 'DELETE',
         });
 

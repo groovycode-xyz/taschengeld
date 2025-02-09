@@ -57,8 +57,18 @@ export const taskRepository = {
   },
 
   async getActiveTasks(): Promise<Task[]> {
-    const query = 'SELECT * FROM tasks WHERE is_active = true ORDER BY created_at DESC';
-    const result = await pool.query(query);
-    return result.rows;
+    console.log('getActiveTasks called');
+    try {
+      console.log('Executing query...');
+      const query = 'SELECT * FROM tasks WHERE is_active = true ORDER BY created_at DESC';
+      const result = await pool.query(query);
+      console.log('Query result:', result.rows);
+      const mappedTasks = result.rows.map(mapTaskFromDb);
+      console.log('Mapped tasks:', mappedTasks);
+      return mappedTasks;
+    } catch (error) {
+      console.error('Error in getActiveTasks:', error);
+      throw error;
+    }
   },
 };

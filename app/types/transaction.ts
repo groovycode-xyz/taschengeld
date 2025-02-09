@@ -1,9 +1,15 @@
+export enum TransactionType {
+  Deposit = 'deposit',
+  Withdrawal = 'withdrawal',
+}
+
 export interface Transaction {
-  id: string;
-  userId: string;
+  transaction_id: number;
+  account_id: number;
   amount: number;
-  type: 'deposit' | 'withdrawal';
-  date: Date;
-  comments?: string;
-  photo?: string | null;
+  transaction_type: TransactionType;
+  transaction_date?: Date;
+  description?: string;
+  photo?: string;
+  completed_task_id?: number;
 }

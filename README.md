@@ -26,6 +26,7 @@ open http://localhost:21971
 ```
 
 The development environment includes:
+
 - Next.js in development mode with hot reloading
 - PostgreSQL database in the same container
 - Source code mounted for live updates
@@ -52,6 +53,7 @@ open http://localhost:21971
 ```
 
 The production environment includes:
+
 - Optimized Next.js build
 - PostgreSQL database in the same container
 - Production-ready configuration
@@ -90,6 +92,7 @@ The database runs in the same container as the application. Configuration includ
 ### Security Notes
 
 1. Database Password:
+
    - Set a secure password in your `.env` file
    - Minimum 12 characters
    - Mix of uppercase, lowercase, numbers, and special characters

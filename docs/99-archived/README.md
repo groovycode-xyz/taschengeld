@@ -5,6 +5,7 @@ This directory contains the archived documentation from the original `/docs` fol
 ## Why Was This Archived?
 
 The documentation was moved to make it:
+
 - More accessible through GitHub's Wiki interface
 - Easier to maintain and update
 - Better organized with built-in navigation

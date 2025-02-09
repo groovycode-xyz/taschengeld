@@ -1,5 +1,14 @@
 import pool from './db';
-import { PiggyBankTransaction } from '@/app/types/piggyBankTransaction';
+import { PiggyBankTransaction, TransactionType } from '@/app/types/piggyBankTransaction';
+
+const validateTransactionType = (type: string): TransactionType => {
+  if (!Object.values(TransactionType).includes(type as TransactionType)) {
+    throw new Error(
+      `Invalid transaction type: ${type}. Must be one of: ${Object.values(TransactionType).join(', ')}`
+    );
+  }
+  return type as TransactionType;
+};
 
 export const piggyBankTransactionRepository = {
   async createTransaction(
@@ -56,6 +65,7 @@ export const piggyBankTransactionRepository = {
   async addTransaction(
     transaction: Omit<PiggyBankTransaction, 'transaction_id' | 'transaction_date'>
   ): Promise<PiggyBankTransaction> {
+    validateTransactionType(transaction.transaction_type);
     const query = `
       INSERT INTO piggybank_transactions (
         account_id, 
@@ -93,6 +103,9 @@ export const piggyBankTransactionRepository = {
       ORDER BY pt.transaction_date DESC
     `;
     const result = await pool.query(query, [accountId]);
-    return result.rows;
+    return result.rows.map((row) => ({
+      ...row,
+      transaction_type: validateTransactionType(row.transaction_type),
+    }));
   },
 };

@@ -9,7 +9,7 @@ export async function GET() {
       SELECT 
         name,
         icon,
-        soundurl,
+        sound_url,
         birthday
       FROM users
       ORDER BY name;

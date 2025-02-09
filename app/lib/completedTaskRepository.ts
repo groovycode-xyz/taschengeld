@@ -1,7 +1,16 @@
 import pool from './db';
-import { CompletedTask, CreateCompletedTaskInput } from '@/app/types/completedTask';
+import { CompletedTask, CreateCompletedTaskInput, PaymentStatus } from '@/app/types/completedTask';
 
 console.log('Database connection:', pool.options);
+
+const validatePaymentStatus = (status: string): PaymentStatus => {
+  if (!Object.values(PaymentStatus).includes(status as PaymentStatus)) {
+    throw new Error(
+      `Invalid payment status: ${status}. Must be one of: ${Object.values(PaymentStatus).join(', ')}`
+    );
+  }
+  return status as PaymentStatus;
+};
 
 export const completedTaskRepository = {
   async getAll(): Promise<CompletedTask[]> {
@@ -22,7 +31,11 @@ export const completedTaskRepository = {
         ct.created_at DESC
     `;
     const result = await pool.query(query);
-    return result.rows;
+    return result.rows.map((row) => ({
+      ...row,
+      payment_status: validatePaymentStatus(row.payment_status),
+      created_at: new Date(row.created_at),
+    }));
   },
 
   async getByUserId(userId: number): Promise<CompletedTask[]> {
@@ -45,10 +58,15 @@ export const completedTaskRepository = {
         ct.created_at DESC
     `;
     const result = await pool.query(query, [userId]);
-    return result.rows;
+    return result.rows.map((row) => ({
+      ...row,
+      payment_status: validatePaymentStatus(row.payment_status),
+      created_at: new Date(row.created_at),
+    }));
   },
 
   async create(completedTaskInput: CreateCompletedTaskInput): Promise<CompletedTask> {
+    validatePaymentStatus('Unpaid'); // Default status
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
@@ -102,6 +120,8 @@ export const completedTaskRepository = {
         user_name: userData.name,
         icon_name: taskData.icon_name,
         user_icon: userData.icon,
+        payment_status: validatePaymentStatus(updatedCompletedTask.payment_status),
+        created_at: new Date(updatedCompletedTask.created_at),
       };
     } catch (error) {
       await client.query('ROLLBACK');
@@ -112,6 +132,7 @@ export const completedTaskRepository = {
   },
 
   async updatePaymentStatus(cTaskId: number, paymentStatus: string): Promise<CompletedTask | null> {
+    validatePaymentStatus(paymentStatus);
     const query = `
       UPDATE completed_tasks
       SET payment_status = $1
@@ -119,19 +140,34 @@ export const completedTaskRepository = {
       RETURNING *
     `;
     const result = await pool.query(query, [paymentStatus, cTaskId]);
-    return result.rows[0] || null;
+    return result.rows[0]
+      ? {
+          ...result.rows[0],
+          payment_status: validatePaymentStatus(result.rows[0].payment_status),
+          created_at: new Date(result.rows[0].created_at),
+        }
+      : null;
   },
 
   async getById(c_task_id: number): Promise<CompletedTask | null> {
     const query = 'SELECT * FROM completed_tasks WHERE c_task_id = $1';
     const result = await pool.query(query, [c_task_id]);
-    return result.rows[0] || null;
+    return result.rows[0]
+      ? {
+          ...result.rows[0],
+          payment_status: validatePaymentStatus(result.rows[0].payment_status),
+          created_at: new Date(result.rows[0].created_at),
+        }
+      : null;
   },
 
   async update(
     c_task_id: number,
     updatedTask: Partial<CompletedTask>
   ): Promise<CompletedTask | null> {
+    if (updatedTask.payment_status) {
+      validatePaymentStatus(updatedTask.payment_status);
+    }
     const { user_id, task_id, comment, attachment, payment_status } = updatedTask;
     const query = `
       UPDATE completed_tasks
@@ -145,13 +181,19 @@ export const completedTaskRepository = {
     `;
     const values = [user_id, task_id, comment, attachment, payment_status, c_task_id];
     const result = await pool.query(query, values);
-    return result.rows[0] || null;
+    return result.rows[0]
+      ? {
+          ...result.rows[0],
+          payment_status: validatePaymentStatus(result.rows[0].payment_status),
+          created_at: new Date(result.rows[0].created_at),
+        }
+      : null;
   },
 
   async delete(c_task_id: number): Promise<boolean> {
     const query = 'DELETE FROM completed_tasks WHERE c_task_id = $1';
     const result = await pool.query(query, [c_task_id]);
-    return result.rowCount ? result.rowCount > 0 : false;
+    return result.rowCount > 0;
   },
 
   async clearAll(): Promise<void> {
@@ -197,6 +239,12 @@ export const completedTaskRepository = {
     console.log('Executing getFullTaskDetails query for c_task_id:', cTaskId);
     const result = await pool.query(query, [cTaskId]);
     console.log('Full task details query result:', result.rows[0]);
-    return result.rows[0] || null;
+    return result.rows[0]
+      ? {
+          ...result.rows[0],
+          payment_status: validatePaymentStatus(result.rows[0].payment_status),
+          created_at: new Date(result.rows[0].created_at),
+        }
+      : null;
   },
 };

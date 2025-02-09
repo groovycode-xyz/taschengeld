@@ -1,3 +1,8 @@
+export enum PaymentStatus {
+  Paid = 'Paid',
+  Unpaid = 'Unpaid',
+}
+
 export interface CreateCompletedTaskInput {
   user_id: number;
   task_id: number;
@@ -7,19 +12,14 @@ export interface CreateCompletedTaskInput {
 
 export interface CompletedTask {
   c_task_id: number;
-  task_id: string;
-  task_title: string;
-  icon_name: string;
-  sound_url: string | null;
   user_id: number;
-  user_name: string;
-  user_icon: string;
-  created_at: Date;
-  payment_status: 'Paid' | 'Unpaid';
-  payout_value: string;
+  task_id: number;
+  description?: string;
+  payout_value?: number;
+  created_at?: Date;
   comment?: string;
   attachment?: string;
-  piggybank_account_id?: number;
+  payment_status: PaymentStatus;
 }
 
 export interface FullTaskDetails extends CompletedTask {
