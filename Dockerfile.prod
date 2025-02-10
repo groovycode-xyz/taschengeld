@@ -1,44 +1,11 @@
-# Development dependencies stage
-FROM node:20-alpine AS deps
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install ALL dependencies (including dev dependencies)
-RUN npm ci
-
-# Install PostgreSQL client
-RUN apk add --no-cache postgresql-client
-
-# Source stage
-FROM node:20-alpine AS source
-
-WORKDIR /app
-
-# Copy source files and dependencies
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
-
-# Create uploads directory and set permissions
-RUN mkdir -p /app/uploads && chown -R node:node /app
-
-# Use non-root user
-USER node
-
-# Expose port
-EXPOSE 21971
-
-# Start script that will build and run the app
-COPY --chown=node:node docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Next.js build step
+# Build stage
 FROM node:18-alpine AS builder
 
 # Install dependencies only when needed
 WORKDIR /app
+
+# Install PostgreSQL client and build dependencies
+RUN apk add --no-cache postgresql-client
 
 # Copy package files
 COPY package*.json ./
@@ -57,37 +24,46 @@ RUN npm run lint
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV SKIP_CLEANUP=true
 
 # Build application
 RUN npm run build
 
-# Production image, copy all the files and run next
+# Remove dev dependencies and unnecessary packages
+RUN npm prune --production && \
+    rm -rf node_modules/@types && \
+    rm -rf node_modules/typescript && \
+    rm -rf node_modules/prettier && \
+    rm -rf node_modules/eslint* && \
+    rm -rf node_modules/postcss && \
+    rm -rf node_modules/tailwindcss && \
+    rm -rf .next/cache
+
+# Production stage - using minimal Alpine
 FROM node:18-alpine AS runner
 
-# Install PostgreSQL client for health checks
-RUN apk add --no-cache postgresql-client
-
-WORKDIR /app
-
-# Don't run production as root
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs && \
+# Install only the necessary system packages and create user
+RUN apk add --no-cache postgresql-client && \
+    addgroup -S -g 1001 nodejs && \
+    adduser -S -u 1001 -G nodejs nextjs && \
     mkdir -p /app/uploads && \
     chown -R nextjs:nodejs /app
 
+WORKDIR /app
+
 # Copy only the necessary files
-COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Switch to non-root user
 USER nextjs
 
-# Install only production dependencies
-RUN npm ci --only=production && \
-    npx prisma generate
+# Generate Prisma client
+RUN npx prisma generate
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
@@ -98,5 +74,8 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "server.js", "-H", "0.0.0.0"]
+# Copy entrypoint script
+COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
+
+ENTRYPOINT ["./docker-entrypoint.sh"]

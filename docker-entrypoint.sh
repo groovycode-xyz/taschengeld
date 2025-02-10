@@ -1,9 +1,21 @@
 #!/bin/sh
+set -e
 
-echo "Starting build process..."
+# Wait for the database to be ready
+echo "Waiting for database to be ready..."
+while ! nc -z db 5432; do
+  sleep 1
+done
+echo "Database is ready!"
 
-# Run lint and build
-npm run lint && npm run build
+# Generate Prisma client
+echo "Generating Prisma client..."
+npx prisma generate
+
+# Run migrations
+echo "Running database migrations..."
+npx prisma migrate deploy
 
 # Start the application
-exec node .next/standalone/server.js
+echo "Starting the application..."
+exec node server.js -H 0.0.0.0

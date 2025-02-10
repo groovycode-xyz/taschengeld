@@ -50,68 +50,63 @@ export function CompletedTaskCard({
   };
 
   return (
-    <Card
-      className={cn(
-        'w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md',
-        newestTaskId === task.c_task_id && 'animate-highlight'
-      )}
-    >
-      <CardContent className='flex items-center justify-between p-6'>
-        {/* Checkbox for multi-select */}
-        <div className='flex-none mr-4'>
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={() => onSelect?.(task.c_task_id)}
-            className='mt-1'
-          />
-        </div>
-
-        <div className='flex items-center space-x-4 flex-1'>
-          <IconComponent icon={task.icon_name} className='h-8 w-8 text-gray-600' />
-          <div>
-            <h3 className='font-medium'>{task.task_title}</h3>
-            {task.comment && <p className='text-sm text-gray-500'>{task.comment}</p>}
-          </div>
-        </div>
-
-        {/* Completed By */}
-        <div className='flex items-center space-x-2 flex-1'>
-          <IconComponent icon={task.user_icon} className='h-6 w-6 text-gray-500' />
-          <span className='text-gray-600'>Completed by: {task.user_name}</span>
-        </div>
-
-        {/* Completion Date */}
-        <div className='flex items-center space-x-2 flex-1'>
-          <span className='text-gray-500 text-sm'>
-            Completed: {new Date(task.created_at).toLocaleDateString()}
-          </span>
-        </div>
-
-        {/* Payout Amount */}
-        <div className='font-bold text-lg min-w-[100px]'>
-          <CurrencyDisplay value={parseFloat(task.payout_value)} />
-        </div>
-
-        {/* Action Buttons */}
-        {task.payment_status === 'Unpaid' && (
-          <div className='flex space-x-2'>
-            <Button
-              onClick={() => handleAction('Approve')}
-              className='bg-green-500 hover:bg-green-600 text-white'
-              disabled={isLoading}
-            >
-              {isLoading ? 'Processing...' : 'Approve'}
-            </Button>
-            <Button
-              onClick={() => handleAction('Reject')}
-              className='bg-red-500 hover:bg-red-600 text-white'
-              disabled={isLoading}
-            >
-              {isLoading ? 'Processing...' : 'Reject'}
-            </Button>
-          </div>
+    <>
+      <Card
+        className={cn(
+          'relative transition-all duration-200',
+          'hover:shadow-md cursor-pointer',
+          isSelected && 'ring-2 ring-[hsl(var(--task-active))]',
+          task.payment_status === 'Paid'
+            ? 'bg-[hsl(var(--task-inactive))] text-[hsl(var(--task-inactive-foreground))]'
+            : 'bg-[hsl(var(--task-active))] text-[hsl(var(--task-active-foreground))]',
+          newestTaskId === task.c_task_id && 'animate-highlight'
         )}
-      </CardContent>
+        onClick={() => onSelect?.(task.c_task_id)}
+      >
+        <CardContent className='p-4'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center space-x-3'>
+              <div className='flex-shrink-0'>
+                <IconComponent
+                  icon={task.icon_name}
+                  className={cn(
+                    'w-8 h-8',
+                    task.payment_status === 'Paid'
+                      ? 'text-[hsl(var(--task-inactive-foreground))]'
+                      : 'text-[hsl(var(--task-active-foreground))]'
+                  )}
+                />
+              </div>
+              <div>
+                <h3 className='font-medium text-foreground'>{task.task_title}</h3>
+                {task.comment && (
+                  <p className='text-sm text-muted-foreground'>{task.comment}</p>
+                )}
+              </div>
+            </div>
+            <div className='flex items-center space-x-4'>
+              <div className='text-right'>
+                <CurrencyDisplay
+                  value={parseFloat(task.payout_value)}
+                  className={cn(
+                    'font-semibold',
+                    task.payment_status === 'Paid'
+                      ? 'text-[hsl(var(--task-inactive-foreground))]'
+                      : 'text-[hsl(var(--task-active-foreground))]'
+                  )}
+                />
+              </div>
+              {onSelect && (
+                <Checkbox
+                  checked={isSelected}
+                  className='data-[state=checked]:bg-[hsl(var(--task-active))] data-[state=checked]:text-[hsl(var(--task-active-foreground))]'
+                  onCheckedChange={() => onSelect(task.c_task_id)}
+                />
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className='bg-white'>
@@ -141,6 +136,6 @@ export function CompletedTaskCard({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </>
   );
 }

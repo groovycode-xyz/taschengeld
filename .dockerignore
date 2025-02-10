@@ -1,71 +1,93 @@
-# Node
+# Dependencies
 node_modules
-npm-debug.log
-yarn-debug.log
-yarn-error.log
 .pnp
 .pnp.js
-.yarn/install-state.gz
+.yarn/
+.npm/
+
+# Testing
+coverage/
+.nyc_output/
+__tests__/
+**/*.test.*
+**/*.spec.*
 
 # Next.js
-.next
-out
+.next/
+out/
+.swc/
+.turbo
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+logs/
+
+# Development
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+.editorconfig
+*.md
+!README.md
+.cursorrules
+.DS_Store
+._*
+Thumbs.db
 
 # Environment
 .env
 .env.*
 !.env.example
 
-# Development
-.git
-.gitignore
-.vscode
-.idea
-*.md
-.cursorrules
-.DS_Store
-._*
-Thumbs.db
-
 # Docker
-Dockerfile
+Dockerfile*
 docker-compose*.yml
 .dockerignore
 
-# Build
-dist
-build
-coverage
+# Build and cache
+dist/
+build/
+.cache/
+**/.tsbuildinfo
+**/*.tsbuildinfo
+.vercel/
 
 # Temporary
-*.log
+tmp/
+temp/
 *.tmp
-.cache
-tmp
-temp
+*.bak
 
 # Database
 *.sql
+*.sqlite
+*.sqlite3
+*.db
 *.backup
-*_backup*.sql
+*_backup*
 schema_*.sql
-backup_*.sql
-/postgres/data/
-/docker/data/
-
-# IDEs and editors
-.obsidian/
-*.swp
-*.swo
-*~
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Documentation
-README.md
-docs
-*.pdf
-*.jpg 
+docs/
+CHANGELOG.md
+LICENSE
+CONTRIBUTING.md
+
+# Assets source files
+**/*.sketch
+**/*.fig
+**/*.xd
+**/*.psd
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv

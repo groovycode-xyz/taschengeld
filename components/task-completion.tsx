@@ -19,6 +19,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Fireworks } from './fireworks';
+import { cn } from '@/lib/utils';
 
 export function TaskCompletion() {
   const [activeTasks, setActiveTasks] = useState<Task[]>([]);
@@ -239,12 +240,31 @@ export function TaskCompletion() {
             {activeTasks.map((task) => (
               <Card
                 key={task.task_id}
-                className='w-full hover:shadow-lg transition-shadow duration-300 cursor-pointer bg-blue-100 hover:bg-blue-200 shadow-md'
+                className={cn(
+                  'w-full transition-all duration-300 cursor-pointer shadow-md',
+                  'dark:hover:shadow-lg',
+                  // Light mode
+                  'bg-blue-100/50 hover:bg-blue-200/50 border-blue-200',
+                  'dark:bg-blue-900/20 dark:hover:bg-blue-800/30 dark:border-blue-800'
+                )}
                 onClick={() => handleTaskClick(task)}
               >
                 <CardContent className='flex flex-col items-center p-3'>
-                  <IconComponent icon={task.icon_name} className='h-12 w-12 mb-1 text-blue-600' />
-                  <h3 className='text-md font-semibold mb-1 text-blue-600'>{task.title}</h3>
+                  <IconComponent 
+                    icon={task.icon_name} 
+                    className={cn(
+                      'h-12 w-12 mb-1',
+                      'text-blue-700', // Light mode
+                      'dark:text-blue-300' // Dark mode
+                    )} 
+                  />
+                  <h3 className={cn(
+                    'text-md font-semibold mb-1',
+                    'text-blue-900', // Light mode
+                    'dark:text-blue-100' // Dark mode
+                  )}>
+                    {task.title}
+                  </h3>
                 </CardContent>
               </Card>
             ))}
@@ -257,42 +277,78 @@ export function TaskCompletion() {
             {completedTasks.map((task) => (
               <Card
                 key={task.c_task_id}
-                className={
-                  'w-full hover:shadow-lg transition-shadow duration-300 bg-white shadow-md'
-                }
+                className={cn(
+                  'w-full transition-all duration-300 shadow-md',
+                  'hover:shadow-lg',
+                  'bg-card dark:bg-card'
+                )}
               >
                 <CardContent className='flex items-center justify-between p-3'>
-                  <SquareCheckBig className='h-6 w-6 mr-2 text-green-500' />
+                  <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
 
-                  <Card className='flex-1 mr-2 bg-blue-50 shadow-sm'>
+                  <Card className={cn(
+                    'flex-1 mr-2 shadow-sm',
+                    'bg-blue-100/50 dark:bg-blue-900/20',
+                    'border-blue-200 dark:border-blue-800'
+                  )}>
                     <CardContent className='flex items-center p-2'>
                       {task.icon_name ? (
-                        <IconComponent icon={task.icon_name} className='h-6 w-6 mr-2' />
+                        <IconComponent 
+                          icon={task.icon_name} 
+                          className={cn(
+                            'h-6 w-6 mr-2',
+                            'text-blue-700 dark:text-blue-300'
+                          )} 
+                        />
                       ) : (
                         <IconComponent
                           icon='default-task-icon'
                           className='h-6 w-6 mr-2 text-gray-400'
                         />
                       )}
-                      <span className='text-sm font-medium'>{task.task_title}</span>
+                      <span className={cn(
+                        'text-sm font-medium',
+                        'text-blue-900 dark:text-blue-100'
+                      )}>
+                        {task.task_title}
+                      </span>
                     </CardContent>
                   </Card>
 
-                  <Card className='flex-1 mx-2 bg-green-50 shadow-sm'>
+                  <Card className={cn(
+                    'flex-1 mx-2 shadow-sm',
+                    'bg-green-100/50 dark:bg-green-900/20',
+                    'border-green-200 dark:border-green-800'
+                  )}>
                     <CardContent className='flex items-center p-2'>
                       {task.user_icon ? (
-                        <IconComponent icon={task.user_icon} className='h-6 w-6 mr-2' />
+                        <IconComponent 
+                          icon={task.user_icon} 
+                          className={cn(
+                            'h-6 w-6 mr-2',
+                            'text-green-700 dark:text-green-300'
+                          )} 
+                        />
                       ) : (
                         <IconComponent
                           icon='default-user-icon'
                           className='h-6 w-6 mr-2 text-gray-400'
                         />
                       )}
-                      <span className='text-sm font-medium'>{task.user_name}</span>
+                      <span className={cn(
+                        'text-sm font-medium',
+                        'text-green-900 dark:text-green-100'
+                      )}>
+                        {task.user_name}
+                      </span>
                     </CardContent>
                   </Card>
 
-                  <Card className='flex-1 ml-2 bg-gray-50 shadow-sm'>
+                  <Card className={cn(
+                    'flex-1 ml-2 shadow-sm',
+                    'bg-gray-100/50 dark:bg-gray-800/20',
+                    'border-gray-200 dark:border-gray-700'
+                  )}>
                     <CardContent className='p-2 text-center'>
                       <TimeSince date={task.created_at.toString()} />
                     </CardContent>

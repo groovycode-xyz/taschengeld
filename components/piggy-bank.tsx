@@ -11,6 +11,7 @@ import { TransactionHistoryModal } from './transaction-history-modal';
 import { PiggyBankUser } from '@/app/types/piggyBankUser';
 import { useMode } from '@/components/context/mode-context';
 import { HandCoins } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function PiggyBank() {
   const { isParentMode } = useMode();
@@ -105,15 +106,34 @@ export function PiggyBank() {
           {users.map((user) => (
             <Card
               key={user.user_id}
-              className='overflow-hidden shadow-md backdrop-blur-sm bg-green-100/50 border border-green-200 hover:border-green-300 transition-all duration-200'
+              className={cn(
+                'overflow-hidden shadow-md backdrop-blur-sm',
+                'bg-green-100/50 hover:bg-green-200/50 border-green-200',
+                'dark:bg-green-900/20 dark:hover:bg-green-800/30 dark:border-green-800',
+                'transition-all duration-200'
+              )}
             >
               <CardHeader className='flex flex-col items-center text-center'>
-                <IconComponent icon={user.icon} className='w-20 h-20 mb-2 text-green-700' />
-                <CardTitle className='mb-2 text-green-900'>{user.name}</CardTitle>
-                <div className='text-2xl font-bold mb-4 text-green-700'>
+                <IconComponent 
+                  icon={user.icon} 
+                  className={cn(
+                    'w-20 h-20 mb-2',
+                    'text-green-700 dark:text-green-300'
+                  )} 
+                />
+                <CardTitle className={cn(
+                  'mb-2',
+                  'text-green-900 dark:text-green-100'
+                )}>
+                  {user.name}
+                </CardTitle>
+                <div className='text-2xl font-bold mb-4'>
                   <CurrencyDisplay
                     value={parseFloat(user.account.balance)}
-                    className='text-2xl font-bold text-green-700'
+                    className={cn(
+                      'text-2xl font-bold',
+                      'text-green-700 dark:text-green-300'
+                    )}
                   />
                 </div>
                 <div className='flex flex-col gap-2 w-full'>
@@ -124,7 +144,11 @@ export function PiggyBank() {
                           setSelectedAccount(user);
                           setIsAddFundsModalOpen(true);
                         }}
-                        className='bg-green-600 hover:bg-green-700 text-white flex-1 font-semibold'
+                        className={cn(
+                          'flex-1 font-semibold',
+                          'bg-green-600 hover:bg-green-700 text-white',
+                          'dark:bg-green-700 dark:hover:bg-green-600'
+                        )}
                       >
                         Deposit
                       </Button>
@@ -133,7 +157,11 @@ export function PiggyBank() {
                           setSelectedAccount(user);
                           setIsWithdrawFundsModalOpen(true);
                         }}
-                        className='bg-red-600 hover:bg-red-700 text-white flex-1 font-semibold'
+                        className={cn(
+                          'flex-1 font-semibold',
+                          'bg-red-600 hover:bg-red-700 text-white',
+                          'dark:bg-red-700 dark:hover:bg-red-600'
+                        )}
                       >
                         Withdraw
                       </Button>
@@ -144,7 +172,11 @@ export function PiggyBank() {
                       setSelectedAccount(user);
                       setIsTransactionsModalOpen(true);
                     }}
-                    className='bg-blue-600 hover:bg-blue-700 text-white w-full font-semibold'
+                    className={cn(
+                      'w-full font-semibold',
+                      'bg-blue-600 hover:bg-blue-700 text-white',
+                      'dark:bg-blue-700 dark:hover:bg-blue-600'
+                    )}
                   >
                     Transactions
                   </Button>

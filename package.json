@@ -9,7 +9,10 @@
     "format": "prettier --write .",
     "lint": "prettier --write . && next lint",
     "lint:dir": "next lint app components",
-    "check": "tsc --noEmit && npm run lint:dir && npm run format"
+    "check": "tsc --noEmit && npm run lint:dir && npm run format",
+    "docker:cleanup": "scripts/docker-cleanup.sh",
+    "docker:cleanup:all": "scripts/docker-cleanup.sh --all",
+    "prebuild": "test \"$SKIP_CLEANUP\" = \"true\" || npm run docker:cleanup"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
@@ -24,8 +27,6 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.2",
-    "@types/pg": "^8.11.10",
-    "autoprefixer": "^10.4.20",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -35,28 +36,30 @@
     "lucide-react": "^0.446.0",
     "next": "^14.2.14",
     "pg": "^8.13.0",
-    "prisma": "^6.3.0",
     "react": "^18.3.1",
     "react-beautiful-dnd": "^13.1.1",
     "react-day-picker": "^9.1.4",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
     "@types/file-saver": "^2.0.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.13",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "postcss": "^8",
     "prettier": "^3.3.3",
+    "prisma": "^6.3.0",
     "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.3"
   }
 }

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { piggyBankDashboardRepository } from '@/app/lib/index';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const dashboardData = await piggyBankDashboardRepository.getDashboardData();

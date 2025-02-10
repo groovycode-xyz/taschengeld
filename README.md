@@ -1,193 +1,235 @@
-# Taschengeld - Allowance Tracker
+# Tgeld Task Management System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-black?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
-
-## Development Environments
-
-This project supports two development environments, both using Docker with a single-container approach that includes Next.js, PostgreSQL, and Prisma:
-
-### 1. Development Environment
-
-Uses Docker for development with hot reloading:
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/tgeld.git
-cd tgeld
-
-# Start development environment
-docker compose -f docker-compose.dev.yml up
-
-# Access the application
-open http://localhost:21971
-```
-
-The development environment includes:
-
-- Next.js in development mode with hot reloading
-- PostgreSQL database in the same container
-- Source code mounted for live updates
-- Development tools and dependencies
-
-### 2. Production Environment
-
-Uses Docker for production deployment:
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/tgeld.git
-cd tgeld
-
-# Set up environment
-cp .env.example .env
-# Edit .env and set a secure password
-
-# Start production environment
-docker compose up -d
-
-# Access the application
-open http://localhost:21971
-```
-
-The production environment includes:
-
-- Optimized Next.js build
-- PostgreSQL database in the same container
-- Production-ready configuration
-- Health monitoring
-
-## Environment Setup
-
-The application uses different environment files for different purposes:
-
-- `.env.example` - Template file, copy to create other env files
-- `.env` - Production environment configuration
-- `.env.docker` - Production Docker configuration
-- `.env.local` - Local development configuration (if needed)
-
-### Environment Switching
-
-Use the provided script to switch between environments:
-
-```bash
-# Switch to development mode
-./switch-mode.sh local
-
-# Switch to production mode
-./switch-mode.sh docker
-```
-
-### Database Configuration
-
-The database runs in the same container as the application. Configuration includes:
-
-- PostgreSQL 17.2
-- Automatic database initialization
-- Persistent data storage
-- Health checks
-
-### Security Notes
-
-1. Database Password:
-
-   - Set a secure password in your `.env` file
-   - Minimum 12 characters
-   - Mix of uppercase, lowercase, numbers, and special characters
-   - Avoid characters that need URL escaping
-
-2. Port Exposure:
-   - Next.js: 21971 (required)
-   - PostgreSQL: 5432 (optional, can be disabled)
-
-## Documentation
-
-📚 [View Full Documentation](docs/README.md)
-
-### Key Documentation Sections
-
-- 🚀 [Getting Started Guide](docs/1-getting-started/quick-start.md)
-- 🏗️ [Architecture Overview](docs/2-architecture/overview.md)
-- 💻 [Development Guide](docs/3-development/setup.md)
-- ✨ [Feature Documentation](docs/4-features/task-management.md)
-- 🛠️ [Maintenance Guide](docs/5-maintenance/backup-restore.md)
+A modern task management system built with Next.js, PostgreSQL, and Docker.
 
 ## Features
 
-- 📋 Task Management
+- Task creation and management
+- Task completion tracking
+- Payout value tracking
+- Docker-based production deployment
+- PostgreSQL database for data persistence
 
-  - Create and manage tasks
-  - Set task values and requirements
-  - Track task completion
+## Prerequisites
 
-- 👥 User Management
+For Development:
+- Node.js 18+ (for local development)
+- PostgreSQL 16
+- Git
 
-  - Parent and child accounts
-  - User profiles and preferences
-  - Access control
+For Production:
+- Docker and Docker Compose
+- Git
 
-- 💰 Payment System
-  - Track allowances and payments
-  - Manage task rewards
-  - Payment history
+## Quick Start
 
-## Development
+### Development Setup
 
-### Prerequisites
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/barneephife/tgeld.git
+   cd tgeld
+   ```
 
-For local development:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-- Node.js 20 or later
-- PostgreSQL 16 or later
-- npm 10 or later
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` with your local PostgreSQL configuration.
 
-For production:
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-- Docker Engine 24.0.0 or later
-- Docker Compose V2 or later
+The application will be available at `http://localhost:3000`.
 
-### Deployment Options
+### Production Setup
 
-1. **Development (Recommended)**
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/barneephife/tgeld.git
+   cd tgeld
+   ```
 
-   - Local setup without Docker
-   - Direct PostgreSQL connection
-   - Fastest feedback loop
-   - Best for development
+2. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` with your production configuration.
 
-2. **Production**
-   - Docker Compose deployment
-   - Includes both application and database
-   - Optional backup service
-   - Production-ready configuration
+3. Start the application:
+   ```bash
+   docker-compose up -d
+   ```
 
-### Database Options
+The application will be available at `http://localhost:3000`.
 
-The default docker-compose configuration includes PostgreSQL. For detailed information about database configuration options and backup strategies, see our [Database Management](docs/3-development/database-management.md) and [Backup and Restore](docs/5-maintenance/backup-restore.md) documentation.
+## Environment Configuration
+
+### Development Environment
+
+```bash
+# Database
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/tgeld?schema=public
+```
+
+### Production Environment
+
+```bash
+# Application
+NODE_ENV=production
+NEXT_PUBLIC_PORT=21971
+
+# Database
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_secure_password
+DB_DATABASE=tgeld
+
+# Upload Configuration
+UPLOAD_PATH=/app/uploads
+
+# Prisma
+DATABASE_URL=postgresql://postgres:your_secure_password@db:5432/tgeld?schema=public
+```
+
+## Development Setup
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Generate Prisma client:
+   ```bash
+   npx prisma generate
+   ```
+
+3. Run migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+4. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+## Production Deployment
+
+1. Build Docker image:
+   ```bash
+   docker build -t tgeld/tgeld:latest -f Dockerfile.prod .
+   ```
+
+2. Push to Docker Hub:
+   ```bash
+   docker push tgeld/tgeld:latest
+   ```
+
+3. Deploy using docker-compose:
+   ```bash
+   docker-compose pull
+   docker-compose up -d
+   ```
+
+## Database Management
+
+### Development
+
+Create a database backup:
+```bash
+pg_dump -U postgres tgeld > backup.sql
+```
+
+Restore from backup:
+```bash
+psql -U postgres -d tgeld < backup.sql
+```
+
+### Production
+
+Create a database backup:
+```bash
+docker-compose exec db pg_dump -U postgres tgeld > backup.sql
+```
+
+Restore from backup:
+```bash
+cat backup.sql | docker-compose exec -T db psql -U postgres -d tgeld
+```
+
+## Updating the Application
+
+### Development
+1. Pull latest changes:
+   ```bash
+   git pull origin main
+   ```
+
+2. Update dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+### Production
+1. Pull latest changes:
+   ```bash
+   git pull origin main
+   ```
+
+2. Rebuild and restart:
+   ```bash
+   docker-compose down
+   docker-compose pull
+   docker-compose up -d
+   ```
+
+## API Documentation
+
+### Tasks
+
+- `GET /api/tasks` - List all tasks
+- `POST /api/tasks` - Create a new task
+- `GET /api/tasks/:id` - Get task details
+- `PUT /api/tasks/:id` - Update a task
+- `DELETE /api/tasks/:id` - Delete a task
+- `GET /api/active-tasks` - List active tasks
+
+## Project Structure
+
+```
+tgeld/
+├── app/                 # Next.js application
+│   ├── api/            # API routes
+│   ├── lib/            # Shared libraries
+│   └── types/          # TypeScript types
+├── components/         # React components
+├── prisma/            # Database schema and migrations
+├── public/            # Static assets
+└── docker/            # Docker configuration
+```
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](docs/3-development/contributing.md) for details.
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-Need help? Check out our:
-
-- [Documentation](docs/README.md)
-- [Troubleshooting Guide](docs/5-maintenance/troubleshooting.md)
-- [GitHub Issues](https://github.com/yourusername/tgeld/issues)
-
-For detailed documentation, please refer to the `docs` directory:
-
-- Getting Started: `docs/1-getting-started/`
-- Architecture: `docs/2-architecture/`
-- Development: `docs/3-development/`
-  - [Database Management](docs/3-development/database-management.md)
-- Features: `docs/4-features/`
-- Maintenance: `docs/5-maintenance/`
+MIT License - See LICENSE file for details

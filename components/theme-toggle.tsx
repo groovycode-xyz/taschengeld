@@ -36,12 +36,12 @@ export function ThemeToggle() {
           <span className='sr-only'>Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent align='end' className='bg-popover'>
         {themes.map(({ id, label, icon: Icon }) => (
           <DropdownMenuItem
             key={id}
             onClick={() => setTheme(id as Theme)}
-            className={`flex items-center gap-2 ${theme === id ? 'bg-accent' : ''}`}
+            className={`flex items-center gap-2 ${theme === id ? 'bg-accent text-accent-foreground' : 'bg-popover text-popover-foreground'}`}
           >
             <Icon className='h-4 w-4' />
             <span>{label}</span>

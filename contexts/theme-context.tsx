@@ -67,19 +67,19 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
   // Apply theme to document root and store preference
   useEffect(() => {
     const root = document.documentElement;
+    const themeClasses = ['theme-light', 'theme-dark', 'theme-ocean', 'theme-forest', 'theme-sunset'];
+    
     // Remove all theme classes and data attributes
-    root.classList.remove(
-      'theme-light',
-      'theme-dark',
-      'theme-ocean',
-      'theme-forest',
-      'theme-sunset'
-    );
+    root.classList.remove(...themeClasses);
     root.removeAttribute('data-theme');
 
-    // Add the new theme class and set the data attribute
-    root.classList.add(`theme-${resolvedTheme}`);
+    // Add the new theme class and data attribute
+    const newThemeClass = `theme-${resolvedTheme}`;
+    root.classList.add(newThemeClass);
     root.setAttribute('data-theme', resolvedTheme);
+
+    // Store the theme preference
+    localStorage.setItem('theme-preference', theme);
 
     console.log('Theme updated:', { theme, resolvedTheme }); // Debug log
   }, [resolvedTheme, theme]);

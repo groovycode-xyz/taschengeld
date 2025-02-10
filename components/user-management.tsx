@@ -133,23 +133,14 @@ export function UserManagement() {
           {users
             .sort((a, b) => new Date(a.birthday).getTime() - new Date(b.birthday).getTime())
             .map((user) => (
-              <div
+              <UserCard
                 key={user.user_id}
-                className='bg-white rounded-2xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md hover:border-gray-300'
+                user={user}
                 onClick={() => {
-                  console.log('Opening edit modal for user:', JSON.stringify(user, null, 2));
                   setEditingUser(user);
                   setIsEditModalOpen(true);
                 }}
-              >
-                <UserCard
-                  user={user}
-                  onClick={() => {
-                    setEditingUser(user);
-                    setIsEditModalOpen(true);
-                  }}
-                />
-              </div>
+              />
             ))}
         </div>
       </div>

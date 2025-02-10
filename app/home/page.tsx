@@ -5,7 +5,7 @@ import { MainLayout } from '@/components/main-layout';
 export default function HomePage() {
   return (
     <AppShell>
-      <MainLayout className='flex items-center justify-center min-h-full bg-background-primary'>
+      <MainLayout className='flex items-center justify-center min-h-full bg-background'>
         <div className='max-w-4xl w-full space-y-6'>
           {/* Hero Image */}
           <div className='relative w-full aspect-[21/8] rounded-2xl overflow-hidden shadow-2xl'>
@@ -21,8 +21,8 @@ export default function HomePage() {
 
           {/* Welcome Text */}
           <div className='text-center space-y-3'>
-            <h1 className='text-3xl font-bold text-content-primary'>Welcome to Taschengeld</h1>
-            <p className='text-lg text-content-secondary max-w-2xl mx-auto'>
+            <h1 className='text-3xl font-bold text-foreground'>Welcome to Taschengeld</h1>
+            <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
               Your family&apos;s allowance and task management app
             </p>
           </div>
@@ -48,15 +48,11 @@ export default function HomePage() {
             ].map((feature) => (
               <div
                 key={feature.title}
-                className='bg-background-secondary/80 backdrop-blur-sm p-4 rounded-xl shadow-lg 
-                         hover:shadow-xl transition-all duration-300 hover:bg-background-secondary/90 
-                         border border-border-primary'
+                className='bg-card p-4 rounded-xl shadow-lg border border-border'
               >
-                <div className='text-2xl mb-2'>{feature.icon}</div>
-                <h3 className='text-base font-semibold mb-1 text-content-primary'>
-                  {feature.title}
-                </h3>
-                <p className='text-sm text-content-secondary'>{feature.description}</p>
+                <div className='text-4xl mb-3'>{feature.icon}</div>
+                <h3 className='text-lg font-semibold text-foreground mb-2'>{feature.title}</h3>
+                <p className='text-muted-foreground'>{feature.description}</p>
               </div>
             ))}
           </div>

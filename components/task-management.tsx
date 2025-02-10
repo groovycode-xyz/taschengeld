@@ -16,6 +16,7 @@ import { EditTaskModal } from './edit-task-modal';
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
+import { cn } from '@/lib/utils';
 
 export function TaskManagement() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -218,10 +219,19 @@ export function TaskManagement() {
           {filteredAndSortedTasks.map((task) => (
             <Card
               key={task.task_id}
-              className={`cursor-pointer transition-all duration-300 shadow-md
-                ${
-                  task.is_active ? 'bg-blue-100 hover:bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'
-                }`}
+              className={cn(
+                'w-full transition-all duration-300 cursor-pointer shadow-md',
+                'dark:hover:shadow-lg',
+                task.is_active
+                  ? [
+                      'bg-blue-100/50 hover:bg-blue-200/50 border-blue-200',
+                      'dark:bg-blue-900/20 dark:hover:bg-blue-800/30 dark:border-blue-800'
+                    ]
+                  : [
+                      'bg-gray-100/50 hover:bg-gray-200/50 border-gray-200',
+                      'dark:bg-gray-800/20 dark:hover:bg-gray-700/30 dark:border-gray-700'
+                    ]
+              )}
               onClick={() => {
                 setEditingTask(task);
                 setIsEditModalOpen(true);
@@ -231,20 +241,33 @@ export function TaskManagement() {
                 <div className='h-20 w-20 mb-2'>
                   <IconComponent
                     icon={task.icon_name}
-                    className={`h-full w-full ${task.is_active ? 'text-blue-600' : 'text-gray-400'}`}
+                    className={cn(
+                      'h-full w-full',
+                      task.is_active
+                        ? 'text-blue-700 dark:text-blue-300'
+                        : 'text-gray-500 dark:text-gray-400'
+                    )}
                   />
                 </div>
                 <h3
-                  className={`text-lg font-semibold mb-1 ${
-                    task.is_active ? 'text-blue-600' : 'text-gray-500'
-                  } ${task.is_active ? '' : 'italic'}`}
+                  className={cn(
+                    'text-lg font-semibold mb-1',
+                    task.is_active
+                      ? 'text-blue-900 dark:text-blue-100'
+                      : 'text-gray-700 dark:text-gray-300 italic'
+                  )}
                 >
                   {task.title}
                 </h3>
-                <p className='text-xl font-bold text-green-600'>
+                <p className='text-xl font-bold'>
                   <CurrencyDisplay
                     value={task.payout_value}
-                    className='text-xl font-bold text-green-600'
+                    className={cn(
+                      'text-xl font-bold',
+                      task.is_active
+                        ? 'text-green-700 dark:text-green-400'
+                        : 'text-gray-600 dark:text-gray-400'
+                    )}
                   />
                 </p>
               </CardContent>

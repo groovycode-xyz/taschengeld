@@ -1,16 +1,7 @@
 import { NextResponse } from 'next/server';
 import { taskRepository } from '@/app/lib/taskRepository';
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const task = await taskRepository.create(body);
-    return NextResponse.json(task, { status: 201 });
-  } catch (error) {
-    console.error('Failed to create task:', error);
-    return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
@@ -19,5 +10,20 @@ export async function GET() {
   } catch (error) {
     console.error('Failed to fetch tasks:', error);
     return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const taskData = {
+      ...body,
+      is_active: true // Set is_active to true by default
+    };
+    const task = await taskRepository.create(taskData);
+    return NextResponse.json(task, { status: 201 });
+  } catch (error) {
+    console.error('Failed to create task:', error);
+    return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
   }
 }
