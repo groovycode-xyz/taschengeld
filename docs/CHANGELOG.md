@@ -1,5 +1,55 @@
 # Recent Changes
 
+## Documentation and Cleanup Planning (2024-03-20)
+
+- Created comprehensive Cleanup Action Plan (`docs/cleanup-action-plan.md`)
+  - Systematic approach to codebase improvement
+  - Clear guardrails and completion criteria
+  - Progress tracking across multiple categories
+  - Strong emphasis on maintaining functionality
+  - Integration with existing documentation
+- Established User Experience Flow (`docs/user-experience-flow.md`) as key reference document
+  - Source of truth for component requirements
+  - Detailed interface specifications
+  - Component relationships and dependencies
+  - Data flow and state management documentation
+  - Required functionality verification
+- Beginning systematic cleanup process
+  - Starting with CSS/Styling Files category
+  - Following established guardrails
+  - Maintaining sync with UX Flow document
+  - Tracking progress in action plan
+- Initial cleanup actions:
+  - Removed empty file: `components/ui/user-card.tsx`
+  - Documented component analysis in cleanup action plan
+  - Prepared for incremental testing and validation
+
+## Component Cleanup and Documentation (2024-03-05)
+
+- Consolidated sound selection modals
+  - Created new unified `SoundSelectorModal` component
+  - Supports both task and user sounds
+  - Improved code reusability and maintainability
+  - Marked old components as unused:
+    - `select-sound-modal.tsx` → `select-sound-modal.tsx.unused`
+    - `select-user-sound-modal.tsx` → `select-user-sound-modal.tsx.unused`
+- Marked unused components for potential removal
+  - Renamed `mode-toggle.tsx` to `mode-toggle.tsx.unused`
+  - Renamed `Layout.tsx` to `Layout.tsx.unused`
+  - Renamed `icon-selector.tsx` to `icon-selector.tsx.unused`
+- Maintained separate delete confirmation components
+  - Kept `delete-confirmation-modal.tsx` for task deletion
+  - Kept `delete-confirmation-dialog.tsx` for user deletion
+  - Different UX requirements and warning levels justify separate components
+- Completed comprehensive documentation of all interfaces
+  - Task Management
+  - Task Completion
+  - Payday
+  - Piggy Bank
+  - Family Overview
+  - Global Settings
+  - Detailed component structure, data flow, and state management documentation
+
 ## Multi-select improvements for Payday interface (2024_1205_1736)
 
 ## Scroll Area Improvements (2024_1205)
@@ -87,3 +137,17 @@
 - Better visual hierarchy in dialogs
 - Clearer action confirmations
 - Consistent styling with shadcn/ui components
+
+## User Deletion Dialog Improvements (2024-03-05)
+
+- Enhanced user deletion confirmation dialog
+  - Replaced browser's native confirm dialog with custom styled component
+  - Maintained consistent styling with task deletion dialog
+  - Preserved all existing deletion logic and cascading operations
+  - Clear visual presentation of affected data:
+    - Piggy bank accounts and transactions
+    - Task history
+    - User settings
+  - Improved user experience with styled buttons:
+    - Cancel (Blue)
+    - Delete (Red)

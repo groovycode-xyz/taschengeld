@@ -10,7 +10,7 @@ import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
 import { DeleteConfirmationModal } from './delete-confirmation-modal';
 import { Trash2, Save, X, Play } from 'lucide-react';
-import { SelectSoundModal } from './select-sound-modal';
+import { SoundSelectorModal } from './sound-selector-modal';
 
 type EditTaskModalProps = {
   isOpen: boolean;
@@ -235,11 +235,12 @@ export function EditTaskModal({
         onSelectIcon={(selectedIcon) => setIconName(selectedIcon)}
         currentIcon={icon_name}
       />
-      <SelectSoundModal
-        isOpen={isSoundModalOpen} // Corrected to use the sound modal state
+      <SoundSelectorModal
+        isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelectSound={(selectedSound) => setSoundUrl(selectedSound)}
+        onSelect={setSoundUrl}
         currentSound={sound_url}
+        type="task"
       />
       <DeleteConfirmationModal
         isOpen={isDeleteConfirmationOpen}

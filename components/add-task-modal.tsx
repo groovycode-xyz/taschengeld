@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
-import { SelectUserSoundModal } from './select-user-sound-modal';
+import { SoundSelectorModal } from './sound-selector-modal';
 import { Save, X, Play } from 'lucide-react';
 
 type AddTaskModalProps = {
@@ -54,6 +54,10 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
       is_active: taskState.is_active,
     });
     onClose();
+  };
+
+  const handleSoundSelect = (selectedSound: string | null) => {
+    setTaskState((prev) => ({ ...prev, sound_url: selectedSound }));
   };
 
   return (
@@ -196,13 +200,12 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
         }
         currentIcon={taskState.icon_name}
       />
-      <SelectUserSoundModal
+      <SoundSelectorModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelect={(selectedSound: string | null) =>
-          setTaskState((prev) => ({ ...prev, sound_url: selectedSound }))
-        }
+        onSelect={handleSoundSelect}
         currentSound={taskState.sound_url}
+        type="task"
       />
     </>
   );

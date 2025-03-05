@@ -34,7 +34,7 @@ import {
   Save,
   X,
 } from 'lucide-react';
-import { SelectUserSoundModal } from './select-user-sound-modal';
+import { SoundSelectorModal } from './sound-selector-modal';
 import { CreateUserInput, User } from 'app/types/user';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 
@@ -166,6 +166,10 @@ export function AddUserModal({
     return <IconComponent className='h-6 w-6' />;
   };
 
+  const handleSoundSelect = (selectedSound: string | null) => {
+    setSoundUrl(selectedSound);
+  };
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -282,11 +286,12 @@ export function AddUserModal({
         onClose={() => setIsIconModalOpen(false)}
         onSelectIcon={(selectedIcon) => setIcon(selectedIcon)}
       />
-      <SelectUserSoundModal
+      <SoundSelectorModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelect={(selectedSound) => setSoundUrl(selectedSound)}
+        onSelect={handleSoundSelect}
         currentSound={soundUrl}
+        type="user"
       />
       <DeleteConfirmationDialog
         isOpen={isDeleteConfirmationOpen}

@@ -10,10 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { IconSelectorModal } from './icon-selector-modal';
-import { SelectUserSoundModal } from './select-user-sound-modal';
+import { SoundSelectorModal } from './sound-selector-modal';
 import { User } from '@/app/types/user';
 import { Save, X, Play, Trash2 } from 'lucide-react';
 import { IconComponent } from './icon-component';
+import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -51,6 +52,7 @@ export function EditUserModal({
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
   const [birthdayError, setBirthdayError] = useState<string | null>(null);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
   useEffect(() => {
     console.log('EditUserModal useEffect triggered');
@@ -114,10 +116,17 @@ export function EditUserModal({
   };
 
   const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      onDeleteUser(Number(user.user_id));
-      onClose();
-    }
+    setIsDeleteConfirmationOpen(true);
+  };
+
+  const confirmDelete = () => {
+    onDeleteUser(Number(user.user_id));
+    setIsDeleteConfirmationOpen(false);
+    onClose();
+  };
+
+  const handleSoundSelect = (selectedSound: string | null) => {
+    setSoundUrl(selectedSound);
   };
 
   return (
@@ -245,11 +254,18 @@ export function EditUserModal({
           setIsIconModalOpen(false);
         }}
       />
-      <SelectUserSoundModal
+      <SoundSelectorModal
         isOpen={isSoundModalOpen}
         onClose={() => setIsSoundModalOpen(false)}
-        onSelect={(selectedSound: string | null) => setSoundUrl(selectedSound)}
+        onSelect={handleSoundSelect}
         currentSound={soundUrl}
+        type="user"
+      />
+      <DeleteConfirmationDialog
+        isOpen={isDeleteConfirmationOpen}
+        onClose={() => setIsDeleteConfirmationOpen(false)}
+        onConfirm={confirmDelete}
+        itemName={name}
       />
     </>
   );

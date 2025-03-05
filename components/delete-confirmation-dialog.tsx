@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogDescription,
 } from 'components/ui/dialog';
 import { Button } from 'components/ui/button';
 
@@ -24,27 +23,34 @@ export function DeleteConfirmationDialog({
 }: DeleteConfirmationDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete User</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete the user &#34;{itemName}&#34;?
-          </DialogDescription>
+          <DialogTitle className="text-xl">Delete User</DialogTitle>
         </DialogHeader>
-        <div className='py-3'>
-          <p className='mb-2'>This will also delete:</p>
-          <ul className='list-disc list-inside space-y-1 text-sm text-muted-foreground'>
-            <li>Their piggy bank account and all transaction history</li>
-            <li>Their completed tasks history</li>
-            <li>All their associated data</li>
-          </ul>
-          <p className='mt-4 text-sm text-red-600'>This action cannot be undone.</p>
+        <div className="py-4">
+          <p>Are you sure you want to delete the user "{itemName}"?</p>
+          <div className="mt-2 text-sm text-gray-500">
+            <p>This will delete all associated data including:</p>
+            <ul className="list-disc list-inside mt-1">
+              <li>Piggy bank account & transactions</li>
+              <li>Task history</li>
+              <li>User settings</li>
+            </ul>
+          </div>
         </div>
-        <DialogFooter>
-          <Button onClick={onClose} variant='outline'>
+        <DialogFooter className="sm:justify-center gap-2">
+          <Button
+            type="button"
+            onClick={onClose}
+            className="px-8 py-2 rounded-full bg-[#4285f4] text-white hover:bg-[#3367d6] transition-colors"
+          >
             Cancel
           </Button>
-          <Button onClick={onConfirm} variant='destructive'>
+          <Button
+            type="button"
+            onClick={onConfirm}
+            className="px-8 py-2 rounded-full bg-[#ea4335] text-white hover:bg-[#d33828] transition-colors"
+          >
             Delete
           </Button>
         </DialogFooter>
