@@ -147,6 +147,47 @@ Additional files created during use:
 ⚠️ Important Notes:
 
 - Never delete the `data/postgres` directory while the application is running
+- Always back up your data before major updates
+
+## ⚠️ DATABASE DATA PERSISTENCE - CRITICAL
+
+### Keeping Your Data Safe
+
+Your family's data is stored in Docker volumes. To avoid accidental data loss:
+
+**SAFE Commands (preserve data):**
+```bash
+# Stop containers (data preserved)
+docker compose down
+
+# Restart containers (data preserved)
+docker compose down
+docker compose up -d
+
+# Update to new version (data preserved)
+docker compose pull
+docker compose up -d
+```
+
+**DANGEROUS Commands (will DELETE all data):**
+```bash
+# ⚠️ NEVER use these unless you want to start fresh:
+docker compose down -v  # The -v flag DELETES volumes/data!
+docker volume rm tgeld_postgres_data  # Directly removes data!
+```
+
+### Best Practices
+
+1. **Regular Backups**: Use the built-in backup feature in Settings → Backup & Restore
+2. **Before Updates**: Always create a backup before updating the application
+3. **Development**: If you're a developer, use separate volume names for dev/prod
+
+### Data Recovery
+
+If you accidentally deleted your data:
+1. Stop immediately - don't run any more commands
+2. Check if you have a recent backup file (`backup.sql`)
+3. If yes, you can restore it through Settings → Backup & Restore
 - Always backup both `.env` and `data/postgres` directory
 - The `logs` directory is created automatically if logging is enabled
 

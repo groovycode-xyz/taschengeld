@@ -37,9 +37,7 @@ export function EditTaskModal({
   const [is_active, setIsActive] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false); // Add this line
-  // {{ Remove the following line }}
-  // const [assignedUser, setAssignedUser] = useState<User | null>(null);
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
 
   useEffect(() => {
     if (task) {

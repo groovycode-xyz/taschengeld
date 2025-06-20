@@ -14,7 +14,10 @@
     "docker:cleanup:all": "scripts/docker-cleanup.sh --all",
     "prebuild": "test \"$SKIP_CLEANUP\" = \"true\" || npm run docker:cleanup",
     "dev:docker": "docker compose -f docker-compose.dev.yml up --build",
-    "dev:docker:clean": "docker compose -f docker-compose.dev.yml down -v && npm run dev:docker"
+    "dev:docker:clean": "docker compose -f docker-compose.dev.yml down -v && npm run dev:docker",
+    "dev:docker:restart": "docker compose -f docker-compose.dev.yml down && docker compose -f docker-compose.dev.yml up --build",
+    "dev:docker:stop": "docker compose -f docker-compose.dev.yml stop",
+    "dev:docker:start": "docker compose -f docker-compose.dev.yml start"
   },
   "dependencies": {
     "@prisma/client": "^6.3.0",
@@ -37,7 +40,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
-    "zod": "^3.24.0"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
