@@ -27,8 +27,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Feature Cards */}
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+          {/* Feature Cards - Optimized for tablets */}
+          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
             {[
               {
                 title: 'Task Management',
@@ -48,7 +48,7 @@ export default function HomePage() {
             ].map((feature) => (
               <div
                 key={feature.title}
-                className='bg-card p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200'
+                className='bg-card p-6 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer'
               >
                 <div className='text-4xl mb-4'>{feature.icon}</div>
                 <h3 className='text-xl font-semibold mb-2'>{feature.title}</h3>

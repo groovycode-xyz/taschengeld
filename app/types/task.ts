@@ -1,19 +1,11 @@
 export interface Task {
   task_id: string;
   title: string;
-  description: string;
-  icon_name: string;
-  sound_url: string | null;
+  description?: string | null;
+  icon_name?: string | null;
+  sound_url?: string | null;
   payout_value: number;
-  is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
-
-export type CompletedTask = Task & {
-  userId: string;
-  userName: string;
-  userIcon: string;
-  completedAt: Date;
-  status: 'pending' | 'approved' | 'rejected';
-};

@@ -20,10 +20,14 @@ import {
 } from '@/components/ui/dialog';
 import { Fireworks } from './fireworks';
 import { cn } from '@/lib/utils';
+import { useUsers } from '@/components/context/user-context';
+import { useMode } from '@/components/context/mode-context';
+import Link from 'next/link';
 
 export function TaskCompletion() {
+  const { childUsers } = useUsers();
+  const { hasFullAccess } = useMode();
   const [activeTasks, setActiveTasks] = useState<Task[]>([]);
-  const [childUsers, setChildUsers] = useState<User[]>([]);
   const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,37 +41,23 @@ export function TaskCompletion() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching data...');
-        const [tasksRes, usersRes, completedRes] = await Promise.all([
-          fetch('./api/active-tasks'),
-          fetch('./api/users'),
+        const [tasksRes, completedRes] = await Promise.all([
+          fetch('./api/tasks?active=true'),
           fetch('./api/completed-tasks'),
         ]);
 
-        console.log('Active tasks response status:', tasksRes.status);
-        console.log('Users response status:', usersRes.status);
-        console.log('Completed tasks response status:', completedRes.status);
-
         if (!tasksRes.ok) throw new Error('Failed to fetch active tasks');
-        if (!usersRes.ok) throw new Error('Failed to fetch users');
         if (!completedRes.ok) throw new Error('Failed to fetch completed tasks');
 
         const tasksData = await tasksRes.json();
-        const usersData = await usersRes.json();
         const completedData = await completedRes.json();
 
-        console.log('Active tasks data:', tasksData);
-        console.log('Users data:', usersData);
-        console.log('Completed tasks data:', completedData);
-
         setActiveTasks(tasksData);
-        setChildUsers(usersData);
         setCompletedTasks(
           completedData.filter((task: CompletedTask) => task.payment_status === 'Unpaid')
         );
       } catch (err) {
         const error = err as Error;
-        console.error('Error details:', error);
         setError(error.message || 'An error occurred');
       } finally {
         setIsLoading(false);
@@ -85,9 +75,7 @@ export function TaskCompletion() {
           taskAudio = new Audio(`./sounds/tasks/${task.sound_url}.wav`);
           return taskAudio.play();
         });
-      } catch (error) {
-        console.error('Error playing task sound:', error);
-      }
+      } catch {}
     }
   };
 
@@ -105,8 +93,7 @@ export function TaskCompletion() {
         return new Promise<void>((resolve) => {
           userAudio.addEventListener('ended', () => resolve());
         });
-      } catch (error) {
-        console.error('Error playing user sound:', error);
+      } catch {
         return Promise.resolve();
       }
     }
@@ -154,18 +141,22 @@ export function TaskCompletion() {
         // Wait for the user sound to complete before continuing
         await playUserSound(selectedUser);
 
-        const response = await fetch('./api/completed-tasks', {
+        const response = await fetch('/api/completed-tasks', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             user_id: userId,
-            task_id: selectedTask.task_id,
+            task_id: parseInt(selectedTask.task_id, 10),
           }),
         });
 
-        if (!response.ok) throw new Error('Failed to create completed task');
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('API Error:', errorData);
+          throw new Error(errorData.error || 'Failed to create completed task');
+        }
 
         const newCompletedTask: CompletedTask = await response.json();
 
@@ -174,7 +165,7 @@ export function TaskCompletion() {
             ...newCompletedTask,
             task_title: selectedTask.title,
             user_name: selectedUser.name || '',
-            icon_name: selectedTask.icon_name,
+            icon_name: selectedTask.icon_name || undefined,
             user_icon: selectedUser.icon || '',
           },
           ...prevTasks,
@@ -225,51 +216,72 @@ export function TaskCompletion() {
   return (
     <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
-      <div className='p-8 bg-background-secondary'>
+      <div className='p-8 bg-secondary'>
         <div className='flex items-center justify-between pb-6 border-b border-border'>
           <div className='flex items-center space-x-4'>
-            <CheckSquare className='h-8 w-8 text-content-primary' />
-            <h1 className='text-3xl font-medium text-content-primary'>Task Completion</h1>
+            <CheckSquare className='h-8 w-8 text-foreground' />
+            <h1 className='text-3xl font-medium text-foreground'>Task Completion</h1>
           </div>
         </div>
       </div>
 
       {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-secondary'>
         <div className='space-y-8'>
           {/* Active Tasks Section */}
           <div className='space-y-4'>
             <h2 className='text-2xl font-semibold'>Active Tasks</h2>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-              {activeTasks.map((task) => (
-                <Card
-                  key={task.task_id}
-                  className={cn(
-                    'w-full transition-all duration-300 cursor-pointer shadow-md',
-                    'dark:hover:shadow-lg',
-                    'bg-blue-100/50 hover:bg-blue-200/50',
-                    'dark:bg-blue-900/20 dark:hover:bg-blue-800/30'
+            {activeTasks.length === 0 ? (
+              <Card className='p-8 text-center bg-muted/50'>
+                <CardContent className='space-y-4'>
+                  <CheckSquare className='h-16 w-16 mx-auto text-muted-foreground' />
+                  <h3 className='text-xl font-semibold text-muted-foreground'>
+                    No Tasks Available
+                  </h3>
+                  <p className='text-muted-foreground'>
+                    There are currently no active tasks to complete.
+                  </p>
+                  {hasFullAccess && (
+                    <div className='pt-4'>
+                      <Link href='/task-management'>
+                        <Button variant='default'>Create Some Tasks</Button>
+                      </Link>
+                    </div>
                   )}
-                  onClick={() => handleTaskClick(task)}
-                >
-                  <CardContent className='flex flex-col items-center p-3'>
-                    <IconComponent
-                      icon={task.icon_name}
-                      className={cn('h-12 w-12 mb-1', 'text-blue-700', 'dark:text-blue-300')}
-                    />
-                    <h3
-                      className={cn(
-                        'text-md font-semibold mb-1',
-                        'text-blue-900',
-                        'dark:text-blue-100'
-                      )}
-                    >
-                      {task.title}
-                    </h3>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+                {activeTasks.map((task) => (
+                  <Card
+                    key={task.task_id}
+                    className={cn(
+                      'w-full transition-all duration-300 cursor-pointer shadow-md',
+                      'dark:hover:shadow-lg',
+                      'bg-blue-100/50 hover:bg-blue-200/50',
+                      'dark:bg-blue-900/10 dark:hover:bg-blue-800/20'
+                    )}
+                    onClick={() => handleTaskClick(task)}
+                  >
+                    <CardContent className='flex flex-col items-center p-3'>
+                      <IconComponent
+                        icon={task.icon_name}
+                        className={cn('h-12 w-12 mb-1', 'text-blue-700', 'dark:text-blue-300')}
+                      />
+                      <h3
+                        className={cn(
+                          'text-md font-semibold mb-1',
+                          'text-blue-900',
+                          'dark:text-blue-100'
+                        )}
+                      >
+                        {task.title}
+                      </h3>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Completed Tasks Section */}
@@ -288,7 +300,7 @@ export function TaskCompletion() {
                     <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
 
                     <Card
-                      className={cn('flex-1 mr-2 shadow-sm', 'bg-blue-100/50 dark:bg-blue-900/20')}
+                      className={cn('flex-1 mr-2 shadow-sm', 'bg-blue-100/50 dark:bg-blue-900/10')}
                     >
                       <CardContent className='flex items-center p-2'>
                         {task.icon_name ? (
@@ -313,7 +325,7 @@ export function TaskCompletion() {
                     <Card
                       className={cn(
                         'flex-1 mx-2 shadow-sm',
-                        'bg-green-100/50 dark:bg-green-900/20'
+                        'bg-green-100/50 dark:bg-green-900/10'
                       )}
                     >
                       <CardContent className='flex items-center p-2'>
@@ -339,9 +351,7 @@ export function TaskCompletion() {
                       </CardContent>
                     </Card>
 
-                    <Card
-                      className={cn('flex-1 ml-2 shadow-sm', 'bg-gray-100/50 dark:bg-gray-800/20')}
-                    >
+                    <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
                       <CardContent className='p-2 text-center'>
                         <TimeSince date={task.created_at.toString()} />
                       </CardContent>

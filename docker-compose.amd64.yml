@@ -10,11 +10,11 @@ services:
         BUILDPLATFORM: linux/amd64
         TARGETPLATFORM: linux/amd64
     labels:
-      - "com.tgeld.architecture=amd64"
-      - "com.tgeld.environment=production"
+      - 'com.tgeld.architecture=amd64'
+      - 'com.tgeld.environment=production'
 
   db:
     platform: linux/amd64
     labels:
-      - "com.tgeld.architecture=amd64"
-      - "com.tgeld.environment=production"
+      - 'com.tgeld.architecture=amd64'
+      - 'com.tgeld.environment=production'

@@ -4,25 +4,63 @@ Taschengeld is an allowance tracker application designed to help families manage
 
 Taschengeld is the German word for "pocket money" and was developed for a family in Switzerland. As a result, there are two German words, "Taschengeld" and "Sparkässeli" which means "Piggy-Bank".
 
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **UI**: Tailwind CSS, shadcn/ui components
+- **Database**: PostgreSQL 16 with Prisma ORM
+- **Deployment**: Docker (multi-architecture support)
+- **State Management**: React Context API
+
 ## Features
 
 - 👥 **User Management**
+
   - Create accounts for family members
   - User profiles and preferences
   - Access control
 
 - 📋 **Task Management**
+
   - Create and manage tasks
   - Set task values and descriptions
   - Track task completion
 
 - 💵 **Payout System**
+
   - Review completed tasks and allocate payment to accounts
   - Bulk transaction processing
 
 - 💰 **Piggy-Bank Account System**
   - Track account balances and transaction history
   - Manually credit and debit accounts
+
+- 🖥️ **Optimized for Desktop & Tablets**
+  - Minimum viewport of 768px (tablets and larger)
+  - Responsive sidebar that collapses on tablets
+  - Enhanced hover effects and tooltips on desktop
+  - Touch-optimized with 48px minimum touch targets
+  - Not designed for mobile phones
+
+## Device Compatibility
+
+Taschengeld is optimized for desktop/laptop computers and tablets:
+
+- **Minimum screen width**: 768px (iPad portrait and larger)
+- **Recommended devices**: Desktop/laptop computers, iPads, Android tablets
+- **Not supported**: Mobile phones (screens smaller than 768px)
+
+### Desktop Features (1024px+)
+- Full sidebar navigation always visible
+- Rich hover effects with tooltips
+- Keyboard navigation optimized
+- Enhanced visual feedback on interactions
+
+### Tablet Features (768-1023px)
+- Collapsible sidebar with hamburger menu
+- Larger touch targets (48px minimum)
+- Touch-optimized interactions
+- 2-column layouts for better space usage
 
 ## Prerequisites
 
@@ -35,12 +73,14 @@ The application is available as a multi-architecture Docker image supporting bot
 ## Quick Start Guide
 
 1. Create a new directory for Taschengeld:
+
    ```bash
    mkdir tgeld && cd tgeld
    mkdir -p ./data/postgres
    ```
 
 2. Create `.env` file:
+
    ```bash
    # Copy this template and save as .env
    POSTGRES_USER=postgres
@@ -49,19 +89,22 @@ The application is available as a multi-architecture Docker image supporting bot
    DATABASE_URL=postgresql://postgres:your_secure_password@db:5432/tgeld?schema=public
    POSTGRES_DATA_DIR=./data/postgres
    ```
+
    ⚠️ Replace `your_secure_password` with your chosen password in BOTH places
    ⚠️ Password Requirements:
-     - Use only alphanumeric characters (a-z, A-Z, 0-9)
-     - Avoid special characters (!@#$%^&*) as they may cause issues with the PostgreSQL connection string
-     - Example of a good password: TGeld2025DB
+
+   - Use only alphanumeric characters (a-z, A-Z, 0-9)
+   - Avoid special characters (!@#$%^&\*) as they may cause issues with the PostgreSQL connection string
+   - Example of a good password: TGeld2025DB
 
 3. Create `docker-compose.yml`:
+
    ```yaml
    services:
      app:
        image: tgeld/tgeld:latest
        ports:
-         - '8071:3000'  # Change 8071 if needed
+         - '8071:3000' # Change 8071 if needed
        environment:
          - DATABASE_URL=${DATABASE_URL}
        depends_on:
@@ -77,6 +120,7 @@ The application is available as a multi-architecture Docker image supporting bot
    ```
 
 4. Start the application:
+
    ```bash
    docker compose up -d
    ```
@@ -86,6 +130,7 @@ The application is available as a multi-architecture Docker image supporting bot
 ## Directory Structure
 
 After setup, your directory should look like this:
+
 ```
 tgeld/
 ├── data/
@@ -100,6 +145,7 @@ Additional files created during use:
 ```
 
 ⚠️ Important Notes:
+
 - Never delete the `data/postgres` directory while the application is running
 - Always backup both `.env` and `data/postgres` directory
 - The `logs` directory is created automatically if logging is enabled
@@ -107,20 +153,23 @@ Additional files created during use:
 ## Important Configuration Notes
 
 ### Port Configuration
+
 - Default port is 8071
 - To use a different port, change the first number in `docker-compose.yml`:
   ```yaml
   ports:
-    - '8072:3000'  # Changed from 8071 to 8072
+    - '8072:3000' # Changed from 8071 to 8072
   ```
 
 ### Data Storage
+
 - Database files are stored in `./data/postgres` by default
 - Change `POSTGRES_DATA_DIR` in `.env` to use a different location
 - Ensure the directory exists before starting
 - Include this directory in your backup strategy
 
 ### Security
+
 - Always change the default password in `.env`
 - Use a strong password (12+ characters, mixed case, numbers, symbols)
 - Keep your `.env` file secure and never share it
@@ -131,11 +180,13 @@ Additional files created during use:
 ### Backup Database
 
 Option 1: Command Line
+
 ```bash
 docker compose exec db pg_dump -U postgres tgeld > backup.sql
 ```
 
 Option 2: Web Interface
+
 1. Click Global App Settings (top right)
 2. Go to Backup and Restore
 3. Click "Download" under Full Database Backup
@@ -143,11 +194,13 @@ Option 2: Web Interface
 ### Restore Database
 
 Option 1: Command Line
+
 ```bash
 cat backup.sql | docker compose exec -T db psql -U postgres -d tgeld
 ```
 
 Option 2: Web Interface
+
 1. Click Global App Settings (top right)
 2. Go to Backup and Restore
 3. Click "Upload" under Full Database Backup
@@ -166,7 +219,9 @@ docker compose up -d
 ```
 
 ### Free Up Disk Space
+
 Remove old, unused Docker images:
+
 ```bash
 docker image prune -f
 ```
@@ -174,12 +229,15 @@ docker image prune -f
 ## Troubleshooting
 
 ### Application Won't Start
+
 1. Check if containers are running:
+
    ```bash
    docker compose ps
    ```
 
 2. Check logs:
+
    ```bash
    docker compose logs
    ```
@@ -193,7 +251,9 @@ docker image prune -f
    ```
 
 ### Database Connection Issues
+
 1. Verify environment variables:
+
    ```bash
    docker compose config
    ```
@@ -204,11 +264,14 @@ docker image prune -f
    ```
 
 ### Need More Help?
+
 - Check our [GitHub Issues](https://github.com/barneephife/tgeld/issues)
 - Submit a new issue if you can't find a solution
 
 ## For Developers
+
 If you're a developer wanting to contribute or modify the application, please see [README_DEV.md](README_DEV.md).
 
 ## License
+
 MIT License - See LICENSE file for details

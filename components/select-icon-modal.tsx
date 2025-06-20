@@ -94,7 +94,6 @@ const taskIcons = [
   'pipette',
   'pizza',
   'pocket-knife',
-  'pokemon',
   'puzzle',
   'rabbit',
   'rainbow',

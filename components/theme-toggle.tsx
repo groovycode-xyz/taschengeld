@@ -1,6 +1,6 @@
 'use client';
 
-import { useTheme } from '@/contexts/theme-context';
+import { useTheme } from '@/components/context/theme-context';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { Sun, Moon, Waves, Trees, Flower2, Monitor } from 'lucide-react';
-import type { Theme } from '@/contexts/theme-context';
+import type { Theme } from '@/components/context/theme-context';
 
 const themes = [
   { id: 'light', label: 'Light', icon: Sun },

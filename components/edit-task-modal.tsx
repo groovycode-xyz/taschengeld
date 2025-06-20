@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
-import { DeleteConfirmationModal } from './delete-confirmation-modal';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { Trash2, Save, X, Play } from 'lucide-react';
 import { SoundSelectorModal } from './sound-selector-modal';
 
@@ -44,11 +44,11 @@ export function EditTaskModal({
   useEffect(() => {
     if (task) {
       setTitle(task.title);
-      setDescription(task.description);
+      setDescription(task.description || '');
       setIconName(task.icon_name || 'box');
-      setSoundUrl(task.sound_url);
+      setSoundUrl(task.sound_url || null);
       setPayoutValue(task.payout_value !== undefined ? task.payout_value.toString() : '0');
-      setIsActive(task.is_active);
+      setIsActive(task.is_active ?? true);
       // {{ If using assignedUser, set it here }}
       // setAssignedUser(task.assignedUser);
     }
@@ -59,9 +59,9 @@ export function EditTaskModal({
     if (task && task.task_id) {
       onEditTask(task.task_id, {
         title,
-        description,
-        icon_name,
-        sound_url,
+        description: description || null,
+        icon_name: icon_name || null,
+        sound_url: sound_url || null,
         payout_value: parseFloat(payout_value),
         is_active,
       });
@@ -240,13 +240,14 @@ export function EditTaskModal({
         onClose={() => setIsSoundModalOpen(false)}
         onSelect={setSoundUrl}
         currentSound={sound_url}
-        type="task"
+        type='task'
       />
-      <DeleteConfirmationModal
+      <ConfirmationDialog
         isOpen={isDeleteConfirmationOpen}
         onClose={() => setIsDeleteConfirmationOpen(false)}
-        onConfirmDelete={confirmDelete}
-        taskTitle={task.title}
+        onConfirm={confirmDelete}
+        title='Delete Task'
+        itemName={task.title}
       />
     </>
   );

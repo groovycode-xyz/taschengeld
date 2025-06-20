@@ -4,7 +4,7 @@ services:
   app:
     image: tgeld/tgeld:latest
     ports:
-      - "${PORT:-8071}:3000"
+      - '${PORT:-8071}:3000'
     environment:
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD}@db:${DB_PORT:-5432}/${DB_DATABASE:-tgeld}?schema=public
       - DB_USER=${DB_USER:-postgres}
@@ -22,7 +22,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/api/health || exit 1']
       interval: 10s
       timeout: 5s
       start_period: 30s
@@ -34,8 +34,8 @@ services:
         soft: 65536
         hard: 65536
     labels:
-      - "com.tgeld.service=app"
-      - "com.tgeld.environment=production"
+      - 'com.tgeld.service=app'
+      - 'com.tgeld.environment=production'
 
   db:
     image: postgres:16-alpine
@@ -46,7 +46,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_DATABASE:-tgeld}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-postgres} -d ${DB_DATABASE:-tgeld}']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -58,8 +58,8 @@ services:
         soft: 65536
         hard: 65536
     labels:
-      - "com.tgeld.service=database"
-      - "com.tgeld.environment=production"
+      - 'com.tgeld.service=database'
+      - 'com.tgeld.environment=production'
 
 volumes:
   postgres_data:

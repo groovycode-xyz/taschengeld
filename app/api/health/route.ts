@@ -1,15 +1,10 @@
-import { NextResponse } from 'next/server';
-import { settingsRepository } from '@/app/lib/settingsRepository';
+import { settingsService } from '@/app/lib/services/settingsService';
+import { createApiHandler, successResponse } from '@/app/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  try {
-    // Try to get a setting to verify database connection
-    await settingsRepository.getSetting('enforce_roles');
-    return NextResponse.json({ status: 'ok' });
-  } catch (error) {
-    console.error('Health check failed:', error);
-    return NextResponse.json({ status: 'error', message: 'Database connection failed' }, { status: 500 });
-  }
-}
+export const GET = createApiHandler(async () => {
+  // Try to get a setting to verify database connection
+  await settingsService.getSetting('enforce_roles');
+  return successResponse({ status: 'ok' });
+});

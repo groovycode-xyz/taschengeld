@@ -1,11 +1,14 @@
 ---
 description: Never Make Assumptions
 globs: 
+alwaysApply: false
 ---
 # When performing an action which has a dependency on a tool or file or any content, never assume anything about it.
 
-Never assume it is NOT installed / exists.
+Never assume it is NOT installed or does not exist.
 
-Never assume that it IS installed / exists.
+Never assume that it IS installed or does not exist.
 
-Always issue the relative command or check procees to DETERMINE the actual state.
+Always issue the relative command, search or required "check procees" to DETERMINE the actual state before proceeding with actions or changes or troubleshooting.
+
+Never assume how something is configured.  Search for and view the associated configuration file(s)/setting(s).

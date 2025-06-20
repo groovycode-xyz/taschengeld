@@ -1,23 +1,15 @@
-import pool from '@/app/lib/db';
-import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler, successResponse } from '@/app/lib/api-utils';
 
-export async function POST() {
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
+export const POST = createApiHandler(async () => {
+  // Use a transaction to ensure all operations complete together
+  await prisma.$transaction(async (tx) => {
+    // Delete all completed tasks first (due to foreign key constraint)
+    await tx.completedTask.deleteMany({});
 
-    // TRUNCATE with CASCADE will handle all related records in completed_tasks
-    await client.query(`
-      TRUNCATE TABLE tasks CASCADE;
-    `);
+    // Then delete all tasks
+    await tx.task.deleteMany({});
+  });
 
-    await client.query('COMMIT');
-    return NextResponse.json({ message: 'All tasks have been reset successfully' });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Error resetting tasks:', error);
-    return NextResponse.json({ error: 'Failed to reset tasks' }, { status: 500 });
-  } finally {
-    client.release();
-  }
-}
+  return successResponse({ message: 'All tasks have been reset successfully' });
+});

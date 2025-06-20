@@ -1,44 +1,45 @@
-import pool from '@/app/lib/db';
-import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler, successResponse } from '@/app/lib/api-utils';
 
-export async function POST(request: Request) {
-  const client = await pool.connect();
-  try {
-    const { accountIds } = await request.json();
+export const POST = createApiHandler(async (request) => {
+  const { accountIds } = await request.json();
 
-    await client.query('BEGIN');
-
-    // Delete transactions for specified accounts
+  // Use a transaction to ensure all operations complete together
+  await prisma.$transaction(async (tx) => {
     if (accountIds && accountIds.length > 0) {
       // Delete transactions for specific accounts
-      await client.query('DELETE FROM piggybank_transactions WHERE account_id = ANY($1)', [
-        accountIds,
-      ]);
+      await tx.piggybankTransaction.deleteMany({
+        where: {
+          account_id: {
+            in: accountIds,
+          },
+        },
+      });
 
       // Reset balances to 0 for these accounts
-      await client.query('UPDATE piggybank_accounts SET balance = 0 WHERE account_id = ANY($1)', [
-        accountIds,
-      ]);
+      await tx.piggybankAccount.updateMany({
+        where: {
+          account_id: {
+            in: accountIds,
+          },
+        },
+        data: {
+          balance: 0,
+        },
+      });
     } else {
       // If no accounts specified, reset all
-      await client.query('TRUNCATE TABLE piggybank_transactions');
-      await client.query('UPDATE piggybank_accounts SET balance = 0');
-    }
+      await tx.piggybankTransaction.deleteMany({});
 
-    await client.query('COMMIT');
-    return NextResponse.json({
-      message: 'Transaction history has been reset successfully',
-    });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Error resetting transactions:', error);
-    return NextResponse.json(
-      {
-        error: 'Failed to reset transactions',
-      },
-      { status: 500 }
-    );
-  } finally {
-    client.release();
-  }
-}
+      await tx.piggybankAccount.updateMany({
+        data: {
+          balance: 0,
+        },
+      });
+    }
+  });
+
+  return successResponse({
+    message: 'Transaction history has been reset successfully',
+  });
+});

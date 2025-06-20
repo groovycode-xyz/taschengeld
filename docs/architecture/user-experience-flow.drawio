@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-03-21T12:00:00.000Z" agent="Mozilla/5.0" version="21.1.9" etag="your-etag" type="device">
+  <diagram name="User Experience Flow" id="user-experience-flow">
+    <mxGraphModel dx="1422" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Application Entry -->
+        <mxCell id="entry" value="Application Entry" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Parent/Child Mode Toggle -->
+        <mxCell id="mode-toggle" value="Parent/Child Mode&#xa;Toggle with PIN" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Main Navigation -->
+        <mxCell id="nav" value="Main Navigation&#xa;(Sidebar)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="320" y="240" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- User Management -->
+        <mxCell id="user-mgmt" value="User Management&#xa;Fields:&#xa;- Name&#xa;- Icon&#xa;- Birthday&#xa;- Sound&#xa;- Role" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="160" y="360" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Task Management -->
+        <mxCell id="task-mgmt" value="Task Management&#xa;Fields:&#xa;- Title&#xa;- Description&#xa;- Icon&#xa;- Sound&#xa;- Payout Value&#xa;- Active Status" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="320" y="360" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Task Completion -->
+        <mxCell id="task-completion" value="Task Completion&#xa;Fields:&#xa;- Task List&#xa;- User Selection&#xa;- Completion Status&#xa;- Celebration Effects" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="480" y="360" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Payday Interface -->
+        <mxCell id="payday" value="Payday Interface&#xa;Fields:&#xa;- Completed Tasks&#xa;- Payment Status&#xa;- Bulk Actions&#xa;- Comments" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="160" y="520" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Piggy Bank -->
+        <mxCell id="piggy-bank" value="Piggy Bank&#xa;Fields:&#xa;- Balance&#xa;- Transactions&#xa;- Add/Withdraw&#xa;- History" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="320" y="520" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Global Settings -->
+        <mxCell id="settings" value="Global Settings&#xa;Fields:&#xa;- Theme&#xa;- PIN&#xa;- Backup/Restore&#xa;- Currency" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="480" y="520" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Connections -->
+        <mxCell id="conn1" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="entry" target="mode-toggle" />
+        <mxCell id="conn2" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="mode-toggle" target="nav" />
+        <mxCell id="conn3" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="nav" target="user-mgmt" />
+        <mxCell id="conn4" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="nav" target="task-mgmt" />
+        <mxCell id="conn5" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="nav" target="task-completion" />
+        <mxCell id="conn6" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="nav" target="payday" />
+        <mxCell id="conn7" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="nav" target="piggy-bank" />
+        <mxCell id="conn8" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="nav" target="settings" />
+        
+        <!-- Database Tables -->
+        <mxCell id="db-users" value="users&#xa;Table Fields:&#xa;- user_id&#xa;- name&#xa;- icon&#xa;- birthday&#xa;- sound_url&#xa;- piggybank_account_id" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="640" y="40" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="db-tasks" value="tasks&#xa;Table Fields:&#xa;- task_id&#xa;- title&#xa;- description&#xa;- icon_name&#xa;- sound_url&#xa;- payout_value&#xa;- is_active" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="640" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="db-completed" value="completed_tasks&#xa;Table Fields:&#xa;- c_task_id&#xa;- user_id&#xa;- task_id&#xa;- payout_value&#xa;- payment_status&#xa;- comment&#xa;- attachment" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="640" y="360" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="db-piggybank" value="piggybank_accounts&#xa;Table Fields:&#xa;- account_id&#xa;- user_id&#xa;- account_number&#xa;- balance&#xa;- created_at" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="640" y="520" width="160" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Database Connections -->
+        <mxCell id="db-conn1" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="user-mgmt" target="db-users" />
+        <mxCell id="db-conn2" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="task-mgmt" target="db-tasks" />
+        <mxCell id="db-conn3" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="task-completion" target="db-completed" />
+        <mxCell id="db-conn4" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="piggy-bank" target="db-piggybank" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile> 

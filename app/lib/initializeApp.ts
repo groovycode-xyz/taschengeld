@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 async function initializeDefaultData() {
   // Check if any users exist
   const userCount = await prisma.user.count();
-  
+
   if (userCount === 0) {
     console.log('No users found. Creating default data...');
-    
+
     try {
       // Create default user
       const defaultUser = await prisma.user.create({
@@ -40,19 +40,19 @@ async function initializeDefaultData() {
           title: 'Make Bed',
           description: 'Make your bed neatly in the morning',
           icon_name: '🛏️',
-          payout_value: 0.50,
+          payout_value: 0.5,
         },
         {
           title: 'Clean Room',
           description: 'Keep your room tidy and organized',
           icon_name: '🧹',
-          payout_value: 1.00,
+          payout_value: 1.0,
         },
         {
           title: 'Do Homework',
           description: 'Complete all homework assignments',
           icon_name: '📚',
-          payout_value: 2.00,
+          payout_value: 2.0,
         },
       ];
 

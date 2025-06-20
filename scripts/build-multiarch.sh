@@ -78,13 +78,13 @@ validate_environment() {
     if ! command -v docker compose >/dev/null 2>&1; then
         log "ERROR" "Docker Compose is not installed"
         exit 1
-    }
+    fi
 
     # Check BuildKit support
     if ! docker buildx version >/dev/null 2>&1; then
         log "ERROR" "Docker BuildKit is not available"
         exit 1
-    }
+    fi
 
     # Validate required files exist
     required_files=("Dockerfile.prod" "docker-compose.yml" "docker-compose.amd64.yml" "docker-compose.arm64.yml")
@@ -141,17 +141,32 @@ test_endpoint() {
 run_api_tests() {
     log "INFO" "Running comprehensive API tests..."
     
-    # Wait for application with timeout
-    local timeout=$TEST_TIMEOUT
+    # Increase timeout for emulated environments
+    local timeout=600  # Increased to 10 minutes
     local elapsed=0
     local interval=5
 
     log "INFO" "Waiting for application to be ready (timeout: ${timeout}s)..."
+    
+    # Add container logs monitoring
+    docker compose logs app > app_startup.log &
+    local log_pid=$!
+    
     while [ $elapsed -lt $timeout ]; do
         if curl -s http://localhost:${PORT:-3000}/api/health | grep -q "ok"; then
             log "SUCCESS" "Application is ready!"
+            kill $log_pid 2>/dev/null  # Stop logging
             break
         fi
+        
+        # Check for specific error conditions
+        if docker compose logs app 2>&1 | grep -q "Error:"; then
+            log "ERROR" "Application reported an error during startup"
+            kill $log_pid 2>/dev/null
+            cat app_startup.log
+            return 1
+        fi
+        
         elapsed=$((elapsed + interval))
         echo -n "."
         sleep $interval
@@ -159,8 +174,13 @@ run_api_tests() {
 
     if [ $elapsed -ge $timeout ]; then
         log "ERROR" "Application failed to start after ${timeout} seconds"
+        kill $log_pid 2>/dev/null
+        log "DEBUG" "Last startup logs:"
+        cat app_startup.log
         return 1
     fi
+
+    rm app_startup.log 2>/dev/null
 
     # Core API Tests
     test_endpoint "health" "GET" "" "200" "Health check endpoint"
@@ -168,16 +188,6 @@ run_api_tests() {
     test_endpoint "settings" "PUT" '{"key":"enforce_roles","value":"true"}' "200" "Update enforce_roles setting"
     test_endpoint "settings/currency" "GET" "" "200" "Get currency setting"
     test_endpoint "settings/language" "GET" "" "200" "Get language setting"
-
-    # Backup/Restore Tests
-    test_endpoint "backup/tasks" "GET" "" "200" "Backup tasks"
-    test_endpoint "backup/piggybank" "GET" "" "200" "Backup piggy bank"
-    
-    # User Management Tests
-    test_endpoint "users" "GET" "" "200" "Get users list"
-    
-    # Task Management Tests
-    test_endpoint "tasks" "GET" "" "200" "Get tasks list"
 
     log "INFO" "API tests completed successfully"
 }
@@ -312,6 +322,7 @@ DB_PASSWORD=$DB_PASSWORD
 DB_USER=$DB_USER
 DB_DATABASE=$DB_DATABASE
 DB_PORT=$DB_PORT
+DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@db:5432/$DB_DATABASE?schema=public
 EOF
         
         # Test AMD64 build

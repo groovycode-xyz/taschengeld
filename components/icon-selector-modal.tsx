@@ -74,7 +74,7 @@ export function IconSelectorModal({ isOpen, onClose, onSelectIcon }: IconSelecto
               }}
               title={option.name}
             >
-              {React.cloneElement(option.icon as React.ReactElement, { className: 'h-8 w-8' })}
+              <div className='h-8 w-8'>{option.icon}</div>
             </Button>
           ))}
         </div>

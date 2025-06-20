@@ -16,6 +16,7 @@ import {
   Download,
   Eye,
   EyeOff,
+  Info,
   Loader2,
   RotateCcw,
   Save,
@@ -33,6 +34,7 @@ import { PinSetupDialog } from '@/components/pin-setup-dialog';
 import Link from 'next/link';
 import { ResetTransactionsDialog } from '@/components/reset-transactions-dialog';
 import { useLanguage } from '@/components/context/language-context';
+import { useSettings } from '@/components/context/settings-context';
 
 type ResetType = 'users' | 'tasks' | 'transactions' | 'all';
 
@@ -115,6 +117,7 @@ interface BackupData {
 
 export function GlobalAppSettings() {
   const { enforceRoles, setEnforceRoles, pin, setPin, verifyPin } = useMode(); // Add verifyPin
+  const { settings, updateSetting } = useSettings();
   const { addToast: toast } = useToast();
   const [loadingStates, setLoadingStates] = useState({
     users: false,
@@ -144,33 +147,14 @@ export function GlobalAppSettings() {
   const [isResetTransactionsOpen, setIsResetTransactionsOpen] = useState(false);
   const [loadingCurrency, setLoadingCurrency] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<string>('symbol');
-  const { showGermanTerms, setShowGermanTerms, settings } = useLanguage();
+  const { showGermanTerms, setShowGermanTerms } = useLanguage();
   const [loadingLanguage, setLoadingLanguage] = useState(false);
 
   // Load initial currency and format settings
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        // Load currency
-        const currencyResponse = await fetch('/api/settings/currency');
-        if (currencyResponse.ok) {
-          const { currency } = await currencyResponse.json();
-          setSelectedCurrency(currency);
-        }
-
-        // Load format
-        const formatResponse = await fetch('/api/settings/currency-format');
-        if (formatResponse.ok) {
-          const { format } = await formatResponse.json();
-          setSelectedFormat(format || 'symbol');
-        }
-      } catch (error) {
-        console.error('Failed to load settings:', error);
-      }
-    };
-
-    loadSettings();
-  }, []);
+    setSelectedCurrency(settings.default_currency || 'none');
+    setSelectedFormat(settings.currency_format || 'symbol');
+  }, [settings.default_currency, settings.currency_format]);
 
   const handleRoleEnforcementChange = async (checked: boolean) => {
     if (!checked && enforceRoles) {
@@ -182,7 +166,7 @@ export function GlobalAppSettings() {
           title: 'Settings Updated',
           description: `Parent/Child role enforcement is now ${checked ? 'enabled' : 'disabled'}`,
         });
-      } catch (error) {
+      } catch {
         toast({
           title: 'Update Failed',
           description: 'Failed to update role enforcement setting. Please try again.',
@@ -265,32 +249,24 @@ export function GlobalAppSettings() {
   const handleCurrencyChange = async (value: string) => {
     setLoadingCurrency(true);
     try {
-      const response = await fetch('/api/settings/currency', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currency: value }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update currency');
-      }
-
-      const data = await response.json();
-      setSelectedCurrency(data.currency);
+      await updateSetting('default_currency', value === 'none' ? null : value);
+      setSelectedCurrency(value);
       toast({
         title: 'Currency Updated',
         description:
-          data.currency === 'none'
+          value === 'none'
             ? 'Default currency has been cleared'
-            : `Default currency has been set to ${data.currency}`,
+            : `Default currency has been set to ${value}`,
         variant: 'default',
       });
     } catch (error) {
       console.error('Failed to update currency:', error);
       toast({
         title: 'Update Failed',
-        description: error instanceof Error ? error.message : 'Failed to update currency setting. Please try again.',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Failed to update currency setting. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -300,14 +276,7 @@ export function GlobalAppSettings() {
 
   const handleFormatChange = async (value: string) => {
     try {
-      const response = await fetch('/api/settings/currency-format', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ format: value }),
-      });
-
-      if (!response.ok) throw new Error('Failed to update currency format');
-
+      await updateSetting('currency_format', value);
       setSelectedFormat(value);
       toast({
         title: 'Display Format Updated',
@@ -417,13 +386,10 @@ export function GlobalAppSettings() {
             dataToRestore = backupData.data.tasks;
             break;
           case 'piggybank':
-            // Handle nested piggybank structure
-            const piggyData =
-              backupData.data.piggybank?.piggybank?.data?.piggybank || backupData.data.piggybank;
-            if (!piggyData?.accounts) {
+            if (!backupData.data.piggybank?.accounts) {
               throw new Error('Invalid piggy bank backup file. No account data found.');
             }
-            dataToRestore = piggyData;
+            dataToRestore = backupData.data.piggybank;
             break;
           case 'all':
             // Validate all required fields exist
@@ -431,7 +397,7 @@ export function GlobalAppSettings() {
               throw new Error('Invalid full backup file. Missing all data section.');
             }
             const allData: AllBackupData = backupData.data.all;
-            
+
             // Check each required field
             if (!Array.isArray(allData.users)) {
               throw new Error('Invalid full backup file. Users data is missing or invalid.');
@@ -440,7 +406,9 @@ export function GlobalAppSettings() {
               throw new Error('Invalid full backup file. Tasks data is missing or invalid.');
             }
             if (!Array.isArray(allData.completed_tasks)) {
-              throw new Error('Invalid full backup file. Completed tasks data is missing or invalid.');
+              throw new Error(
+                'Invalid full backup file. Completed tasks data is missing or invalid.'
+              );
             }
             if (!Array.isArray(allData.accounts)) {
               throw new Error('Invalid full backup file. Accounts data is missing or invalid.');
@@ -452,19 +420,25 @@ export function GlobalAppSettings() {
             // Validate required fields in each array
             allData.users.forEach((user: UserBackup, index: number) => {
               if (!user.name) {
-                throw new Error(`Invalid user data at index ${index}. Missing required field: name`);
+                throw new Error(
+                  `Invalid user data at index ${index}. Missing required field: name`
+                );
               }
             });
 
             allData.tasks.forEach((task: TaskBackup, index: number) => {
               if (!task.title || !task.payout_value) {
-                throw new Error(`Invalid task data at index ${index}. Missing required fields: title or payout_value`);
+                throw new Error(
+                  `Invalid task data at index ${index}. Missing required fields: title or payout_value`
+                );
               }
             });
 
             allData.accounts.forEach((account: AccountBackup, index: number) => {
               if (!account.account_number || !account.user_name) {
-                throw new Error(`Invalid account data at index ${index}. Missing required fields: account_number or user_name`);
+                throw new Error(
+                  `Invalid account data at index ${index}. Missing required fields: account_number or user_name`
+                );
               }
             });
 
@@ -543,10 +517,8 @@ export function GlobalAppSettings() {
 
   const handlePinFieldClick = () => {
     if (!pin) {
-      console.log('PIN field clicked, triggering animation'); // Add this line
       setIsConfigureFlashing(true);
       setTimeout(() => {
-        console.log('Animation should end now'); // Add this line
         setIsConfigureFlashing(false);
       }, 1000);
     }
@@ -587,11 +559,11 @@ export function GlobalAppSettings() {
   const handleLanguageToggle = async () => {
     setLoadingLanguage(true);
     const newState = !showGermanTerms;
-    
+
     try {
       // Don't update UI until we know the database update succeeded
       const success = await setShowGermanTerms(newState);
-      
+
       if (success) {
         toast({
           title: 'Language Updated',
@@ -614,10 +586,10 @@ export function GlobalAppSettings() {
   return (
     <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
-      <div className='p-8 bg-background-secondary'>
+      <div className='p-8 bg-secondary'>
         <div className='flex items-center space-x-4 pb-6 border-b border-border'>
-          <Settings2 className='h-8 w-8 text-content-primary' />
-          <h1 className='text-3xl font-medium text-content-primary'>Global Application Settings</h1>
+          <Settings2 className='h-8 w-8 text-foreground' />
+          <h1 className='text-3xl font-medium text-foreground'>Global Application Settings</h1>
         </div>
       </div>
 
@@ -625,22 +597,22 @@ export function GlobalAppSettings() {
       <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background'>
         <div className='space-y-8'>
           {/* Access Control Section */}
-          <section className='bg-card dark:bg-[#2f3136] rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-[#e3e5e8] dark:border-[#202225] transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
             <div className='flex items-center gap-4 mb-8'>
-              <Shield className='h-6 w-6 text-content-primary' />
-              <h2 className='text-xl font-medium text-content-primary'>Access Control</h2>
+              <Shield className='h-6 w-6 text-foreground' />
+              <h2 className='text-xl font-medium text-foreground'>Access Control</h2>
             </div>
 
             <div className='space-y-8'>
-              <div className='flex items-center justify-between space-x-4 p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
+              <div className='flex items-center justify-between space-x-4 p-4 rounded-xl bg-secondary shadow-sm border border-border'>
                 <div>
                   <Label
                     htmlFor='role-enforcement'
-                    className='text-base font-medium text-content-primary'
+                    className='text-base font-medium text-foreground'
                   >
                     Enforce Parent/Child Roles
                   </Label>
-                  <p className='text-sm text-content-secondary'>
+                  <p className='text-sm text-muted-foreground'>
                     Prevent accidental access to parent-only features
                   </p>
                 </div>
@@ -653,8 +625,8 @@ export function GlobalAppSettings() {
               </div>
 
               {enforceRoles && (
-                <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                  <h3 className='text-base font-medium text-content-primary mb-4'>Global PIN</h3>
+                <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+                  <h3 className='text-base font-medium text-foreground mb-4'>Global PIN</h3>
                   <div className='flex items-center space-x-3'>
                     <div className='relative'>
                       <Input
@@ -716,17 +688,17 @@ export function GlobalAppSettings() {
           </section>
 
           {/* Currency Section */}
-          <section className='bg-card dark:bg-[#2f3136] rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-[#e3e5e8] dark:border-[#202225] transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
             <div className='flex items-center gap-4 mb-8'>
-              <Coins className='h-6 w-6 text-content-primary' />
-              <h2 className='text-xl font-medium text-content-primary'>Currency</h2>
+              <Coins className='h-6 w-6 text-foreground' />
+              <h2 className='text-xl font-medium text-foreground'>Currency</h2>
             </div>
 
             <div className='space-y-6'>
               <div>
                 <Label
                   htmlFor='currency-select'
-                  className='text-sm font-medium text-content-primary mb-2 block'
+                  className='text-sm font-medium text-foreground mb-2 block'
                 >
                   Default Currency
                 </Label>
@@ -756,7 +728,7 @@ export function GlobalAppSettings() {
               <div>
                 <Label
                   htmlFor='format-select'
-                  className='text-sm font-medium text-content-primary mb-2 block'
+                  className='text-sm font-medium text-foreground mb-2 block'
                 >
                   Display Format
                 </Label>
@@ -779,10 +751,10 @@ export function GlobalAppSettings() {
           </section>
 
           {/* Language Section */}
-          <section className='bg-card dark:bg-[#2f3136] rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-[#e3e5e8] dark:border-[#202225] transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
             <div className='flex items-center gap-4 mb-8'>
               <svg
-                className='h-6 w-6 text-content-primary'
+                className='h-6 w-6 text-foreground'
                 viewBox='0 0 24 24'
                 fill='none'
                 xmlns='http://www.w3.org/2000/svg'
@@ -792,7 +764,7 @@ export function GlobalAppSettings() {
                   fill='currentColor'
                 />
               </svg>
-              <h2 className='text-xl font-medium text-content-primary'>Language</h2>
+              <h2 className='text-xl font-medium text-foreground'>Language</h2>
             </div>
 
             <div className='space-y-6'>
@@ -805,11 +777,11 @@ export function GlobalAppSettings() {
                 </div>
                 <div className='mt-4'>
                   <Switch
-                    id="language-toggle"
+                    id='language-toggle'
                     checked={showGermanTerms}
                     onCheckedChange={handleLanguageToggle}
                     disabled={loadingLanguage}
-                    className="data-[state=checked]:bg-primary"
+                    className='data-[state=checked]:bg-primary'
                   />
                 </div>
               </div>
@@ -817,23 +789,23 @@ export function GlobalAppSettings() {
           </section>
 
           {/* Backup and Restore Section */}
-          <section className='bg-card dark:bg-[#2f3136] rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-[#e3e5e8] dark:border-[#202225] transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
             <div className='flex items-center gap-4 mb-8'>
-              <Save className='h-6 w-6 text-content-primary' />
-              <h2 className='text-xl font-medium text-content-primary'>Backup and Restore</h2>
+              <Save className='h-6 w-6 text-foreground' />
+              <h2 className='text-xl font-medium text-foreground'>Backup and Restore</h2>
             </div>
 
             <div className='space-y-8'>
               {/* Tasks Backup/Restore */}
-              <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-content-primary mb-4'>Tasks</h3>
+              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+                <h3 className='text-base font-medium text-foreground mb-4'>Tasks</h3>
                 <div className='flex gap-3'>
                   <Button
                     variant='outline'
                     size='sm'
                     onClick={() => handleBackup('tasks')}
                     disabled={loadingBackup.tasks}
-                    className='flex-1 border-gray-200 text-content-primary hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
+                    className='flex-1 border-gray-200 text-foreground hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
                   >
                     {loadingBackup.tasks ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
@@ -847,7 +819,7 @@ export function GlobalAppSettings() {
                     size='sm'
                     onClick={() => handleRestore('tasks')}
                     disabled={loadingRestore.tasks}
-                    className='flex-1 border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                    className='flex-1 border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                   >
                     {loadingRestore.tasks ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
@@ -857,23 +829,21 @@ export function GlobalAppSettings() {
                     Restore
                   </Button>
                 </div>
-                <p className='text-sm text-content-secondary mt-2'>
+                <p className='text-sm text-muted-foreground mt-2'>
                   Download or restore all task definitions
                 </p>
               </div>
 
               {/* Accounts Backup/Restore */}
-              <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-content-primary mb-4'>
-                  Sparkässeli Accounts
-                </h3>
+              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+                <h3 className='text-base font-medium text-foreground mb-4'>Sparkässeli Accounts</h3>
                 <div className='flex gap-3'>
                   <Button
                     variant='outline'
                     size='sm'
                     onClick={() => handleBackup('piggybank')}
                     disabled={loadingBackup.piggybank}
-                    className='flex-1 border-gray-200 text-content-primary hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
+                    className='flex-1 border-gray-200 text-foreground hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
                   >
                     {loadingBackup.piggybank ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
@@ -887,7 +857,7 @@ export function GlobalAppSettings() {
                     size='sm'
                     onClick={() => handleRestore('piggybank')}
                     disabled={loadingRestore.piggybank}
-                    className='flex-1 border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                    className='flex-1 border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                   >
                     {loadingRestore.piggybank ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
@@ -897,21 +867,21 @@ export function GlobalAppSettings() {
                     Restore
                   </Button>
                 </div>
-                <p className='text-sm text-content-secondary mt-2'>
+                <p className='text-sm text-muted-foreground mt-2'>
                   Download or restore all account data and transactions
                 </p>
               </div>
 
               {/* Full Backup/Restore */}
-              <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-content-primary mb-4'>Full Backup</h3>
+              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+                <h3 className='text-base font-medium text-foreground mb-4'>Full Backup</h3>
                 <div className='flex gap-3'>
                   <Button
                     variant='outline'
                     size='sm'
                     onClick={() => handleBackup('all')}
                     disabled={loadingBackup.all}
-                    className='flex-1 border-gray-200 text-content-primary hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
+                    className='flex-1 border-gray-200 text-foreground hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
                   >
                     {loadingBackup.all ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
@@ -925,7 +895,7 @@ export function GlobalAppSettings() {
                     size='sm'
                     onClick={() => handleRestore('all')}
                     disabled={loadingRestore.all}
-                    className='flex-1 border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                    className='flex-1 border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                   >
                     {loadingRestore.all ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
@@ -935,7 +905,7 @@ export function GlobalAppSettings() {
                     Restore
                   </Button>
                 </div>
-                <p className='text-sm text-content-secondary mt-2'>
+                <p className='text-sm text-muted-foreground mt-2'>
                   Download or restore all application data
                 </p>
               </div>
@@ -943,23 +913,21 @@ export function GlobalAppSettings() {
           </section>
 
           {/* Reset Options Section */}
-          <section className='bg-card dark:bg-[#2f3136] rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-[#e3e5e8] dark:border-[#202225] transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
             <div className='flex items-center gap-4 mb-8'>
-              <RotateCcw className='h-6 w-6 text-content-primary' />
-              <h2 className='text-xl font-medium text-content-primary'>Reset Options</h2>
+              <RotateCcw className='h-6 w-6 text-foreground' />
+              <h2 className='text-xl font-medium text-foreground'>Reset Options</h2>
             </div>
 
             <div className='space-y-8'>
-              <div className='p-4 rounded-xl bg-background-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-content-primary mb-4'>
-                  Reset Transactions
-                </h3>
+              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+                <h3 className='text-base font-medium text-foreground mb-4'>Reset Transactions</h3>
                 <Button
                   variant='outline'
                   size='sm'
                   onClick={() => setIsResetTransactionsOpen(true)}
                   disabled={loadingStates.transactions}
-                  className='w-full border-gray-200 text-content-primary hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
+                  className='w-full border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
                 >
                   {loadingStates.transactions ? (
                     <Loader2 className='h-4 w-4 animate-spin mr-2' />
@@ -968,9 +936,84 @@ export function GlobalAppSettings() {
                   )}
                   Reset Selected Accounts
                 </Button>
-                <p className='text-sm text-content-secondary mt-2'>
+                <p className='text-sm text-muted-foreground mt-2'>
                   Clear transaction history for selected accounts while preserving account data
                 </p>
+              </div>
+            </div>
+          </section>
+
+          {/* About Section */}
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+            <div className='flex items-center gap-4 mb-8'>
+              <Info className='h-6 w-6 text-foreground' />
+              <h2 className='text-xl font-medium text-foreground'>About</h2>
+            </div>
+
+            <div className='space-y-6'>
+              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+                <div className='space-y-4'>
+                  <div>
+                    <h3 className='text-base font-medium text-foreground mb-2'>Taschengeld</h3>
+                    <p className='text-sm text-muted-foreground'>
+                      A family allowance tracker application for managing children's tasks and pocket money
+                    </p>
+                  </div>
+                  
+                  <div className='pt-4 border-t border-border space-y-2'>
+                    <div className='flex justify-between items-center'>
+                      <span className='text-sm text-muted-foreground'>Version</span>
+                      <span className='text-sm font-mono text-foreground'>1.0.4</span>
+                    </div>
+                    <div className='flex justify-between items-center'>
+                      <span className='text-sm text-muted-foreground'>Environment</span>
+                      <span className='text-sm font-mono text-foreground'>{process.env.NODE_ENV || 'production'}</span>
+                    </div>
+                  </div>
+
+                  <div className='pt-4 border-t border-border space-y-3'>
+                    <h4 className='text-sm font-medium text-foreground'>Resources & Support</h4>
+                    <div className='space-y-2'>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground'>GitHub</span>
+                        <Link 
+                          href='https://github.com/barneephife/taschengeld' 
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='text-sm text-primary hover:underline'
+                        >
+                          View Repository
+                        </Link>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground'>Website</span>
+                        <Link 
+                          href='https://taschengeld.groovycode.xyz' 
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='text-sm text-primary hover:underline'
+                        >
+                          taschengeld.groovycode.xyz
+                        </Link>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground'>Support Email</span>
+                        <Link 
+                          href='mailto:support@groovycode.xyz'
+                          className='text-sm text-primary hover:underline'
+                        >
+                          support@groovycode.xyz
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='pt-4 border-t border-border'>
+                    <p className='text-xs text-muted-foreground text-center'>
+                      © 2024 Taschengeld · Made with ❤️ for families everywhere
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </section>

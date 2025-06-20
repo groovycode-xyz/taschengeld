@@ -9,6 +9,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 ### Database Schema
 
 #### Users (`users` table)
+
 - `user_id` (PK, Auto-increment)
 - `name` (VARCHAR(100))
 - `icon` (VARCHAR(50))
@@ -18,6 +19,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - `sound_url` (VARCHAR(255))
 
 #### Tasks (`tasks` table)
+
 - `task_id` (PK, Auto-increment)
 - `title` (VARCHAR(100))
 - `description` (TEXT)
@@ -29,6 +31,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - `updated_at` (TIMESTAMPTZ)
 
 #### Completed Tasks (`completed_tasks` table)
+
 - `c_task_id` (PK, Auto-increment)
 - `user_id` (FK -> users)
 - `task_id` (FK -> tasks)
@@ -40,6 +43,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - `payment_status` (VARCHAR(20))
 
 #### Piggybank Accounts (`piggybank_accounts` table)
+
 - `account_id` (PK, Auto-increment)
 - `user_id` (FK -> users)
 - `account_number` (VARCHAR(20), UNIQUE)
@@ -47,6 +51,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - `created_at` (TIMESTAMPTZ)
 
 #### Piggybank Transactions (`piggybank_transactions` table)
+
 - `transaction_id` (PK, Auto-increment)
 - `account_id` (FK -> piggybank_accounts)
 - `amount` (DECIMAL(15,2))
@@ -57,6 +62,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - `completed_task_id` (FK -> completed_tasks)
 
 #### App Settings (`app_settings` table)
+
 - `setting_id` (PK, Auto-increment)
 - `setting_key` (VARCHAR(50), UNIQUE)
 - `setting_value` (TEXT)
@@ -66,20 +72,25 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 ## User Interface Flow
 
 ### 1. Home Page (`/app/home`)
+
 - Entry point of the application
 - Displays overview dashboard
 - Navigation to all main features
 - Quick access to frequently used functions
 
 ### 2. User Management (`/app/user-management`)
+
 **Components:**
+
 1. Main View (`components/user-management.tsx`):
+
    - Header with title and Add User button
    - Grid layout of user cards
    - Loading and error states
    - User sorting by birthday
 
 2. User Card (`components/user-card.tsx`):
+
    - Displays user information
    - Click handler for editing
    - Visual representation of:
@@ -89,6 +100,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      - Sound indicator
 
 3. Add User Modal (`components/add-user-modal.tsx`):
+
    - Form fields:
      - Name (text input, required)
      - Birthday (date input, required, max=today)
@@ -99,6 +111,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      - Save (green outline)
 
 4. Edit User Modal (`components/edit-user-modal.tsx`):
+
    - Same fields as Add User Modal
    - Additional delete button
    - Birthday validation:
@@ -107,6 +120,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      - Required field
 
 5. Icon Selection (`components/icon-selector-modal.tsx`):
+
    - Grid of available icons
    - Predefined icon set:
      - baby, laugh, smile, star, heart
@@ -121,15 +135,18 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Supports both .mp3 and .wav formats
 
 **Data Flow:**
+
 1. User Fetching:
+
    ```typescript
    GET /api/users
    Response: User[]
    ```
 
 2. User Creation:
+
    ```typescript
-   POST /api/users
+   POST / api / users;
    Body: {
      name: string;
      icon: string;
@@ -139,6 +156,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 3. User Updates:
+
    ```typescript
    PUT /api/users/${userId}
    Body: User
@@ -150,6 +168,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **State Management:**
+
 - Local state for modal visibility
 - Local state for user data
 - Optimistic updates for UI responsiveness
@@ -157,14 +176,18 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Loading states during API operations
 
 **Error Handling:**
+
 - Input validation
 - API error handling
 - User feedback via toast messages
 - Fallback UI for error states
 
 ### 3. Task Management (`/app/task-management`)
+
 **Components:**
+
 1. Main View (`components/task-management.tsx`):
+
    - Header with title and Add Task button
    - Filter controls:
      - Status filter (All/Active/Inactive)
@@ -173,6 +196,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Loading and error states
 
 2. Task Card (Embedded in task-management.tsx):
+
    - Visual states:
      - Active: Blue theme
      - Inactive: Gray theme
@@ -186,6 +210,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Hover effects and transitions
 
 3. Add Task Modal (`components/add-task-modal.tsx`):
+
    - Form fields:
      - Title (required)
      - Description
@@ -206,13 +231,16 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      - Payout value validation
 
 **Data Flow:**
+
 1. Task Fetching:
+
    ```typescript
    GET /api/tasks
    Response: Task[]
    ```
 
 2. Task Creation:
+
    ```typescript
    POST /api/tasks
    Body: {
@@ -226,6 +254,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 3. Task Updates:
+
    ```typescript
    PUT /api/tasks/${taskId}
    Body: Partial<Task>
@@ -238,6 +267,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **State Management:**
+
 - Local state for tasks list
 - Filter and sort state
 - Modal visibility states
@@ -245,6 +275,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Optimistic updates
 
 **Error Handling:**
+
 - API error handling with user feedback
 - Validation error messages
 - Auto-dismissing error notifications (5s timeout)
@@ -252,6 +283,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Loading state during operations
 
 **Visual Feedback:**
+
 - Color-coded task status
 - Interactive hover states
 - Loading indicators
@@ -259,8 +291,11 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Success confirmations
 
 ### 4. Task Completion (`/app/task-completion`)
+
 **Components:**
+
 1. Main View (`components/task-completion.tsx`):
+
    - Header with title
    - Two main sections:
      - Active Tasks grid
@@ -269,6 +304,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Fireworks celebration effect
 
 2. Task Cards:
+
    - Visual styling:
      - Blue theme for active tasks
      - Interactive hover effects
@@ -280,6 +316,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      - Payout value
 
 3. Child User Selection Modal (`components/child-user-selection-modal.tsx`):
+
    - List of available child users
    - User selection handler
    - Modal close action
@@ -292,12 +329,15 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      3. Applause sound
 
 **Audio System:**
+
 1. Task Sounds:
+
    - Played when task is selected
    - Supports .mp3 and .wav formats
    - Fallback handling for missing files
 
 2. User Sounds:
+
    - Played after user selection
    - Supports .mp3 and .wav formats
    - Promise-based playback sequence
@@ -308,16 +348,19 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Synchronized with fireworks animation
 
 **Data Flow:**
+
 1. Initial Data Loading:
+
    ```typescript
-   GET /api/active-tasks    // Fetch available tasks
-   GET /api/users          // Fetch child users
-   GET /api/completed-tasks // Fetch unpaid completed tasks
+   GET / api / active - tasks; // Fetch available tasks
+   GET / api / users; // Fetch child users
+   GET / api / completed - tasks; // Fetch unpaid completed tasks
    ```
 
 2. Task Completion:
+
    ```typescript
-   POST /api/completed-tasks
+   POST / api / completed - tasks;
    Body: {
      user_id: number;
      task_id: number;
@@ -330,6 +373,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **State Management:**
+
 - Active tasks list
 - Child users list
 - Completed tasks tracking
@@ -339,7 +383,9 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Error handling
 
 **Process Flow:**
+
 1. Task Selection:
+
    ```typescript
    1. User clicks task card
    2. Play task sound
@@ -348,6 +394,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 2. User Selection:
+
    ```typescript
    1. User selects child
    2. Close selection modal
@@ -366,6 +413,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **Error Handling:**
+
 - API error catching and display
 - Audio playback fallbacks
 - Processing state protection
@@ -373,6 +421,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - User feedback for actions
 
 **Visual Feedback:**
+
 - Loading indicators
 - Error messages
 - Interactive card states
@@ -382,7 +431,9 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 ### 5. Payday Interface (`/app/payday`)
 
 **Components:**
+
 1. Main View (`components/payday.tsx`):
+
    - Fixed header with title and bulk action controls
    - Scrollable content area with completed tasks
    - Loading and error states
@@ -397,12 +448,15 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Approval confirmation dialog
 
 **Data Flow:**
+
 1. Initial Data Loading:
+
    ```typescript
-   GET /api/completed-tasks // Fetches unpaid completed tasks
+   GET / api / completed - tasks; // Fetches unpaid completed tasks
    ```
 
 2. Task Payment Processing:
+
    ```typescript
    PUT /api/completed-tasks
    Body: {
@@ -418,6 +472,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Records the transaction with task details
 
 **State Management:**
+
 - Completed tasks list
 - Selected tasks for bulk actions
 - Loading states
@@ -426,7 +481,9 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Task payment status tracking
 
 **Process Flow:**
+
 1. Individual Task Approval:
+
    ```typescript
    1. User clicks approve on a task
    2. Show confirmation dialog
@@ -448,6 +505,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **Error Handling:**
+
 - API error catching and display
 - Transaction failure recovery
 - Loading state management
@@ -455,6 +513,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Optimistic updates with rollback
 
 **Visual Feedback:**
+
 - Task status colors:
   - Active: Blue theme
   - Paid: Green theme
@@ -465,6 +524,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Selection indicators
 
 **Security:**
+
 - Parent mode required
 - Transaction validation
 - Balance verification
@@ -473,13 +533,16 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 ### 6. Piggy Bank Interface (`/app/piggy-bank`)
 
 **Components:**
+
 1. Main View (`components/piggy-bank.tsx`):
+
    - Fixed header with title
    - Grid of user account cards
    - Loading and error states
    - Role-based access control
 
 2. Account Cards:
+
    - User icon and name
    - Current balance display
    - Action buttons (Parent mode):
@@ -489,12 +552,14 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    - Theme-aware styling
 
 3. Add Funds Modal (`components/add-funds-modal.tsx`):
+
    - Amount input
    - Comments field
    - Photo attachment option
    - Confirmation controls
 
 4. Withdraw Funds Modal (`components/withdraw-funds-modal.tsx`):
+
    - Amount input
    - Comments field
    - Photo attachment option
@@ -509,12 +574,15 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
      - Photo (if attached)
 
 **Data Flow:**
+
 1. Initial Data Loading:
+
    ```typescript
-   GET /api/piggy-bank/dashboard // Fetches all user accounts and balances
+   GET / api / piggy - bank / dashboard; // Fetches all user accounts and balances
    ```
 
 2. Fund Deposits:
+
    ```typescript
    POST /api/piggy-bank
    Body: {
@@ -539,6 +607,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **State Management:**
+
 - User accounts list
 - Selected account
 - Modal visibility states
@@ -547,7 +616,9 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Transaction processing states
 
 **Process Flow:**
+
 1. Deposit Process:
+
    ```typescript
    1. Select user account
    2. Open deposit modal
@@ -567,6 +638,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
    ```
 
 **Error Handling:**
+
 - API error catching and display
 - Balance validation
 - Transaction validation
@@ -574,6 +646,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - User feedback messages
 
 **Visual Feedback:**
+
 - Account card themes:
   - Light mode: Green subtle background
   - Dark mode: Dark green background
@@ -583,6 +656,7 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 - Transaction confirmations
 
 **Security:**
+
 - Parent mode required for deposits/withdrawals
 - Balance validation
 - Transaction limits
@@ -594,13 +668,16 @@ Taschengeld is a family allowance tracker application implemented as a Next.js w
 The Family Overview is implemented through the User Management interface (`components/user-management.tsx`), providing a comprehensive view of family members and their management.
 
 **Components:**
+
 1. Main View (`components/user-management.tsx`):
+
    - Fixed header with title
    - Grid of user cards
    - Add user button
    - Loading and error states
 
 2. User Card (`components/user-card.tsx`):
+
    - User icon display
    - User name
    - Role indicator (Parent/Child)
@@ -608,6 +685,7 @@ The Family Overview is implemented through the User Management interface (`compo
    - Theme-aware styling
 
 3. Add User Modal:
+
    - Name input
    - Icon selection
    - Role selection
@@ -623,7 +701,9 @@ The Family Overview is implemented through the User Management interface (`compo
    - Validation checks
 
 **Data Flow:**
+
 1. User Management:
+
    ```typescript
    GET /api/users              // Fetch all users
    POST /api/users             // Create new user
@@ -633,10 +713,11 @@ The Family Overview is implemented through the User Management interface (`compo
 
 2. Account Management:
    ```typescript
-   POST /api/piggy-bank/accounts // Create piggy bank account for new user
+   POST / api / piggy - bank / accounts; // Create piggy bank account for new user
    ```
 
 **State Management:**
+
 - Users list
 - Modal visibility states
 - Form data handling
@@ -645,7 +726,9 @@ The Family Overview is implemented through the User Management interface (`compo
 - Edit mode tracking
 
 **Process Flow:**
+
 1. User Creation:
+
    ```typescript
    1. Click add user button
    2. Fill in user details
@@ -664,6 +747,7 @@ The Family Overview is implemented through the User Management interface (`compo
    ```
 
 **Error Handling:**
+
 - Form validation
 - API error catching
 - Duplicate user checks
@@ -671,6 +755,7 @@ The Family Overview is implemented through the User Management interface (`compo
 - User feedback messages
 
 **Visual Feedback:**
+
 - Card themes:
   - Light mode: Green subtle background
   - Dark mode: Dark green background
@@ -680,6 +765,7 @@ The Family Overview is implemented through the User Management interface (`compo
 - Role-based styling
 
 **Security:**
+
 - Parent mode required
 - Role validation
 - Data validation
@@ -689,13 +775,16 @@ The Family Overview is implemented through the User Management interface (`compo
 ### 8. Global Settings (`/app/global-settings`)
 
 **Components:**
+
 1. Main View (`components/global-app-settings.tsx`):
+
    - Fixed header with title
    - Scrollable content area
    - Sections for different settings
    - Protected access control
 
 2. Access Control Section:
+
    - Role enforcement toggle
    - Global PIN management:
      - PIN display/hide
@@ -704,6 +793,7 @@ The Family Overview is implemented through the User Management interface (`compo
      - PIN removal
 
 3. Currency Section:
+
    - Default currency selection:
      - USD, EUR, GBP, CHF options
      - None option
@@ -713,11 +803,13 @@ The Family Overview is implemented through the User Management interface (`compo
      - Both ($10.00 USD)
 
 4. Language Section:
+
    - German terms toggle
    - Language preference management
    - Real-time language switching
 
 5. Backup and Restore Section:
+
    - Tasks backup/restore
    - Piggy bank accounts backup/restore
    - Full system backup/restore
@@ -729,15 +821,18 @@ The Family Overview is implemented through the User Management interface (`compo
    - Confirmation dialogs
 
 **Data Flow:**
+
 1. Settings Management:
+
    ```typescript
-   GET /api/settings              // Fetch current settings
-   PUT /api/settings              // Update settings
-   POST /api/settings/currency    // Update currency
-   POST /api/settings/currency-format // Update format
+   GET / api / settings; // Fetch current settings
+   PUT / api / settings; // Update settings
+   POST / api / settings / currency; // Update currency
+   POST / api / settings / currency - format; // Update format
    ```
 
 2. Backup Operations:
+
    ```typescript
    GET /api/backup/${type}        // Download backup
    POST /api/restore/${type}      // Restore from backup
@@ -750,6 +845,7 @@ The Family Overview is implemented through the User Management interface (`compo
    ```
 
 **State Management:**
+
 - Role enforcement state
 - PIN management
 - Currency settings
@@ -760,7 +856,9 @@ The Family Overview is implemented through the User Management interface (`compo
 - Language preferences
 
 **Process Flow:**
+
 1. Access Control:
+
    ```typescript
    1. Check role enforcement
    2. Verify parent mode
@@ -769,6 +867,7 @@ The Family Overview is implemented through the User Management interface (`compo
    ```
 
 2. Settings Updates:
+
    ```typescript
    1. Validate input
    2. Update database
@@ -785,6 +884,7 @@ The Family Overview is implemented through the User Management interface (`compo
    ```
 
 **Error Handling:**
+
 - PIN verification failures
 - Settings update errors
 - Backup/restore failures
@@ -793,6 +893,7 @@ The Family Overview is implemented through the User Management interface (`compo
 - User feedback messages
 
 **Visual Feedback:**
+
 - Loading indicators
 - Success/error messages
 - Interactive states
@@ -800,6 +901,7 @@ The Family Overview is implemented through the User Management interface (`compo
 - Theme-aware styling
 
 **Security:**
+
 - Parent mode required
 - PIN protection
 - Backup file encryption
@@ -809,6 +911,7 @@ The Family Overview is implemented through the User Management interface (`compo
 ## Technical Implementation Details
 
 ### Directory Structure
+
 ```
 app/
 ├── api/           # API endpoints
@@ -821,13 +924,16 @@ app/
 ```
 
 ### Key Components
+
 1. Layout Components
+
    - Navigation bar
    - Sidebar
    - Footer
    - Theme provider
 
 2. Feature Components
+
    - User cards
    - Task cards
    - Transaction lists
@@ -847,12 +953,14 @@ app/
 The application uses a centralized icon system based on the Lucide icon library. This system ensures consistent icon display across all interfaces while maintaining efficient storage and rendering.
 
 #### Database Storage
+
 - Icons are stored in the database as string identifiers (VARCHAR(50))
 - Example fields:
   - `users.icon`: User profile icons
   - `tasks.icon_name`: Task-specific icons
 
 #### Icon Component Architecture
+
 ```typescript
 // IconComponent implementation
 type IconComponentProps = {
@@ -865,7 +973,9 @@ type IconComponentProps = {
 ```
 
 #### Icon Rendering Process
+
 1. Database to Component:
+
    - Read icon identifier from database (e.g., "user-circle")
    - Pass identifier to IconComponent
    - Component converts kebab-case to PascalCase (e.g., "UserCircle")
@@ -879,6 +989,7 @@ type IconComponentProps = {
 #### Interface-Specific Icon Usage
 
 1. User Management:
+
    - Add User Modal:
      - Default user silhouette icon for new users
      - Icon selector for choosing user icons
@@ -889,12 +1000,14 @@ type IconComponentProps = {
      - Optional background styling
 
 2. Task Management:
+
    - Task Icons:
      - Visual representation of task type
      - Status indicators (active/inactive)
      - Completion state icons
 
 3. Transaction Interface:
+
    - Status Icons:
      - Payment status indicators
      - Transaction type symbols
@@ -907,6 +1020,7 @@ type IconComponentProps = {
      - Consistent navigation symbolism
 
 #### Icon Selection Guidelines
+
 - User Icons:
   - Personalized user representations
   - Child-friendly options
@@ -921,12 +1035,15 @@ type IconComponentProps = {
   - Navigation and action symbols
 
 ### Data Flow
+
 1. Client-side State Management
+
    - React Context for global state
    - Local state for component-specific data
    - Form state management
 
 2. Server Communication
+
    - API routes in `/app/api`
    - Prisma Client for database operations
    - File upload handling
@@ -940,7 +1057,9 @@ type IconComponentProps = {
 ### User Interface Logic
 
 #### Task Management
+
 1. Task Creation:
+
    ```typescript
    // Create task flow
    1. User fills task form
@@ -961,6 +1080,7 @@ type IconComponentProps = {
    ```
 
 #### Financial Operations
+
 1. Payment Processing:
    ```typescript
    // Payment flow

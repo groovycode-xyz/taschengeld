@@ -1,128 +1,142 @@
-import { NextResponse } from 'next/server';
-import { completedTaskRepository } from '@/app/lib/completedTaskRepository';
+import { NextRequest, NextResponse } from 'next/server';
+import { completedTaskService } from '@/app/lib/services/completedTaskService';
 import { CreateCompletedTaskInput } from '@/app/types/completedTask';
-import { taskRepository } from '@/app/lib/taskRepository';
-import { userRepository } from '@/app/lib/userRepository';
-import { piggyBankTransactionRepository } from '@/app/lib/piggyBankTransactionRepository';
+import { piggyBankTransactionService } from '@/app/lib/services/piggyBankTransactionService';
+import { validateRequest } from '@/app/lib/validation/middleware';
+import {
+  completeTaskSchema,
+  updateCompletedTaskSchema,
+  paydaySchema,
+} from '@/app/lib/validation/schemas';
+import { logger } from '@/app/lib/logger';
 
 export async function GET() {
   try {
-    const completedTasks = await completedTaskRepository.getAll();
+    const completedTasks = await completedTaskService.getAll();
     return NextResponse.json(completedTasks);
   } catch (error) {
-    console.error('Failed to fetch completed tasks:', error);
+    logger.error('Failed to fetch completed tasks', error);
     return NextResponse.json({ error: 'Failed to fetch completed tasks' }, { status: 500 });
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Validate request body
+  const validation = await validateRequest(request, completeTaskSchema);
+  if (!validation.success) {
+    return validation.error;
+  }
+
   try {
-    const completedTaskData: CreateCompletedTaskInput = await request.json();
-    const newCompletedTask = await completedTaskRepository.create(completedTaskData);
+    const completedTaskData: CreateCompletedTaskInput = validation.data;
+    const newCompletedTask = await completedTaskService.create(completedTaskData);
 
-    // Fetch additional data for the response
-    const taskDetails = await taskRepository.getById(completedTaskData.task_id.toString());
-    const userDetails = await userRepository.getById(Number(completedTaskData.user_id));
-
-    const fullCompletedTask = {
-      ...newCompletedTask,
-      task_title: taskDetails?.title,
-      user_name: userDetails?.name,
-      icon_name: taskDetails?.icon_name,
-      user_icon: userDetails?.icon,
-    };
-
-    return NextResponse.json(fullCompletedTask, { status: 201 });
+    return NextResponse.json(newCompletedTask, { status: 201 });
   } catch (error) {
-    console.error('Failed to create completed task:', error);
+    logger.error('Failed to create completed task', error);
     return NextResponse.json({ error: 'Failed to create completed task' }, { status: 500 });
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log('PUT /api/completed-tasks - Request body:', body);
+    logger.debug('PUT /api/completed-tasks', { body });
 
     const { c_task_id, payment_status } = body;
 
-    // Validate payment status
-    if (payment_status !== 'Paid' && payment_status !== 'Unpaid') {
+    // Validate the update data
+    const validation = updateCompletedTaskSchema.safeParse({ payment_status });
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Invalid payment status. Must be either "Paid" or "Unpaid".' },
+        {
+          error: 'Validation failed',
+          details: validation.error.errors.map((e) => ({
+            field: e.path.join('.'),
+            message: e.message,
+          })),
+        },
         { status: 400 }
       );
     }
 
-    // Update the payment status
-    const updatedTask = await completedTaskRepository.updatePaymentStatus(
-      c_task_id,
-      payment_status
-    );
-    console.log('Updated task details:', updatedTask);
-
-    if (!updatedTask) {
-      console.error('Task not found for c_task_id:', c_task_id);
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+    // Validate task ID
+    if (!c_task_id || typeof c_task_id !== 'number') {
+      return NextResponse.json({ error: 'Valid completed task ID is required' }, { status: 400 });
     }
 
-    // Fetch full task details using the optimized query
-    const fullTaskDetails = await completedTaskRepository.getFullTaskDetails(c_task_id);
-    console.log('Full task details with account:', fullTaskDetails);
+    const updatedTask = await completedTaskService.updatePaymentStatus(c_task_id, payment_status);
 
-    if (!fullTaskDetails) {
-      console.error('Failed to fetch full task details for c_task_id:', c_task_id);
-      return NextResponse.json({ error: 'Failed to fetch full task details' }, { status: 500 });
+    if (updatedTask) {
+      return NextResponse.json(updatedTask);
+    } else {
+      return NextResponse.json({ error: 'Completed task not found' }, { status: 404 });
     }
-
-    // Handle transaction creation if the task is being paid
-    if (
-      payment_status === 'Paid' &&
-      fullTaskDetails.piggybank_account_id &&
-      fullTaskDetails.payout_value
-    ) {
-      console.log('Creating transaction with details:', {
-        accountId: fullTaskDetails.piggybank_account_id,
-        amount: fullTaskDetails.payout_value,
-        taskTitle: fullTaskDetails.task_title,
-        taskId: c_task_id,
-      });
-
-      const transactionCreated = await piggyBankTransactionRepository.createTransaction(
-        fullTaskDetails.piggybank_account_id,
-        Number(fullTaskDetails.payout_value),
-        fullTaskDetails.task_title || 'Task Payment',
-        c_task_id
-      );
-
-      if (!transactionCreated) {
-        console.error('Failed to create transaction for c_task_id:', c_task_id);
-        return NextResponse.json({ error: 'Failed to create transaction' }, { status: 500 });
-      }
-      console.log('Transaction created successfully');
-    }
-
-    return NextResponse.json(fullTaskDetails);
   } catch (error) {
-    console.error('Failed to update completed task. Error:', error);
+    logger.error('Failed to update completed task', error);
     return NextResponse.json({ error: 'Failed to update completed task' }, { status: 500 });
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
+  const url = new URL(request.url);
+  const completedTaskId = url.searchParams.get('id');
+
+  // Validate ID
+  if (!completedTaskId || isNaN(Number(completedTaskId))) {
+    return NextResponse.json({ error: 'Valid completed task ID is required' }, { status: 400 });
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const c_task_id = searchParams.get('c_task_id');
-    if (!c_task_id) {
-      return NextResponse.json({ error: 'c_task_id is required' }, { status: 400 });
-    }
-    const deletedTask = await completedTaskRepository.delete(Number(c_task_id));
-    if (!deletedTask) {
+    const success = await completedTaskService.delete(Number(completedTaskId));
+    if (success) {
+      return NextResponse.json({ message: 'Completed task deleted successfully' });
+    } else {
       return NextResponse.json({ error: 'Completed task not found' }, { status: 404 });
     }
-    return NextResponse.json({ message: 'Completed task deleted successfully' });
   } catch (error) {
-    console.error('Failed to delete completed task:', error);
+    logger.error('Failed to delete completed task', error);
     return NextResponse.json({ error: 'Failed to delete completed task' }, { status: 500 });
+  }
+}
+
+// Payday endpoint
+export async function PATCH(request: NextRequest) {
+  // Validate request body
+  const validation = await validateRequest(request, paydaySchema);
+  if (!validation.success) {
+    return validation.error;
+  }
+
+  try {
+    const { completedTaskIds } = validation.data;
+
+    // Process payday for each completed task
+    const results = await Promise.all(
+      completedTaskIds.map(async (taskId) => {
+        const completedTask = await completedTaskService.getById(taskId);
+        if (!completedTask) {
+          return { taskId, success: false, error: 'Task not found' };
+        }
+
+        // Update payment status
+        await completedTaskService.updatePaymentStatus(taskId, 'Paid');
+
+        // Create piggy bank transaction
+        await piggyBankTransactionService.create({
+          user_id: completedTask.user_id,
+          amount: Number(completedTask.payout_value),
+          transaction_type: 'payday',
+          description: `Payday for task: ${completedTask.description || 'Unknown'}`,
+        });
+
+        return { taskId, success: true };
+      })
+    );
+
+    return NextResponse.json({ results });
+  } catch (error) {
+    logger.error('Failed to process payday', error);
+    return NextResponse.json({ error: 'Failed to process payday' }, { status: 500 });
   }
 }

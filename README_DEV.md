@@ -12,22 +12,26 @@ This guide provides step-by-step instructions for the development workflow. For 
 ## Quick Start
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/barneephife/tgeld.git
    cd tgeld
    ```
 
 2. Install local dependencies (for tooling only):
+
    ```bash
    npm install
    ```
 
 3. Copy environment files:
+
    ```bash
    cp .env.example .env
    ```
 
    Configure your environment file:
+
    ```bash
    # Required settings for development
    DB_HOST=db                    # Use Docker service name
@@ -38,20 +42,24 @@ This guide provides step-by-step instructions for the development workflow. For 
 ## Development Workflow
 
 ### 1. Start Development Environment
+
 ```bash
 # Start the development stack
 docker compose -f docker-compose.dev.yml up --build
 ```
 
 ✅ Verify:
+
 - Application runs at http://localhost:3000
 - Database connection is successful
 - No architecture-related errors in logs
 
 ### 2. Make and Test Changes
+
 Your local changes will automatically reflect due to volume mounting and hot reloading.
 
 When adding new dependencies:
+
 ```bash
 # Add dependency
 npm install new-package
@@ -62,15 +70,18 @@ docker compose -f docker-compose.dev.yml up --build
 ```
 
 ✅ Verify:
+
 - New features work as expected
 - No new architecture-specific dependencies added
 - All API endpoints function correctly
 - Database operations work properly
 
 ### 3. Database Changes
+
 When making database changes:
 
 1. Create migration:
+
    ```bash
    npx prisma migrate dev --create-only --name descriptive_name
    ```
@@ -84,11 +95,13 @@ When making database changes:
    ```
 
 ✅ Verify:
+
 - Migration applies successfully
 - Data model works as expected
 - No data loss or corruption
 
 ### 4. Commit Changes
+
 ```bash
 git add .
 git commit -m "descriptive message"
@@ -96,11 +109,13 @@ git push
 ```
 
 ✅ Verify:
+
 - All necessary files included
 - No sensitive data in commit
 - Documentation updated if needed
 
 ### 5. Build Production Image
+
 ```bash
 # Build and test both architectures locally
 ./scripts/build-multiarch.sh --local --version 1.0.0
@@ -110,6 +125,7 @@ docker compose -f docker-compose.yml up
 ```
 
 ✅ Verify:
+
 - Builds succeed for both architectures
 - All features work in production build
 - No development dependencies included
@@ -121,6 +137,7 @@ docker compose -f docker-compose.yml up
 When building production images, we follow semantic versioning (SemVer):
 
 1. **Version Tags**
+
    - `v1.0.0` - Stable release version
    - `latest` - Most recent stable version
    - `v1.0.0-arm64` - Architecture-specific (local testing)
@@ -136,44 +153,51 @@ When building production images, we follow semantic versioning (SemVer):
 The project uses automated version management through the `version.txt` file and build script features.
 
 1. **Current Version**
+
    - Stored in `version.txt` at the project root
    - Automatically read by build scripts
    - Tracked in version control
 
 2. **Incrementing Versions**
-   
+
    For bug fixes (patch):
+
    ```bash
    ./scripts/build-multiarch.sh --push --increment patch
    # Example: 1.0.0 -> 1.0.1
    ```
 
    For new features (minor):
+
    ```bash
    ./scripts/build-multiarch.sh --push --increment minor
    # Example: 1.0.0 -> 1.1.0
    ```
 
    For breaking changes (major):
+
    ```bash
    ./scripts/build-multiarch.sh --push --increment major
    # Example: 1.0.0 -> 2.0.0
    ```
 
 3. **Manual Version Control** (if needed)
-   
+
    Specify version directly:
+
    ```bash
    ./scripts/build-multiarch.sh --push --version 1.2.3
    ```
 
    Or edit `version.txt` directly before building:
+
    ```bash
    echo "1.2.3" > version.txt
    ./scripts/build-multiarch.sh --push
    ```
 
 4. **Version Management Best Practices**
+
    - Always use `--increment` for automated version management
    - Commit `version.txt` changes with your release
    - Include version changes in commit messages
@@ -181,25 +205,28 @@ The project uses automated version management through the `version.txt` file and
    - Document breaking changes in release notes
 
 5. **Release Process**
+
    ```bash
    # 1. Ensure all changes are committed
    git status
-   
+
    # 2. Build and push with version increment
    ./scripts/build-multiarch.sh --push --increment minor
-   
+
    # 3. Tag the git commit with the new version
    git tag -a v$(cat version.txt) -m "Release version $(cat version.txt)"
    git push origin v$(cat version.txt)
    ```
 
 ### 6. Push to Docker Hub
+
 ```bash
 # Build and push multi-arch image with version tag
 ./scripts/build-multiarch.sh --push --version 1.0.0
 ```
 
 ✅ Verify:
+
 - Both architecture variants pushed successfully
 - Version tags are correct (latest, v1.0.0)
 - Image can be pulled and run on different architectures
@@ -208,17 +235,20 @@ The project uses automated version management through the `version.txt` file and
 ## Troubleshooting
 
 ### Check Logs
+
 ```bash
 docker compose -f docker-compose.dev.yml logs -f app
 docker compose -f docker-compose.dev.yml logs -f db
 ```
 
 ### Verify Database
+
 ```bash
 docker compose -f docker-compose.dev.yml exec db psql -U postgres -d tgeld
 ```
 
 ### Reset Environment
+
 ```bash
 docker compose -f docker-compose.dev.yml down -v
 docker compose -f docker-compose.dev.yml up --build
@@ -245,17 +275,20 @@ For more detailed information about architecture decisions, risk areas, and desi
 ## Best Practices
 
 1. **Always Use Docker for Development**
+
    - Don't rely on local-only testing
    - Always verify changes in Docker environment
    - Use development compose file for all testing
 
 2. **Migration Management**
+
    - Create explicit migrations using local tooling
    - Test migrations in Docker environment
    - Never rely on automatic migrations
    - Always version control your migrations
 
 3. **Environment Variables**
+
    - Use `.env` for development configuration
    - Never commit any `.env` files
    - Keep passwords and secrets secure
@@ -360,14 +393,16 @@ No special configuration is needed as Docker will use the appropriate architectu
 ### Environment Variables in Docker
 
 1. Development vs Production:
+
    - Development: Uses `.env.development` for local development
    - Production: Uses environment variables from Docker Compose
    - Never mix these configurations
 
 2. Database Connection:
+
    - Development: Uses `localhost` or `127.0.0.1`
    - Production: Uses Docker service name (`db`)
-   Example production URL:
+     Example production URL:
 
    ```yaml
    DATABASE_URL=postgresql://postgres:password@db:5432/tgeld?schema=public
@@ -376,6 +411,7 @@ No special configuration is needed as Docker will use the appropriate architectu
 ### Prisma Configuration
 
 1. Binary Targets:
+
    - The Dockerfile is configured to generate Prisma client with correct binary targets for Alpine Linux
    - Do not modify these settings unless you understand the implications
    - Required targets: `linux-musl` and `linux-musl-openssl-3.0.x`
@@ -387,6 +423,7 @@ No special configuration is needed as Docker will use the appropriate architectu
 ### Database Connection Management
 
 1. Connection Pooling:
+
    - Use the singleton pool pattern in `db.ts`
    - Never create new pools for each request
    - Do not call `pool.end()` in API routes
@@ -413,10 +450,10 @@ We follow strict migration practices to ensure database changes work consistentl
    ```bash
    # 1. Set up local environment for migration creation
    export DATABASE_URL="postgresql://postgres:tgeld_secure_password_2024@localhost:5432/tgeld"
-   
+
    # 2. Create migration (without applying it)
    npx prisma migrate dev --create-only --name descriptive_name
-   
+
    # 3. Review the generated migration in:
    #    prisma/migrations/YYYYMMDDHHMMSS_descriptive_name/migration.sql
    ```
@@ -426,12 +463,12 @@ We follow strict migration practices to ensure database changes work consistentl
    ```bash
    # 1. Test locally first
    npx prisma migrate deploy
-   
+
    # 2. Test in Docker environment
    docker compose down -v              # Remove existing volumes
    docker build -f Dockerfile.prod -t tgeld:latest .
    docker compose up -d               # Start fresh environment
-   
+
    # 3. Verify database state in Docker
    docker compose exec db psql -U postgres -d tgeld -c "\dt"
    ```
@@ -443,10 +480,10 @@ We follow strict migration practices to ensure database changes work consistentl
    ```bash
    # 1. Check migration logs
    docker compose logs app
-   
+
    # 2. Connect to database to inspect state
    docker compose exec db psql -U postgres -d tgeld
-   
+
    # 3. If needed, reset and retry
    docker compose down -v
    docker compose up
@@ -455,17 +492,20 @@ We follow strict migration practices to ensure database changes work consistentl
 ### Migration Best Practices
 
 1. **Always Create Explicit Migrations**
+
    - ❌ Don't use `prisma migrate dev` without `--create-only`
    - ✅ Use `--create-only` and review migrations before applying
    - ✅ Test migrations in both local and Docker environments
 
 2. **Migration Content Guidelines**
+
    - Keep migrations atomic (one conceptual change per migration)
    - Include both "up" and "down" migration logic when needed
    - Add comments explaining complex migration steps
    - Test data modifications thoroughly
 
 3. **Version Control**
+
    - Always commit migration files with related schema changes
    - Never modify existing migrations that are in version control
    - Include both schema.prisma and migration files in commits
@@ -492,7 +532,7 @@ We follow strict migration practices to ensure database changes work consistentl
 
    ```sql
    -- Always use ALTER TABLE for existing tables
-   ALTER TABLE "existing_table" 
+   ALTER TABLE "existing_table"
    ADD COLUMN "new_column" TEXT;
    ```
 
@@ -500,10 +540,10 @@ We follow strict migration practices to ensure database changes work consistentl
 
    ```sql
    -- Include both schema and data changes
-   ALTER TABLE "users" 
+   ALTER TABLE "users"
    ADD COLUMN "display_name" TEXT;
-   
-   UPDATE "users" 
+
+   UPDATE "users"
    SET "display_name" = "username"
    WHERE "display_name" IS NULL;
    ```
@@ -511,11 +551,13 @@ We follow strict migration practices to ensure database changes work consistentl
 ### Deployment Considerations
 
 1. **Development Environment**
+
    - Uses Docker for testing migrations
    - Mirrors production database configuration
    - Allows safe testing of migration procedures
 
 2. **Production Environment**
+
    - Uses same Docker configuration
    - Runs migrations during deployment
    - Maintains data integrity
@@ -525,7 +567,7 @@ We follow strict migration practices to ensure database changes work consistentl
    ```bash
    # Always backup before migrations
    docker compose exec db pg_dump -U postgres tgeld > backup.sql
-   
+
    # Restore if needed
    cat backup.sql | docker compose exec -T db psql -U postgres -d tgeld
    ```
@@ -533,11 +575,13 @@ We follow strict migration practices to ensure database changes work consistentl
 ### Troubleshooting Guide
 
 1. **Migration Failed to Apply**
+
    - Check migration logs in Docker
    - Verify database connection settings
    - Ensure migrations are in correct order
 
 2. **Data Inconsistencies**
+
    - Use transaction blocks in migrations
    - Include validation queries
    - Add data verification steps
@@ -552,16 +596,19 @@ Remember: The goal is to maintain a reliable and consistent database state acros
 ## Development Best Practices
 
 1. Environment Configuration:
+
    - Always test with production-like settings locally
    - Use Docker Compose to replicate production environment
    - Verify environment variable handling in both contexts
 
 2. Code Changes:
+
    - Test database connections thoroughly
    - Verify API endpoints in Docker environment
    - Monitor logs for connection issues
 
 3. Deployment Checklist:
+
    - Build multi-arch Docker images
    - Test on both ARM64 and AMD64 platforms
    - Verify environment variables in production
@@ -589,11 +636,11 @@ Remember: The goal is to maintain a reliable and consistent database state acros
    ```yaml
    services:
      app:
-       platform: linux/arm64  # Specify ARM platform
+       platform: linux/arm64 # Specify ARM platform
        # ... other configurations remain the same
-     
+
      db:
-       platform: linux/arm64  # PostgreSQL also needs platform specified
+       platform: linux/arm64 # PostgreSQL also needs platform specified
        # ... other configurations remain the same
    ```
 
@@ -604,7 +651,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
    ```bash
    # Create development database (local tooling)
    createdb tgeld
-   
+
    # Set up local environment
    cp .env.example .env.development
    cp .env.example .env
@@ -615,12 +662,13 @@ Remember: The goal is to maintain a reliable and consistent database state acros
    ```bash
    # Build the image for ARM64
    docker build --platform linux/arm64 -f Dockerfile.prod -t tgeld:latest .
-   
+
    # Start the development environment
    docker compose up
    ```
 
 3. **Making Changes**
+
    - Edit code locally using your preferred editor
    - Docker will use the ARM64-compatible image
    - Changes to Next.js pages will hot-reload
@@ -631,7 +679,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
    # Creating migrations (using local tooling)
    export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/tgeld"
    npx prisma migrate dev --create-only --name your_migration_name
-   
+
    # Testing migrations in Docker
    docker compose down -v
    docker build --platform linux/arm64 -f Dockerfile.prod -t tgeld:latest .
@@ -646,11 +694,12 @@ Remember: The goal is to maintain a reliable and consistent database state acros
    ```bash
    # Verify the image architecture
    docker inspect tgeld:latest | grep Architecture
-   
+
    # Should output: "arm64"
    ```
 
 2. **Performance Optimization**
+
    - Use volume mounts for node_modules to avoid rebuilding
    - Enable Docker Desktop's new virtualization framework
    - Ensure Docker Desktop is up to date
@@ -666,11 +715,13 @@ Remember: The goal is to maintain a reliable and consistent database state acros
 ### Best Practices for M1 Development
 
 1. **Always Specify Platform**
+
    - Use `--platform linux/arm64` when building
    - Add platform specification in docker-compose.yml
    - Ensure all services use ARM64 images
 
 2. **Local Development Tools**
+
    - Install ARM64 versions of Node.js
    - Use Homebrew for ARM64 to install PostgreSQL
    - Keep Docker Desktop updated
@@ -682,7 +733,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
    docker build --platform linux/arm64 -f Dockerfile.prod -t tgeld:latest .
    docker compose down -v
    docker compose up
-   
+
    # Verify all services
    docker compose ps
    ```
@@ -694,6 +745,7 @@ Remember: The M1's ARM64 architecture requires explicit platform specifications,
 ### Prerequisites
 
 1. **Docker**
+
    - Docker Desktop 4.x or later
    - BuildKit enabled
    - Docker Compose V2

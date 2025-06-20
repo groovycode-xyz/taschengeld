@@ -14,7 +14,7 @@ import { SoundSelectorModal } from './sound-selector-modal';
 import { User } from '@/app/types/user';
 import { Save, X, Play, Trash2 } from 'lucide-react';
 import { IconComponent } from './icon-component';
-import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -31,17 +31,11 @@ export function EditUserModal({
   onDeleteUser,
   user,
 }: EditUserModalProps) {
-  console.log('EditUserModal received user:', JSON.stringify(user, null, 2));
-  console.log('Raw birthday value:', user.birthday);
-
   // Get just the YYYY-MM-DD part of any date string
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     return dateString.split('T')[0];
   };
-
-  const initialBirthday = formatDate(user.birthday);
-  console.log('Formatted birthday value:', initialBirthday);
 
   const [name, setName] = useState(user?.name || '');
   const [icon, setIcon] = useState(user?.icon || '');
@@ -55,11 +49,6 @@ export function EditUserModal({
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
   useEffect(() => {
-    console.log('EditUserModal useEffect triggered');
-    console.log('User in useEffect:', JSON.stringify(user, null, 2));
-    console.log('Birthday in useEffect:', user.birthday);
-    console.log('Formatted birthday:', formatDate(user.birthday));
-
     if (user) {
       setName(user.name);
       setIcon(user.icon);
@@ -110,7 +99,6 @@ export function EditUserModal({
       return;
     }
 
-    console.log('Submitting updated user:', userData);
     await onEditUser(userData);
     onClose();
   };
@@ -160,7 +148,6 @@ export function EditUserModal({
                     type='date'
                     value={birthday}
                     onChange={(e) => {
-                      console.log('Birthday input changed to:', e.target.value);
                       setBirthday(e.target.value);
                     }}
                     className={birthdayError ? 'border-red-500' : ''}
@@ -198,9 +185,7 @@ export function EditUserModal({
                             audio = new Audio(`/sounds/users/${soundUrl}.wav`);
                             return audio.play();
                           });
-                        } catch (error) {
-                          console.error('Error playing sound:', error);
-                        }
+                        } catch {}
                       }}
                       aria-label='Play Sound'
                     >
@@ -259,13 +244,15 @@ export function EditUserModal({
         onClose={() => setIsSoundModalOpen(false)}
         onSelect={handleSoundSelect}
         currentSound={soundUrl}
-        type="user"
+        type='user'
       />
-      <DeleteConfirmationDialog
+      <ConfirmationDialog
         isOpen={isDeleteConfirmationOpen}
         onClose={() => setIsDeleteConfirmationOpen(false)}
         onConfirm={confirmDelete}
+        title='Delete User'
         itemName={name}
+        consequences={['Piggy bank account & transactions', 'Task history', 'User settings']}
       />
     </>
   );

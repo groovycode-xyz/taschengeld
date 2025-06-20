@@ -1,52 +1,68 @@
-import pool from '@/app/lib/db';
 import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler } from '@/app/lib/api-utils';
 
-export async function GET() {
-  const client = await pool.connect();
-  try {
-    // Get accounts data with user information
-    const accounts = await client.query(`
-      SELECT 
-        pa.account_id,
-        pa.account_number,
-        pa.balance,
-        pa.user_id,
-        u.name as user_name
-      FROM piggybank_accounts pa
-      JOIN users u ON pa.user_id = u.user_id
-      ORDER BY u.name;
-    `);
-
-    // Get transactions data
-    const transactions = await client.query(`
-      SELECT 
-        pt.amount,
-        pt.transaction_type,
-        pt.description,
-        pt.photo,
-        u.name as user_name,
-        pt.transaction_date,
-        pa.account_id
-      FROM piggybank_transactions pt
-      JOIN piggybank_accounts pa ON pt.account_id = pa.account_id
-      JOIN users u ON pa.user_id = u.user_id
-      ORDER BY pt.transaction_date DESC;
-    `);
-
-    return NextResponse.json({
-      timestamp: new Date().toISOString(),
-      type: 'piggybank',
-      data: {
-        piggybank: {
-          accounts: accounts.rows,
-          transactions: transactions.rows,
+export const GET = createApiHandler(async () => {
+  // Get accounts data with user information
+  const accounts = await prisma.piggybankAccount.findMany({
+    select: {
+      account_id: true,
+      account_number: true,
+      balance: true,
+      user_id: true,
+      user: {
+        select: {
+          name: true,
         },
       },
-    });
-  } catch (error) {
-    console.error('Error fetching piggy bank data:', error);
-    return NextResponse.json({ error: 'Failed to fetch piggy bank data' }, { status: 500 });
-  } finally {
-    client.release();
-  }
-}
+    },
+    orderBy: { user: { name: 'asc' } },
+  });
+
+  // Transform accounts data to match expected format
+  const accountsData = accounts.map((account) => ({
+    account_id: account.account_id,
+    account_number: account.account_number,
+    balance: account.balance,
+    user_id: account.user_id,
+    user_name: account.user?.name || 'Unknown',
+  }));
+
+  // Get transactions data
+  const transactions = await prisma.piggybankTransaction.findMany({
+    select: {
+      amount: true,
+      transaction_type: true,
+      description: true,
+      photo: true,
+      transaction_date: true,
+      account: {
+        select: {
+          account_id: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { transaction_date: 'desc' },
+  });
+
+  // Transform transactions data to match expected format
+  const transactionsData = transactions.map((transaction) => ({
+    amount: transaction.amount,
+    transaction_type: transaction.transaction_type,
+    description: transaction.description,
+    photo: transaction.photo,
+    user_name: transaction.account.user?.name || 'Unknown',
+    transaction_date: transaction.transaction_date,
+    account_id: transaction.account.account_id,
+  }));
+
+  return NextResponse.json({
+    accounts: accountsData,
+    transactions: transactionsData,
+  });
+});

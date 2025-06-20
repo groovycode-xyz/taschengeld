@@ -14,12 +14,18 @@ export interface CompletedTask {
   c_task_id: number;
   user_id: number;
   task_id: number;
-  description?: string;
-  payout_value?: number;
-  created_at?: Date;
-  comment?: string;
-  attachment?: string;
+  description: string | null;
+  payout_value: number | null;
+  created_at: Date;
+  comment: string | null;
+  attachment: string | null;
   payment_status: PaymentStatus;
+  // Fields from joins
+  task_title?: string;
+  task_description?: string;
+  icon_name?: string;
+  user_name?: string;
+  user_icon?: string;
 }
 
 export interface FullTaskDetails extends CompletedTask {

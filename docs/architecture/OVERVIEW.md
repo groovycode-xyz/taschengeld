@@ -6,55 +6,69 @@ Taschengeld is a Next.js-based web application designed to manage allowances and
 
 ## Tech Stack
 
-- Frontend: Next.js 14 with React
+- Frontend: Next.js 15 with React 19
 - Backend: Next.js API Routes
-- Database: PostgreSQL v16 (hosted on Homebrew)
-  - Schema management through migrations
-  - Direct SQL queries (no ORM)
+- Database: PostgreSQL 16 with Prisma ORM
+  - Schema management through Prisma migrations
+  - Type-safe database queries with Prisma Client
   - Full backup/restore capabilities
   - Strict data integrity constraints
 - Styling: Tailwind CSS
-- UI Components: shadcn/ui
+- UI Components: shadcn/ui (built on Radix UI primitives)
 - Authentication: Custom PIN-based system
-- State Management: React hooks (useState, useEffect, useContext)
+- State Management: React Context API (useState, useEffect, useContext)
+- Device Support: Desktop/Laptop and Tablets only (768px+ screens)
+
+### Additional Libraries
+
+- **Icons**: lucide-react
+- **Animations**: canvas-confetti, tailwindcss-animate
+- **Utilities**: clsx, tailwind-merge, class-variance-authority
+- **Validation**: zod
+- **File Operations**: file-saver
 
 ## Directory Structure
 
 The Taschengeld project follows a Next.js-based architecture with React components and App Router. Here's an overview of the main directories and their purposes:
 
-- `/app`: Contains the main application logic and page components.
+- `/app`: Contains the main application logic and page components
   - `/api`: API routes for data operations
     - `/backup`: Endpoints for database backup operations
     - `/restore`: Endpoints for database restore operations
-  - `/lib`: Houses utility functions and database connection logic.
-  - `/types`: Stores TypeScript type definitions for consistent data structures.
-  - `/components`: Contains reusable React components used across the application.
-- `/migrations`: Database migration files for schema management
-- `/components`: Reusable UI components that are used in various parts of the application.
-- `/tests`: Includes unit and integration tests.
-  - `backup-restore.test.ts`: Tests for database backup/restore functionality
+    - Various resource endpoints (users, tasks, completed-tasks, piggy-bank, settings)
+  - `/lib`: Core application logic
+    - `/services`: Service layer for database operations (replaced repository pattern)
+    - `/validation`: Zod schemas for request validation
+    - `prisma.ts`: Prisma client singleton
+    - `error-handler.ts`, `errors.ts`: Error handling utilities
+    - `logger.ts`: Logging utilities
+  - `/types`: TypeScript type definitions for domain models
+- `/prisma`: Prisma schema and migrations
+  - `schema.prisma`: Database schema definition
+  - `/migrations`: Auto-generated migration files
+- `/components`: Reusable UI components
+  - `/ui`: shadcn/ui components
+  - `/context`: React Context providers
+  - Feature-specific components (user-management, task-management, etc.)
 - `/docs`: Project documentation
-  - `/architecture`: System architecture documentation
-    - `DATABASE.md`: Detailed database schema and operations
-    - `OVERVIEW.md`: This file
-- `/types`: TypeScript type definitions
-  - `database.ts`: Database schema type definitions
+- `/public`: Static assets (images, sounds)
 
 ## Database Architecture
 
 ### Schema Management
 
-- Migrations-based schema evolution
-- Standardized data types and constraints
-- Proper foreign key relationships
-- Check constraints for data validity
+- Prisma migrations for schema evolution
+- Type-safe schema definition in `schema.prisma`
+- Automatic TypeScript type generation
+- Proper foreign key relationships with referential actions
 
 ### Data Operations
 
-- Direct SQL queries for performance
-- Prepared statements for security
-- Transaction support for data integrity
-- Backup/restore functionality for data safety
+- Type-safe queries through Prisma Client
+- Automatic query optimization and connection pooling
+- Transaction support with `prisma.$transaction`
+- Service layer pattern for business logic encapsulation
+- Backup/restore functionality with SQL dumps
 
 ### Key Features
 
@@ -136,6 +150,17 @@ See `docs/LAYOUT_ARCHITECTURE.md` for detailed information.
 - Tailwind CSS for utility-first styling
 - shadcn/ui components for consistent UI elements
 - See `docs/color-system/README.md` and `docs/color-system/IMPLEMENTATION.md` for detailed information.
+
+## Responsive Design & Device Support
+
+- **Minimum viewport**: 768px (enforced via CSS)
+- **Breakpoints**:
+  - `md:` (768px+) - Tablet portrait and up
+  - `lg:` (1024px+) - Desktop/laptop screens
+  - `xl:` (1280px+) - Large desktop screens
+- **Touch targets**: 48px minimum on tablets
+- **Hover effects**: Enhanced on desktop with `@media (hover: hover)`
+- **Sidebar**: Fixed on desktop, collapsible on tablets
 
 ## Development Workflow
 

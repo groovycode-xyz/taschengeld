@@ -28,7 +28,7 @@ const defaultTaskState = {
   description: '',
   icon_name: 'box',
   sound_url: null as string | null,
-  payout_value: '0.00',
+  payout_value: '1.00',
   is_active: true,
 };
 
@@ -205,7 +205,7 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
         onClose={() => setIsSoundModalOpen(false)}
         onSelect={handleSoundSelect}
         currentSound={taskState.sound_url}
-        type="task"
+        type='task'
       />
     </>
   );

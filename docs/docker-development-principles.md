@@ -13,6 +13,7 @@ This principle guides all our development and deployment decisions. While develo
 ## Environment Separation
 
 ### Development Environment
+
 - **Platform**: MacBook M1 (ARM64)
 - **Purpose**: Active development and testing
 - **Configuration**: Uses `docker-compose.dev.yml`
@@ -24,6 +25,7 @@ This principle guides all our development and deployment decisions. While develo
   - Never runs production containers
 
 ### Production Environment
+
 - **Platform**: Any platform running Docker (AMD64 or ARM64)
 - **Purpose**: End-user deployment
 - **Configuration**: Uses `docker-compose.yml`
@@ -39,6 +41,7 @@ This principle guides all our development and deployment decisions. While develo
 ![Docker Development Workflow](docker-development-principles.jpg)
 
 ### 1. Development Phase
+
 ```mermaid
 graph TD
     A[Start Docker Dev Environment] --> B[Modify Code]
@@ -50,6 +53,7 @@ graph TD
 ```
 
 ### 2. Production Build Phase
+
 ```mermaid
 graph TD
     A[Build Multi-arch Production Image] --> B[Push to Docker Hub]
@@ -58,6 +62,7 @@ graph TD
 ```
 
 ### 3. End User Deployment
+
 ```mermaid
 graph TD
     A[Read Documentation] --> B[Configure Environment]
@@ -68,6 +73,7 @@ graph TD
 ## Database Strategy
 
 PostgreSQL is our chosen database solution because it:
+
 - Maintains perfect Dev-to-Prod parity
 - Works identically across all architectures
 - Has excellent Docker integration
@@ -77,6 +83,7 @@ PostgreSQL is our chosen database solution because it:
 ## Critical Implementation Points
 
 ### 1. Development Environment
+
 - Uses Docker volumes for:
   - Source code (`./:/app`)
   - Node modules (`/app/node_modules`)
@@ -86,6 +93,7 @@ PostgreSQL is our chosen database solution because it:
 - Environment variables configured for development
 
 ### 2. Production Build Process
+
 - Multi-stage build process
 - Builds for both ARM64 and AMD64 architectures
 - Removes development dependencies
@@ -93,6 +101,7 @@ PostgreSQL is our chosen database solution because it:
 - Includes only production-necessary files
 
 ### 3. Production Deployment
+
 - Pulls pre-built images from Docker Hub
 - Uses production-specific environment variables
 - Runs optimized code without development tools
@@ -101,6 +110,7 @@ PostgreSQL is our chosen database solution because it:
 ## Build Process Requirements
 
 The build process must:
+
 1. Reliably convert development code to production format
 2. Handle all architecture-specific requirements
 3. Maintain functionality across environments
@@ -112,12 +122,14 @@ The build process must:
 ### Current Stack Compatibility
 
 1. **Core Components**
+
    - Node.js (node:18-alpine) ✅ Multi-arch support
    - PostgreSQL (postgres:16-alpine) ✅ Multi-arch support
    - Next.js ✅ Platform agnostic
    - Prisma ✅ Configured for multi-arch
 
 2. **System Dependencies**
+
    - postgresql-client ✅ Available on all platforms
    - python3 ✅ Available on all platforms
    - make ✅ Available on all platforms
@@ -130,11 +142,13 @@ The build process must:
 ### Risk Areas
 
 1. **Native Node Modules**
+
    - Risk: Modules with architecture-specific binaries
    - Impact: Build failures on different architectures
    - Mitigation: Test builds on both architectures before committing
 
 2. **Build Tools**
+
    - Risk: Tools that only work on specific architectures
    - Impact: Development-to-production inconsistency
    - Mitigation: Verify multi-arch support before adding tools
@@ -147,11 +161,13 @@ The build process must:
 ### Safeguards
 
 1. **Development Workflow**
+
    - Always test new dependencies in Docker immediately
    - Verify builds on both architectures before pushing
    - Use architecture-specific tags for testing
 
 2. **Dependency Management**
+
    - Prefer pure JavaScript/TypeScript packages
    - Document any architecture-specific requirements
    - Keep native dependencies to a minimum
@@ -164,14 +180,17 @@ The build process must:
 ## Common Pitfalls to Avoid
 
 1. **Development-only Dependencies**
+
    - ❌ Using tools that won't work in production
    - ✅ Ensure all runtime dependencies are properly included in production builds
 
 2. **Architecture-specific Code**
+
    - ❌ Writing code that only works on ARM64
    - ✅ Ensuring code and dependencies work on both ARM64 and AMD64
 
 3. **Environment Assumptions**
+
    - ❌ Assuming development-specific paths or configurations
    - ✅ Using environment variables and proper configuration management
 
@@ -182,6 +201,7 @@ The build process must:
 ## Testing Requirements
 
 1. Development Testing
+
    - Test all features in development environment
    - Verify database operations
    - Check all API endpoints
@@ -196,6 +216,7 @@ The build process must:
 ## Documentation Requirements
 
 1. Maintain clear documentation for:
+
    - Development setup process
    - Build and deployment procedures
    - Environment variable configuration
@@ -209,6 +230,7 @@ The build process must:
 ## Version Control Practices
 
 1. Development
+
    - Regular commits during development
    - Clear commit messages
    - Feature branches for new development
@@ -221,14 +243,17 @@ The build process must:
 ## Image Versioning Strategy
 
 ### Tag Structure
+
 Our Docker images follow a consistent versioning strategy:
 
 1. **Latest Tag**
+
    - `latest` - Always points to the most recent stable version
    - Used for development and testing
    - Not recommended for production deployments
 
 2. **Semantic Version Tags**
+
    - `v1.0.0` - Major version releases following SemVer
    - Recommended for production deployments
    - Provides stable, known states for rollback
@@ -241,11 +266,13 @@ Our Docker images follow a consistent versioning strategy:
 ### Version Management Rules
 
 1. **Tag Creation**
+
    - New version tags created with each production release
    - Architecture-specific tags generated during local testing
    - Latest tag updated automatically with each release
 
 2. **Version Progression**
+
    - Major version (X.0.0): Breaking changes
    - Minor version (1.X.0): New features, backward compatible
    - Patch version (1.0.X): Bug fixes and minor updates
@@ -258,9 +285,11 @@ Our Docker images follow a consistent versioning strategy:
 ### Build Process Integration
 
 1. **Local Development**
+
    ```bash
    ./scripts/build-multiarch.sh --local --version 1.0.0
    ```
+
    - Creates architecture-specific tags
    - Enables local testing of both architectures
 
@@ -275,6 +304,7 @@ Our Docker images follow a consistent versioning strategy:
 ### Version Compatibility
 
 1. **Database Compatibility**
+
    - Document database version requirements
    - Include migration paths between versions
    - Test upgrades between consecutive versions
@@ -288,4 +318,4 @@ Remember: The M1's ARM64 architecture requires explicit platform specifications,
 
 ## Conclusion
 
-This Docker-first development approach ensures that our application behaves consistently across all environments while maintaining an efficient development workflow. By following these principles and practices, we maintain reliability and predictability in our development-to-production pipeline. 
+This Docker-first development approach ensures that our application behaves consistently across all environments while maintaining an efficient development workflow. By following these principles and practices, we maintain reliability and predictability in our development-to-production pipeline.

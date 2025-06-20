@@ -1,41 +1,30 @@
-import pool from '@/app/lib/db';
-import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler, successResponse } from '@/app/lib/api-utils';
+import { NextRequest } from 'next/server';
 
-export async function POST(request: Request) {
-  const client = await pool.connect();
-  try {
-    const { tasks } = await request.json();
+export const POST = createApiHandler(async (request: NextRequest) => {
+  const { tasks } = await request.json();
 
-    await client.query('BEGIN');
-
-    // Clear existing tasks
-    await client.query('TRUNCATE tasks CASCADE');
+  // Use a transaction to ensure all operations succeed or fail together
+  return await prisma.$transaction(async (tx) => {
+    // Clear existing tasks (this will cascade delete related completed_tasks)
+    await tx.completedTask.deleteMany();
+    await tx.task.deleteMany();
 
     // Insert new tasks
-    for (const task of tasks) {
-      await client.query(
-        `
-        INSERT INTO tasks (title, description, icon_name, sound_url, payout_value, is_active)
-        VALUES ($1, $2, $3, $4, $5, $6)
-      `,
-        [
-          task.title,
-          task.description,
-          task.icon_name,
-          task.sound_url,
-          task.payout_value,
-          task.is_active,
-        ]
-      );
+    if (tasks && tasks.length > 0) {
+      await tx.task.createMany({
+        data: tasks.map((task: any) => ({
+          title: task.title,
+          description: task.description,
+          icon_name: task.icon_name,
+          sound_url: task.sound_url,
+          payout_value: task.payout_value,
+          is_active: task.is_active ?? true,
+        })),
+      });
     }
 
-    await client.query('COMMIT');
-    return NextResponse.json({ message: 'Tasks restored successfully' });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Error restoring tasks:', error);
-    return NextResponse.json({ error: 'Failed to restore tasks' }, { status: 500 });
-  } finally {
-    client.release();
-  }
-}
+    return successResponse({ message: 'Tasks restored successfully' });
+  });
+});

@@ -1,31 +1,27 @@
-import pool from '@/app/lib/db';
-import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler, successResponse } from '@/app/lib/api-utils';
+import { NextRequest } from 'next/server';
 
-export async function POST(request: Request) {
-  const client = await pool.connect();
-  try {
-    const data = await request.json();
-    console.log('Received data:', JSON.stringify(data, null, 2));
+export const POST = createApiHandler(async (request: NextRequest) => {
+  const data = await request.json();
+  console.log('Received data:', JSON.stringify(data, null, 2));
 
-    const { accounts, transactions } = data;
-    if (!accounts) {
-      throw new Error('No accounts data provided');
-    }
+  const { accounts, transactions } = data;
+  if (!accounts) {
+    throw new Error('No accounts data provided');
+  }
 
-    await client.query('BEGIN');
-
+  // Use a transaction to ensure all operations succeed or fail together
+  return await prisma.$transaction(async (tx) => {
     // First, set all piggybank_account_id to NULL in users table
-    await client.query('UPDATE users SET piggybank_account_id = NULL');
-
-    // Then drop the foreign key constraint
-    await client.query('ALTER TABLE users DROP CONSTRAINT IF EXISTS fk_user_piggybank_account');
+    await tx.$executeRaw`UPDATE users SET piggybank_account_id = NULL`;
 
     // Clear existing accounts and transactions
-    await client.query('TRUNCATE piggybank_transactions');
-    await client.query('TRUNCATE piggybank_accounts CASCADE');
+    await tx.piggybankTransaction.deleteMany();
+    await tx.piggybankAccount.deleteMany();
 
     // Store account mappings (old_id -> new_id)
-    const accountMappings = new Map();
+    const accountMappings = new Map<number, number>();
 
     // First restore accounts
     for (const account of accounts) {
@@ -34,11 +30,11 @@ export async function POST(request: Request) {
 
       // If no user_id but have user_name, try to find user_id
       if (!userId && account.user_name) {
-        const userResult = await client.query('SELECT user_id FROM users WHERE name = $1', [
-          account.user_name,
-        ]);
-        if (userResult.rows[0]) {
-          userId = userResult.rows[0].user_id;
+        const user = await tx.user.findFirst({
+          where: { name: account.user_name },
+        });
+        if (user) {
+          userId = user.user_id;
           console.log('Found user_id:', userId, 'for user_name:', account.user_name);
         }
       }
@@ -46,24 +42,22 @@ export async function POST(request: Request) {
       if (userId) {
         console.log('Inserting account for user_id:', userId);
         // Insert account with original account_number
-        const result = await client.query(
-          `INSERT INTO piggybank_accounts (user_id, account_number, balance)
-           VALUES ($1, $2, $3)
-           RETURNING account_id`,
-          [userId, account.account_number, account.balance]
-        );
+        const createdAccount = await tx.piggybankAccount.create({
+          data: {
+            user_id: userId,
+            account_number: account.account_number,
+            balance: account.balance,
+          },
+        });
 
         // Store the mapping of old account_id to new account_id
-        const newAccountId = result.rows[0].account_id;
-        accountMappings.set(account.account_id, newAccountId);
+        accountMappings.set(account.account_id, createdAccount.account_id);
 
         // Update the user's piggybank_account_id
-        await client.query(
-          `UPDATE users 
-           SET piggybank_account_id = $1
-           WHERE user_id = $2`,
-          [newAccountId, userId]
-        );
+        await tx.user.update({
+          where: { user_id: userId },
+          data: { piggybank_account_id: createdAccount.account_id },
+        });
       } else {
         console.log('No user_id found for account:', account);
       }
@@ -77,61 +71,39 @@ export async function POST(request: Request) {
 
         // If no mapped account_id but have user_name, try to find account_id
         if (!accountId && transaction.user_name) {
-          const accountResult = await client.query(
-            `SELECT pa.account_id 
-             FROM piggybank_accounts pa
-             JOIN users u ON pa.user_id = u.user_id
-             WHERE u.name = $1`,
-            [transaction.user_name]
-          );
-          if (accountResult.rows[0]) {
-            accountId = accountResult.rows[0].account_id;
+          const account = await tx.piggybankAccount.findFirst({
+            where: {
+              user: {
+                name: transaction.user_name,
+              },
+            },
+          });
+          if (account) {
+            accountId = account.account_id;
             console.log('Found account_id:', accountId, 'for user_name:', transaction.user_name);
           }
         }
 
         if (accountId) {
           console.log('Inserting transaction for account_id:', accountId);
-          await client.query(
-            `INSERT INTO piggybank_transactions 
-             (account_id, amount, transaction_type, description, photo, transaction_date)
-             VALUES ($1, $2, $3, $4, $5, $6)`,
-            [
-              accountId,
-              transaction.amount,
-              transaction.transaction_type,
-              transaction.description,
-              transaction.photo,
-              transaction.transaction_date,
-            ]
-          );
+          await tx.piggybankTransaction.create({
+            data: {
+              account_id: accountId,
+              amount: transaction.amount,
+              transaction_type: transaction.transaction_type,
+              description: transaction.description,
+              photo: transaction.photo,
+              transaction_date: transaction.transaction_date
+                ? new Date(transaction.transaction_date)
+                : new Date(),
+            },
+          });
         } else {
           console.log('No account_id found for transaction:', transaction);
         }
       }
     }
 
-    // Restore the foreign key constraint
-    await client.query(`
-      ALTER TABLE users 
-      ADD CONSTRAINT fk_user_piggybank_account 
-      FOREIGN KEY (piggybank_account_id) 
-      REFERENCES piggybank_accounts(account_id)
-    `);
-
-    await client.query('COMMIT');
-    return NextResponse.json({ message: 'Piggy bank data restored successfully' });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Error restoring piggy bank data:', error);
-    return NextResponse.json(
-      {
-        error: 'Failed to restore piggy bank data',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
-  } finally {
-    client.release();
-  }
-}
+    return successResponse({ message: 'Piggy bank data restored successfully' });
+  });
+});

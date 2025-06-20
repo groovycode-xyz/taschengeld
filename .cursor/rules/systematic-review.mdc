@@ -1,0 +1,37 @@
+---
+description: Systematic Review and Document the Implementation Guidelines
+globs: 
+alwaysApply: false
+---
+Please systematically review and document the implementation details of the following interfaces in our application:
+
+[LIST OF INTERFACES TO DOCUMENT]
+
+For each interface, please:
+
+1. Search for and analyze the actual implementation files
+2. Document the following aspects in detail:
+   - Components and their structure
+   - Data flow and API endpoints
+   - State management
+   - Process flows
+   - Error handling
+   - Visual feedback
+   - Security considerations
+
+3. Update the documentation in `docs/user-experience-flow.md` with accurate implementation details
+
+Please follow these guidelines:
+- Use semantic search to find relevant implementation files
+- Read and analyze the actual code implementation
+- Document based on real code, not assumptions
+- Maintain consistent structure across all interfaces
+- Include code snippets where relevant
+- Focus on technical accuracy and completeness
+- Do not suggest improvements or new features
+- Keep testing simple without frameworks
+- Use zsh for any terminal commands
+
+The documentation should be detailed enough to serve as a comprehensive reference for developers working with these interfaces.
+
+Please proceed interface by interface, confirming each section before moving to the next.

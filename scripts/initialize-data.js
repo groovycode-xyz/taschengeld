@@ -12,10 +12,10 @@ async function initializeData() {
   try {
     // Check if settings already exist
     const settingsCheck = await pool.query('SELECT COUNT(*) FROM app_settings');
-    
+
     if (parseInt(settingsCheck.rows[0].count) === 0) {
       console.log('Initializing default settings...');
-      
+
       // Insert default settings
       await pool.query(`
         INSERT INTO app_settings (setting_key, setting_value) VALUES
@@ -25,7 +25,7 @@ async function initializeData() {
         ('theme', 'light'),
         ('notifications_enabled', 'true')
       `);
-      
+
       console.log('Default settings initialized successfully');
     } else {
       console.log('Settings already exist, skipping initialization');
@@ -42,8 +42,8 @@ async function initializeData() {
 
 // Run the initialization
 initializeData()
-  .then(success => process.exit(success ? 0 : 1))
-  .catch(error => {
+  .then((success) => process.exit(success ? 0 : 1))
+  .catch((error) => {
     console.error('Initialization script failed:', error);
     process.exit(1);
   });

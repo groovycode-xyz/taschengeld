@@ -1,16 +1,19 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:18-alpine3.18 AS builder
 
 # Install dependencies only when needed
 WORKDIR /app
 
-# Install build dependencies
+# Install build dependencies and ensure OpenSSL 3.0
 RUN apk add --no-cache \
     postgresql-client \
     python3 \
     make \
     g++ \
-    curl
+    curl \
+    openssl3 \
+    openssl3-dev \
+    libc6-compat
 
 # Copy package files
 COPY package*.json ./
@@ -30,26 +33,33 @@ ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public"
 ENV HOST=0.0.0.0
 ENV NEXT_PUBLIC_API_URL=http://localhost:3000
 
-# Generate Prisma Client during build with explicit binary targets and caching
-RUN --mount=type=cache,target=/app/.prisma/client \
-    npx prisma generate --generator client { \
-    provider = "prisma-client-js", \
-    binaryTargets = [ \
-        "native", \
-        "linux-arm64-openssl-1.1.x", \
-        "linux-arm64-openssl-3.0.x", \
-        "linux-musl-openssl-3.0.x", \
-        "linux-musl", \
-        "debian-openssl-1.1.x", \
-        "debian-openssl-3.0.x", \
-        "linux-arm64-openssl-1.1.x" \
-    ] \
-}
+# Validate platform and set up Prisma
+RUN echo "Building for platform: $(uname -m)" && \
+    if [ "$(uname -m)" = "x86_64" ]; then \
+        echo "Configuring for AMD64" && \
+        export PRISMA_QUERY_ENGINE_BINARY_PLATFORM="linux-musl-openssl-3.0.x-x64"; \
+    elif [ "$(uname -m)" = "aarch64" ]; then \
+        echo "Configuring for ARM64" && \
+        export PRISMA_QUERY_ENGINE_BINARY_PLATFORM="linux-musl-openssl-3.0.x-arm64"; \
+    else \
+        echo "Unsupported platform: $(uname -m)" && \
+        exit 1; \
+    fi
+
+# Generate Prisma Client with explicit binary targets
+RUN npx prisma generate --generator client \
+    '{ \
+    "provider": "prisma-client-js", \
+    "binaryTargets": ["native", "linux-musl-openssl-3.0.x"] \
+    }' && \
+    mkdir -p node_modules/.prisma/client && \
+    cp -r node_modules/@prisma/engines/* node_modules/.prisma/client/ && \
+    ls -la node_modules/.prisma/client/
 
 # Build application
 RUN npm run build
 
-# Remove dev dependencies and unnecessary packages, but keep sharp
+# Remove dev dependencies and unnecessary packages, but keep sharp and Prisma
 RUN npm prune --production && \
     npm install sharp && \
     rm -rf node_modules/@types && \
@@ -61,16 +71,18 @@ RUN npm prune --production && \
     rm -rf .next/cache
 
 # Production stage - using minimal Alpine
-FROM node:18-alpine AS runner
+FROM node:18-alpine3.18 AS runner
 
 # Install only the necessary system packages and create user
 RUN apk add --no-cache \
     postgresql-client \
     curl \
-    wget && \
+    wget \
+    openssl3 \
+    libc6-compat && \
     addgroup -S -g 1001 nodejs && \
     adduser -S -u 1001 -G nodejs nextjs && \
-    mkdir -p /app/uploads && \
+    mkdir -p /app/uploads /app/data && \
     chown -R nextjs:nodejs /app
 
 WORKDIR /app
@@ -82,6 +94,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+# Ensure Prisma engines are copied with proper permissions
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma/client ./node_modules/.prisma/client
+RUN chmod +x ./node_modules/.prisma/client/query-engine-* || true && \
+    chmod +x ./node_modules/.prisma/client/schema-engine-* || true
 
 # Copy initialization script
 COPY --chown=nextjs:nodejs scripts/initialize-data.js ./scripts/initialize-data.js
@@ -99,10 +116,13 @@ ENV PORT=3000
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOST=0.0.0.0
 ENV NEXT_PUBLIC_API_URL=http://localhost:3000
+ENV PRISMA_QUERY_ENGINE_BINARY=/app/node_modules/.prisma/client/query-engine-linux-musl-openssl-3.0.x
+ENV PRISMA_MIGRATION_ENGINE_BINARY=/app/node_modules/.prisma/client/schema-engine-linux-musl-openssl-3.0.x
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE=binary
+ENV PRISMA_CLIENT_ENGINE_TYPE=binary
 
 # Create volume mount points with proper permissions
 VOLUME ["/app/uploads", "/app/data"]
-RUN chown -R nextjs:nodejs /app/uploads /app/data
 
 EXPOSE 3000
 
@@ -110,4 +130,5 @@ EXPOSE 3000
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
 
+# Use ENTRYPOINT without CMD as we're executing node directly in the entrypoint
 ENTRYPOINT ["./docker-entrypoint.sh"]

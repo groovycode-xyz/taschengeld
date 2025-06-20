@@ -1,38 +1,58 @@
-import { NextResponse } from 'next/server';
-import { userRepository } from '@/app/lib/userRepository';
+import { NextRequest, NextResponse } from 'next/server';
+import { userService } from '@/app/lib/services/userService';
+import { validateParams, validateRequest } from '@/app/lib/validation/middleware';
+import { idParamSchema, updateUserSchema } from '@/app/lib/validation/schemas';
+import { logger } from '@/app/lib/logger';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Await params in Next.js 15
+  const resolvedParams = await params;
+
+  // Validate ID parameter
+  const paramValidation = validateParams(resolvedParams, idParamSchema);
+  if (!paramValidation.success) {
+    return paramValidation.error;
+  }
+
   try {
-    const user = await userRepository.getById(Number(params.id));
+    const user = await userService.getById(paramValidation.data.id);
     if (user) {
       return NextResponse.json(user);
     } else {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
   } catch (error) {
-    console.error('Failed to fetch user:', error);
+    logger.error('Failed to fetch user', error);
     return NextResponse.json({ error: 'Failed to fetch user' }, { status: 500 });
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Await params in Next.js 15
+  const resolvedParams = await params;
+
+  // Validate ID parameter
+  const paramValidation = validateParams(resolvedParams, idParamSchema);
+  if (!paramValidation.success) {
+    return paramValidation.error;
+  }
+
+  // Validate request body
+  const bodyValidation = await validateRequest(request, updateUserSchema);
+  if (!bodyValidation.success) {
+    return bodyValidation.error;
+  }
+
   try {
-    const userId = parseInt(params.id);
-    if (isNaN(userId)) {
-      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
-    }
+    const updatedUser = await userService.update(paramValidation.data.id, bodyValidation.data);
 
-    const userData = await request.json();
-    console.log('Received user update request:', userData);
-
-    const updatedUser = await userRepository.update(userId, userData);
     if (!updatedUser) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error('Failed to update user:', error);
+    logger.error('Failed to update user', error);
     return NextResponse.json(
       { error: 'Failed to update user. Please try again.' },
       { status: 500 }
@@ -40,16 +60,28 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  // Await params in Next.js 15
+  const resolvedParams = await params;
+
+  // Validate ID parameter
+  const paramValidation = validateParams(resolvedParams, idParamSchema);
+  if (!paramValidation.success) {
+    return paramValidation.error;
+  }
+
   try {
-    const success = await userRepository.delete(Number(params.id));
+    const success = await userService.delete(paramValidation.data.id);
     if (success) {
       return NextResponse.json({ message: 'User deleted successfully' });
     } else {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
   } catch (error) {
-    console.error('Failed to delete user:', error);
+    logger.error('Failed to delete user', error);
     return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   }
 }

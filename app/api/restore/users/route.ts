@@ -1,34 +1,30 @@
-import pool from '@/app/lib/db';
-import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler, successResponse } from '@/app/lib/api-utils';
+import { NextRequest } from 'next/server';
 
-export async function POST(request: Request) {
-  const client = await pool.connect();
-  try {
-    const { users } = await request.json();
+export const POST = createApiHandler(async (request: NextRequest) => {
+  const { users } = await request.json();
 
-    await client.query('BEGIN');
-
-    // Clear existing users
-    await client.query('TRUNCATE users CASCADE');
+  // Use a transaction to ensure all operations succeed or fail together
+  return await prisma.$transaction(async (tx) => {
+    // Clear existing users (this will cascade delete related data)
+    await tx.piggybankTransaction.deleteMany();
+    await tx.completedTask.deleteMany();
+    await tx.piggybankAccount.deleteMany();
+    await tx.user.deleteMany();
 
     // Insert new users
-    for (const user of users) {
-      await client.query(
-        `
-        INSERT INTO users (name, icon, soundurl, birthday)
-        VALUES ($1, $2, $3, $4)
-      `,
-        [user.name, user.icon, user.soundurl, user.birthday]
-      );
+    if (users && users.length > 0) {
+      await tx.user.createMany({
+        data: users.map((user: any) => ({
+          name: user.name,
+          icon: user.icon,
+          sound_url: user.soundurl || user.sound_url, // Handle both field names
+          birthday: new Date(user.birthday),
+        })),
+      });
     }
 
-    await client.query('COMMIT');
-    return NextResponse.json({ message: 'Users restored successfully' });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Error restoring users:', error);
-    return NextResponse.json({ error: 'Failed to restore users' }, { status: 500 });
-  } finally {
-    client.release();
-  }
-}
+    return successResponse({ message: 'Users restored successfully' });
+  });
+});

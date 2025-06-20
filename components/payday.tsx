@@ -13,13 +13,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Banknote } from 'lucide-react';
+import { useLanguage } from '@/components/context/language-context';
 
 export function Payday() {
+  const { getTermFor } = useLanguage();
   const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([]);
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [bulkActionType, setBulkActionType] = useState<'approve' | 'reject'>('approve');
 
   useEffect(() => {
     fetchCompletedTasks();
@@ -50,21 +53,32 @@ export function Payday() {
     isRejection: boolean = false
   ) => {
     try {
-      const response = await fetch('/api/completed-tasks', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          c_task_id: cTaskId,
-          payment_status: paymentStatus,
-          is_rejected: isRejection,
-        }),
-      });
+      if (isRejection) {
+        // For rejections, use DELETE endpoint
+        const response = await fetch(`/api/completed-tasks/${cTaskId}`, {
+          method: 'DELETE',
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to process task');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to reject task');
+        }
+      } else {
+        // For approvals, use PUT endpoint
+        const response = await fetch(`/api/completed-tasks/${cTaskId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            payment_status: paymentStatus,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to update task');
+        }
       }
 
       setCompletedTasks((prevTasks) => prevTasks.filter((task) => task.c_task_id !== cTaskId));
@@ -86,7 +100,8 @@ export function Payday() {
     }
   };
 
-  const handleBulkActionClick = () => {
+  const handleBulkActionClick = (actionType: 'approve' | 'reject') => {
+    setBulkActionType(actionType);
     setIsDialogOpen(true);
   };
 
@@ -94,7 +109,11 @@ export function Payday() {
     try {
       const tasksToProcess = [...selectedTasks];
       for (const taskId of tasksToProcess) {
-        await handleUpdatePaymentStatus(taskId, 'Paid', false);
+        if (bulkActionType === 'approve') {
+          await handleUpdatePaymentStatus(taskId, 'Paid', false);
+        } else {
+          await handleUpdatePaymentStatus(taskId, 'Unpaid', true);
+        }
       }
     } catch (error) {
       console.error('Error in bulk action:', error);
@@ -124,30 +143,40 @@ export function Payday() {
   return (
     <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
-      <div className='p-8 bg-background-secondary'>
+      <div className='p-8 bg-secondary'>
         <div className='flex items-center justify-between pb-6 border-b border-border'>
           <div className='flex items-center space-x-4'>
-            <Banknote className='h-8 w-8 text-content-primary' />
-            <h1 className='text-3xl font-medium text-content-primary'>Payday</h1>
+            <Banknote className='h-8 w-8 text-foreground' />
+            <h1 className='text-3xl font-medium text-foreground'>
+              {getTermFor('Zahltag', 'Payday')}
+            </h1>
           </div>
           {selectedTasks.length > 0 && (
             <div className='flex items-center gap-4'>
-              <span className='text-sm font-medium text-content-secondary'>
+              <span className='text-sm font-medium text-muted-foreground'>
                 {selectedTasks.length} item{selectedTasks.length !== 1 ? 's' : ''} selected
               </span>
-              <Button
-                onClick={handleBulkActionClick}
-                className='bg-green-500 hover:bg-green-600 text-white'
-              >
-                Approve Selected ({selectedTasks.length})
-              </Button>
+              <div className='flex gap-2'>
+                <Button
+                  onClick={() => handleBulkActionClick('approve')}
+                  className='bg-green-500 hover:bg-green-600 text-white'
+                >
+                  Approve Selected ({selectedTasks.length})
+                </Button>
+                <Button
+                  onClick={() => handleBulkActionClick('reject')}
+                  className='bg-red-500 hover:bg-red-600 text-white'
+                >
+                  Reject Selected ({selectedTasks.length})
+                </Button>
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-background-secondary'>
+      <div className='flex-1 overflow-y-auto p-8 pt-4 bg-secondary'>
         {/* Task Groups */}
         <div className='space-y-8'>
           {Object.entries(organizedTasks).map(([groupName, tasks]) => (
@@ -173,18 +202,24 @@ export function Payday() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Bulk Action</DialogTitle>
+            <DialogTitle>
+              Confirm Bulk {bulkActionType === 'approve' ? 'Approval' : 'Rejection'}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to mark {selectedTasks.length} task
-              {selectedTasks.length !== 1 ? 's' : ''} as Paid?
+              Are you sure you want to {bulkActionType} {selectedTasks.length} task
+              {selectedTasks.length !== 1 ? 's' : ''}?
+              {bulkActionType === 'reject' && ' This will permanently delete the completed tasks.'}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className='flex justify-end space-x-2'>
             <Button variant='outline' onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={confirmBulkAction} variant='default'>
-              Confirm
+            <Button
+              onClick={confirmBulkAction}
+              variant={bulkActionType === 'approve' ? 'default' : 'destructive'}
+            >
+              {bulkActionType === 'approve' ? 'Approve' : 'Reject'}
             </Button>
           </DialogFooter>
         </DialogContent>

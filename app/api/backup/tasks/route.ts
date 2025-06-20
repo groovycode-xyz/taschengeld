@@ -1,44 +1,37 @@
-import pool from '@/app/lib/db';
 import { NextResponse } from 'next/server';
+import { prisma } from '@/app/lib/prisma';
+import { createApiHandler } from '@/app/lib/api-utils';
 
-export async function GET() {
-  const client = await pool.connect();
-  try {
-    // Get only essential task data
-    const tasks = await client.query(`
-      SELECT 
-        title,
-        description,
-        icon_name,
-        sound_url,
-        payout_value,
-        is_active
-      FROM tasks
-      ORDER BY title;
-    `);
+export const GET = createApiHandler(async () => {
+  // Get only essential task data
+  const tasks = await prisma.task.findMany({
+    select: {
+      title: true,
+      description: true,
+      icon_name: true,
+      sound_url: true,
+      payout_value: true,
+      is_active: true,
+    },
+    orderBy: { title: 'asc' },
+  });
 
-    // For completed tasks, we might want to keep some historical data
-    // but exclude system-generated IDs
-    const completedTasks = await client.query(`
-      SELECT 
-        user_id,
-        description,
-        payout_value,
-        comment,
-        attachment,
-        payment_status
-      FROM completed_tasks
-      ORDER BY created_at DESC;
-    `);
+  // For completed tasks, we might want to keep some historical data
+  // but exclude system-generated IDs
+  const completedTasks = await prisma.completedTask.findMany({
+    select: {
+      user_id: true,
+      description: true,
+      payout_value: true,
+      comment: true,
+      attachment: true,
+      payment_status: true,
+    },
+    orderBy: { created_at: 'desc' },
+  });
 
-    return NextResponse.json({
-      tasks: tasks.rows,
-      completed_tasks: completedTasks.rows,
-    });
-  } catch (error) {
-    console.error('Error fetching tasks data:', error);
-    return NextResponse.json({ error: 'Failed to fetch tasks data' }, { status: 500 });
-  } finally {
-    client.release();
-  }
-}
+  return NextResponse.json({
+    tasks,
+    completed_tasks: completedTasks,
+  });
+});

@@ -1,29 +1,41 @@
-import { NextResponse } from 'next/server';
-import { taskRepository } from '@/app/lib/taskRepository';
+import { NextRequest, NextResponse } from 'next/server';
+import { taskService } from '@/app/lib/services/taskService';
+import { validateRequest } from '@/app/lib/validation/middleware';
+import { createTaskSchema } from '@/app/lib/validation/schemas';
+import { logger } from '@/app/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const tasks = await taskRepository.getAll();
+    const { searchParams } = new URL(request.url);
+    const activeOnly = searchParams.get('active') === 'true';
+
+    const tasks = activeOnly ? await taskService.getAllActive() : await taskService.getAll();
+
     return NextResponse.json(tasks);
   } catch (error) {
-    console.error('Failed to fetch tasks:', error);
+    logger.error('Failed to fetch tasks', error);
     return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Validate request body
+  const validation = await validateRequest(request, createTaskSchema);
+  if (!validation.success) {
+    return validation.error;
+  }
+
   try {
-    const body = await request.json();
     const taskData = {
-      ...body,
+      ...validation.data,
       is_active: true, // Set is_active to true by default
     };
-    const task = await taskRepository.create(taskData);
+    const task = await taskService.create(taskData);
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
-    console.error('Failed to create task:', error);
+    logger.error('Failed to create task', error);
     return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
   }
 }

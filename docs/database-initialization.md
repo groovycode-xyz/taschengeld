@@ -7,11 +7,13 @@ The Taschengeld application includes an automatic database initialization proces
 ## How It Works
 
 1. **Startup Process**
+
    - The initialization check runs automatically as part of the Docker container startup
    - Location: `/app/scripts/initialize-data.js`
    - Executed by: `docker-entrypoint.sh`
 
 2. **Initialization Logic**
+
    - The script first checks if any users exist in the database
    - If users exist (existing installation):
      - No changes are made
@@ -37,6 +39,7 @@ The Taschengeld application includes an automatic database initialization proces
 ## Usage
 
 ### Fresh Installation
+
 1. When you first deploy the application:
    ```bash
    docker compose pull
@@ -46,6 +49,7 @@ The Taschengeld application includes an automatic database initialization proces
 3. Log in and customize the example user and task according to your needs
 
 ### Upgrading Existing Installation
+
 1. When you upgrade to a new version:
    ```bash
    docker compose pull
@@ -70,11 +74,13 @@ POSTGRES_DATA_DIR=./data/postgres
 ```
 
 **Important Notes:**
+
 1. The DATABASE_URL should use direct values instead of ${VAR} references
 2. Make sure the POSTGRES_DATA_DIR path exists before starting containers
 3. Always change the default password in production
 
 Example of correct values:
+
 ```env
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=Marathon123!

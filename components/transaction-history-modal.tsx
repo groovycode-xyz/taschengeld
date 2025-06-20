@@ -1,16 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
 import { IconComponent } from './icon-component';
-import { PiggyBankUser } from '@/app/types/piggyBankUser';
+
+interface PiggyBankAccount {
+  account_id: number;
+  user_id: number | null;
+  user_name: string;
+  user_icon: string;
+  balance: number;
+}
 
 interface TransactionHistoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: PiggyBankUser;
+  user: PiggyBankAccount;
 }
 
 interface Transaction {
@@ -56,7 +63,29 @@ function groupTransactionsByWeek(transactions: Transaction[]): GroupedTransactio
 }
 
 export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHistoryModalProps) {
-  const groupedTransactions = groupTransactionsByWeek(user.recent_transactions);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (isOpen && user) {
+      fetchTransactions();
+    }
+  }, [isOpen, user]);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch(`/api/piggy-bank/transactions?accountId=${user.account_id}`);
+      if (!response.ok) throw new Error('Failed to fetch transactions');
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const groupedTransactions = groupTransactionsByWeek(transactions);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -64,10 +93,10 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
         <div className='px-6 py-4 border-b'>
           <DialogHeader>
             <div className='flex items-center gap-3'>
-              <IconComponent icon={user.icon} className='h-8 w-8' />
+              <IconComponent icon={user.user_icon} className='h-8 w-8' />
               <div>
                 <DialogTitle>Transaction History</DialogTitle>
-                <p className='text-sm text-gray-500'>{user.name}</p>
+                <p className='text-sm text-gray-500'>{user.user_name}</p>
               </div>
             </div>
           </DialogHeader>
@@ -75,7 +104,9 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
 
         <ScrollArea className='flex-1 p-6'>
           <div className='space-y-6'>
-            {user.recent_transactions.length === 0 ? (
+            {isLoading ? (
+              <p className='text-center text-gray-500'>Loading transactions...</p>
+            ) : transactions.length === 0 ? (
               <p className='text-center text-gray-500'>No transactions found</p>
             ) : (
               groupedTransactions.map((group) => (
@@ -89,7 +120,8 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                     <div
                       key={transaction.transaction_id}
                       className={`p-4 rounded-lg border ${
-                        transaction.transaction_type === 'deposit'
+                        transaction.transaction_type === 'deposit' ||
+                        transaction.transaction_type === 'payday'
                           ? 'bg-green-50 border-green-200'
                           : 'bg-red-50 border-red-200'
                       }`}
@@ -111,12 +143,16 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                         </div>
                         <span
                           className={`font-semibold ${
-                            transaction.transaction_type === 'deposit'
+                            transaction.transaction_type === 'deposit' ||
+                            transaction.transaction_type === 'payday'
                               ? 'text-green-600'
                               : 'text-red-600'
                           }`}
                         >
-                          {transaction.transaction_type === 'deposit' ? '+' : '-'}
+                          {transaction.transaction_type === 'deposit' ||
+                          transaction.transaction_type === 'payday'
+                            ? '+'
+                            : '-'}
                           <CurrencyDisplay
                             value={Math.abs(parseFloat(transaction.amount))}
                             className='font-semibold'

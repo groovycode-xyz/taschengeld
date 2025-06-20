@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -38,13 +38,7 @@ export function SoundSelectorModal({
     setSelectedSound(currentSound);
   }, [isOpen, currentSound]);
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchSounds();
-    }
-  }, [isOpen]);
-
-  async function fetchSounds() {
+  const fetchSounds = useCallback(async () => {
     try {
       const endpoint = type === 'task' ? '/api/task-sounds' : '/api/user-sounds';
       const response = await fetch(endpoint);
@@ -56,7 +50,13 @@ export function SoundSelectorModal({
     } catch (error) {
       console.error('Error fetching sounds:', error);
     }
-  }
+  }, [type]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchSounds();
+    }
+  }, [isOpen, fetchSounds]);
 
   const playSound = (sound: Sound) => {
     const basePath = type === 'task' ? '/sounds/tasks/' : '/sounds/users/';
@@ -95,17 +95,16 @@ export function SoundSelectorModal({
             No Sound
           </Button>
           {sounds.map((sound) => (
-            <Button
+            <div
               key={sound.name}
-              variant={selectedSound === sound.name ? 'default' : 'outline'}
-              className={`w-full justify-between ${
+              className={`flex items-center justify-between p-2 rounded-md border cursor-pointer ${
                 selectedSound === sound.name
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600'
-                  : 'hover:bg-gray-100'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'border-gray-200 hover:bg-gray-100'
               }`}
               onClick={() => setSelectedSound(sound.name)}
             >
-              <span>{sound.name.toUpperCase()}</span>
+              <span className='font-medium'>{sound.name.toUpperCase()}</span>
               <Button
                 size='sm'
                 variant='ghost'
@@ -121,7 +120,7 @@ export function SoundSelectorModal({
               >
                 <Play className='h-4 w-4' />
               </Button>
-            </Button>
+            </div>
           ))}
         </div>
         <DialogFooter className='flex-shrink-0 px-4 py-2 space-x-2'>
@@ -135,4 +134,4 @@ export function SoundSelectorModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}

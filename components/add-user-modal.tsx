@@ -36,25 +36,16 @@ import {
 } from 'lucide-react';
 import { SoundSelectorModal } from './sound-selector-modal';
 import { CreateUserInput, User } from 'app/types/user';
-import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddUser: (user: CreateUserInput) => Promise<Response>;
-  onDeleteUser: (userId: number) => void;
   user?: User;
   onUserAdded?: () => void;
 }
 
-export function AddUserModal({
-  isOpen,
-  onClose,
-  onAddUser,
-  onDeleteUser,
-  user,
-  onUserAdded,
-}: AddUserModalProps) {
+export function AddUserModal({ isOpen, onClose, onAddUser, user, onUserAdded }: AddUserModalProps) {
   const { addToast } = useToast();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('default');
@@ -62,7 +53,6 @@ export function AddUserModal({
   const [birthday, setBirthday] = useState(new Date().toISOString().split('T')[0]);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
-  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
   const defaultUserState = React.useMemo(
     () => ({
@@ -131,14 +121,6 @@ export function AddUserModal({
         title: 'Error',
         description: 'Failed to create user. Please try again.',
       });
-    }
-  };
-
-  const confirmDelete = () => {
-    if (user && user.user_id) {
-      onDeleteUser(Number(user.user_id));
-      setIsDeleteConfirmationOpen(false);
-      onClose();
     }
   };
 
@@ -291,13 +273,7 @@ export function AddUserModal({
         onClose={() => setIsSoundModalOpen(false)}
         onSelect={handleSoundSelect}
         currentSound={soundUrl}
-        type="user"
-      />
-      <DeleteConfirmationDialog
-        isOpen={isDeleteConfirmationOpen}
-        onClose={() => setIsDeleteConfirmationOpen(false)}
-        onConfirm={confirmDelete}
-        itemName={name}
+        type='user'
       />
     </>
   );

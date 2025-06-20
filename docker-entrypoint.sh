@@ -83,19 +83,57 @@ run_migrations() {
     max_retries=3
     retries=0
 
+    # Enable Prisma query and debug logging
+    export DEBUG="prisma:*,prisma-client:*"
+    export PRISMA_CLIENT_ENGINE_TYPE="binary"
+    export PRISMA_CLI_QUERY_ENGINE_TYPE="binary"
+
     while [ $retries -lt $max_retries ]; do
-        if npx prisma migrate deploy; then
+        echo "Attempting migration (attempt $((retries + 1))/$max_retries)..."
+        
+        # Print environment information
+        echo "Environment Info:"
+        echo "NODE_ENV: $NODE_ENV"
+        echo "DATABASE_URL: ${DATABASE_URL//:*@/:***@}"  # Mask password
+        echo "Platform: $(uname -a)"
+        echo "OpenSSL version: $(openssl version)"
+        
+        # Run migration with detailed output
+        if npx prisma migrate deploy --preview-feature 2>&1 | tee /tmp/migration.log; then
             echo "Migrations completed successfully!"
             return 0
         fi
 
+        # Log the error details
+        echo "Migration attempt failed. Error details:"
+        cat /tmp/migration.log
+        
+        # Check for specific error conditions
+        if grep -q "ENOENT" /tmp/migration.log; then
+            echo "Error: Binary not found error detected"
+            ls -la /app/node_modules/.prisma/client
+        fi
+        
+        if grep -q "SSL" /tmp/migration.log; then
+            echo "Error: SSL-related error detected"
+            echo "OpenSSL configuration:"
+            ls -la /etc/ssl/certs
+        fi
+
         retries=$((retries + 1))
-        remaining=$((max_retries - retries))
-        echo "Migration attempt failed. Retrying... ($remaining attempts remaining)"
-        sleep 5
+        if [ $retries -lt $max_retries ]; then
+            echo "Waiting before retry..."
+            sleep 5
+        fi
     done
 
     echo "Error: Failed to run database migrations after $max_retries attempts"
+    echo "Last migration log:"
+    cat /tmp/migration.log
+    echo "Directory contents:"
+    ls -la /app/node_modules/.prisma/client
+    echo "System information:"
+    uname -a
     exit 1
 }
 
@@ -134,10 +172,7 @@ initialize_app_data
 
 # Start the application
 echo "Starting the application..."
-node server.js -H "${HOST:-0.0.0.0}" &
+exec node server.js -H "${HOST:-0.0.0.0}"
 
 # Verify application health
 verify_app_health
-
-# Keep the container running
-exec "$@"

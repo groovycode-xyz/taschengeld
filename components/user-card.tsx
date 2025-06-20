@@ -15,8 +15,9 @@ export function UserCard({ user, onClick }: UserCardProps) {
         'p-4 rounded-lg shadow-md cursor-pointer',
         'overflow-hidden backdrop-blur-sm',
         'bg-green-100/50 hover:bg-green-200/50 border-green-200',
-        'dark:bg-green-900/20 dark:hover:bg-green-800/30 dark:border-green-800',
-        'transition-all duration-200'
+        'dark:bg-green-900/10 dark:hover:bg-green-800/20 dark:border-green-800/30',
+        'transition-all duration-200',
+        'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
       )}
       onClick={onClick}
     >
@@ -29,9 +30,6 @@ export function UserCard({ user, onClick }: UserCardProps) {
         </div>
         <div>
           <h3 className='text-lg font-semibold text-green-900 dark:text-green-100'>{user.name}</h3>
-          <p className='text-sm text-green-700 dark:text-green-300'>
-            {user.role === 'parent' ? 'Parent' : 'Child'}
-          </p>
         </div>
       </div>
     </div>
