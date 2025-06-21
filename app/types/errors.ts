@@ -32,7 +32,7 @@ export function isDatabaseError(error: unknown): error is DatabaseError {
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string'
+    typeof (error as Record<string, unknown>).code === 'string'
   );
 }
 
@@ -41,8 +41,8 @@ export function isPrismaError(error: unknown): error is PrismaError {
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string' &&
-    (error as any).code.startsWith('P')
+    typeof (error as Record<string, unknown>).code === 'string' &&
+    ((error as Record<string, unknown>).code as string).startsWith('P')
   );
 }
 
