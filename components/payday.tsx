@@ -27,6 +27,47 @@ import { Banknote, Filter, SortAsc, SquareCheckBig, ThumbsUp, Trash2, Layers } f
 import { useLanguage } from '@/components/context/language-context';
 import { cn } from '@/lib/utils';
 
+// LocalStorage key for persisting settings
+const PAYDAY_SETTINGS_KEY = 'payday-settings';
+
+interface PaydaySettings {
+  filterUser: string;
+  sortBy: 'name' | 'age';
+  sortOrder: 'asc' | 'desc';
+  groupBy: 'user' | 'task' | 'value';
+}
+
+const getDefaultSettings = (): PaydaySettings => ({
+  filterUser: 'all',
+  sortBy: 'name',
+  sortOrder: 'asc',
+  groupBy: 'user',
+});
+
+const loadSettings = (): PaydaySettings => {
+  if (typeof window === 'undefined') return getDefaultSettings();
+
+  try {
+    const saved = localStorage.getItem(PAYDAY_SETTINGS_KEY);
+    if (saved) {
+      return { ...getDefaultSettings(), ...JSON.parse(saved) };
+    }
+  } catch (error) {
+    // If there's an error reading from localStorage, use defaults
+  }
+  return getDefaultSettings();
+};
+
+const saveSettings = (settings: PaydaySettings) => {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.setItem(PAYDAY_SETTINGS_KEY, JSON.stringify(settings));
+  } catch (error) {
+    // If there's an error saving to localStorage, fail silently
+  }
+};
+
 export function Payday() {
   const { getTermFor } = useLanguage();
   const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([]);
@@ -35,18 +76,50 @@ export function Payday() {
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [bulkActionType, setBulkActionType] = useState<'approve' | 'reject'>('approve');
-  const [filterUser, setFilterUser] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'age'>('name');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [groupBy, setGroupBy] = useState<'user' | 'task' | 'value'>('user');
+
+  // Initialize settings from localStorage
+  const [settings, setSettings] = useState<PaydaySettings>(getDefaultSettings());
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+
   const [confirmActionTask, setConfirmActionTask] = useState<{
     id: number;
     action: 'approve' | 'reject';
   } | null>(null);
 
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const loaded = loadSettings();
+    setSettings(loaded);
+    setSettingsLoaded(true);
+  }, []);
+
+  // Save settings whenever they change
+  useEffect(() => {
+    if (settingsLoaded) {
+      saveSettings(settings);
+    }
+  }, [settings, settingsLoaded]);
+
   useEffect(() => {
     fetchCompletedTasks();
   }, []);
+
+  // Setting update functions
+  const updateFilterUser = (value: string) => {
+    setSettings((prev) => ({ ...prev, filterUser: value }));
+  };
+
+  const updateSortBy = (value: 'name' | 'age') => {
+    setSettings((prev) => ({ ...prev, sortBy: value }));
+  };
+
+  const updateSortOrder = (value: 'asc' | 'desc') => {
+    setSettings((prev) => ({ ...prev, sortOrder: value }));
+  };
+
+  const updateGroupBy = (value: 'user' | 'task' | 'value') => {
+    setSettings((prev) => ({ ...prev, groupBy: value }));
+  };
 
   const fetchCompletedTasks = async () => {
     setIsLoading(true);
@@ -149,22 +222,22 @@ export function Payday() {
 
   // Filter tasks
   const filteredTasks =
-    filterUser === 'all'
+    settings.filterUser === 'all'
       ? completedTasks
-      : completedTasks.filter((task) => task.user_name === filterUser);
+      : completedTasks.filter((task) => task.user_name === settings.filterUser);
 
   // Sort tasks
   const sortedTasks = [...filteredTasks].sort((a, b) => {
-    if (sortBy === 'name') {
+    if (settings.sortBy === 'name') {
       const nameA = a.user_name || '';
       const nameB = b.user_name || '';
-      return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+      return settings.sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
     } else {
       // Sort by age (using birthday)
       const ageA = a.user_birthday ? new Date(a.user_birthday).getTime() : 0;
       const ageB = b.user_birthday ? new Date(b.user_birthday).getTime() : 0;
       // For age, newer birthdays (younger) should come first when ascending
-      return sortOrder === 'asc' ? ageB - ageA : ageA - ageB;
+      return settings.sortOrder === 'asc' ? ageB - ageA : ageA - ageB;
     }
   });
 
@@ -172,11 +245,11 @@ export function Payday() {
   const organizedTasks = sortedTasks.reduce((groups: { [key: string]: CompletedTask[] }, task) => {
     let groupKey = '';
 
-    if (groupBy === 'user') {
+    if (settings.groupBy === 'user') {
       groupKey = task.user_name || 'Unknown User';
-    } else if (groupBy === 'task') {
+    } else if (settings.groupBy === 'task') {
       groupKey = task.task_title || 'Unknown Task';
-    } else if (groupBy === 'value') {
+    } else if (settings.groupBy === 'value') {
       const value = task.payout_value || 0;
       // Format to 2 decimal places for consistent grouping
       groupKey = value.toFixed(2);
@@ -257,7 +330,7 @@ export function Payday() {
         <div className='flex items-center gap-4 pt-6'>
           <div className='flex items-center gap-2'>
             <Filter className='h-4 w-4 text-muted-foreground' />
-            <Select value={filterUser} onValueChange={setFilterUser}>
+            <Select value={settings.filterUser} onValueChange={updateFilterUser}>
               <SelectTrigger className='w-[200px]'>
                 <SelectValue placeholder='Filter by user' />
               </SelectTrigger>
@@ -274,7 +347,7 @@ export function Payday() {
 
           <div className='flex items-center gap-2'>
             <SortAsc className='h-4 w-4 text-muted-foreground' />
-            <Select value={sortBy} onValueChange={(value: 'name' | 'age') => setSortBy(value)}>
+            <Select value={settings.sortBy} onValueChange={updateSortBy}>
               <SelectTrigger className='w-[200px]'>
                 <SelectValue placeholder='Sort by' />
               </SelectTrigger>
@@ -283,21 +356,18 @@ export function Payday() {
                 <SelectItem value='age'>{getTermFor('Alter', 'Age')}</SelectItem>
               </SelectContent>
             </Select>
-            <Select
-              value={sortOrder}
-              onValueChange={(value: 'asc' | 'desc') => setSortOrder(value)}
-            >
+            <Select value={settings.sortOrder} onValueChange={updateSortOrder}>
               <SelectTrigger className='w-[120px]'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='asc'>
-                  {sortBy === 'age'
+                  {settings.sortBy === 'age'
                     ? getTermFor('Jüngste zuerst', 'Youngest first')
                     : getTermFor('A-Z', 'A-Z')}
                 </SelectItem>
                 <SelectItem value='desc'>
-                  {sortBy === 'age'
+                  {settings.sortBy === 'age'
                     ? getTermFor('Älteste zuerst', 'Oldest first')
                     : getTermFor('Z-A', 'Z-A')}
                 </SelectItem>
@@ -307,10 +377,7 @@ export function Payday() {
 
           <div className='flex items-center gap-2'>
             <Layers className='h-4 w-4 text-muted-foreground' />
-            <Select
-              value={groupBy}
-              onValueChange={(value: 'user' | 'task' | 'value') => setGroupBy(value)}
-            >
+            <Select value={settings.groupBy} onValueChange={updateGroupBy}>
               <SelectTrigger className='w-[200px]'>
                 <SelectValue placeholder='Group by' />
               </SelectTrigger>
@@ -330,7 +397,7 @@ export function Payday() {
         <div className='space-y-8'>
           {Object.entries(organizedTasks)
             .sort(([a], [b]) => {
-              if (groupBy === 'value') {
+              if (settings.groupBy === 'value') {
                 // Sort by value numerically
                 return parseFloat(b) - parseFloat(a); // Descending order
               }
@@ -346,15 +413,15 @@ export function Payday() {
                     className='mt-1'
                     data-state={isGroupPartiallySelected(tasks) ? 'indeterminate' : undefined}
                   />
-                  {groupBy === 'user' && tasks.length > 0 && tasks[0].user_icon && (
+                  {settings.groupBy === 'user' && tasks.length > 0 && tasks[0].user_icon && (
                     <IconComponent icon={tasks[0].user_icon} className='h-6 w-6 text-foreground' />
                   )}
-                  {groupBy === 'task' && tasks.length > 0 && tasks[0].icon_name && (
+                  {settings.groupBy === 'task' && tasks.length > 0 && tasks[0].icon_name && (
                     <IconComponent icon={tasks[0].icon_name} className='h-6 w-6 text-foreground' />
                   )}
-                  {groupBy === 'value' && <Banknote className='h-6 w-6 text-foreground' />}
+                  {settings.groupBy === 'value' && <Banknote className='h-6 w-6 text-foreground' />}
                   <h2 className='text-2xl font-semibold'>
-                    {groupBy === 'value' ? (
+                    {settings.groupBy === 'value' ? (
                       <CurrencyDisplay value={parseFloat(groupName)} />
                     ) : (
                       groupName
