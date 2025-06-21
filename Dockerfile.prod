@@ -46,22 +46,15 @@ RUN echo "Building for platform: $(uname -m)" && \
         exit 1; \
     fi
 
-# Generate Prisma Client with explicit binary targets
-RUN npx prisma generate --generator client \
-    '{ \
-    "provider": "prisma-client-js", \
-    "binaryTargets": ["native", "linux-musl-openssl-3.0.x"] \
-    }' && \
-    mkdir -p node_modules/.prisma/client && \
-    cp -r node_modules/@prisma/engines/* node_modules/.prisma/client/ && \
-    ls -la node_modules/.prisma/client/
+# Generate Prisma Client 
+RUN npx prisma generate
 
 # Build application
 RUN npm run build
 
-# Remove dev dependencies and unnecessary packages, but keep sharp and Prisma
+# Remove dev dependencies and unnecessary packages, but keep sharp, pg, and Prisma
 RUN npm prune --production && \
-    npm install sharp && \
+    npm install sharp pg && \
     rm -rf node_modules/@types && \
     rm -rf node_modules/typescript && \
     rm -rf node_modules/prettier && \
@@ -95,11 +88,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-# Ensure Prisma engines are copied with proper permissions
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma/client ./node_modules/.prisma/client
-RUN chmod +x ./node_modules/.prisma/client/query-engine-* || true && \
-    chmod +x ./node_modules/.prisma/client/schema-engine-* || true
-
 # Copy initialization script
 COPY --chown=nextjs:nodejs scripts/initialize-data.js ./scripts/initialize-data.js
 
@@ -116,10 +104,6 @@ ENV PORT=3000
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOST=0.0.0.0
 ENV NEXT_PUBLIC_API_URL=http://localhost:3000
-ENV PRISMA_QUERY_ENGINE_BINARY=/app/node_modules/.prisma/client/query-engine-linux-musl-openssl-3.0.x
-ENV PRISMA_MIGRATION_ENGINE_BINARY=/app/node_modules/.prisma/client/schema-engine-linux-musl-openssl-3.0.x
-ENV PRISMA_CLI_QUERY_ENGINE_TYPE=binary
-ENV PRISMA_CLIENT_ENGINE_TYPE=binary
 
 # Create volume mount points with proper permissions
 VOLUME ["/app/uploads", "/app/data"]

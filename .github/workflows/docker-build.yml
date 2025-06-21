@@ -1,0 +1,127 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: tgeld/taschengeld
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=raw,value=latest,enable={{is_default_branch}}
+          type=sha,prefix={{branch}}-
+
+    - name: Read version
+      id: version
+      run: |
+        VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $VERSION"
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile.prod
+        platforms: linux/amd64,linux/arm64
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        labels: |
+          org.opencontainers.image.title=Taschengeld
+          org.opencontainers.image.description=Family allowance tracker application
+          org.opencontainers.image.version=v${{ steps.version.outputs.VERSION }}
+          org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          org.opencontainers.image.revision=${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Test Docker image
+      if: github.event_name != 'pull_request'
+      run: |
+        # Set up test environment
+        export DB_PASSWORD=TGeld2025DB
+        export DB_USER=postgres
+        export DB_DATABASE=tgeld
+        export DB_PORT=5432
+        export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+        export DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}
+        
+        # Create test environment file
+        cat > .env.test << EOF
+        DB_PASSWORD=$DB_PASSWORD
+        DB_USER=$DB_USER
+        DB_DATABASE=$DB_DATABASE
+        DB_PORT=$DB_PORT
+        DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@db:5432/$DB_DATABASE?schema=public
+        EOF
+        
+        # Tag image for testing
+        docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
+        
+        # Start test environment
+        docker compose --env-file .env.test -f docker-compose.yml up -d db
+        
+        # Wait for database
+        timeout 60 bash -c 'until docker compose --env-file .env.test exec -T db pg_isready -U postgres; do sleep 2; done'
+        
+        # Test the image
+        docker run --rm --network taschengeld_default \
+          -e DATABASE_URL=postgresql://postgres:TGeld2025DB@db:5432/tgeld?schema=public \
+          -e DB_HOST=db \
+          -e DB_USER=postgres \
+          -e DB_PASSWORD=TGeld2025DB \
+          -e DB_DATABASE=tgeld \
+          -e DB_PORT=5432 \
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test \
+          timeout 30 bash -c 'until curl -f http://localhost:3000/api/health 2>/dev/null; do sleep 2; done' || true
+        
+        # Cleanup
+        docker compose --env-file .env.test down
+        rm -f .env.test
+
+    - name: Update Docker Hub description
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      uses: peter-evans/dockerhub-description@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        repository: ${{ env.IMAGE_NAME }}
+        readme-filepath: ./README.md

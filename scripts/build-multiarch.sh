@@ -11,7 +11,7 @@ NC='\033[0m'
 
 # Default values
 REGISTRY="docker.io"
-REPOSITORY="tgeld/tgeld"
+REPOSITORY="tgeld/taschengeld"
 VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
 TAG="latest"
 PUSH=false
@@ -96,6 +96,34 @@ validate_environment() {
     done
 
     log "INFO" "Environment validation completed successfully"
+}
+
+# Function to handle Docker Hub authentication
+docker_login() {
+    if [ "$PUSH" = true ]; then
+        log "INFO" "Attempting Docker Hub login..."
+        
+        # Check if running in GitHub Actions
+        if [ -n "$GITHUB_ACTIONS" ]; then
+            # Use GitHub Actions secrets
+            if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
+                log "ERROR" "DOCKERHUB_USERNAME and DOCKERHUB_TOKEN must be set in GitHub Actions"
+                exit 1
+            fi
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+        else
+            # Local development - check if already logged in
+            if docker info 2>/dev/null | grep -q "Username:"; then
+                log "INFO" "Already logged in to Docker Hub"
+            else
+                log "INFO" "Please log in to Docker Hub manually with: docker login"
+                log "INFO" "Or set DOCKERHUB_USERNAME and DOCKERHUB_TOKEN environment variables"
+                exit 1
+            fi
+        fi
+        
+        log "SUCCESS" "Docker Hub authentication completed"
+    fi
 }
 
 # Function to test API endpoints with improved error handling
@@ -273,6 +301,9 @@ done
 
 # Validate environment before proceeding
 validate_environment
+
+# Handle Docker Hub authentication
+docker_login
 
 # Ensure BuildKit is enabled
 export DOCKER_BUILDKIT=1
