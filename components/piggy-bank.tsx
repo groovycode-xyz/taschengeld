@@ -9,7 +9,6 @@ import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionHistoryModal } from './transaction-history-modal';
 import { useMode } from '@/components/context/mode-context';
-import { useLanguage } from '@/components/context/language-context';
 import { PiggyBank as PiggyBankIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,7 +22,6 @@ interface PiggyBankAccount {
 
 export function PiggyBank() {
   const { isParentMode, enforceRoles } = useMode();
-  const { getTermFor } = useLanguage();
   const [users, setUsers] = useState<PiggyBankAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,7 +111,7 @@ export function PiggyBank() {
           <div className='flex items-center space-x-4'>
             <PiggyBankIcon className='h-8 w-8 text-foreground' />
             <h1 className='text-3xl font-medium text-foreground'>
-              {getTermFor('Sparkässeli', 'Piggy Bank')}
+              Piggy Bank
             </h1>
           </div>
         </div>

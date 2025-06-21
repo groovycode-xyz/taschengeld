@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useLanguage } from '@/components/context/language-context';
 import { useMode } from '@/components/context/mode-context';
 import {
   CheckSquare,
@@ -15,7 +14,6 @@ import {
 } from 'lucide-react';
 
 export function Sidebar() {
-  const { getTermFor } = useLanguage();
   const { toggleParentMode, isParentMode, enforceRoles } = useMode();
   const pathname = usePathname();
 
@@ -44,7 +42,7 @@ export function Sidebar() {
             }`}
           >
             <PiggyBank className='h-6 w-6 md:h-5 md:w-5' />
-            <span className='text-base md:text-sm'>{getTermFor('Sparkässeli', 'Piggy Bank')}</span>
+            <span className='text-base md:text-sm'>Piggy Bank</span>
           </Link>
 
           {(!enforceRoles || isParentMode) && (
@@ -58,7 +56,7 @@ export function Sidebar() {
                 }`}
               >
                 <HandCoins className='h-6 w-6 md:h-5 md:w-5' />
-                <span className='text-base md:text-sm'>{getTermFor('Zahltag', 'Payday')}</span>
+                <span className='text-base md:text-sm'>Payday</span>
               </Link>
 
               <Link

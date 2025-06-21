@@ -33,7 +33,6 @@ import {
   Layers,
   Loader2,
 } from 'lucide-react';
-import { useLanguage } from '@/components/context/language-context';
 import { cn } from '@/lib/utils';
 
 // LocalStorage key for persisting settings
@@ -78,7 +77,6 @@ const saveSettings = (settings: PaydaySettings) => {
 };
 
 export function Payday() {
-  const { getTermFor } = useLanguage();
   const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([]);
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -347,7 +345,7 @@ export function Payday() {
           <div className='flex items-center space-x-4'>
             <Banknote className='h-8 w-8 text-foreground' />
             <h1 className='text-3xl font-medium text-foreground'>
-              {getTermFor('Zahltag', 'Payday')}
+              Payday
             </h1>
           </div>
           {selectedTasks.length > 0 && (
@@ -382,7 +380,7 @@ export function Payday() {
                 <SelectValue placeholder='Filter by user' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>{getTermFor('Alle', 'All')}</SelectItem>
+                <SelectItem value='all'>All</SelectItem>
                 {uniqueUsers.map((userName) => (
                   <SelectItem key={userName} value={userName}>
                     {userName}
@@ -399,8 +397,8 @@ export function Payday() {
                 <SelectValue placeholder='Sort by' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='name'>{getTermFor('Name', 'Name')}</SelectItem>
-                <SelectItem value='age'>{getTermFor('Alter', 'Age')}</SelectItem>
+                <SelectItem value='name'>Name</SelectItem>
+                <SelectItem value='age'>Age</SelectItem>
               </SelectContent>
             </Select>
             <Select value={settings.sortOrder} onValueChange={updateSortOrder}>
@@ -410,13 +408,13 @@ export function Payday() {
               <SelectContent>
                 <SelectItem value='asc'>
                   {settings.sortBy === 'age'
-                    ? getTermFor('Jüngste zuerst', 'Youngest first')
-                    : getTermFor('A-Z', 'A-Z')}
+                    ? 'Youngest first'
+                    : 'A-Z'}
                 </SelectItem>
                 <SelectItem value='desc'>
                   {settings.sortBy === 'age'
-                    ? getTermFor('Älteste zuerst', 'Oldest first')
-                    : getTermFor('Z-A', 'Z-A')}
+                    ? 'Oldest first'
+                    : 'Z-A'}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -429,9 +427,9 @@ export function Payday() {
                 <SelectValue placeholder='Group by' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='user'>{getTermFor('Benutzer', 'User')}</SelectItem>
-                <SelectItem value='task'>{getTermFor('Aufgabe', 'Task')}</SelectItem>
-                <SelectItem value='value'>{getTermFor('Wert', 'Value')}</SelectItem>
+                <SelectItem value='user'>User</SelectItem>
+                <SelectItem value='task'>Task</SelectItem>
+                <SelectItem value='value'>Value</SelectItem>
               </SelectContent>
             </Select>
           </div>
