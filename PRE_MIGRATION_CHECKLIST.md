@@ -4,64 +4,64 @@ Complete this checklist before migrating to the new GitHub repository.
 
 ## 🔍 Code Verification
 
-- [ ] All cleanup phases completed successfully
-- [ ] Application tested and working
-- [ ] No uncommitted changes (`git status` is clean)
-- [ ] All changes pushed to current repository
+- [x] All cleanup phases completed successfully
+- [x] Application tested and working
+- [x] No uncommitted changes (`git status` is clean)
+- [x] All changes pushed to current repository
 
 ## 💾 Backup Requirements
 
 ### Database Backup
-- [ ] Create full backup via Settings → Global App Settings → Backup & Restore
-- [ ] Download backup SQL file
-- [ ] Verify backup file size (should be > 0 bytes)
-- [ ] Store backup in safe location
-- [ ] Test backup can be opened/read
+- [x] Create full backup via Settings → Global App Settings → Backup & Restore
+- [x] Download backup SQL file
+- [x] Verify backup file size (should be > 0 bytes)
+- [x] Store backup in safe location
+- [x] Test backup can be opened/read
 
 ### Code Backup
-- [ ] Current repository pushed to GitHub
-- [ ] Tag created: `pre-migration-backup`
-- [ ] All branches preserved
+- [x] Current repository pushed to GitHub
+- [x] Tag created: `pre-migration-backup`
+- [x] All branches preserved
 
 ### Environment Backup
-- [ ] Copy `.env` file to safe location
-- [ ] Document any custom environment variables
-- [ ] Note current Docker volume names:
+- [x] Copy `.env` file to safe location
+- [x] Document any custom environment variables
+- [x] Note current Docker volume names:
   ```bash
   docker volume ls | grep tgeld
   ```
 
 ## 📋 Documentation Review
 
-- [ ] CLEANUP_SUMMARY.md reviewed
-- [ ] GITHUB_MIGRATION_GUIDE.md reviewed
-- [ ] DOCKER_DATA_PERSISTENCE.md understood
-- [ ] README.md ready for update
+- [x] CLEANUP_SUMMARY.md reviewed
+- [x] GITHUB_MIGRATION_GUIDE.md reviewed
+- [x] DOCKER_DATA_PERSISTENCE.md understood
+- [x] README.md ready for update
 
 ## 🐳 Docker Status
 
-- [ ] All containers running normally
-- [ ] No pending database migrations
-- [ ] Docker volumes healthy
-- [ ] Recent backup tested
+- [x] All containers running normally
+- [x] No pending database migrations
+- [x] Docker volumes healthy
+- [x] Recent backup tested
 
 ## 🚀 Deployment Preparation
 
-- [ ] List all active deployments
-- [ ] Document deployment URLs
-- [ ] Note any CI/CD configurations
-- [ ] Identify webhook dependencies
+- [x] List all active deployments
+- [x] Document deployment URLs
+- [x] Note any CI/CD configurations
+- [x] Identify webhook dependencies
 
 ## ✅ Final Checks
 
 ### Functionality Test
-- [ ] User creation works
-- [ ] Task creation works
-- [ ] Task completion works
-- [ ] Payday process works
-- [ ] Piggy bank transactions work
-- [ ] Backup/restore works
-- [ ] Settings changes persist
+- [x] User creation works
+- [x] Task creation works
+- [x] Task completion works
+- [x] Payday process works
+- [x] Piggy bank transactions work
+- [x] Backup/restore works
+- [x] Settings changes persist
 
 ### Technical Verification
 ```bash
@@ -112,3 +112,19 @@ By checking this box, I confirm all items above are complete:
 ## Notes
 
 _Add any additional notes or concerns here:_
+
+### Docker Volumes (as of migration date):
+- **tgeld_postgres_dev_data** - Development database data (currently in use)
+- **tgeld_postgres_data** - Production database data
+- **tgeld_postgres_prod_data** - Another production database volume
+- **tgeld_app_data** - Application data
+- **tgeld_app_uploads** - Uploaded files
+- **tgeld_uploads** - Additional uploads volume
+- **tgeld_next_cache** - Next.js cache
+- **tgeld_node_modules** - Node modules cache
+
+### Deployment Information:
+- **Active Deployments**: Development environment only (localhost)
+- **URLs**: http://localhost:3001 (app), localhost:5433 (database)
+- **CI/CD**: None configured
+- **Webhooks**: None found
