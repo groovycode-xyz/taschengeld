@@ -1,59 +1,70 @@
 import { prisma } from '@/app/lib/prisma';
-import { PiggyBankTransaction, CreateTransactionInput } from '@/app/types/piggyBankTransaction';
+import { PiggyBankTransaction, CreateTransactionInput, TransactionType } from '@/app/types/piggyBankTransaction';
 import { Prisma } from '@prisma/client';
 
 export const piggyBankTransactionService = {
   async create(input: CreateTransactionInput): Promise<PiggyBankTransaction> {
-    // First, get the account for this user
-    const account = await prisma.piggybankAccount.findFirst({
-      where: { user_id: input.user_id },
-    });
+    // Use a database transaction to ensure atomicity
+    const result = await prisma.$transaction(async (tx) => {
+      // First verify the account exists
+      const account = await tx.piggybankAccount.findUnique({
+        where: { account_id: input.account_id },
+      });
 
-    if (!account) {
-      throw new Error('No piggy bank account found for this user');
-    }
+      if (!account) {
+        throw new Error('Account not found');
+      }
 
-    // Create the transaction
-    const transaction = await prisma.piggybankTransaction.create({
-      data: {
-        account_id: account.account_id,
-        amount: new Prisma.Decimal(input.amount),
-        transaction_type: input.transaction_type,
-        description: input.description,
-        photo: input.photo,
-      },
-    });
+      // For withdrawals, check if sufficient balance
+      if (input.transaction_type === 'withdrawal' && Number(account.balance) < input.amount) {
+        throw new Error('Insufficient balance');
+      }
 
-    // Update account balance
-    if (input.transaction_type === 'deposit' || input.transaction_type === 'payday') {
-      await prisma.piggybankAccount.update({
-        where: { account_id: account.account_id },
+      // Create the transaction
+      const transaction = await tx.piggybankTransaction.create({
         data: {
-          balance: {
-            increment: input.amount,
-          },
+          account_id: input.account_id,
+          amount: new Prisma.Decimal(input.amount),
+          transaction_type: input.transaction_type,
+          description: input.description,
+          photo: input.photo,
+          completed_task_id: input.completed_task_id,
         },
       });
-    } else if (input.transaction_type === 'withdrawal') {
-      await prisma.piggybankAccount.update({
-        where: { account_id: account.account_id },
-        data: {
-          balance: {
-            decrement: input.amount,
+
+      // Update account balance atomically
+      if (input.transaction_type === 'deposit' || input.transaction_type === 'payday') {
+        await tx.piggybankAccount.update({
+          where: { account_id: input.account_id },
+          data: {
+            balance: {
+              increment: input.amount,
+            },
           },
-        },
-      });
-    }
+        });
+      } else if (input.transaction_type === 'withdrawal') {
+        await tx.piggybankAccount.update({
+          where: { account_id: input.account_id },
+          data: {
+            balance: {
+              decrement: input.amount,
+            },
+          },
+        });
+      }
+
+      return transaction;
+    });
 
     return {
-      transaction_id: transaction.transaction_id,
-      account_id: transaction.account_id,
-      amount: Number(transaction.amount),
-      transaction_type: transaction.transaction_type as TransactionType,
-      transaction_date: transaction.transaction_date,
-      description: transaction.description,
-      photo: transaction.photo,
-      completed_task_id: transaction.completed_task_id,
+      transaction_id: result.transaction_id,
+      account_id: result.account_id,
+      amount: Number(result.amount),
+      transaction_type: result.transaction_type as TransactionType,
+      transaction_date: result.transaction_date,
+      description: result.description,
+      photo: result.photo,
+      completed_task_id: result.completed_task_id,
     };
   },
 

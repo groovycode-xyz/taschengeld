@@ -30,10 +30,13 @@ export const piggyBankDashboardService = {
   async getDashboardData(): Promise<DashboardData> {
     logger.debug('getDashboardData called');
 
-    // Get all accounts with user info
+    // Get all accounts with user info, ordered by user_id for consistent display
     const accounts = await prisma.piggybankAccount.findMany({
       include: {
         user: true,
+      },
+      orderBy: {
+        user_id: 'asc',
       },
     });
 

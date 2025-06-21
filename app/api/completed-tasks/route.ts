@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { completedTaskService } from '@/app/lib/services/completedTaskService';
 import { CreateCompletedTaskInput } from '@/app/types/completedTask';
 import { piggyBankTransactionService } from '@/app/lib/services/piggyBankTransactionService';
+import { piggyBankAccountService } from '@/app/lib/services/piggyBankAccountService';
 import { validateRequest } from '@/app/lib/validation/middleware';
 import {
   completeTaskSchema,
@@ -119,15 +120,22 @@ export async function PATCH(request: NextRequest) {
           return { taskId, success: false, error: 'Task not found' };
         }
 
+        // Get the user's piggy bank account
+        const account = await piggyBankAccountService.getByUserId(completedTask.user_id);
+        if (!account) {
+          return { taskId, success: false, error: 'No piggy bank account found for user' };
+        }
+
         // Update payment status
         await completedTaskService.updatePaymentStatus(taskId, 'Paid');
 
         // Create piggy bank transaction
         await piggyBankTransactionService.create({
-          user_id: completedTask.user_id,
+          account_id: account.account_id,
           amount: Number(completedTask.payout_value),
           transaction_type: 'payday',
           description: `Payday for task: ${completedTask.description || 'Unknown'}`,
+          completed_task_id: taskId,
         });
 
         return { taskId, success: true };

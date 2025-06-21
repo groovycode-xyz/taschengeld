@@ -14,7 +14,7 @@ export interface PiggyBankTransaction {
 }
 
 export interface CreateTransactionInput {
-  user_id: number;
+  account_id: number;
   amount: number;
   transaction_type: TransactionType;
   description?: string | null;

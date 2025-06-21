@@ -29,21 +29,17 @@ export const POST = createApiHandler(async (request: Request) => {
     return validation.error;
   }
 
-  const { account_id, amount, transaction_type, description, photo } = validation.data;
+  const { account_id, amount, transaction_type, description, photo, completed_task_id } =
+    validation.data;
 
-  // Get account to find user_id
-  const account = await piggyBankAccountService.getById(account_id);
-  if (!account || !account.user_id) {
-    return NextResponse.json({ error: 'Account not found' }, { status: 404 });
-  }
-
-  // Create transaction (this also updates the balance)
+  // Create transaction (this also updates the balance atomically)
   const transaction = await piggyBankTransactionService.create({
-    user_id: account.user_id,
+    account_id,
     amount,
     transaction_type,
     description,
     photo,
+    completed_task_id,
   });
 
   // Get updated account
