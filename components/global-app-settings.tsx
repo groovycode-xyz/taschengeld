@@ -949,10 +949,11 @@ export function GlobalAppSettings() {
                   <div>
                     <h3 className='text-base font-medium text-foreground mb-2'>Taschengeld</h3>
                     <p className='text-sm text-muted-foreground'>
-                      A family allowance tracker application for managing children's tasks and pocket money
+                      A family allowance tracker application for managing children's tasks and
+                      pocket money
                     </p>
                   </div>
-                  
+
                   <div className='pt-4 border-t border-border space-y-2'>
                     <div className='flex justify-between items-center'>
                       <span className='text-sm text-muted-foreground'>Version</span>
@@ -960,7 +961,9 @@ export function GlobalAppSettings() {
                     </div>
                     <div className='flex justify-between items-center'>
                       <span className='text-sm text-muted-foreground'>Environment</span>
-                      <span className='text-sm font-mono text-foreground'>{process.env.NODE_ENV || 'production'}</span>
+                      <span className='text-sm font-mono text-foreground'>
+                        {process.env.NODE_ENV || 'production'}
+                      </span>
                     </div>
                   </div>
 
@@ -969,8 +972,8 @@ export function GlobalAppSettings() {
                     <div className='space-y-2'>
                       <div className='flex items-center justify-between'>
                         <span className='text-sm text-muted-foreground'>GitHub</span>
-                        <Link 
-                          href='https://github.com/barneephife/taschengeld' 
+                        <Link
+                          href='https://github.com/barneephife/taschengeld'
                           target='_blank'
                           rel='noopener noreferrer'
                           className='text-sm text-primary hover:underline'
@@ -980,8 +983,8 @@ export function GlobalAppSettings() {
                       </div>
                       <div className='flex items-center justify-between'>
                         <span className='text-sm text-muted-foreground'>Website</span>
-                        <Link 
-                          href='https://taschengeld.groovycode.xyz' 
+                        <Link
+                          href='https://taschengeld.groovycode.xyz'
                           target='_blank'
                           rel='noopener noreferrer'
                           className='text-sm text-primary hover:underline'
@@ -991,7 +994,7 @@ export function GlobalAppSettings() {
                       </div>
                       <div className='flex items-center justify-between'>
                         <span className='text-sm text-muted-foreground'>Support Email</span>
-                        <Link 
+                        <Link
                           href='mailto:support@groovycode.xyz'
                           className='text-sm text-primary hover:underline'
                         >

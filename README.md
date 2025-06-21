@@ -32,6 +32,7 @@ Taschengeld is the German word for "pocket money" and was developed for a family
   - Bulk transaction processing
 
 - 💰 **Piggy-Bank Account System**
+
   - Track account balances and transaction history
   - Manually credit and debit accounts
 
@@ -51,12 +52,14 @@ Taschengeld is optimized for desktop/laptop computers and tablets:
 - **Not supported**: Mobile phones (screens smaller than 768px)
 
 ### Desktop Features (1024px+)
+
 - Full sidebar navigation always visible
 - Rich hover effects with tooltips
 - Keyboard navigation optimized
 - Enhanced visual feedback on interactions
 
 ### Tablet Features (768-1023px)
+
 - Collapsible sidebar with hamburger menu
 - Larger touch targets (48px minimum)
 - Touch-optimized interactions
@@ -156,6 +159,7 @@ Additional files created during use:
 Your family's data is stored in Docker volumes. To avoid accidental data loss:
 
 **SAFE Commands (preserve data):**
+
 ```bash
 # Stop containers (data preserved)
 docker compose down
@@ -170,6 +174,7 @@ docker compose up -d
 ```
 
 **DANGEROUS Commands (will DELETE all data):**
+
 ```bash
 # ⚠️ NEVER use these unless you want to start fresh:
 docker compose down -v  # The -v flag DELETES volumes/data!
@@ -185,9 +190,11 @@ docker volume rm tgeld_postgres_data  # Directly removes data!
 ### Data Recovery
 
 If you accidentally deleted your data:
+
 1. Stop immediately - don't run any more commands
 2. Check if you have a recent backup file (`backup.sql`)
 3. If yes, you can restore it through Settings → Backup & Restore
+
 - Always backup both `.env` and `data/postgres` directory
 - The `logs` directory is created automatically if logging is enabled
 

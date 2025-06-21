@@ -52,12 +52,12 @@ export function AppShell({ children }: AppShellProps) {
               href='/home'
               className='flex items-center space-x-3 hover:opacity-80 transition-opacity'
             >
-              <Image 
-                src="/images/logo/logo-pocket.png" 
-                alt="Taschengeld" 
-                width={40} 
+              <Image
+                src='/images/logo/logo-pocket.png'
+                alt='Taschengeld'
+                width={40}
                 height={40}
-                className="object-contain"
+                className='object-contain'
               />
               <span className='text-2xl font-bold'>
                 {getTermFor('Taschengeld', 'Pocket Money')}

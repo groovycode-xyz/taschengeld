@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Task } from '@/app/types/task';
 import { IconComponent } from './icon-component';
 import { SelectIconModal } from './select-icon-modal';
-import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Trash2, Save, X, Play } from 'lucide-react';
 import { SoundSelectorModal } from './sound-selector-modal';
 
@@ -236,12 +236,14 @@ export function EditTaskModal({
         currentSound={sound_url}
         type='task'
       />
-      <ConfirmationDialog
+      <ConfirmDialog
         isOpen={isDeleteConfirmationOpen}
         onClose={() => setIsDeleteConfirmationOpen(false)}
         onConfirm={confirmDelete}
         title='Delete Task'
-        itemName={task.title}
+        description={`Are you sure you want to delete "${task.title}"?`}
+        confirmText='Delete'
+        cancelText='Cancel'
       />
     </>
   );

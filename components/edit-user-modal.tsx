@@ -14,7 +14,7 @@ import { SoundSelectorModal } from './sound-selector-modal';
 import { User } from '@/app/types/user';
 import { Save, X, Play, Trash2 } from 'lucide-react';
 import { IconComponent } from './icon-component';
-import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -246,13 +246,26 @@ export function EditUserModal({
         currentSound={soundUrl}
         type='user'
       />
-      <ConfirmationDialog
+      <ConfirmDialog
         isOpen={isDeleteConfirmationOpen}
         onClose={() => setIsDeleteConfirmationOpen(false)}
         onConfirm={confirmDelete}
         title='Delete User'
-        itemName={name}
-        consequences={['Piggy bank account & transactions', 'Task history', 'User settings']}
+        description={
+          <div>
+            <p>Are you sure you want to delete &quot;{name}&quot;?</p>
+            <div className='mt-2 text-sm text-gray-500'>
+              <p>This will delete all associated data including:</p>
+              <ul className='list-disc list-inside mt-1'>
+                <li>Piggy bank account & transactions</li>
+                <li>Task history</li>
+                <li>User settings</li>
+              </ul>
+            </div>
+          </div>
+        }
+        confirmText='Delete'
+        cancelText='Cancel'
       />
     </>
   );
