@@ -15,7 +15,6 @@ export async function GET() {
 
     return NextResponse.json(sounds);
   } catch (error) {
-    console.error('Error reading sounds directory:', error);
     return NextResponse.json({ error: 'Failed to fetch sounds' }, { status: 500 });
   }
 }

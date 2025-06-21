@@ -40,7 +40,6 @@ export function Payday() {
       const unpaidTasks = data.filter((task: CompletedTask) => task.payment_status === 'Unpaid');
       setCompletedTasks(unpaidTasks);
     } catch (err) {
-      console.error('Error fetching completed tasks:', err);
       setError('Failed to load completed tasks');
     } finally {
       setIsLoading(false);
@@ -86,7 +85,6 @@ export function Payday() {
 
       await fetchCompletedTasks();
     } catch (error) {
-      console.error('Error updating payment status:', error);
       setError(error instanceof Error ? error.message : 'Failed to process task');
       await fetchCompletedTasks();
     }
@@ -116,7 +114,6 @@ export function Payday() {
         }
       }
     } catch (error) {
-      console.error('Error in bulk action:', error);
       setError(error instanceof Error ? error.message : 'Failed to process bulk action');
     } finally {
       setSelectedTasks([]);

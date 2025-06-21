@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Menu, User, Cog } from 'lucide-react';
 
 export function Header({ onMenuClick }: { onMenuClick: () => void }) {
-  console.warn('Header component is deprecated. Use AppShell instead.');
   return (
     <header className='flex items-center justify-between px-4 py-2 bg-primary text-primary-foreground'>
       <div className='flex items-center'>

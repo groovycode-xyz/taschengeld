@@ -63,7 +63,6 @@ export function TaskManagement() {
       const data = await response.json();
       setTasks(data);
     } catch (err) {
-      console.error('Error fetching tasks:', err);
       setError('Failed to load tasks. Please try again later.');
     } finally {
       setIsLoading(false);
@@ -76,7 +75,6 @@ export function TaskManagement() {
         ...newTask,
         payout_value: newTask.payout_value || 0, // Provide a default value if not set
       };
-      console.log('Sending task data:', taskWithPayoutValue);
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,21 +82,18 @@ export function TaskManagement() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('API Error:', errorData);
         throw new Error(errorData.error || errorData.details || 'Failed to add task');
       }
       const task = await response.json();
       setTasks((prevTasks) => [...prevTasks, task]);
       setIsAddModalOpen(false);
     } catch (error) {
-      console.error('Error adding task:', error);
       setError('Failed to add task. Please try again.');
     }
   };
 
   const handleEditTask = async (taskId: string, updatedTask: Partial<Task>) => {
     try {
-      console.log('Editing task:', taskId, 'with data:', updatedTask);
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -112,7 +107,6 @@ export function TaskManagement() {
       setTasks((prevTasks) => prevTasks.map((t) => (t.task_id === task.task_id ? task : t)));
       setIsEditModalOpen(false);
     } catch (error) {
-      console.error('Error updating task:', error);
       setError('Failed to update task. Please try again.');
     }
   };
@@ -141,7 +135,6 @@ export function TaskManagement() {
       setIsEditModalOpen(false);
       setEditingTask(null);
     } catch (error) {
-      console.error('Error deleting task:', error);
       setError(
         'Unable to delete this task. It may have unpaid completed entries that need to be processed first.'
       );

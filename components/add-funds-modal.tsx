@@ -50,7 +50,7 @@ export function AddFundsModal({
       const audio = new Audio('/sounds/cheer1.wav');
       await audio.play();
     } catch (error) {
-      console.error('Error playing cheer sound:', error);
+      // Error playing cheer sound
     }
   };
 
@@ -64,7 +64,7 @@ export function AddFundsModal({
         await playCheerSound();
         onClose();
       } catch (error) {
-        console.error('Error adding funds:', error);
+        // Error adding funds
       } finally {
         setIsSubmitting(false);
       }

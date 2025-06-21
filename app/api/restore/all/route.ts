@@ -4,10 +4,6 @@ import { NextRequest } from 'next/server';
 
 export const POST = createApiHandler(async (request: NextRequest) => {
   const { users, tasks, completed_tasks, accounts, transactions } = await request.json();
-  console.log(
-    'Received data for restore:',
-    JSON.stringify({ users, tasks, completed_tasks, accounts, transactions }, null, 2)
-  );
 
   // Use a transaction to ensure all operations succeed or fail together
   return await prisma.$transaction(async (tx) => {
@@ -27,7 +23,6 @@ export const POST = createApiHandler(async (request: NextRequest) => {
     const accountMappings = new Map<string, number>();
 
     // Restore users
-    console.log('Restoring users...');
     for (const user of users) {
       const createdUser = await tx.user.create({
         data: {
@@ -41,7 +36,6 @@ export const POST = createApiHandler(async (request: NextRequest) => {
     }
 
     // Restore tasks
-    console.log('Restoring tasks...');
     for (const task of tasks) {
       const createdTask = await tx.task.create({
         data: {
@@ -57,7 +51,6 @@ export const POST = createApiHandler(async (request: NextRequest) => {
     }
 
     // Restore accounts
-    console.log('Restoring accounts...');
     for (const account of accounts) {
       const userId = userMappings.get(account.user_name);
       if (userId) {
@@ -75,13 +68,10 @@ export const POST = createApiHandler(async (request: NextRequest) => {
           where: { user_id: userId },
           data: { piggybank_account_id: createdAccount.account_id },
         });
-      } else {
-        console.log(`Warning: No user found for account with user_name: ${account.user_name}`);
       }
     }
 
     // Restore completed tasks
-    console.log('Restoring completed tasks...');
     if (completed_tasks && completed_tasks.length > 0) {
       for (const ct of completed_tasks) {
         // Find the user ID from the user_id directly
@@ -105,16 +95,11 @@ export const POST = createApiHandler(async (request: NextRequest) => {
               payment_status: ct.payment_status,
             },
           });
-        } else {
-          console.log(
-            `Warning: Could not restore completed task. User ID: ${userId}, Task Description: ${ct.description}`
-          );
         }
       }
     }
 
     // Restore transactions
-    console.log('Restoring transactions...');
     if (transactions && transactions.length > 0) {
       for (const transaction of transactions) {
         // Find the account through the user_name
@@ -140,10 +125,6 @@ export const POST = createApiHandler(async (request: NextRequest) => {
                 : new Date(),
             },
           });
-        } else {
-          console.log(
-            `Warning: No account found for transaction with user_name: ${transaction.user_name}`
-          );
         }
       }
     }

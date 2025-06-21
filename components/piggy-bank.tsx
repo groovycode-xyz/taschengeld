@@ -44,7 +44,6 @@ export function PiggyBank() {
       setUsers(data.accountBalances || []);
     } catch (error) {
       setError('Failed to load piggy bank data');
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +69,7 @@ export function PiggyBank() {
       await fetchPiggyBankData(); // Refresh data
       setIsAddFundsModalOpen(false);
     } catch (error) {
-      console.error('Error adding funds:', error);
+      // Error adding funds
     }
   };
 
@@ -92,16 +91,14 @@ export function PiggyBank() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('API Error:', errorData);
         throw new Error(errorData.error || 'Failed to withdraw funds');
       }
 
       const result = await response.json();
-      console.log('Withdrawal successful:', result);
 
       await fetchPiggyBankData(); // Refresh data
     } catch (error) {
-      console.error('Error withdrawing funds:', error);
+      // Error withdrawing funds
     }
   };
 

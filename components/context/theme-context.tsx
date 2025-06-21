@@ -86,8 +86,6 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
 
     // Store the theme preference
     localStorage.setItem('theme-preference', theme);
-
-    console.log('Theme updated:', { theme, resolvedTheme }); // Debug log
   }, [resolvedTheme, theme]);
 
   return (

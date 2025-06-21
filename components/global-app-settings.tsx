@@ -235,7 +235,6 @@ export function GlobalAppSettings() {
         variant: 'default',
       });
     } catch (error) {
-      console.error('Reset failed:', error);
       toast({
         title: 'Reset Failed',
         description: `Failed to reset ${type}. Please try again.`,
@@ -260,7 +259,6 @@ export function GlobalAppSettings() {
         variant: 'default',
       });
     } catch (error) {
-      console.error('Failed to update currency:', error);
       toast({
         title: 'Update Failed',
         description:
@@ -284,7 +282,6 @@ export function GlobalAppSettings() {
         variant: 'default',
       });
     } catch (error) {
-      console.error('Failed to update currency format:', error);
       toast({
         title: 'Update Failed',
         description: 'Failed to update display format. Please try again.',
@@ -324,7 +321,6 @@ export function GlobalAppSettings() {
         variant: 'default',
       });
     } catch (error) {
-      console.error('Backup failed:', error);
       toast({
         title: 'Backup Failed',
         description: `Failed to backup ${type} data. Please try again.`,
@@ -468,7 +464,6 @@ export function GlobalAppSettings() {
           variant: 'default',
         });
       } catch (error) {
-        console.error('Restore failed:', error);
         toast({
           title: 'Restore Failed',
           description: error instanceof Error ? error.message : 'Failed to restore data',
@@ -544,7 +539,6 @@ export function GlobalAppSettings() {
         variant: 'default',
       });
     } catch (error) {
-      console.error('Reset failed:', error);
       toast({
         title: 'Reset Failed',
         description: 'Failed to reset selected accounts. Please try again.',
@@ -572,7 +566,6 @@ export function GlobalAppSettings() {
         });
       }
     } catch (error) {
-      console.error('Error saving language setting:', error);
       toast({
         title: 'Update Failed',
         description: 'Failed to update language setting. Please try again.',

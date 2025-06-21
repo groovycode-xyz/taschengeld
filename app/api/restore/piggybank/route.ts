@@ -4,7 +4,6 @@ import { NextRequest } from 'next/server';
 
 export const POST = createApiHandler(async (request: NextRequest) => {
   const data = await request.json();
-  console.log('Received data:', JSON.stringify(data, null, 2));
 
   const { accounts, transactions } = data;
   if (!accounts) {
@@ -25,7 +24,6 @@ export const POST = createApiHandler(async (request: NextRequest) => {
 
     // First restore accounts
     for (const account of accounts) {
-      console.log('Processing account:', JSON.stringify(account, null, 2));
       let userId = account.user_id;
 
       // If no user_id but have user_name, try to find user_id
@@ -35,12 +33,10 @@ export const POST = createApiHandler(async (request: NextRequest) => {
         });
         if (user) {
           userId = user.user_id;
-          console.log('Found user_id:', userId, 'for user_name:', account.user_name);
         }
       }
 
       if (userId) {
-        console.log('Inserting account for user_id:', userId);
         // Insert account with original account_number
         const createdAccount = await tx.piggybankAccount.create({
           data: {
@@ -58,15 +54,12 @@ export const POST = createApiHandler(async (request: NextRequest) => {
           where: { user_id: userId },
           data: { piggybank_account_id: createdAccount.account_id },
         });
-      } else {
-        console.log('No user_id found for account:', account);
       }
     }
 
     // Then restore transactions
     if (transactions && transactions.length > 0) {
       for (const transaction of transactions) {
-        console.log('Processing transaction:', JSON.stringify(transaction, null, 2));
         let accountId = accountMappings.get(transaction.account_id);
 
         // If no mapped account_id but have user_name, try to find account_id
@@ -80,12 +73,10 @@ export const POST = createApiHandler(async (request: NextRequest) => {
           });
           if (account) {
             accountId = account.account_id;
-            console.log('Found account_id:', accountId, 'for user_name:', transaction.user_name);
           }
         }
 
         if (accountId) {
-          console.log('Inserting transaction for account_id:', accountId);
           await tx.piggybankTransaction.create({
             data: {
               account_id: accountId,
@@ -98,8 +89,6 @@ export const POST = createApiHandler(async (request: NextRequest) => {
                 : new Date(),
             },
           });
-        } else {
-          console.log('No account_id found for transaction:', transaction);
         }
       }
     }

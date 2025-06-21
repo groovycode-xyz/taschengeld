@@ -23,7 +23,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       await updateSetting('show_german_terms', show);
       return show;
     } catch (error) {
-      console.error('Error saving language preference:', error);
       throw error;
     }
   };

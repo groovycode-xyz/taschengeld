@@ -7,8 +7,6 @@ async function initializeDefaultData() {
   const userCount = await prisma.user.count();
 
   if (userCount === 0) {
-    console.log('No users found. Creating default data...');
-
     try {
       // Create default user
       const defaultUser = await prisma.user.create({
@@ -76,13 +74,10 @@ async function initializeDefaultData() {
         });
       }
 
-      console.log('Default data created successfully!');
+      // Default data created successfully
     } catch (error) {
-      console.error('Error creating default data:', error);
       throw error;
     }
-  } else {
-    console.log('Users already exist, skipping initialization.');
   }
 }
 
@@ -92,7 +87,6 @@ async function initializeApp() {
   try {
     await initializeDefaultData();
   } catch (error) {
-    console.error('Failed to initialize app:', error);
     throw error;
   } finally {
     await prisma.$disconnect();

@@ -64,8 +64,6 @@ export function EditTaskModal({
         is_active,
       });
       onClose();
-    } else {
-      console.error('Cannot update task: task_id is undefined');
     }
   };
 
@@ -88,8 +86,6 @@ export function EditTaskModal({
     if (task && task.task_id) {
       onDeleteTask(task.task_id);
       onClose();
-    } else {
-      console.error('Cannot delete task: task_id is undefined');
     }
   };
 
@@ -166,7 +162,7 @@ export function EditTaskModal({
                               return audio.play();
                             });
                           } catch (error) {
-                            console.error('Error playing sound:', error);
+                            // Error playing sound
                           }
                         }}
                       >

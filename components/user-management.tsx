@@ -21,7 +21,6 @@ export function UserManagement() {
 
   const handleAddUser = async (newUser: CreateUserInput) => {
     try {
-      console.log('Creating user with data:', newUser);
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -30,7 +29,6 @@ export function UserManagement() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('API Error:', errorData);
         throw new Error(errorData.error || errorData.details || 'Failed to add user');
       }
 
@@ -39,7 +37,6 @@ export function UserManagement() {
       router.refresh();
       return response;
     } catch (error) {
-      console.error('Error adding user:', error);
       throw error;
     }
   };
@@ -59,7 +56,7 @@ export function UserManagement() {
       setEditingUser(null);
       router.refresh();
     } catch (error) {
-      console.error('Error updating user:', error);
+      // Error updating user
     }
   };
 
@@ -78,7 +75,7 @@ export function UserManagement() {
       setIsEditModalOpen(false);
       router.refresh();
     } catch (error) {
-      console.error('Error deleting user:', error);
+      // Error deleting user
     }
   };
 

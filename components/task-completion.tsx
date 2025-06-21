@@ -112,7 +112,7 @@ export function TaskCompletion() {
         applauseAudio.addEventListener('ended', () => resolve());
       });
     } catch (error) {
-      console.error('Error playing applause sound:', error);
+      // Error playing applause sound
     } finally {
       setShowFireworks(false);
     }
@@ -154,7 +154,6 @@ export function TaskCompletion() {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error('API Error:', errorData);
           throw new Error(errorData.error || 'Failed to create completed task');
         }
 
@@ -180,7 +179,6 @@ export function TaskCompletion() {
         }, 100);
       } catch (err) {
         setError('Error creating completed task');
-        console.error(err);
         setIsProcessing(false);
       }
     }
@@ -205,7 +203,6 @@ export function TaskCompletion() {
         setDeleteTaskId(null);
       } catch (err) {
         setError('Error deleting completed task');
-        console.error(err);
       }
     }
   };

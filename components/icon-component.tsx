@@ -20,7 +20,6 @@ export const IconComponent: React.FC<IconComponentProps> = ({ icon, className })
   const IconElement = LucideIcons[pascalCaseIcon as keyof typeof LucideIcons] as React.ElementType;
 
   if (!IconElement) {
-    console.warn(`Icon "${icon}" not found`);
     return <LucideIcons.HelpCircle className={className} />;
   }
 

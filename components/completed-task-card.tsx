@@ -49,7 +49,7 @@ export function CompletedTaskCard({
     try {
       await onUpdateStatus(task.c_task_id, 'Paid', false);
     } catch (err) {
-      console.error('Error approving task:', err);
+      // Error approving task
     }
   };
 
@@ -58,7 +58,7 @@ export function CompletedTaskCard({
     try {
       await onUpdateStatus(task.c_task_id, 'Unpaid', true);
     } catch (err) {
-      console.error('Error rejecting task:', err);
+      // Error rejecting task
     }
   };
 

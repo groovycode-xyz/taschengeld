@@ -79,7 +79,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
       const data = await response.json();
       setTransactions(data);
     } catch (error) {
-      console.error('Error fetching transactions:', error);
+      // Error fetching transactions
     } finally {
       setIsLoading(false);
     }

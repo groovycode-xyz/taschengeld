@@ -133,7 +133,7 @@ export function AddTaskModal({ isOpen, onClose, onAddTask }: AddTaskModalProps) 
                               return audio.play();
                             });
                           } catch (error) {
-                            console.error('Error playing sound:', error);
+                            // Error playing sound
                           }
                         }}
                       >

@@ -115,7 +115,6 @@ export function AddUserModal({ isOpen, onClose, onAddUser, user, onUserAdded }: 
         onUserAdded();
       }
     } catch (error) {
-      console.error('Error creating user:', error);
       addToast({
         variant: 'destructive',
         title: 'Error',
@@ -225,7 +224,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser, user, onUserAdded }: 
                             return audio.play();
                           });
                         } catch (error) {
-                          console.error('Error playing sound:', error);
+                          // Error playing sound
                         }
                       }}
                       aria-label='Play Sound'
