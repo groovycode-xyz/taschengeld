@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
 import { createApiHandler } from '@/app/lib/api-utils';
+import { BackupService } from '@/app/lib/services/backup-service';
 
 export const GET = createApiHandler(async () => {
   // Get accounts data with user information
@@ -60,6 +61,9 @@ export const GET = createApiHandler(async () => {
     transaction_date: transaction.transaction_date,
     account_id: transaction.account.account_id,
   }));
+
+  // Update backup tracking before returning data
+  await BackupService.updateBackupTracking();
 
   return NextResponse.json({
     accounts: accountsData,

@@ -130,13 +130,6 @@ export function GlobalAppSettings() {
     type: null,
   });
   const [loadingBackup, setLoadingBackup] = useState({
-    tasks: false,
-    piggybank: false,
-    all: false,
-  });
-  const [loadingRestore, setLoadingRestore] = useState({
-    tasks: false,
-    piggybank: false,
     all: false,
   });
   const [disableRolesDialog, setDisableRolesDialog] = useState(false);
@@ -147,6 +140,13 @@ export function GlobalAppSettings() {
   const [isResetTransactionsOpen, setIsResetTransactionsOpen] = useState(false);
   const [loadingCurrency, setLoadingCurrency] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<string>('symbol');
+  const [backupStatus, setBackupStatus] = useState<{
+    lastBackupDate: string | null;
+    newTransactions: number;
+    threshold: number;
+    reminderEnabled: boolean;
+  } | null>(null);
+  const [isRestoring, setIsRestoring] = useState(false);
   const { showGermanTerms, setShowGermanTerms } = useLanguage();
   const [loadingLanguage, setLoadingLanguage] = useState(false);
 
@@ -154,7 +154,25 @@ export function GlobalAppSettings() {
   useEffect(() => {
     setSelectedCurrency(settings.default_currency || 'none');
     setSelectedFormat(settings.currency_format || 'symbol');
+    fetchBackupStatus();
   }, [settings.default_currency, settings.currency_format]);
+
+  const fetchBackupStatus = async () => {
+    try {
+      const response = await fetch('/api/backup/status');
+      if (response.ok) {
+        const data = await response.json();
+        setBackupStatus({
+          lastBackupDate: data.lastBackupDate,
+          newTransactions: data.newTransactions,
+          threshold: data.threshold,
+          reminderEnabled: data.reminderEnabled,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch backup status:', error);
+    }
+  };
 
   const handleRoleEnforcementChange = async (checked: boolean) => {
     if (!checked && enforceRoles) {
@@ -309,9 +327,15 @@ export function GlobalAppSettings() {
         },
       };
 
-      // Create and download file
+      // Create and download file with user-friendly filename
+      const date = new Date();
+      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const typeLabel = type === 'all' ? 'Backup' : type.charAt(0).toUpperCase() + type.slice(1);
       const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-      saveAs(blob, `taschengeld-${type}-backup-${new Date().toISOString()}.json`);
+      saveAs(blob, `Taschengeld_${typeLabel}_${dateStr}.json`);
+
+      // Refresh backup status after successful backup
+      await fetchBackupStatus();
 
       toast({
         title: 'Backup Successful',
@@ -331,7 +355,7 @@ export function GlobalAppSettings() {
     }
   };
 
-  const handleRestore = async (type: 'tasks' | 'piggybank' | 'all') => {
+  const handleRestore = async () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -339,8 +363,6 @@ export function GlobalAppSettings() {
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
-
-      setLoadingRestore((prev) => ({ ...prev, [type]: true }));
 
       try {
         const content = await new Promise<string>((resolve, reject) => {
@@ -365,112 +387,73 @@ export function GlobalAppSettings() {
           );
         }
 
-        // Validate backup type
-        if (backupData.type !== type) {
+        // Only accept 'all' type backups
+        if (backupData.type !== 'all') {
           throw new Error(
-            `Please select a ${type} backup file. You selected a ${backupData.type} backup file.`
+            `Please select a full backup file. You selected a ${backupData.type} backup file.`
           );
         }
 
-        // Extract the correct data structure based on type
-        let dataToRestore;
-        switch (type) {
-          case 'tasks':
-            if (!backupData.data.tasks?.tasks) {
-              throw new Error('Invalid tasks backup file. No task data found.');
-            }
-            dataToRestore = backupData.data.tasks;
-            break;
-          case 'piggybank':
-            if (!backupData.data.piggybank?.accounts) {
-              throw new Error('Invalid piggy bank backup file. No account data found.');
-            }
-            dataToRestore = backupData.data.piggybank;
-            break;
-          case 'all':
-            // Validate all required fields exist
-            if (!backupData.data.all) {
-              throw new Error('Invalid full backup file. Missing all data section.');
-            }
-            const allData: AllBackupData = backupData.data.all;
+        // Validate all required fields exist
+        if (!backupData.data.all) {
+          throw new Error('Invalid full backup file. Missing all data section.');
+        }
+        const allData: AllBackupData = backupData.data.all;
 
-            // Check each required field
-            if (!Array.isArray(allData.users)) {
-              throw new Error('Invalid full backup file. Users data is missing or invalid.');
-            }
-            if (!Array.isArray(allData.tasks)) {
-              throw new Error('Invalid full backup file. Tasks data is missing or invalid.');
-            }
-            if (!Array.isArray(allData.completed_tasks)) {
-              throw new Error(
-                'Invalid full backup file. Completed tasks data is missing or invalid.'
-              );
-            }
-            if (!Array.isArray(allData.accounts)) {
-              throw new Error('Invalid full backup file. Accounts data is missing or invalid.');
-            }
-            if (!Array.isArray(allData.transactions)) {
-              throw new Error('Invalid full backup file. Transactions data is missing or invalid.');
-            }
-
-            // Validate required fields in each array
-            allData.users.forEach((user: UserBackup, index: number) => {
-              if (!user.name) {
-                throw new Error(
-                  `Invalid user data at index ${index}. Missing required field: name`
-                );
-              }
-            });
-
-            allData.tasks.forEach((task: TaskBackup, index: number) => {
-              if (!task.title || !task.payout_value) {
-                throw new Error(
-                  `Invalid task data at index ${index}. Missing required fields: title or payout_value`
-                );
-              }
-            });
-
-            allData.accounts.forEach((account: AccountBackup, index: number) => {
-              if (!account.account_number || !account.user_name) {
-                throw new Error(
-                  `Invalid account data at index ${index}. Missing required fields: account_number or user_name`
-                );
-              }
-            });
-
-            dataToRestore = allData;
-            break;
+        // Basic validation of data structure
+        if (!allData.users || !allData.tasks || !allData.accounts) {
+          throw new Error('Invalid backup file. Missing required data sections.');
         }
 
-        // If we get here, the file is valid - proceed with restore
-        const response = await fetch(`/api/restore/${type}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dataToRestore),
-        });
+        // If we get here, the file is valid - confirm restore
+        const confirmRestore = window.confirm(
+          `Are you sure you want to restore from this backup?\n\n` +
+            `File: ${file.name}\n` +
+            `Created: ${new Date(backupData.timestamp).toLocaleString()}\n\n` +
+            `WARNING: This will replace ALL current data with the backup data. This cannot be undone.`
+        );
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to restore data');
+        if (confirmRestore) {
+          setIsRestoring(true);
+
+          try {
+            const response = await fetch('/api/restore/all', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(allData),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to restore data');
+            }
+
+            await fetchBackupStatus(); // Refresh backup status
+
+            toast({
+              title: 'Restore Successful',
+              description:
+                'All data has been restored successfully. Please refresh the page to see the changes.',
+              variant: 'default',
+            });
+          } catch (error) {
+            toast({
+              title: 'Restore Failed',
+              description: error instanceof Error ? error.message : 'Failed to restore data',
+              variant: 'destructive',
+            });
+          } finally {
+            setIsRestoring(false);
+          }
         }
-
-        toast({
-          title: 'Restore Successful',
-          description: `${
-            type.charAt(0).toUpperCase() + type.slice(1)
-          } data has been restored successfully.`,
-          variant: 'default',
-        });
       } catch (error) {
         toast({
-          title: 'Restore Failed',
-          description: error instanceof Error ? error.message : 'Failed to restore data',
+          title: 'Invalid Backup File',
+          description: error instanceof Error ? error.message : 'Failed to read backup file',
           variant: 'destructive',
         });
-      } finally {
-        setLoadingRestore((prev) => ({ ...prev, [type]: false }));
       }
     };
 
@@ -782,125 +765,159 @@ export function GlobalAppSettings() {
           </section>
 
           {/* Backup and Restore Section */}
-          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+          <section
+            data-section='backup'
+            className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'
+          >
             <div className='flex items-center gap-4 mb-8'>
               <Save className='h-6 w-6 text-foreground' />
               <h2 className='text-xl font-medium text-foreground'>Backup and Restore</h2>
             </div>
 
-            <div className='space-y-8'>
-              {/* Tasks Backup/Restore */}
-              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-foreground mb-4'>Tasks</h3>
-                <div className='flex gap-3'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleBackup('tasks')}
-                    disabled={loadingBackup.tasks}
-                    className='flex-1 border-gray-200 text-foreground hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
-                  >
-                    {loadingBackup.tasks ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ) : (
-                      <Download className='h-4 w-4 mr-2' />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleRestore('tasks')}
-                    disabled={loadingRestore.tasks}
-                    className='flex-1 border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
-                  >
-                    {loadingRestore.tasks ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ) : (
-                      <Upload className='h-4 w-4 mr-2' />
-                    )}
-                    Restore
-                  </Button>
+            {/* Quick Backup */}
+            <div className='mb-8 p-6 rounded-xl bg-primary/5 border-2 border-primary/20'>
+              <div className='flex flex-col space-y-4'>
+                <div className='flex items-center justify-between'>
+                  <div>
+                    <h3 className='text-lg font-semibold text-foreground'>Quick Backup</h3>
+                    <p className='text-sm text-muted-foreground mt-1'>
+                      Create a complete backup of all your data with one click
+                    </p>
+                  </div>
+                  <div className='flex gap-3'>
+                    <Button
+                      size='lg'
+                      variant='outline'
+                      onClick={handleRestore}
+                      disabled={isRestoring}
+                      className='border-2'
+                    >
+                      {isRestoring ? (
+                        <Loader2 className='h-5 w-5 animate-spin mr-2' />
+                      ) : (
+                        <Upload className='h-5 w-5 mr-2' />
+                      )}
+                      Restore
+                    </Button>
+                    <Button
+                      size='lg'
+                      onClick={() => handleBackup('all')}
+                      disabled={loadingBackup.all}
+                      className='bg-primary hover:bg-primary/90'
+                    >
+                      {loadingBackup.all ? (
+                        <Loader2 className='h-5 w-5 animate-spin mr-2' />
+                      ) : (
+                        <Download className='h-5 w-5 mr-2' />
+                      )}
+                      Backup Now
+                    </Button>
+                  </div>
                 </div>
-                <p className='text-sm text-muted-foreground mt-2'>
-                  Download or restore all task definitions
-                </p>
+                {backupStatus && (
+                  <div className='flex items-center justify-between text-sm'>
+                    <span className='text-muted-foreground'>
+                      {backupStatus.lastBackupDate
+                        ? `Last backup: ${new Date(backupStatus.lastBackupDate).toLocaleDateString()}`
+                        : 'No backups yet'}
+                    </span>
+                    <span
+                      className={`font-medium ${
+                        backupStatus.newTransactions >= backupStatus.threshold
+                          ? 'text-red-600 font-semibold'
+                          : 'text-foreground'
+                      }`}
+                    >
+                      {backupStatus.newTransactions} new transactions since last backup
+                    </span>
+                  </div>
+                )}
               </div>
+            </div>
 
-              {/* Accounts Backup/Restore */}
-              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-foreground mb-4'>Sparkässeli Accounts</h3>
-                <div className='flex gap-3'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleBackup('piggybank')}
-                    disabled={loadingBackup.piggybank}
-                    className='flex-1 border-gray-200 text-foreground hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
-                  >
-                    {loadingBackup.piggybank ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ) : (
-                      <Download className='h-4 w-4 mr-2' />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleRestore('piggybank')}
-                    disabled={loadingRestore.piggybank}
-                    className='flex-1 border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
-                  >
-                    {loadingRestore.piggybank ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ) : (
-                      <Upload className='h-4 w-4 mr-2' />
-                    )}
-                    Restore
-                  </Button>
+            {/* Backup Configuration */}
+            <div className='mt-8 p-4 rounded-xl bg-secondary shadow-sm border border-border'>
+              <h3 className='text-base font-medium text-foreground mb-4'>
+                Backup Reminder Settings
+              </h3>
+              <div className='space-y-4'>
+                <div className='flex items-center justify-between'>
+                  <div>
+                    <p className='text-sm font-medium text-foreground'>
+                      Transaction-based reminders
+                    </p>
+                    <p className='text-xs text-muted-foreground mt-1'>
+                      Show reminder after a certain number of new transactions
+                    </p>
+                  </div>
+                  <Switch
+                    checked={backupStatus?.reminderEnabled ?? true}
+                    onCheckedChange={async (checked) => {
+                      try {
+                        const response = await fetch('/api/backup/status', {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ enabled: checked }),
+                        });
+                        if (response.ok) {
+                          await fetchBackupStatus();
+                          toast({
+                            title: 'Settings Updated',
+                            description: checked
+                              ? 'Backup reminders enabled'
+                              : 'Backup reminders disabled',
+                          });
+                        }
+                      } catch (error) {
+                        toast({
+                          title: 'Update Failed',
+                          description: 'Failed to update backup reminder setting',
+                          variant: 'destructive',
+                        });
+                      }
+                    }}
+                  />
                 </div>
-                <p className='text-sm text-muted-foreground mt-2'>
-                  Download or restore all account data and transactions
-                </p>
-              </div>
-
-              {/* Full Backup/Restore */}
-              <div className='p-4 rounded-xl bg-secondary shadow-sm border border-border'>
-                <h3 className='text-base font-medium text-foreground mb-4'>Full Backup</h3>
-                <div className='flex gap-3'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleBackup('all')}
-                    disabled={loadingBackup.all}
-                    className='flex-1 border-gray-200 text-foreground hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors'
-                  >
-                    {loadingBackup.all ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ) : (
-                      <Download className='h-4 w-4 mr-2' />
-                    )}
-                    Download
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleRestore('all')}
-                    disabled={loadingRestore.all}
-                    className='flex-1 border-gray-200 text-foreground hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors'
-                  >
-                    {loadingRestore.all ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ) : (
-                      <Upload className='h-4 w-4 mr-2' />
-                    )}
-                    Restore
-                  </Button>
+                <div className='flex items-center space-x-2'>
+                  <Label htmlFor='threshold' className='text-sm'>
+                    Remind after
+                  </Label>
+                  <Input
+                    id='threshold'
+                    type='number'
+                    min='5'
+                    max='50'
+                    value={backupStatus?.threshold || 10}
+                    disabled={!backupStatus?.reminderEnabled}
+                    onChange={async (e) => {
+                      const value = parseInt(e.target.value);
+                      if (value >= 5 && value <= 50) {
+                        try {
+                          const response = await fetch('/api/backup/status', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ threshold: value }),
+                          });
+                          if (response.ok) {
+                            await fetchBackupStatus();
+                            toast({
+                              title: 'Settings Updated',
+                              description: `Backup reminder threshold set to ${value} transactions`,
+                            });
+                          }
+                        } catch (error) {
+                          toast({
+                            title: 'Update Failed',
+                            description: 'Failed to update backup reminder threshold',
+                            variant: 'destructive',
+                          });
+                        }
+                      }
+                    }}
+                    className='w-20'
+                  />
+                  <span className='text-sm text-muted-foreground'>new transactions</span>
                 </div>
-                <p className='text-sm text-muted-foreground mt-2'>
-                  Download or restore all application data
-                </p>
               </div>
             </div>
           </section>

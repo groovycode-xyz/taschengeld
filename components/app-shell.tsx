@@ -9,6 +9,7 @@ import { useLanguage } from '@/components/context/language-context';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { BackupReminder } from '@/components/backup-reminder';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -109,6 +110,9 @@ export function AppShell({ children }: AppShellProps) {
             {children}
           </div>
         </div>
+
+        {/* Backup Reminder */}
+        <BackupReminder />
       </div>
     </TooltipProvider>
   );

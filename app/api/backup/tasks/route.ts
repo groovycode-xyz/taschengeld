@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
 import { createApiHandler } from '@/app/lib/api-utils';
+import { BackupService } from '@/app/lib/services/backup-service';
 
 export const GET = createApiHandler(async () => {
   // Get only essential task data
@@ -29,6 +30,9 @@ export const GET = createApiHandler(async () => {
     },
     orderBy: { created_at: 'desc' },
   });
+
+  // Update backup tracking before returning data
+  await BackupService.updateBackupTracking();
 
   return NextResponse.json({
     tasks,

@@ -26,36 +26,6 @@ export default function HomePage() {
               Your family&apos;s allowance and task management app
             </p>
           </div>
-
-          {/* Feature Cards - Optimized for tablets */}
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
-            {[
-              {
-                title: 'Task Management',
-                description: 'Create and manage household tasks easily',
-                icon: '✓',
-              },
-              {
-                title: 'Piggy Bank',
-                description: 'Track allowances and savings',
-                icon: '🐷',
-              },
-              {
-                title: 'Family Friendly',
-                description: 'Designed for parents and children',
-                icon: '👨‍👩‍👧‍👦',
-              },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className='bg-card p-6 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer'
-              >
-                <div className='text-4xl mb-4'>{feature.icon}</div>
-                <h3 className='text-xl font-semibold mb-2'>{feature.title}</h3>
-                <p className='text-muted-foreground'>{feature.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </MainLayout>
     </AppShell>
