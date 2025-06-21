@@ -53,7 +53,8 @@ export const settingsService = {
   // Specific setting helpers
   async getShowGermanTerms(): Promise<boolean> {
     const value = await this.getSetting('show_german_terms');
-    return value === 'true';
+    // Default to true (German) if not set
+    return value === null ? true : value === 'true';
   },
 
   async setShowGermanTerms(show: boolean): Promise<void> {

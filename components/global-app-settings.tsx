@@ -535,16 +535,16 @@ export function GlobalAppSettings() {
 
   const handleLanguageToggle = async () => {
     setLoadingLanguage(true);
-    const newState = !showGermanTerms;
+    const newState = showGermanTerms; // Reversed: if currently showing German, toggle will switch to English
 
     try {
       // Don't update UI until we know the database update succeeded
-      const success = await setShowGermanTerms(newState);
+      const success = await setShowGermanTerms(!newState);
 
       if (success) {
         toast({
           title: 'Language Updated',
-          description: `Application terms will now be shown in ${newState ? 'German' : 'English'}.`,
+          description: `App name will now be shown as "${newState ? 'Pocket Money' : 'Taschengeld'}".`,
           variant: 'default',
         });
       }
@@ -746,15 +746,15 @@ export function GlobalAppSettings() {
             <div className='space-y-6'>
               <div className='rounded-lg border p-4'>
                 <div className='flex-1 space-y-1'>
-                  <Label>German Terms</Label>
+                  <Label>Enable English App Name</Label>
                   <p className='text-sm text-muted-foreground'>
-                    Show German terms (Taschengeld, Sparkässeli) instead of English translations
+                    Use "Pocket Money" for the app heading instead of "Taschengeld" (for those who don't want to struggle with learning one German word 😊)
                   </p>
                 </div>
                 <div className='mt-4'>
                   <Switch
                     id='language-toggle'
-                    checked={showGermanTerms}
+                    checked={!showGermanTerms}
                     onCheckedChange={handleLanguageToggle}
                     disabled={loadingLanguage}
                     className='data-[state=checked]:bg-primary'
