@@ -132,25 +132,19 @@ export function PiggyBank() {
               )}
               onClick={() => setSelectedAccount(user)}
             >
-              <CardHeader>
-                <CardTitle>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-3'>
-                      <IconComponent
-                        icon={user.user_icon}
-                        className={cn('h-8 w-8', 'text-green-700 dark:text-green-300')}
-                      />
-                      <div>
-                        <div className='text-lg font-medium text-green-900 dark:text-green-100'>
-                          {user.user_name}&apos;s {getTermFor('Sparkässeli', 'Piggy Bank')}
-                        </div>
-                        <CurrencyDisplay
-                          value={user.balance}
-                          className='text-2xl font-bold text-green-700 dark:text-green-300'
-                        />
-                      </div>
-                    </div>
+              <CardHeader className='pb-4'>
+                <CardTitle className='flex flex-col items-center space-y-4'>
+                  <IconComponent
+                    icon={user.user_icon}
+                    className={cn('h-24 w-24', 'text-green-700 dark:text-green-300')}
+                  />
+                  <div className='text-xl font-medium text-green-900 dark:text-green-100 text-center'>
+                    {user.user_name}
                   </div>
+                  <CurrencyDisplay
+                    value={user.balance}
+                    className='text-3xl font-bold text-green-700 dark:text-green-300'
+                  />
                 </CardTitle>
               </CardHeader>
               <div className='p-4 pt-0 flex flex-col gap-2'>
