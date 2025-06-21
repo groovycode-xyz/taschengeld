@@ -1,5 +1,9 @@
 import { prisma } from '@/app/lib/prisma';
-import { PiggyBankTransaction, CreateTransactionInput, TransactionType } from '@/app/types/piggyBankTransaction';
+import {
+  PiggyBankTransaction,
+  CreateTransactionInput,
+  TransactionType,
+} from '@/app/types/piggyBankTransaction';
 import { Prisma } from '@prisma/client';
 
 export const piggyBankTransactionService = {

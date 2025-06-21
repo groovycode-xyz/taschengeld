@@ -23,7 +23,16 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { IconComponent } from './icon-component';
 import { TimeSince } from './time-since';
-import { Banknote, Filter, SortAsc, SquareCheckBig, ThumbsUp, Trash2, Layers } from 'lucide-react';
+import {
+  Banknote,
+  Filter,
+  SortAsc,
+  SquareCheckBig,
+  ThumbsUp,
+  Trash2,
+  Layers,
+  Loader2,
+} from 'lucide-react';
 import { useLanguage } from '@/components/context/language-context';
 import { cn } from '@/lib/utils';
 
@@ -85,6 +94,7 @@ export function Payday() {
     id: number;
     action: 'approve' | 'reject';
   } | null>(null);
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -197,21 +207,47 @@ export function Payday() {
   };
 
   const confirmBulkAction = async () => {
+    setIsDialogOpen(false); // Close dialog immediately
+    setIsBulkProcessing(true); // Show loading state
+
     try {
       const tasksToProcess = [...selectedTasks];
-      for (const taskId of tasksToProcess) {
-        if (bulkActionType === 'approve') {
-          await handleUpdatePaymentStatus(taskId, 'Paid', false);
-        } else {
-          await handleUpdatePaymentStatus(taskId, 'Unpaid', true);
+
+      if (bulkActionType === 'approve') {
+        // Use the payday endpoint for bulk approval
+        const response = await fetch('/api/completed-tasks', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            completedTaskIds: tasksToProcess,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to approve tasks');
         }
+      } else {
+        // For bulk rejection, process each task but don't update UI until all are done
+        const promises = tasksToProcess.map((taskId) =>
+          fetch(`/api/completed-tasks/${taskId}`, {
+            method: 'DELETE',
+          })
+        );
+
+        await Promise.all(promises);
       }
+
+      // Clear selections and refresh data once after all operations
+      setSelectedTasks([]);
+      await fetchCompletedTasks();
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to process bulk action');
-    } finally {
-      setSelectedTasks([]);
-      setIsDialogOpen(false);
       await fetchCompletedTasks();
+    } finally {
+      setIsBulkProcessing(false); // Hide loading state
     }
   };
 
@@ -293,7 +329,18 @@ export function Payday() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
+    <div className='h-[calc(100vh-4rem)] flex flex-col bg-background relative'>
+      {/* Loading overlay for bulk operations */}
+      {isBulkProcessing && (
+        <div className='absolute inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center'>
+          <div className='flex flex-col items-center gap-4'>
+            <Loader2 className='h-8 w-8 animate-spin text-primary' />
+            <p className='text-lg font-medium'>
+              Processing {selectedTasks.length} task{selectedTasks.length !== 1 ? 's' : ''}...
+            </p>
+          </div>
+        </div>
+      )}
       {/* Fixed Header */}
       <div className='p-8 bg-secondary'>
         <div className='flex items-center justify-between pb-6 border-b border-border'>
@@ -393,6 +440,36 @@ export function Payday() {
 
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto p-8 pt-4 bg-secondary'>
+        {/* Select All Button */}
+        {filteredTasks.length > 0 && (
+          <div className='mb-4 flex items-center'>
+            <Checkbox
+              checked={
+                selectedTasks.length === filteredTasks.length &&
+                filteredTasks.every((task) => selectedTasks.includes(task.c_task_id))
+              }
+              onCheckedChange={() => {
+                const visibleTaskIds = filteredTasks.map((task) => task.c_task_id);
+
+                if (
+                  selectedTasks.length === visibleTaskIds.length &&
+                  visibleTaskIds.every((id) => selectedTasks.includes(id))
+                ) {
+                  // All visible tasks are selected, so deselect all
+                  setSelectedTasks([]);
+                } else {
+                  // Select all visible tasks
+                  setSelectedTasks(visibleTaskIds);
+                }
+              }}
+              className='mr-3'
+            />
+            <span className='text-sm font-medium text-muted-foreground'>
+              Select All ({filteredTasks.length} task{filteredTasks.length !== 1 ? 's' : ''})
+            </span>
+          </div>
+        )}
+
         {/* Task Groups */}
         <div className='space-y-8'>
           {Object.entries(organizedTasks)
@@ -431,18 +508,24 @@ export function Payday() {
                     ({tasks.length} {tasks.length === 1 ? 'task' : 'tasks'})
                   </span>
                 </div>
-                <div className='space-y-4 ml-7'>
+                <div className='space-y-4'>
                   {tasks.map((task) => (
-                    <Card
-                      key={task.c_task_id}
-                      className={cn(
-                        'w-full transition-all duration-300 shadow-md hover:shadow-lg',
-                        'bg-card dark:bg-card',
-                        selectedTasks.includes(task.c_task_id) && 'ring-2 ring-primary'
-                      )}
-                    >
-                      <CardContent className='flex items-center justify-between p-3'>
-                        <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
+                    <div key={task.c_task_id} className='flex items-center gap-3 group'>
+                      <Checkbox
+                        checked={selectedTasks.includes(task.c_task_id)}
+                        onCheckedChange={() => handleTaskSelect(task.c_task_id)}
+                        className='flex-shrink-0 ml-9 group-hover:shadow-lg transition-shadow'
+                      />
+                      <Card
+                        className={cn(
+                          'flex-1 transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer',
+                          'bg-card dark:bg-card',
+                          selectedTasks.includes(task.c_task_id) && 'ring-2 ring-primary'
+                        )}
+                        onClick={() => handleTaskSelect(task.c_task_id)}
+                      >
+                        <CardContent className='flex items-center justify-between p-3'>
+                          <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
 
                         <Card
                           className={cn(
@@ -510,9 +593,9 @@ export function Payday() {
 
                         <div className='flex items-center gap-2 ml-2'>
                           <Button
-                            size='icon'
+                            size='sm'
                             variant='ghost'
-                            className='text-green-600 hover:text-green-700 hover:bg-green-100'
+                            className='text-green-600 hover:text-green-700 hover:bg-green-100 px-3'
                             onClick={(e) => {
                               e.stopPropagation();
                               setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
@@ -522,9 +605,9 @@ export function Payday() {
                             <ThumbsUp className='h-4 w-4' />
                           </Button>
                           <Button
-                            size='icon'
+                            size='sm'
                             variant='ghost'
-                            className='text-red-600 hover:text-red-700 hover:bg-red-100'
+                            className='text-red-600 hover:text-red-700 hover:bg-red-100 px-3'
                             onClick={(e) => {
                               e.stopPropagation();
                               setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
@@ -533,15 +616,10 @@ export function Payday() {
                           >
                             <Trash2 className='h-4 w-4' />
                           </Button>
-                          <Checkbox
-                            checked={selectedTasks.includes(task.c_task_id)}
-                            className='ml-2'
-                            onClick={(e) => e.stopPropagation()}
-                            onCheckedChange={() => handleTaskSelect(task.c_task_id)}
-                          />
                         </div>
                       </CardContent>
                     </Card>
+                  </div>
                   ))}
                 </div>
               </div>
