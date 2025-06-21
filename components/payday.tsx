@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CompletedTask } from '@/app/types/completedTask';
-import { CompletedTaskCard } from './completed-task-card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -20,8 +20,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Banknote, Filter, SortAsc } from 'lucide-react';
+import { IconComponent } from './icon-component';
+import { TimeSince } from './time-since';
+import { Banknote, Filter, SortAsc, SquareCheckBig, ThumbsUp, Trash2 } from 'lucide-react';
 import { useLanguage } from '@/components/context/language-context';
+import { cn } from '@/lib/utils';
 
 export function Payday() {
   const { getTermFor } = useLanguage();
@@ -34,6 +37,10 @@ export function Payday() {
   const [filterUser, setFilterUser] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'name' | 'age'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [confirmActionTask, setConfirmActionTask] = useState<{
+    id: number;
+    action: 'approve' | 'reject';
+  } | null>(null);
 
   useEffect(() => {
     fetchCompletedTasks();
@@ -307,13 +314,115 @@ export function Payday() {
               </div>
               <div className='space-y-4 ml-7'>
                 {tasks.map((task) => (
-                  <CompletedTaskCard
+                  <Card
                     key={task.c_task_id}
-                    task={task}
-                    onUpdateStatus={handleUpdatePaymentStatus}
-                    onSelect={handleTaskSelect}
-                    isSelected={selectedTasks.includes(task.c_task_id)}
-                  />
+                    className={cn(
+                      'w-full transition-all duration-300 shadow-md hover:shadow-lg',
+                      'bg-card dark:bg-card',
+                      selectedTasks.includes(task.c_task_id) && 'ring-2 ring-primary'
+                    )}
+                  >
+                    <CardContent className='flex items-center justify-between p-3'>
+                      <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
+
+                      <Card
+                        className={cn(
+                          'flex-1 mr-2 shadow-sm',
+                          'bg-blue-100/50 dark:bg-blue-900/10'
+                        )}
+                      >
+                        <CardContent className='flex items-center p-2'>
+                          {task.icon_name ? (
+                            <IconComponent
+                              icon={task.icon_name}
+                              className={cn('h-6 w-6 mr-2', 'text-blue-700 dark:text-blue-300')}
+                            />
+                          ) : (
+                            <IconComponent
+                              icon='default-task-icon'
+                              className='h-6 w-6 mr-2 text-gray-400'
+                            />
+                          )}
+                          <span
+                            className={cn(
+                              'text-sm font-medium',
+                              'text-blue-900 dark:text-blue-100'
+                            )}
+                          >
+                            {task.task_title}
+                          </span>
+                        </CardContent>
+                      </Card>
+
+                      <Card
+                        className={cn(
+                          'flex-1 mx-2 shadow-sm',
+                          'bg-green-100/50 dark:bg-green-900/10'
+                        )}
+                      >
+                        <CardContent className='flex items-center p-2'>
+                          {task.user_icon ? (
+                            <IconComponent
+                              icon={task.user_icon}
+                              className={cn('h-6 w-6 mr-2', 'text-green-700 dark:text-green-300')}
+                            />
+                          ) : (
+                            <IconComponent
+                              icon='default-user-icon'
+                              className='h-6 w-6 mr-2 text-gray-400'
+                            />
+                          )}
+                          <span
+                            className={cn(
+                              'text-sm font-medium',
+                              'text-green-900 dark:text-green-100'
+                            )}
+                          >
+                            {task.user_name}
+                          </span>
+                        </CardContent>
+                      </Card>
+
+                      <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
+                        <CardContent className='p-2 text-center'>
+                          <TimeSince date={task.created_at.toString()} />
+                        </CardContent>
+                      </Card>
+
+                      <div className='flex items-center gap-2 ml-2'>
+                        <Button
+                          size='icon'
+                          variant='ghost'
+                          className='text-green-600 hover:text-green-700 hover:bg-green-100'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
+                          }}
+                          title='Approve'
+                        >
+                          <ThumbsUp className='h-4 w-4' />
+                        </Button>
+                        <Button
+                          size='icon'
+                          variant='ghost'
+                          className='text-red-600 hover:text-red-700 hover:bg-red-100'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
+                          }}
+                          title='Reject'
+                        >
+                          <Trash2 className='h-4 w-4' />
+                        </Button>
+                        <Checkbox
+                          checked={selectedTasks.includes(task.c_task_id)}
+                          className='ml-2'
+                          onClick={(e) => e.stopPropagation()}
+                          onCheckedChange={() => handleTaskSelect(task.c_task_id)}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </div>
@@ -343,6 +452,42 @@ export function Payday() {
               variant={bulkActionType === 'approve' ? 'default' : 'destructive'}
             >
               {bulkActionType === 'approve' ? 'Approve' : 'Reject'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Individual Action Confirmation Dialog */}
+      <Dialog open={!!confirmActionTask} onOpenChange={() => setConfirmActionTask(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Confirm {confirmActionTask?.action === 'approve' ? 'Approval' : 'Rejection'}
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to {confirmActionTask?.action} this task?
+              {confirmActionTask?.action === 'reject' &&
+                ' This will permanently delete the completed task.'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className='flex justify-end space-x-2'>
+            <Button variant='outline' onClick={() => setConfirmActionTask(null)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (confirmActionTask) {
+                  handleUpdatePaymentStatus(
+                    confirmActionTask.id,
+                    confirmActionTask.action === 'approve' ? 'Paid' : 'Unpaid',
+                    confirmActionTask.action === 'reject'
+                  );
+                  setConfirmActionTask(null);
+                }
+              }}
+              variant={confirmActionTask?.action === 'approve' ? 'default' : 'destructive'}
+            >
+              {confirmActionTask?.action === 'approve' ? 'Approve' : 'Reject'}
             </Button>
           </DialogFooter>
         </DialogContent>
