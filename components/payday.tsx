@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { CompletedTask } from '@/app/types/completedTask';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { CurrencyDisplay } from '@/components/ui/currency-display';
 import {
   Dialog,
   DialogContent,
@@ -22,7 +23,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { IconComponent } from './icon-component';
 import { TimeSince } from './time-since';
-import { Banknote, Filter, SortAsc, SquareCheckBig, ThumbsUp, Trash2 } from 'lucide-react';
+import { Banknote, Filter, SortAsc, SquareCheckBig, ThumbsUp, Trash2, Layers } from 'lucide-react';
 import { useLanguage } from '@/components/context/language-context';
 import { cn } from '@/lib/utils';
 
@@ -37,6 +38,7 @@ export function Payday() {
   const [filterUser, setFilterUser] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'name' | 'age'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [groupBy, setGroupBy] = useState<'user' | 'task' | 'value'>('user');
   const [confirmActionTask, setConfirmActionTask] = useState<{
     id: number;
     action: 'approve' | 'reject';
@@ -166,9 +168,20 @@ export function Payday() {
     }
   });
 
-  // Group tasks by user
+  // Group tasks based on selected criteria
   const organizedTasks = sortedTasks.reduce((groups: { [key: string]: CompletedTask[] }, task) => {
-    const groupKey = task.user_name || 'Unknown User';
+    let groupKey = '';
+
+    if (groupBy === 'user') {
+      groupKey = task.user_name || 'Unknown User';
+    } else if (groupBy === 'task') {
+      groupKey = task.task_title || 'Unknown Task';
+    } else if (groupBy === 'value') {
+      const value = task.payout_value || 0;
+      // Format to 2 decimal places for consistent grouping
+      groupKey = value.toFixed(2);
+    }
+
     if (!groups[groupKey]) {
       groups[groupKey] = [];
     }
@@ -291,6 +304,23 @@ export function Payday() {
               </SelectContent>
             </Select>
           </div>
+
+          <div className='flex items-center gap-2'>
+            <Layers className='h-4 w-4 text-muted-foreground' />
+            <Select
+              value={groupBy}
+              onValueChange={(value: 'user' | 'task' | 'value') => setGroupBy(value)}
+            >
+              <SelectTrigger className='w-[200px]'>
+                <SelectValue placeholder='Group by' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='user'>{getTermFor('Benutzer', 'User')}</SelectItem>
+                <SelectItem value='task'>{getTermFor('Aufgabe', 'Task')}</SelectItem>
+                <SelectItem value='value'>{getTermFor('Wert', 'Value')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -298,135 +328,157 @@ export function Payday() {
       <div className='flex-1 overflow-y-auto p-8 pt-4 bg-secondary'>
         {/* Task Groups */}
         <div className='space-y-8'>
-          {Object.entries(organizedTasks).map(([groupName, tasks]) => (
-            <div key={groupName} className='space-y-4'>
-              <div className='flex items-center gap-3'>
-                <Checkbox
-                  checked={isGroupSelected(tasks)}
-                  onCheckedChange={() => handleGroupSelectAll(groupName, tasks)}
-                  className='mt-1'
-                  data-state={isGroupPartiallySelected(tasks) ? 'indeterminate' : undefined}
-                />
-                <h2 className='text-2xl font-semibold'>{groupName}</h2>
-                <span className='text-sm text-muted-foreground'>
-                  ({tasks.length} {tasks.length === 1 ? 'task' : 'tasks'})
-                </span>
-              </div>
-              <div className='space-y-4 ml-7'>
-                {tasks.map((task) => (
-                  <Card
-                    key={task.c_task_id}
-                    className={cn(
-                      'w-full transition-all duration-300 shadow-md hover:shadow-lg',
-                      'bg-card dark:bg-card',
-                      selectedTasks.includes(task.c_task_id) && 'ring-2 ring-primary'
+          {Object.entries(organizedTasks)
+            .sort(([a], [b]) => {
+              if (groupBy === 'value') {
+                // Sort by value numerically
+                return parseFloat(b) - parseFloat(a); // Descending order
+              }
+              // For other groupings, sort alphabetically
+              return a.localeCompare(b);
+            })
+            .map(([groupName, tasks]) => (
+              <div key={groupName} className='space-y-4'>
+                <div className='flex items-center gap-3'>
+                  <Checkbox
+                    checked={isGroupSelected(tasks)}
+                    onCheckedChange={() => handleGroupSelectAll(groupName, tasks)}
+                    className='mt-1'
+                    data-state={isGroupPartiallySelected(tasks) ? 'indeterminate' : undefined}
+                  />
+                  {groupBy === 'user' && tasks.length > 0 && tasks[0].user_icon && (
+                    <IconComponent icon={tasks[0].user_icon} className='h-6 w-6 text-foreground' />
+                  )}
+                  {groupBy === 'task' && tasks.length > 0 && tasks[0].icon_name && (
+                    <IconComponent icon={tasks[0].icon_name} className='h-6 w-6 text-foreground' />
+                  )}
+                  {groupBy === 'value' && <Banknote className='h-6 w-6 text-foreground' />}
+                  <h2 className='text-2xl font-semibold'>
+                    {groupBy === 'value' ? (
+                      <CurrencyDisplay value={parseFloat(groupName)} />
+                    ) : (
+                      groupName
                     )}
-                  >
-                    <CardContent className='flex items-center justify-between p-3'>
-                      <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
+                  </h2>
+                  <span className='text-sm text-muted-foreground'>
+                    ({tasks.length} {tasks.length === 1 ? 'task' : 'tasks'})
+                  </span>
+                </div>
+                <div className='space-y-4 ml-7'>
+                  {tasks.map((task) => (
+                    <Card
+                      key={task.c_task_id}
+                      className={cn(
+                        'w-full transition-all duration-300 shadow-md hover:shadow-lg',
+                        'bg-card dark:bg-card',
+                        selectedTasks.includes(task.c_task_id) && 'ring-2 ring-primary'
+                      )}
+                    >
+                      <CardContent className='flex items-center justify-between p-3'>
+                        <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
 
-                      <Card
-                        className={cn(
-                          'flex-1 mr-2 shadow-sm',
-                          'bg-blue-100/50 dark:bg-blue-900/10'
-                        )}
-                      >
-                        <CardContent className='flex items-center p-2'>
-                          {task.icon_name ? (
-                            <IconComponent
-                              icon={task.icon_name}
-                              className={cn('h-6 w-6 mr-2', 'text-blue-700 dark:text-blue-300')}
-                            />
-                          ) : (
-                            <IconComponent
-                              icon='default-task-icon'
-                              className='h-6 w-6 mr-2 text-gray-400'
-                            />
+                        <Card
+                          className={cn(
+                            'flex-1 mr-2 shadow-sm',
+                            'bg-blue-100/50 dark:bg-blue-900/10'
                           )}
-                          <span
-                            className={cn(
-                              'text-sm font-medium',
-                              'text-blue-900 dark:text-blue-100'
+                        >
+                          <CardContent className='flex items-center p-2'>
+                            {task.icon_name ? (
+                              <IconComponent
+                                icon={task.icon_name}
+                                className={cn('h-6 w-6 mr-2', 'text-blue-700 dark:text-blue-300')}
+                              />
+                            ) : (
+                              <IconComponent
+                                icon='default-task-icon'
+                                className='h-6 w-6 mr-2 text-gray-400'
+                              />
                             )}
-                          >
-                            {task.task_title}
-                          </span>
-                        </CardContent>
-                      </Card>
+                            <span
+                              className={cn(
+                                'text-sm font-medium',
+                                'text-blue-900 dark:text-blue-100'
+                              )}
+                            >
+                              {task.task_title}
+                            </span>
+                          </CardContent>
+                        </Card>
 
-                      <Card
-                        className={cn(
-                          'flex-1 mx-2 shadow-sm',
-                          'bg-green-100/50 dark:bg-green-900/10'
-                        )}
-                      >
-                        <CardContent className='flex items-center p-2'>
-                          {task.user_icon ? (
-                            <IconComponent
-                              icon={task.user_icon}
-                              className={cn('h-6 w-6 mr-2', 'text-green-700 dark:text-green-300')}
-                            />
-                          ) : (
-                            <IconComponent
-                              icon='default-user-icon'
-                              className='h-6 w-6 mr-2 text-gray-400'
-                            />
+                        <Card
+                          className={cn(
+                            'flex-1 mx-2 shadow-sm',
+                            'bg-green-100/50 dark:bg-green-900/10'
                           )}
-                          <span
-                            className={cn(
-                              'text-sm font-medium',
-                              'text-green-900 dark:text-green-100'
+                        >
+                          <CardContent className='flex items-center p-2'>
+                            {task.user_icon ? (
+                              <IconComponent
+                                icon={task.user_icon}
+                                className={cn('h-6 w-6 mr-2', 'text-green-700 dark:text-green-300')}
+                              />
+                            ) : (
+                              <IconComponent
+                                icon='default-user-icon'
+                                className='h-6 w-6 mr-2 text-gray-400'
+                              />
                             )}
+                            <span
+                              className={cn(
+                                'text-sm font-medium',
+                                'text-green-900 dark:text-green-100'
+                              )}
+                            >
+                              {task.user_name}
+                            </span>
+                          </CardContent>
+                        </Card>
+
+                        <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
+                          <CardContent className='p-2 text-center'>
+                            <TimeSince date={task.created_at.toString()} />
+                          </CardContent>
+                        </Card>
+
+                        <div className='flex items-center gap-2 ml-2'>
+                          <Button
+                            size='icon'
+                            variant='ghost'
+                            className='text-green-600 hover:text-green-700 hover:bg-green-100'
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
+                            }}
+                            title='Approve'
                           >
-                            {task.user_name}
-                          </span>
-                        </CardContent>
-                      </Card>
-
-                      <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
-                        <CardContent className='p-2 text-center'>
-                          <TimeSince date={task.created_at.toString()} />
-                        </CardContent>
-                      </Card>
-
-                      <div className='flex items-center gap-2 ml-2'>
-                        <Button
-                          size='icon'
-                          variant='ghost'
-                          className='text-green-600 hover:text-green-700 hover:bg-green-100'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
-                          }}
-                          title='Approve'
-                        >
-                          <ThumbsUp className='h-4 w-4' />
-                        </Button>
-                        <Button
-                          size='icon'
-                          variant='ghost'
-                          className='text-red-600 hover:text-red-700 hover:bg-red-100'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
-                          }}
-                          title='Reject'
-                        >
-                          <Trash2 className='h-4 w-4' />
-                        </Button>
-                        <Checkbox
-                          checked={selectedTasks.includes(task.c_task_id)}
-                          className='ml-2'
-                          onClick={(e) => e.stopPropagation()}
-                          onCheckedChange={() => handleTaskSelect(task.c_task_id)}
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                            <ThumbsUp className='h-4 w-4' />
+                          </Button>
+                          <Button
+                            size='icon'
+                            variant='ghost'
+                            className='text-red-600 hover:text-red-700 hover:bg-red-100'
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
+                            }}
+                            title='Reject'
+                          >
+                            <Trash2 className='h-4 w-4' />
+                          </Button>
+                          <Checkbox
+                            checked={selectedTasks.includes(task.c_task_id)}
+                            className='ml-2'
+                            onClick={(e) => e.stopPropagation()}
+                            onCheckedChange={() => handleTaskSelect(task.c_task_id)}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
