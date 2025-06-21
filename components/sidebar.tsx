@@ -10,7 +10,6 @@ import {
   ListTodo,
   Users,
   SwitchCamera,
-  Settings,
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -81,18 +80,6 @@ export function Sidebar() {
               >
                 <Users className='h-6 w-6 md:h-5 md:w-5' />
                 <span className='text-base md:text-sm'>Family</span>
-              </Link>
-
-              <Link
-                href='/global-settings'
-                className={`flex items-center space-x-3 px-3 py-4 md:py-3 rounded-lg border-2 transition-all touch-target ${
-                  pathname === '/global-settings'
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'border-border hover:bg-muted hover:border-muted-foreground/20 active:bg-muted/80'
-                }`}
-              >
-                <Settings className='h-6 w-6 md:h-5 md:w-5' />
-                <span className='text-base md:text-sm'>Settings</span>
               </Link>
             </>
           )}
