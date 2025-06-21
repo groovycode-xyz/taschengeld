@@ -36,6 +36,7 @@ export const completedTaskService = {
       icon_name: ct.task.icon_name,
       user_name: ct.user.name,
       user_icon: ct.user.icon,
+      user_birthday: ct.user.birthday,
     }));
   },
 
@@ -283,6 +284,7 @@ export const completedTaskService = {
       icon_name: ct.task.icon_name,
       user_name: ct.user.name,
       user_icon: ct.user.icon,
+      user_birthday: ct.user.birthday,
     }));
   },
 

@@ -26,6 +26,7 @@ export interface CompletedTask {
   icon_name?: string;
   user_name?: string;
   user_icon?: string;
+  user_birthday?: string;
 }
 
 export interface FullTaskDetails extends CompletedTask {

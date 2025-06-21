@@ -12,7 +12,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Banknote } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Banknote, Filter, SortAsc } from 'lucide-react';
 import { useLanguage } from '@/components/context/language-context';
 
 export function Payday() {
@@ -23,6 +31,9 @@ export function Payday() {
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [bulkActionType, setBulkActionType] = useState<'approve' | 'reject'>('approve');
+  const [filterUser, setFilterUser] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'name' | 'age'>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     fetchCompletedTasks();
@@ -122,17 +133,68 @@ export function Payday() {
     }
   };
 
-  const organizedTasks = completedTasks.reduce(
-    (groups: { [key: string]: CompletedTask[] }, task) => {
-      const groupKey = 'All Tasks';
-      if (!groups[groupKey]) {
-        groups[groupKey] = [];
-      }
-      groups[groupKey].push(task);
-      return groups;
-    },
-    {}
-  );
+  // Get unique users for filter dropdown
+  const uniqueUsers = Array.from(
+    new Set(completedTasks.map((task) => task.user_name).filter(Boolean))
+  ).sort();
+
+  // Filter tasks
+  const filteredTasks =
+    filterUser === 'all'
+      ? completedTasks
+      : completedTasks.filter((task) => task.user_name === filterUser);
+
+  // Sort tasks
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    if (sortBy === 'name') {
+      const nameA = a.user_name || '';
+      const nameB = b.user_name || '';
+      return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    } else {
+      // Sort by age (using birthday)
+      const ageA = a.user_birthday ? new Date(a.user_birthday).getTime() : 0;
+      const ageB = b.user_birthday ? new Date(b.user_birthday).getTime() : 0;
+      // For age, newer birthdays (younger) should come first when ascending
+      return sortOrder === 'asc' ? ageB - ageA : ageA - ageB;
+    }
+  });
+
+  // Group tasks by user
+  const organizedTasks = sortedTasks.reduce((groups: { [key: string]: CompletedTask[] }, task) => {
+    const groupKey = task.user_name || 'Unknown User';
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(task);
+    return groups;
+  }, {});
+
+  // Handle select all for a group
+  const handleGroupSelectAll = (groupName: string, tasks: CompletedTask[]) => {
+    const groupTaskIds = tasks.map((task) => task.c_task_id);
+    const allSelected = groupTaskIds.every((id) => selectedTasks.includes(id));
+
+    if (allSelected) {
+      // Deselect all tasks in this group
+      setSelectedTasks(selectedTasks.filter((id) => !groupTaskIds.includes(id)));
+    } else {
+      // Select all tasks in this group
+      const newSelectedTasks = Array.from(new Set([...selectedTasks, ...groupTaskIds]));
+      setSelectedTasks(newSelectedTasks);
+    }
+  };
+
+  // Check if all tasks in a group are selected
+  const isGroupSelected = (tasks: CompletedTask[]) => {
+    if (tasks.length === 0) return false;
+    return tasks.every((task) => selectedTasks.includes(task.c_task_id));
+  };
+
+  // Check if some tasks in a group are selected
+  const isGroupPartiallySelected = (tasks: CompletedTask[]) => {
+    const selectedCount = tasks.filter((task) => selectedTasks.includes(task.c_task_id)).length;
+    return selectedCount > 0 && selectedCount < tasks.length;
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -170,6 +232,59 @@ export function Payday() {
             </div>
           )}
         </div>
+
+        {/* Filter and Sort Controls */}
+        <div className='flex items-center gap-4 pt-6'>
+          <div className='flex items-center gap-2'>
+            <Filter className='h-4 w-4 text-muted-foreground' />
+            <Select value={filterUser} onValueChange={setFilterUser}>
+              <SelectTrigger className='w-[200px]'>
+                <SelectValue placeholder='Filter by user' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>{getTermFor('Alle', 'All')}</SelectItem>
+                {uniqueUsers.map((userName) => (
+                  <SelectItem key={userName} value={userName}>
+                    {userName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className='flex items-center gap-2'>
+            <SortAsc className='h-4 w-4 text-muted-foreground' />
+            <Select value={sortBy} onValueChange={(value: 'name' | 'age') => setSortBy(value)}>
+              <SelectTrigger className='w-[200px]'>
+                <SelectValue placeholder='Sort by' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='name'>{getTermFor('Name', 'Name')}</SelectItem>
+                <SelectItem value='age'>{getTermFor('Alter', 'Age')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={sortOrder}
+              onValueChange={(value: 'asc' | 'desc') => setSortOrder(value)}
+            >
+              <SelectTrigger className='w-[120px]'>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='asc'>
+                  {sortBy === 'age'
+                    ? getTermFor('Jüngste zuerst', 'Youngest first')
+                    : getTermFor('A-Z', 'A-Z')}
+                </SelectItem>
+                <SelectItem value='desc'>
+                  {sortBy === 'age'
+                    ? getTermFor('Älteste zuerst', 'Oldest first')
+                    : getTermFor('Z-A', 'Z-A')}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
 
       {/* Scrollable Content */}
@@ -178,8 +293,19 @@ export function Payday() {
         <div className='space-y-8'>
           {Object.entries(organizedTasks).map(([groupName, tasks]) => (
             <div key={groupName} className='space-y-4'>
-              <h2 className='text-2xl font-semibold'>{groupName}</h2>
-              <div className='space-y-4'>
+              <div className='flex items-center gap-3'>
+                <Checkbox
+                  checked={isGroupSelected(tasks)}
+                  onCheckedChange={() => handleGroupSelectAll(groupName, tasks)}
+                  className='mt-1'
+                  data-state={isGroupPartiallySelected(tasks) ? 'indeterminate' : undefined}
+                />
+                <h2 className='text-2xl font-semibold'>{groupName}</h2>
+                <span className='text-sm text-muted-foreground'>
+                  ({tasks.length} {tasks.length === 1 ? 'task' : 'tasks'})
+                </span>
+              </div>
+              <div className='space-y-4 ml-7'>
                 {tasks.map((task) => (
                   <CompletedTaskCard
                     key={task.c_task_id}
