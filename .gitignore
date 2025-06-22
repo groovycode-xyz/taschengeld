@@ -87,7 +87,6 @@ TESTING_CHECKLIST.md
 
 # Claude Code artifacts
 .claude/
-CLAUDE.md
 
 # Application logs
 logs/
