@@ -1,8 +1,45 @@
-# Taschengeld Family Allowance Application
+# 💰 Taschengeld - Family Allowance Tracker
 
-Taschengeld is an allowance tracker application designed to help families manage chores, tasks, and allowances for children. It features a user-friendly interface for both parents and children to interact with.
+Taschengeld is a family allowance tracker application that runs on your own computer or home server using Docker. Your family's data stays private and secure in your home.
 
-Taschengeld is the German word for "pocket money" and was developed for a family in Switzerland. As a result, there are two German words, "Taschengeld" and "Sparkässeli" which means "Piggy-Bank".
+**Taschengeld** is the German word for "pocket money" and was developed for a family in Switzerland. The app also uses "Sparkässeli" which means "Piggy-Bank".
+
+## 🚀 Quick Start
+
+```bash
+# Simple installation
+mkdir taschengeld && cd taschengeld
+curl -o docker-compose.yml https://raw.githubusercontent.com/barneephife/taschengeld/main/docker-compose.prod.yml
+curl -o .env.example https://raw.githubusercontent.com/barneephife/taschengeld/main/.env.example.prod
+cp .env.example .env
+# Edit .env with your database password
+docker compose up -d
+```
+
+**Access your application**: http://localhost:3000
+
+📖 **[Complete Installation Guide](INSTALLATION.md)**
+
+## ✨ Features
+
+- 👨‍👩‍👧‍👦 **Family Management**: Multiple family member profiles
+- ✅ **Task Management**: Define tasks with values and completion tracking  
+- 💰 **Piggy Bank**: Virtual accounts with transaction history
+- 🎯 **Payday System**: Bulk approval/rejection of completed tasks
+- 📱 **Kiosk Interface**: PIN-protected parent mode and simplified child mode
+- 🏠 **Privacy First**: All data stays on your computer/server
+
+## 🐳 Docker Images
+
+**Multi-Architecture Support:**
+- `docker pull tgeld/taschengeld:latest` (AMD64 + ARM64)
+- `docker pull tgeld/taschengeld:v1.0.5` (Specific version)
+- `docker pull tgeld/taschengeld:stable` (Latest stable release)
+
+**Supported Platforms:**
+- ✅ Intel/AMD processors (linux/amd64)
+- ✅ Apple Silicon (linux/arm64)  
+- ✅ ARM devices (linux/arm64)
 
 ## Tech Stack
 
