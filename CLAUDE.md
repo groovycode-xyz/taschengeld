@@ -161,7 +161,7 @@ The build script includes comprehensive testing:
    - Updates version.txt and creates git tags
 
 **Required GitHub Secrets:**
-- `DOCKERHUB_USERNAME`: Your DockerHub username (tgeld@masweh.com)
+- `DOCKERHUB_USERNAME`: Your DockerHub username (groovycodexyz)
 - `DOCKERHUB_TOKEN`: DockerHub access token for authentication
 
 **Deployment Process:**
@@ -426,7 +426,7 @@ curl -s http://localhost:3001/api/settings | grep version
 ### Initial Setup
 
 1. **Create DockerHub Repository**:
-   - Go to https://hub.docker.com/repositories/tgeld
+   - Go to https://hub.docker.com/repositories/groovycodexyz
    - Create new repository named `taschengeld`
    - Set as public repository
    - Add description: "Family allowance tracker application"
@@ -439,7 +439,7 @@ curl -s http://localhost:3001/api/settings | grep version
 3. **Configure GitHub Secrets**:
    - Go to GitHub repository → Settings → Secrets and variables → Actions
    - Add repository secrets:
-     - `DOCKERHUB_USERNAME`: Your DockerHub username (tgeld@masweh.com)
+     - `DOCKERHUB_USERNAME`: Your DockerHub username (groovycodexyz)
      - `DOCKERHUB_TOKEN`: The access token from step 2
 
 4. **Local Development Setup**:
