@@ -74,5 +74,31 @@ docker-compose.override.yml
 tmp/
 temp/
 
+# Project cleanup and migration artifacts
+ARTIFACT_CLEANUP_PLAN.md
+ARTIFACT_CLEANUP_REPORT.md
+CLEANUP_SUMMARY.md
+FUNCTIONALITY_CHECKLIST.md
+GITHUB_MIGRATION_GUIDE.md
+TESTING_CHECKLIST.md
+.migration-complete
+.migration-*
+
+# Claude Code artifacts
+.claude/
+CLAUDE.md
+
+# Application logs
+logs/
+*.log.*
+app_startup.log
+
+# Git artifacts from history rewrite
+.git/refs/original/
+
+# Backup files
+*.orig
+*.backup
+
 # OS
 Thumbs.db
