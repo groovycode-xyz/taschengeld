@@ -60,10 +60,11 @@ docker-compose.override.yml
 
 # IDEs and editors
 .idea/
+.vscode/
+.obsidian/
 *.swp
 *.swo
 *~
-.obsidian/
 
 # Development files
 .cursorrules
@@ -99,6 +100,10 @@ app_startup.log
 # Backup files
 *.orig
 *.backup
+
+# Archive and cleanup folders
+.archive/
+archive/
 
 # OS
 Thumbs.db
