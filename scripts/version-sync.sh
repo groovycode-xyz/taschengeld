@@ -119,8 +119,8 @@ if [ "$CREATE_RELEASE" = true ]; then
 ## 🚀 Release v$CURRENT_VERSION
 
 ### Docker Images
-- \`docker pull tgeld/taschengeld:v$CURRENT_VERSION\`
-- \`docker pull tgeld/taschengeld:latest\`
+- \`docker pull groovycodexyz/taschengeld:v$CURRENT_VERSION\`
+- \`docker pull groovycodexyz/taschengeld:latest\`
 
 ### Multi-Architecture Support
 - ✅ linux/amd64 (Intel/AMD processors)
@@ -128,7 +128,7 @@ if [ "$CREATE_RELEASE" = true ]; then
 
 ### Installation
 \`\`\`bash
-docker pull tgeld/taschengeld:v$CURRENT_VERSION
+docker pull groovycodexyz/taschengeld:v$CURRENT_VERSION
 \`\`\`
 
 For full setup instructions, see: https://taschengeld.groovycode.xyz
@@ -146,4 +146,4 @@ log "INFO" "Version synchronization completed!"
 log "INFO" "Current version: $CURRENT_VERSION"
 log "INFO" "Git tag: v$CURRENT_VERSION"
 log "INFO" "Application version: Check /global-settings in app"
-log "INFO" "DockerHub images: tgeld/taschengeld:v$CURRENT_VERSION"
+log "INFO" "DockerHub images: groovycodexyz/taschengeld:v$CURRENT_VERSION"

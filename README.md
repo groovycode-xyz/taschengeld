@@ -9,8 +9,8 @@ Taschengeld is a family allowance tracker application that runs on your own comp
 ```bash
 # Simple installation
 mkdir taschengeld && cd taschengeld
-curl -o docker-compose.yml https://raw.githubusercontent.com/barneephife/taschengeld/main/docker-compose.prod.yml
-curl -o .env.example https://raw.githubusercontent.com/barneephife/taschengeld/main/.env.example.prod
+curl -o docker-compose.yml https://raw.githubusercontent.com/groovycode-xyz/taschengeld/main/docker-compose.prod.yml
+curl -o .env.example https://raw.githubusercontent.com/groovycode-xyz/taschengeld/main/.env.example.prod
 cp .env.example .env
 # Edit .env with your database password
 docker compose up -d
@@ -32,9 +32,9 @@ docker compose up -d
 ## 🐳 Docker Images
 
 **Multi-Architecture Support:**
-- `docker pull tgeld/taschengeld:latest` (AMD64 + ARM64)
-- `docker pull tgeld/taschengeld:v1.0.5` (Specific version)
-- `docker pull tgeld/taschengeld:stable` (Latest stable release)
+- `docker pull groovycodexyz/taschengeld:latest` (AMD64 + ARM64)
+- `docker pull groovycodexyz/taschengeld:v1.0.5` (Specific version)
+- `docker pull groovycodexyz/taschengeld:stable` (Latest stable release)
 
 **Supported Platforms:**
 - ✅ Intel/AMD processors (linux/amd64)

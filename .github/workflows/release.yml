@@ -17,7 +17,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: tgeld/taschengeld
+  IMAGE_NAME: groovycodexyz/taschengeld
 
 jobs:
   release:
@@ -162,9 +162,9 @@ jobs:
           ## 🚀 Release v${{ steps.version.outputs.VERSION }}
           
           ### Docker Images
-          - `docker pull tgeld/taschengeld:v${{ steps.version.outputs.VERSION }}`
-          - `docker pull tgeld/taschengeld:latest`
-          - `docker pull tgeld/taschengeld:stable`
+          - `docker pull groovycodexyz/taschengeld:v${{ steps.version.outputs.VERSION }}`
+          - `docker pull groovycodexyz/taschengeld:latest`
+          - `docker pull groovycodexyz/taschengeld:stable`
           
           ### Multi-Architecture Support
           - ✅ linux/amd64 (Intel/AMD processors)
