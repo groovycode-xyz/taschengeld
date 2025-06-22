@@ -173,6 +173,3 @@ initialize_app_data
 # Start the application
 echo "Starting the application..."
 exec node server.js -H "${HOST:-0.0.0.0}"
-
-# Verify application health
-verify_app_health

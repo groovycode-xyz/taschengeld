@@ -76,44 +76,15 @@ jobs:
     - name: Test Docker image
       if: github.event_name != 'pull_request'
       run: |
-        # Pull the image that was just pushed to test it
-        docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        # Simple image validation - verify it can start and respond to basic commands
+        echo "Testing Docker image basic functionality..."
         
-        # Set up test environment
-        export DB_PASSWORD=TGeld2025DB
-        export DB_USER=postgres
-        export DB_DATABASE=tgeld
-        export DB_PORT=5432
-        
-        # Create test environment file
-        cat > .env.test << EOF
-        DB_PASSWORD=$DB_PASSWORD
-        DB_USER=$DB_USER
-        DB_DATABASE=$DB_DATABASE
-        DB_PORT=$DB_PORT
-        DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@db:5432/$DB_DATABASE?schema=public
-        EOF
-        
-        # Start test database
-        docker compose --env-file .env.test -f docker-compose.yml up -d db
-        
-        # Wait for database
-        timeout 60 bash -c 'until docker compose --env-file .env.test exec -T db pg_isready -U postgres; do sleep 2; done'
-        
-        # Test the image with a simple health check
-        docker run --rm --network taschengeld_default \
-          -e DATABASE_URL=postgresql://postgres:TGeld2025DB@db:5432/tgeld?schema=public \
-          -e DB_HOST=db \
-          -e DB_USER=postgres \
-          -e DB_PASSWORD=TGeld2025DB \
-          -e DB_DATABASE=tgeld \
-          -e DB_PORT=5432 \
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-          sh -c "echo 'Testing image...' && node --version && echo 'Image test passed!'"
-        
-        # Cleanup
-        docker compose --env-file .env.test down
-        rm -f .env.test
+        # Test that the image contains expected files and Node.js
+        docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+          sh -c "echo 'Testing image contents...' && \
+                 node --version && \
+                 ls -la /app && \
+                 echo 'Image validation passed!'"
 
     - name: Update Docker Hub description
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
