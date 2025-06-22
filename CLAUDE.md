@@ -6,6 +6,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Taschengeld ("pocket money" in German) is a family allowance tracker application designed for parents to manage children's tasks and allowances. It features a kiosk-style interface with PIN-protected parent mode and simplified child mode.
 
+### Repository Information
+
+**GitHub:**
+- **Organization:** `groovycode-xyz`
+- **Repository:** https://github.com/groovycode-xyz/taschengeld.git
+- **Issues:** https://github.com/groovycode-xyz/taschengeld/issues
+
+**DockerHub:**
+- **Account:** `groovycodexyz`
+- **Repository:** https://hub.docker.com/repository/docker/groovycodexyz/taschengeld
+- **Images:** `groovycodexyz/taschengeld`
+
+**Website & Support:**
+- **Website:** https://taschengeld.groovycode.xyz
+- **Support Email:** support@groovycode.xyz
+
+**Version & Release:**
+- **Current Version:** 1.0.5 (from `version.txt`)
+- **Version Strategy:** Single source of truth in `version.txt`
+- **Release Process:** Use `./scripts/version-sync.sh --increment patch --release`
+
+**Key Branding Notes:**
+- **GitHub Organization:** `groovycode-xyz` (with hyphens)
+- **DockerHub Account:** `groovycodexyz` (no hyphens) 
+- **Project Name:** Always "Taschengeld" (not "tgeld" which is legacy internal reference)
+- **Domain:** `groovycode.xyz` (not `.com`)
+
 ### Device Optimization
 
 The application is optimized exclusively for desktop/laptop and tablet devices:

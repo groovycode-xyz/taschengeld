@@ -350,7 +350,7 @@ docker image prune -f
 
 ### Need More Help?
 
-- Check our [GitHub Issues](https://github.com/barneephife/tgeld/issues)
+- Check our [GitHub Issues](https://github.com/groovycode-xyz/taschengeld/issues)
 - Submit a new issue if you can't find a solution
 
 ## For Developers

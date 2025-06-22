@@ -14,8 +14,8 @@ This guide provides step-by-step instructions for the development workflow. For 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/barneephife/tgeld.git
-   cd tgeld
+   git clone https://github.com/groovycode-xyz/taschengeld.git
+   cd taschengeld
    ```
 
 2. Install local dependencies (for tooling only):
@@ -759,8 +759,8 @@ Remember: The M1's ARM64 architecture requires explicit platform specifications,
 1. **Clone Repository**
 
    ```bash
-   git clone https://github.com/barneephife/tgeld.git
-   cd tgeld
+   git clone https://github.com/groovycode-xyz/taschengeld.git
+   cd taschengeld
    ```
 
 2. **Start Development Environment**

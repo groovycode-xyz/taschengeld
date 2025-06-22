@@ -990,7 +990,7 @@ export function GlobalAppSettings() {
                       <div className='flex items-center justify-between'>
                         <span className='text-sm text-muted-foreground'>GitHub</span>
                         <Link
-                          href='https://github.com/barneephife/taschengeld'
+                          href='https://github.com/groovycode-xyz/taschengeld'
                           target='_blank'
                           rel='noopener noreferrer'
                           className='text-sm text-primary hover:underline'

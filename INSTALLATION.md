@@ -33,10 +33,10 @@ cd taschengeld
 ### Step 2: Download Configuration Files
 ```bash
 # Download docker-compose.yml
-curl -o docker-compose.yml https://raw.githubusercontent.com/barneephife/taschengeld/main/docker-compose.prod.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/groovycode-xyz/taschengeld/main/docker-compose.prod.yml
 
 # Download environment template
-curl -o .env.example https://raw.githubusercontent.com/barneephife/taschengeld/main/.env.example.prod
+curl -o .env.example https://raw.githubusercontent.com/groovycode-xyz/taschengeld/main/.env.example.prod
 ```
 
 ### Step 3: Configure Environment
@@ -180,7 +180,7 @@ ports:
 ## 📞 Support
 
 - **Documentation**: https://taschengeld.groovycode.xyz
-- **GitHub Issues**: https://github.com/barneephife/taschengeld/issues
+- **GitHub Issues**: https://github.com/groovycode-xyz/taschengeld/issues
 - **Email Support**: support@groovycode.xyz
 
 ---

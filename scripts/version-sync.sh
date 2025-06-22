@@ -139,7 +139,7 @@ EOF
 )" \
         --latest
     
-    log "SUCCESS" "Created GitHub release: https://github.com/barneephife/taschengeld/releases/tag/v$CURRENT_VERSION"
+    log "SUCCESS" "Created GitHub release: https://github.com/groovycode-xyz/taschengeld/releases/tag/v$CURRENT_VERSION"
 fi
 
 log "INFO" "Version synchronization completed!"

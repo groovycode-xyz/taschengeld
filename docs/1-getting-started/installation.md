@@ -25,8 +25,8 @@ For Production:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/barneephife/tgeld.git
-   cd tgeld
+   git clone https://github.com/groovycode-xyz/taschengeld.git
+   cd taschengeld
    ```
 
 2. **Install Dependencies**
@@ -66,8 +66,8 @@ For Production:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/barneephife/tgeld.git
-   cd tgeld
+   git clone https://github.com/groovycode-xyz/taschengeld.git
+   cd taschengeld
    ```
 
 2. **Configure Environment**

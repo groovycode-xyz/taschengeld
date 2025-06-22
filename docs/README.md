@@ -1,16 +1,16 @@
 # Taschengeld Documentation
 
-The main documentation for Taschengeld has been moved to our [GitHub Wiki](https://github.com/barneephife/tgeld/wiki).
+The main documentation for Taschengeld has been moved to our [GitHub Wiki](https://github.com/groovycode-xyz/taschengeld/wiki).
 
 ## Documentation Structure
 
 Our documentation is organized into these main sections:
 
-- [Getting Started](https://github.com/barneephife/tgeld/wiki/Getting-Started)
-- [Architecture](https://github.com/barneephife/tgeld/wiki/Architecture)
-- [Development](https://github.com/barneephife/tgeld/wiki/Development)
-- [Features](https://github.com/barneephife/tgeld/wiki/Features)
-- [Maintenance](https://github.com/barneephife/tgeld/wiki/Maintenance)
+- [Getting Started](https://github.com/groovycode-xyz/taschengeld/wiki/Getting-Started)
+- [Architecture](https://github.com/groovycode-xyz/taschengeld/wiki/Architecture)
+- [Development](https://github.com/groovycode-xyz/taschengeld/wiki/Development)
+- [Features](https://github.com/groovycode-xyz/taschengeld/wiki/Features)
+- [Maintenance](https://github.com/groovycode-xyz/taschengeld/wiki/Maintenance)
 
 ## Recent Architecture Updates
 
@@ -22,9 +22,9 @@ We've recently updated our architecture to use a single-container approach that 
 
 For detailed information about these changes, please see:
 
-- [Container Architecture](https://github.com/barneephife/tgeld/wiki/Architecture#container-architecture)
-- [Development Setup](https://github.com/barneephife/tgeld/wiki/Development#development-environment)
-- [Production Deployment](https://github.com/barneephife/tgeld/wiki/Deployment)
+- [Container Architecture](https://github.com/groovycode-xyz/taschengeld/wiki/Architecture#container-architecture)
+- [Development Setup](https://github.com/groovycode-xyz/taschengeld/wiki/Development#development-environment)
+- [Production Deployment](https://github.com/groovycode-xyz/taschengeld/wiki/Deployment)
 
 ## Archived Documentation
 
