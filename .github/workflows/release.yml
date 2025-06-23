@@ -121,33 +121,31 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Test release image
+      - name: Verify release image
         run: |
-          echo "Testing release image with simplified approach..."
+          echo "Verifying release image availability..."
           
-          # Pull the release image that was just pushed
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
-
-          # Simple container test - verify image integrity and basic functionality
-          echo "Testing image contents and Node.js..."
-          timeout 120 docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} \
-            sh -c "echo 'Testing release image...' && \
-                   node --version && \
-                   ls -la /app/docker-entrypoint.sh /app/scripts/initialize-data.js && \
-                   echo 'Release image test passed!'"
-
-          echo "Testing Docker image startup fixes are present..."
-          # Verify the startup fixes are in the image
-          if docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} \
-            sh -c "grep -q 'Schema validation' /app/scripts/initialize-data.js && grep -q 'schema push' /app/docker-entrypoint.sh"; then
-            echo "✅ Docker startup fixes verified in image"
+          # Simple verification that images were pushed successfully
+          if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} >/dev/null 2>&1; then
+            echo "✅ Release image v${{ steps.version.outputs.VERSION }} verified on DockerHub"
           else
-            echo "❌ Docker startup fixes not found in image"
+            echo "❌ ERROR: Release image v${{ steps.version.outputs.VERSION }} not found on DockerHub"
+            exit 1
+          fi
+          
+          if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest >/dev/null 2>&1; then
+            echo "✅ Latest image verified on DockerHub"
+          else
+            echo "❌ ERROR: Latest image not found on DockerHub"
             exit 1
           fi
 
-          echo "🎉 Release image testing completed successfully!"
-          echo "Note: Full database integration testing is performed in docker-build.yml workflow"
+          echo "🎉 Release image verification completed successfully!"
+          echo "📋 Images available:"
+          echo "  - docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}"
+          echo "  - docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          echo ""
+          echo "Note: Comprehensive testing is performed in docker-build.yml workflow"
 
       - name: Commit version update
         if: github.event_name == 'workflow_dispatch'
