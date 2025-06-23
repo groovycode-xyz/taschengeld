@@ -179,7 +179,7 @@ jobs:
           
           # Wait for application to be ready
           echo "Waiting for application to start..."
-          max_attempts=30
+          max_attempts=24  # Reduced from 30 to 24 (2 minutes total)
           attempt=0
           while [ $attempt -lt $max_attempts ]; do
             if curl -s -f http://localhost:3003/api/health >/dev/null 2>&1; then
