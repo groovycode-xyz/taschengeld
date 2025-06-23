@@ -23,7 +23,7 @@ docker compose up -d
 ## ✨ Features
 
 - 👨‍👩‍👧‍👦 **Family Management**: Multiple family member profiles
-- ✅ **Task Management**: Define tasks with values and completion tracking  
+- ✅ **Task Management**: Define tasks with values and completion tracking
 - 💰 **Piggy Bank**: Virtual accounts with transaction history
 - 🎯 **Payday System**: Bulk approval/rejection of completed tasks
 - 📱 **Kiosk Interface**: PIN-protected parent mode and simplified child mode
@@ -32,13 +32,15 @@ docker compose up -d
 ## 🐳 Docker Images
 
 **Multi-Architecture Support:**
+
 - `docker pull groovycodexyz/taschengeld:latest` (AMD64 + ARM64)
 - `docker pull groovycodexyz/taschengeld:v1.0.5` (Specific version)
 - `docker pull groovycodexyz/taschengeld:stable` (Latest stable release)
 
 **Supported Platforms:**
+
 - ✅ Intel/AMD processors (linux/amd64)
-- ✅ Apple Silicon (linux/arm64)  
+- ✅ Apple Silicon (linux/arm64)
 - ✅ ARM devices (linux/arm64)
 
 ## Tech Stack

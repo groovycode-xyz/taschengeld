@@ -149,13 +149,46 @@ export function GlobalAppSettings() {
   const [isRestoring, setIsRestoring] = useState(false);
   const { showGermanTerms, setShowGermanTerms } = useLanguage();
   const [loadingLanguage, setLoadingLanguage] = useState(false);
+  const [versionInfo, setVersionInfo] = useState<{
+    version: string;
+    environment: string;
+    loading: boolean;
+  }>({
+    version: '1.0.0',
+    environment: 'production',
+    loading: true,
+  });
 
   // Load initial currency and format settings
   useEffect(() => {
     setSelectedCurrency(settings.default_currency || 'none');
     setSelectedFormat(settings.currency_format || 'symbol');
     fetchBackupStatus();
+    fetchVersion();
   }, [settings.default_currency, settings.currency_format]);
+
+  const fetchVersion = async () => {
+    try {
+      const response = await fetch('/api/version');
+      if (response.ok) {
+        const data = await response.json();
+        setVersionInfo({
+          version: data.version,
+          environment: data.environment,
+          loading: false,
+        });
+      } else {
+        throw new Error('Failed to fetch version');
+      }
+    } catch (error) {
+      console.error('Failed to fetch version:', error);
+      setVersionInfo({
+        version: '1.0.0',
+        environment: process.env.NODE_ENV || 'production',
+        loading: false,
+      });
+    }
+  };
 
   const fetchBackupStatus = async () => {
     try {
@@ -748,7 +781,8 @@ export function GlobalAppSettings() {
                 <div className='flex-1 space-y-1'>
                   <Label>Enable English App Name</Label>
                   <p className='text-sm text-muted-foreground'>
-                    Use "Pocket Money" for the app heading instead of "Taschengeld" (for those who don't want to struggle with learning one German word 😊)
+                    Use "Pocket Money" for the app heading instead of "Taschengeld" (for those who
+                    don't want to struggle with learning one German word 😊)
                   </p>
                 </div>
                 <div className='mt-4'>
@@ -974,12 +1008,22 @@ export function GlobalAppSettings() {
                   <div className='pt-4 border-t border-border space-y-2'>
                     <div className='flex justify-between items-center'>
                       <span className='text-sm text-muted-foreground'>Version</span>
-                      <span className='text-sm font-mono text-foreground'>1.0.4</span>
+                      <span className='text-sm font-mono text-foreground'>
+                        {versionInfo.loading ? (
+                          <Loader2 className='h-3 w-3 animate-spin inline' />
+                        ) : (
+                          versionInfo.version
+                        )}
+                      </span>
                     </div>
                     <div className='flex justify-between items-center'>
                       <span className='text-sm text-muted-foreground'>Environment</span>
                       <span className='text-sm font-mono text-foreground'>
-                        {process.env.NODE_ENV || 'production'}
+                        {versionInfo.loading ? (
+                          <Loader2 className='h-3 w-3 animate-spin inline' />
+                        ) : (
+                          versionInfo.environment
+                        )}
                       </span>
                     </div>
                   </div>

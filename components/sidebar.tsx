@@ -3,14 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMode } from '@/components/context/mode-context';
-import {
-  CheckSquare,
-  HandCoins,
-  PiggyBank,
-  ListTodo,
-  Users,
-  SwitchCamera,
-} from 'lucide-react';
+import { CheckSquare, HandCoins, PiggyBank, ListTodo, Users, SwitchCamera } from 'lucide-react';
 
 export function Sidebar() {
   const { toggleParentMode, isParentMode, enforceRoles } = useMode();

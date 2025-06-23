@@ -90,4 +90,20 @@ export const settingsService = {
   async setCurrencyFormat(format: string): Promise<void> {
     await this.updateSetting('currency_format', format);
   },
+
+  async getVersion(): Promise<{ version: string; environment: string }> {
+    try {
+      const response = await fetch('/api/version');
+      if (!response.ok) {
+        throw new Error('Failed to fetch version');
+      }
+      return await response.json();
+    } catch (error) {
+      // Fallback if API fails
+      return {
+        version: '1.0.0',
+        environment: process.env.NODE_ENV || 'production',
+      };
+    }
+  },
 };

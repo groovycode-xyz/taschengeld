@@ -110,9 +110,7 @@ export function PiggyBank() {
         <div className='flex items-center justify-between pb-6 border-b border-border'>
           <div className='flex items-center space-x-4'>
             <PiggyBankIcon className='h-8 w-8 text-foreground' />
-            <h1 className='text-3xl font-medium text-foreground'>
-              Piggy Bank
-            </h1>
+            <h1 className='text-3xl font-medium text-foreground'>Piggy Bank</h1>
           </div>
         </div>
       </div>

@@ -344,9 +344,7 @@ export function Payday() {
         <div className='flex items-center justify-between pb-6 border-b border-border'>
           <div className='flex items-center space-x-4'>
             <Banknote className='h-8 w-8 text-foreground' />
-            <h1 className='text-3xl font-medium text-foreground'>
-              Payday
-            </h1>
+            <h1 className='text-3xl font-medium text-foreground'>Payday</h1>
           </div>
           {selectedTasks.length > 0 && (
             <div className='flex items-center gap-4'>
@@ -407,14 +405,10 @@ export function Payday() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='asc'>
-                  {settings.sortBy === 'age'
-                    ? 'Youngest first'
-                    : 'A-Z'}
+                  {settings.sortBy === 'age' ? 'Youngest first' : 'A-Z'}
                 </SelectItem>
                 <SelectItem value='desc'>
-                  {settings.sortBy === 'age'
-                    ? 'Oldest first'
-                    : 'Z-A'}
+                  {settings.sortBy === 'age' ? 'Oldest first' : 'Z-A'}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -525,99 +519,102 @@ export function Payday() {
                         <CardContent className='flex items-center justify-between p-3'>
                           <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
 
-                        <Card
-                          className={cn(
-                            'flex-1 mr-2 shadow-sm',
-                            'bg-blue-100/50 dark:bg-blue-900/10'
-                          )}
-                        >
-                          <CardContent className='flex items-center p-2'>
-                            {task.icon_name ? (
-                              <IconComponent
-                                icon={task.icon_name}
-                                className={cn('h-6 w-6 mr-2', 'text-blue-700 dark:text-blue-300')}
-                              />
-                            ) : (
-                              <IconComponent
-                                icon='default-task-icon'
-                                className='h-6 w-6 mr-2 text-gray-400'
-                              />
+                          <Card
+                            className={cn(
+                              'flex-1 mr-2 shadow-sm',
+                              'bg-blue-100/50 dark:bg-blue-900/10'
                             )}
-                            <span
-                              className={cn(
-                                'text-sm font-medium',
-                                'text-blue-900 dark:text-blue-100'
+                          >
+                            <CardContent className='flex items-center p-2'>
+                              {task.icon_name ? (
+                                <IconComponent
+                                  icon={task.icon_name}
+                                  className={cn('h-6 w-6 mr-2', 'text-blue-700 dark:text-blue-300')}
+                                />
+                              ) : (
+                                <IconComponent
+                                  icon='default-task-icon'
+                                  className='h-6 w-6 mr-2 text-gray-400'
+                                />
                               )}
-                            >
-                              {task.task_title}
-                            </span>
-                          </CardContent>
-                        </Card>
+                              <span
+                                className={cn(
+                                  'text-sm font-medium',
+                                  'text-blue-900 dark:text-blue-100'
+                                )}
+                              >
+                                {task.task_title}
+                              </span>
+                            </CardContent>
+                          </Card>
 
-                        <Card
-                          className={cn(
-                            'flex-1 mx-2 shadow-sm',
-                            'bg-green-100/50 dark:bg-green-900/10'
-                          )}
-                        >
-                          <CardContent className='flex items-center p-2'>
-                            {task.user_icon ? (
-                              <IconComponent
-                                icon={task.user_icon}
-                                className={cn('h-6 w-6 mr-2', 'text-green-700 dark:text-green-300')}
-                              />
-                            ) : (
-                              <IconComponent
-                                icon='default-user-icon'
-                                className='h-6 w-6 mr-2 text-gray-400'
-                              />
+                          <Card
+                            className={cn(
+                              'flex-1 mx-2 shadow-sm',
+                              'bg-green-100/50 dark:bg-green-900/10'
                             )}
-                            <span
-                              className={cn(
-                                'text-sm font-medium',
-                                'text-green-900 dark:text-green-100'
+                          >
+                            <CardContent className='flex items-center p-2'>
+                              {task.user_icon ? (
+                                <IconComponent
+                                  icon={task.user_icon}
+                                  className={cn(
+                                    'h-6 w-6 mr-2',
+                                    'text-green-700 dark:text-green-300'
+                                  )}
+                                />
+                              ) : (
+                                <IconComponent
+                                  icon='default-user-icon'
+                                  className='h-6 w-6 mr-2 text-gray-400'
+                                />
                               )}
+                              <span
+                                className={cn(
+                                  'text-sm font-medium',
+                                  'text-green-900 dark:text-green-100'
+                                )}
+                              >
+                                {task.user_name}
+                              </span>
+                            </CardContent>
+                          </Card>
+
+                          <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
+                            <CardContent className='p-2 text-center'>
+                              <TimeSince date={task.created_at.toString()} />
+                            </CardContent>
+                          </Card>
+
+                          <div className='flex items-center gap-2 ml-2'>
+                            <Button
+                              size='sm'
+                              variant='ghost'
+                              className='text-green-600 hover:text-green-700 hover:bg-green-100 px-3'
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
+                              }}
+                              title='Approve'
                             >
-                              {task.user_name}
-                            </span>
-                          </CardContent>
-                        </Card>
-
-                        <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
-                          <CardContent className='p-2 text-center'>
-                            <TimeSince date={task.created_at.toString()} />
-                          </CardContent>
-                        </Card>
-
-                        <div className='flex items-center gap-2 ml-2'>
-                          <Button
-                            size='sm'
-                            variant='ghost'
-                            className='text-green-600 hover:text-green-700 hover:bg-green-100 px-3'
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
-                            }}
-                            title='Approve'
-                          >
-                            <ThumbsUp className='h-4 w-4' />
-                          </Button>
-                          <Button
-                            size='sm'
-                            variant='ghost'
-                            className='text-red-600 hover:text-red-700 hover:bg-red-100 px-3'
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
-                            }}
-                            title='Reject'
-                          >
-                            <Trash2 className='h-4 w-4' />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                              <ThumbsUp className='h-4 w-4' />
+                            </Button>
+                            <Button
+                              size='sm'
+                              variant='ghost'
+                              className='text-red-600 hover:text-red-700 hover:bg-red-100 px-3'
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
+                              }}
+                              title='Reject'
+                            >
+                              <Trash2 className='h-4 w-4' />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
                   ))}
                 </div>
               </div>

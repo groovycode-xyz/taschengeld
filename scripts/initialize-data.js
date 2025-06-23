@@ -11,18 +11,27 @@ async function initializeData() {
 
   try {
     console.log('Verifying database schema...');
-    
+
     // First, verify that required tables exist
-    const requiredTables = ['app_settings', 'users', 'tasks', 'completed_tasks', 'piggybank_accounts'];
-    const schemaValidation = await pool.query(`
+    const requiredTables = [
+      'app_settings',
+      'users',
+      'tasks',
+      'completed_tasks',
+      'piggybank_accounts',
+    ];
+    const schemaValidation = await pool.query(
+      `
       SELECT table_name 
       FROM information_schema.tables 
       WHERE table_schema = 'public' 
       AND table_name = ANY($1)
-    `, [requiredTables]);
+    `,
+      [requiredTables]
+    );
 
-    const existingTables = schemaValidation.rows.map(row => row.table_name);
-    const missingTables = requiredTables.filter(table => !existingTables.includes(table));
+    const existingTables = schemaValidation.rows.map((row) => row.table_name);
+    const missingTables = requiredTables.filter((table) => !existingTables.includes(table));
 
     if (missingTables.length > 0) {
       console.error('Schema validation failed. Missing required tables:', missingTables);
@@ -56,16 +65,18 @@ async function initializeData() {
     }
 
     // Verify the data was inserted correctly
-    const finalCheck = await pool.query('SELECT setting_key, setting_value FROM app_settings ORDER BY setting_key');
+    const finalCheck = await pool.query(
+      'SELECT setting_key, setting_value FROM app_settings ORDER BY setting_key'
+    );
     console.log('Current app settings:');
-    finalCheck.rows.forEach(row => {
+    finalCheck.rows.forEach((row) => {
       console.log(`  ${row.setting_key}: ${row.setting_value}`);
     });
 
     return true;
   } catch (error) {
     console.error('Error initializing data:', error);
-    
+
     // Provide more detailed error information
     if (error.code) {
       console.error('Error code:', error.code);
@@ -76,12 +87,12 @@ async function initializeData() {
     if (error.message) {
       console.error('Error message:', error.message);
     }
-    
+
     // Check if this is a connection issue
     if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
       console.error('Database connection failed. Please check database connectivity.');
     }
-    
+
     return false;
   } finally {
     await pool.end();

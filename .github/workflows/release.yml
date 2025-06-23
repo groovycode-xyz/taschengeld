@@ -11,9 +11,9 @@ on:
         default: 'patch'
         type: choice
         options:
-        - patch
-        - minor
-        - major
+          - patch
+          - minor
+          - major
 
 env:
   REGISTRY: docker.io
@@ -22,166 +22,166 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Determine version
-      id: version
-      run: |
-        if [ "${{ github.event_name }}" = "release" ]; then
-          # Extract version from release tag (remove 'v' prefix if present)
-          VERSION="${{ github.event.release.tag_name }}"
-          VERSION=${VERSION#v}
-        else
-          # Manual workflow dispatch - increment version
-          CURRENT_VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
-          echo "Current version: $CURRENT_VERSION"
-          
-          # Parse version components
-          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
-          
-          case "${{ github.event.inputs.version_type }}" in
-            major)
-              major=$((major + 1))
-              minor=0
-              patch=0
-              ;;
-            minor)
-              minor=$((minor + 1))
-              patch=0
-              ;;
-            patch)
-              patch=$((patch + 1))
-              ;;
-          esac
-          
-          VERSION="$major.$minor.$patch"
-        fi
-        
-        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-        echo "New version: $VERSION"
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            # Extract version from release tag (remove 'v' prefix if present)
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION=${VERSION#v}
+          else
+            # Manual workflow dispatch - increment version
+            CURRENT_VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
+            echo "Current version: $CURRENT_VERSION"
+            
+            # Parse version components
+            IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+            
+            case "${{ github.event.inputs.version_type }}" in
+              major)
+                major=$((major + 1))
+                minor=0
+                patch=0
+                ;;
+              minor)
+                minor=$((minor + 1))
+                patch=0
+                ;;
+              patch)
+                patch=$((patch + 1))
+                ;;
+            esac
+            
+            VERSION="$major.$minor.$patch"
+          fi
 
-    - name: Update version file
-      run: |
-        echo "${{ steps.version.outputs.VERSION }}" > version.txt
-        echo "Updated version.txt to ${{ steps.version.outputs.VERSION }}"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $VERSION"
 
-    - name: Build and push release images
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile.prod
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
-        labels: |
-          org.opencontainers.image.title=Taschengeld
-          org.opencontainers.image.description=Family allowance tracker application
-          org.opencontainers.image.version=v${{ steps.version.outputs.VERSION }}
-          org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-          org.opencontainers.image.revision=${{ github.sha }}
-          org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Update version file
+        run: |
+          echo "${{ steps.version.outputs.VERSION }}" > version.txt
+          echo "Updated version.txt to ${{ steps.version.outputs.VERSION }}"
 
-    - name: Test release image
-      run: |
-        # Pull the release image that was just pushed
-        docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
-        
-        # Set up test environment
-        export DB_PASSWORD=TGeld2025DB
-        export DB_USER=postgres
-        export DB_DATABASE=tgeld
-        export DB_PORT=5432
-        
-        # Create test environment file
-        cat > .env.test << EOF
-        DB_PASSWORD=$DB_PASSWORD
-        DB_USER=$DB_USER
-        DB_DATABASE=$DB_DATABASE
-        DB_PORT=$DB_PORT
-        DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@db:5432/$DB_DATABASE?schema=public
-        EOF
-        
-        # Start test database
-        docker compose --env-file .env.test -f docker-compose.yml up -d db
-        
-        # Wait for database
-        timeout 60 bash -c 'until docker compose --env-file .env.test exec -T db pg_isready -U postgres; do sleep 2; done'
-        
-        # Test the release image with a simple health check
-        docker run --rm --network taschengeld_default \
-          -e DATABASE_URL=postgresql://postgres:TGeld2025DB@db:5432/tgeld?schema=public \
-          -e DB_HOST=db \
-          -e DB_USER=postgres \
-          -e DB_PASSWORD=TGeld2025DB \
-          -e DB_DATABASE=tgeld \
-          -e DB_PORT=5432 \
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} \
-          sh -c "echo 'Testing release image...' && node --version && echo 'Release image test passed!'"
-        
-        # Cleanup
-        docker compose --env-file .env.test down
-        rm -f .env.test
+      - name: Build and push release images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.prod
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
+          labels: |
+            org.opencontainers.image.title=Taschengeld
+            org.opencontainers.image.description=Family allowance tracker application
+            org.opencontainers.image.version=v${{ steps.version.outputs.VERSION }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    - name: Commit version update
-      if: github.event_name == 'workflow_dispatch'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add version.txt
-        git commit -m "🔖 Bump version to v${{ steps.version.outputs.VERSION }}"
-        git tag "v${{ steps.version.outputs.VERSION }}"
-        git push origin HEAD --tags
+      - name: Test release image
+        run: |
+          # Pull the release image that was just pushed
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
 
-    - name: Create GitHub Release
-      if: github.event_name == 'workflow_dispatch'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ steps.version.outputs.VERSION }}
-        name: Release v${{ steps.version.outputs.VERSION }}
-        body: |
-          ## 🚀 Release v${{ steps.version.outputs.VERSION }}
-          
-          ### Docker Images
-          - `docker pull groovycodexyz/taschengeld:v${{ steps.version.outputs.VERSION }}`
-          - `docker pull groovycodexyz/taschengeld:latest`
-          - `docker pull groovycodexyz/taschengeld:stable`
-          
-          ### Multi-Architecture Support
-          - ✅ linux/amd64 (Intel/AMD processors)
-          - ✅ linux/arm64 (Apple Silicon, ARM processors)
-          
-          ### Changes
-          - Version bump from manual release workflow
-          
-          ---
-          🤖 Generated with [Claude Code](https://claude.ai/code)
-        draft: false
-        prerelease: false
+          # Set up test environment
+          export DB_PASSWORD=TGeld2025DB
+          export DB_USER=postgres
+          export DB_DATABASE=tgeld
+          export DB_PORT=5432
 
-    - name: Update Docker Hub description
-      uses: peter-evans/dockerhub-description@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-        repository: ${{ env.IMAGE_NAME }}
-        readme-filepath: ./README.md
+          # Create test environment file
+          cat > .env.test << EOF
+          DB_PASSWORD=$DB_PASSWORD
+          DB_USER=$DB_USER
+          DB_DATABASE=$DB_DATABASE
+          DB_PORT=$DB_PORT
+          DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@db:5432/$DB_DATABASE?schema=public
+          EOF
+
+          # Start test database
+          docker compose --env-file .env.test -f docker-compose.yml up -d db
+
+          # Wait for database
+          timeout 60 bash -c 'until docker compose --env-file .env.test exec -T db pg_isready -U postgres; do sleep 2; done'
+
+          # Test the release image with a simple health check
+          docker run --rm --network taschengeld_default \
+            -e DATABASE_URL=postgresql://postgres:TGeld2025DB@db:5432/tgeld?schema=public \
+            -e DB_HOST=db \
+            -e DB_USER=postgres \
+            -e DB_PASSWORD=TGeld2025DB \
+            -e DB_DATABASE=tgeld \
+            -e DB_PORT=5432 \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} \
+            sh -c "echo 'Testing release image...' && node --version && echo 'Release image test passed!'"
+
+          # Cleanup
+          docker compose --env-file .env.test down
+          rm -f .env.test
+
+      - name: Commit version update
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add version.txt
+          git commit -m "🔖 Bump version to v${{ steps.version.outputs.VERSION }}"
+          git tag "v${{ steps.version.outputs.VERSION }}"
+          git push origin HEAD --tags
+
+      - name: Create GitHub Release
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: Release v${{ steps.version.outputs.VERSION }}
+          body: |
+            ## 🚀 Release v${{ steps.version.outputs.VERSION }}
+
+            ### Docker Images
+            - `docker pull groovycodexyz/taschengeld:v${{ steps.version.outputs.VERSION }}`
+            - `docker pull groovycodexyz/taschengeld:latest`
+            - `docker pull groovycodexyz/taschengeld:stable`
+
+            ### Multi-Architecture Support
+            - ✅ linux/amd64 (Intel/AMD processors)
+            - ✅ linux/arm64 (Apple Silicon, ARM processors)
+
+            ### Changes
+            - Version bump from manual release workflow
+
+            ---
+            🤖 Generated with [Claude Code](https://claude.ai/code)
+          draft: false
+          prerelease: false
+
+      - name: Update Docker Hub description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.IMAGE_NAME }}
+          readme-filepath: ./README.md

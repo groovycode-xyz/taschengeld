@@ -44,7 +44,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       setSettings({
         enforce_roles: data.enforce_roles === 'true',
         parent_mode_pin: data.parent_mode_pin || null,
-        show_german_terms: data.show_german_terms === undefined ? true : data.show_german_terms === 'true',
+        show_german_terms:
+          data.show_german_terms === undefined ? true : data.show_german_terms === 'true',
         default_currency: data.default_currency || null,
         currency_format: data.currency_format || 'symbol',
       });
