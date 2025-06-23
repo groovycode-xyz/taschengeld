@@ -30,7 +30,7 @@ For detailed information about these changes, please see:
 
 The original documentation has been archived in the [99-archived](99-archived) directory for historical reference.
 
-Please visit our [GitHub Wiki](https://github.com/barneephife/tgeld/wiki) for the current documentation.
+Please visit our [GitHub Wiki](https://github.com/groovycode-xyz/taschengeld/wiki) for the current documentation.
 
 ## Quick Links
 

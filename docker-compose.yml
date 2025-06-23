@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: tgeld/tgeld:latest
+    image: groovycodexyz/taschengeld:latest
     ports:
       - '${PORT:-8071}:3000'
     environment:

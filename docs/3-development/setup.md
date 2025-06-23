@@ -25,8 +25,8 @@ This guide covers the setup and workflow for developing the Tgeld Task Managemen
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/barneephife/tgeld.git
-   cd tgeld
+   git clone https://github.com/groovycode-xyz/taschengeld.git
+   cd taschengeld
    ```
 
 2. **Install Dependencies**
@@ -181,7 +181,7 @@ describe('TaskList', () => {
 
 ```bash
 # Build production image
-docker build -t tgeld-prod -f Dockerfile.prod .
+docker build -t taschengeld-prod -f Dockerfile.prod .
 ```
 
 #### Running Production Containers

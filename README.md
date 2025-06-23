@@ -142,7 +142,7 @@ The application is available as a multi-architecture Docker image supporting bot
    ```yaml
    services:
      app:
-       image: tgeld/tgeld:latest
+       image: groovycodexyz/taschengeld:latest
        ports:
          - '8071:3000' # Change 8071 if needed
        environment:

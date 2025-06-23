@@ -357,7 +357,7 @@ Production builds are handled by the CI/CD pipeline, but can be tested locally:
 
    ```bash
    # Build for your local architecture
-   docker build -f Dockerfile.prod -t tgeld:prod-test .
+   docker build -f Dockerfile.prod -t taschengeld:prod-test .
 
    # Test the production build
    docker compose -f docker-compose.prod.yml up
@@ -373,7 +373,7 @@ Production builds are handled by the CI/CD pipeline, but can be tested locally:
    docker buildx build \
      --platform linux/amd64,linux/arm64 \
      -f Dockerfile.prod \
-     -t tgeld:latest \
+     -t taschengeld:latest \
      .
    ```
 
@@ -466,7 +466,7 @@ We follow strict migration practices to ensure database changes work consistentl
 
    # 2. Test in Docker environment
    docker compose down -v              # Remove existing volumes
-   docker build -f Dockerfile.prod -t tgeld:latest .
+   docker build -f Dockerfile.prod -t taschengeld:latest .
    docker compose up -d               # Start fresh environment
 
    # 3. Verify database state in Docker
@@ -661,7 +661,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
 
    ```bash
    # Build the image for ARM64
-   docker build --platform linux/arm64 -f Dockerfile.prod -t tgeld:latest .
+   docker build --platform linux/arm64 -f Dockerfile.prod -t taschengeld:latest .
 
    # Start the development environment
    docker compose up
@@ -682,7 +682,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
 
    # Testing migrations in Docker
    docker compose down -v
-   docker build --platform linux/arm64 -f Dockerfile.prod -t tgeld:latest .
+   docker build --platform linux/arm64 -f Dockerfile.prod -t taschengeld:latest .
    docker compose up
    ```
 
@@ -693,7 +693,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
 
    ```bash
    # Verify the image architecture
-   docker inspect tgeld:latest | grep Architecture
+   docker inspect taschengeld:latest | grep Architecture
 
    # Should output: "arm64"
    ```
@@ -730,7 +730,7 @@ Remember: The goal is to maintain a reliable and consistent database state acros
 
    ```bash
    # Full testing cycle
-   docker build --platform linux/arm64 -f Dockerfile.prod -t tgeld:latest .
+   docker build --platform linux/arm64 -f Dockerfile.prod -t taschengeld:latest .
    docker compose down -v
    docker compose up
 
@@ -767,7 +767,7 @@ Remember: The M1's ARM64 architecture requires explicit platform specifications,
 
    ```bash
    # Build the image
-   docker build -f Dockerfile.prod -t barneephife/tgeld:latest .
+   docker build -f Dockerfile.prod -t groovycodexyz/taschengeld:latest .
 
    # Start services
    docker compose up
@@ -844,7 +844,7 @@ Remember: The M1's ARM64 architecture requires explicit platform specifications,
 
    ```bash
    # Build production image
-   docker build -f Dockerfile.prod -t barneephife/tgeld:latest .
+   docker build -f Dockerfile.prod -t groovycodexyz/taschengeld:latest .
 
    # Test production setup
    docker compose -f docker-compose.prod.yml up
