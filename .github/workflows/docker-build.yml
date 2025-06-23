@@ -4,13 +4,17 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - '**.md'
-      - 'docs/**'
+      - 'README.md'
+      - 'docs/theme-system-research.md'
+      - 'docs/color-system/**'
+      - '.archive/**'
   pull_request:
     branches: [ main ]
     paths-ignore:
-      - '**.md'
-      - 'docs/**'
+      - 'README.md'
+      - 'docs/theme-system-research.md'
+      - 'docs/color-system/**'
+      - '.archive/**'
   workflow_dispatch:
 
 env:
