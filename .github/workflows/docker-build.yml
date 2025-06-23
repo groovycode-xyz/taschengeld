@@ -29,6 +29,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate commit size
+        run: |
+          echo "Checking commit size to prevent CI failures..."
+          COMMIT_LINES=$(git show --stat ${{ github.sha }} | grep -E "file.*changed.*insertion.*deletion" | grep -oE '[0-9]+' | head -2 | paste -sd+ | bc || echo "0")
+          MAX_LINES=10000
+          
+          echo "Commit changes: approximately $COMMIT_LINES lines"
+          
+          if [ "$COMMIT_LINES" -gt "$MAX_LINES" ]; then
+            echo "❌ ERROR: Commit is too large ($COMMIT_LINES lines > $MAX_LINES limit)"
+            echo "Large commits can break CI/CD. Please:"
+            echo "  1. Check if large files were accidentally committed"
+            echo "  2. Ensure logs/ and other artifacts are in .gitignore"
+            echo "  3. Consider breaking large changes into smaller commits"
+            exit 1
+          fi
+          
+          echo "✅ Commit size validation passed"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -58,6 +77,7 @@ jobs:
           echo "Current version: $VERSION"
 
       - name: Build and push Docker image
+        id: docker_build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -76,6 +96,32 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Verify Docker image was pushed
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "Verifying Docker images were successfully pushed to registry..."
+          
+          # Wait a moment for registry to update
+          sleep 10
+          
+          # Check if the latest tag exists
+          if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest >/dev/null 2>&1; then
+            echo "✅ Latest image verified on DockerHub"
+          else
+            echo "❌ ERROR: Latest image not found on DockerHub"
+            exit 1
+          fi
+          
+          # Check if the version tag exists
+          if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} >/dev/null 2>&1; then
+            echo "✅ Version v${{ steps.version.outputs.VERSION }} image verified on DockerHub"
+          else
+            echo "❌ ERROR: Version v${{ steps.version.outputs.VERSION }} image not found on DockerHub"
+            exit 1
+          fi
+          
+          echo "🎉 All Docker images successfully pushed and verified!"
 
       - name: Test Docker image
         if: github.event_name != 'pull_request'
@@ -98,3 +144,30 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ env.IMAGE_NAME }}
           readme-filepath: ./README.md
+
+      - name: Report build failure
+        if: failure() && github.event_name != 'pull_request'
+        run: |
+          echo "🚨 DOCKER BUILD FAILURE DETECTED 🚨"
+          echo ""
+          echo "Build failed for:"
+          echo "  Repository: ${{ github.repository }}"
+          echo "  Branch: ${{ github.ref_name }}"
+          echo "  Commit: ${{ github.sha }}"
+          echo "  Version: ${{ steps.version.outputs.VERSION }}"
+          echo "  Trigger: ${{ github.event_name }}"
+          echo ""
+          echo "This means new Docker images were NOT pushed to DockerHub!"
+          echo "Users pulling 'latest' will get outdated images without recent fixes."
+          echo ""
+          echo "🔧 Troubleshooting steps:"
+          echo "  1. Check GitHub Actions logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "  2. Verify DockerHub credentials are valid"
+          echo "  3. Check for large commits (>10k lines) that break CI"
+          echo "  4. Manually trigger release workflow if needed"
+          echo ""
+          echo "📋 Quick manual fix:"
+          echo "  gh workflow run release.yml --ref main"
+          
+          # Set exit code to mark this as a warning, not failure
+          exit 0

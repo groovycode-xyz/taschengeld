@@ -30,6 +30,26 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: Validate repository state
+        run: |
+          echo "Validating repository state for release..."
+          
+          # Check for uncommitted large files
+          LARGE_FILES=$(find . -name "*.log*" -size +1M 2>/dev/null | head -5)
+          if [ -n "$LARGE_FILES" ]; then
+            echo "⚠️  WARNING: Found large log files that could break CI:"
+            echo "$LARGE_FILES"
+            echo "These should be in .gitignore"
+          fi
+          
+          # Check .gitignore has required entries
+          if ! grep -q "^logs/" .gitignore; then
+            echo "❌ ERROR: .gitignore missing 'logs/' entry"
+            exit 1
+          fi
+          
+          echo "✅ Repository state validation passed"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
