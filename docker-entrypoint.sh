@@ -77,6 +77,19 @@ verify_app_health() {
     exit 1
 }
 
+# Function to generate Prisma client at runtime
+generate_prisma_client() {
+    echo "Generating Prisma client..."
+    if ! npx prisma generate 2>&1 | tee /tmp/prisma_generate.log; then
+        echo "Warning: Prisma client generation failed. Error details:"
+        cat /tmp/prisma_generate.log
+        echo "This may cause issues with database operations."
+        # Continue anyway as the client might already exist
+    else
+        echo "Prisma client generated successfully!"
+    fi
+}
+
 # Function to handle Prisma migrations with intelligent fallback
 run_migrations() {
     echo "Running database migrations..."
@@ -199,6 +212,9 @@ validate_db_url
 
 # Wait for database
 wait_for_db
+
+# Generate Prisma client at runtime
+generate_prisma_client
 
 # Run migrations with retry logic
 run_migrations

@@ -33,18 +33,7 @@ ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public"
 ENV HOST=0.0.0.0
 ENV NEXT_PUBLIC_API_URL=http://localhost:3000
 
-# Generate Prisma Client with platform-specific configuration
-RUN echo "Building for platform: $(uname -m)" && \
-    if [ "$(uname -m)" = "x86_64" ]; then \
-        echo "Configuring for AMD64" && \
-        PRISMA_QUERY_ENGINE_BINARY_PLATFORM="linux-musl-openssl-3.0.x" npx prisma generate; \
-    elif [ "$(uname -m)" = "aarch64" ]; then \
-        echo "Configuring for ARM64" && \
-        PRISMA_QUERY_ENGINE_BINARY_PLATFORM="linux-musl-arm64-openssl-3.0.x" npx prisma generate; \
-    else \
-        echo "Unsupported platform: $(uname -m)" && \
-        exit 1; \
-    fi
+# Skip Prisma generation during build - will be generated at runtime
 
 # Build application
 RUN npm run build
