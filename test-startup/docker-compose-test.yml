@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  app:
+    image: groovycodexyz/taschengeld:v1.0.7
+    environment:
+      - DATABASE_URL=postgresql://postgres:testpass123@db:5432/testdb?schema=public
+      - DB_USER=postgres
+      - DB_PASSWORD=testpass123
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=testdb
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3002:3000"
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testpass123
+      - POSTGRES_DB=testdb
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d testdb']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

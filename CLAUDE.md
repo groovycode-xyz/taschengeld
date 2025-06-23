@@ -552,9 +552,57 @@ curl -s http://localhost:3001/api/settings | grep version
    - **Lost Changes**: Use `git stash` before switching branches if you have uncommitted changes
    - **Wrong Branch**: Check `git branch --show-current` and switch with `git checkout [branch-name]`
    - **Merge Conflicts**: When merging development to main, resolve conflicts carefully in your IDE
+8. **CI/CD Pipeline Issues**:
+   - **Silent Build Failures**: Large commits (>10k lines) can break GitHub Actions
+   - **Outdated Docker Images**: Check if GitHub Actions completed successfully after commits to main
+   - **Log File Commits**: Ensure `logs/` directory is in .gitignore to prevent CI disruption
+   - **Missing Docker Images**: Manually trigger release workflow if automated builds fail
+
+### Docker Container Startup Issues
+
+**Issue**: Container restart loop with "relation does not exist" errors
+**Root Cause**: Database schema not created before data initialization
+**Solution**: Enhanced docker-entrypoint.sh (v1.0.7+) includes:
+- Schema validation before data insertion
+- Intelligent fallback to `prisma db push` when migrations fail
+- Better error diagnostics and retry logic
+
+**Diagnostic Commands**:
+```bash
+# Check if image contains startup fixes (v1.0.7+)
+docker run --rm groovycodexyz/taschengeld:latest sh -c "grep -c 'schema validation' /app/scripts/initialize-data.js"
+
+# Test startup manually with fresh database
+docker-compose -f docker-compose.yml up -d db
+docker run --rm --network taschengeld_default \
+  -e DATABASE_URL="postgresql://postgres:password@db:5432/tgeld?schema=public" \
+  -e DB_HOST=db -e DB_USER=postgres -e DB_PASSWORD=password \
+  -e DB_DATABASE=tgeld -e DB_PORT=5432 \
+  groovycodexyz/taschengeld:latest
+```
+
+### CI/CD Pipeline Troubleshooting
+
+**GitHub Actions Not Triggering**:
+1. Check recent commits for large files: `git show --stat HEAD`
+2. Verify .gitignore contains `logs/` entry
+3. Check GitHub Actions page for failed workflows
+4. Manually trigger release: `gh workflow run release.yml --ref main`
+
+**Docker Images Not Updated**:
+1. Check GitHub Actions completion status
+2. Verify DockerHub credentials in repository secrets
+3. Check for failed builds in Actions tab
+4. Use build script manually: `./scripts/build-multiarch.sh --push`
+
+**Large Commit Prevention**:
+- GitHub Actions now validates commit size (<10k lines)
+- Automatic detection of large log files
+- Enhanced error reporting with troubleshooting steps
 
 ### Testing Approach
 
 - Manual testing in Docker environment is primary approach
+- Automated CI/CD testing with fresh database startup verification
 - API endpoint testing included in build script
 - Focus on dev-prod parity rather than unit tests

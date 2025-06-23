@@ -136,6 +136,92 @@ jobs:
                    ls -la /app && \
                    echo 'Image validation passed!'"
 
+      - name: Test Docker startup with database
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "Testing Docker image startup with fresh database..."
+          
+          # Create test environment
+          cat > docker-compose.test.yml << 'EOF'
+          version: '3.8'
+          services:
+            app:
+              image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+              environment:
+                - DATABASE_URL=postgresql://postgres:testpass123@db:5432/testdb?schema=public
+                - DB_USER=postgres
+                - DB_PASSWORD=testpass123
+                - DB_HOST=db
+                - DB_PORT=5432
+                - DB_DATABASE=testdb
+                - NODE_ENV=production
+              depends_on:
+                db:
+                  condition: service_healthy
+              ports:
+                - "3003:3000"
+            db:
+              image: postgres:16-alpine
+              environment:
+                - POSTGRES_USER=postgres
+                - POSTGRES_PASSWORD=testpass123
+                - POSTGRES_DB=testdb
+              healthcheck:
+                test: ['CMD-SHELL', 'pg_isready -U postgres -d testdb']
+                interval: 5s
+                timeout: 5s
+                retries: 5
+                start_period: 10s
+          EOF
+          
+          # Start test environment
+          docker-compose -f docker-compose.test.yml up -d
+          
+          # Wait for application to be ready
+          echo "Waiting for application to start..."
+          max_attempts=30
+          attempt=0
+          while [ $attempt -lt $max_attempts ]; do
+            if curl -s -f http://localhost:3003/api/health >/dev/null 2>&1; then
+              echo "✅ Application startup test passed!"
+              break
+            fi
+            attempt=$((attempt + 1))
+            echo "Attempt $attempt/$max_attempts - waiting for application..."
+            sleep 5
+          done
+          
+          if [ $attempt -eq $max_attempts ]; then
+            echo "❌ Application startup test failed - logs:"
+            docker-compose -f docker-compose.test.yml logs app
+            docker-compose -f docker-compose.test.yml down
+            exit 1
+          fi
+          
+          # Verify API endpoints
+          echo "Testing API endpoints..."
+          if curl -s http://localhost:3003/api/health | grep -q '"status":"ok"'; then
+            echo "✅ Health endpoint working"
+          else
+            echo "❌ Health endpoint failed"
+            docker-compose -f docker-compose.test.yml logs app
+            docker-compose -f docker-compose.test.yml down
+            exit 1
+          fi
+          
+          # Test version endpoint
+          if curl -s http://localhost:3003/api/version | grep -q '"version"'; then
+            echo "✅ Version endpoint working"
+          else
+            echo "❌ Version endpoint failed"
+          fi
+          
+          # Clean up
+          docker-compose -f docker-compose.test.yml down
+          rm -f docker-compose.test.yml
+          
+          echo "🎉 Docker startup verification completed successfully!"
+
       - name: Update Docker Hub description
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: peter-evans/dockerhub-description@v3
