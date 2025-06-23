@@ -11,7 +11,7 @@ NC='\033[0m'
 
 # Default values
 REGISTRY="docker.io"
-REPOSITORY="tgeld/taschengeld"
+REPOSITORY="groovycodexyz/taschengeld"
 VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
 TAG="latest"
 PUSH=false
