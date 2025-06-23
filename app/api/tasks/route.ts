@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { taskService } from '@/app/lib/services/taskService';
 import { validateRequest } from '@/app/lib/validation/middleware';
+import { requireParentMode } from '@/app/lib/middleware/auth';
 import { createTaskSchema } from '@/app/lib/validation/schemas';
 import { logger } from '@/app/lib/logger';
 
@@ -21,21 +22,23 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  // Validate request body
-  const validation = await validateRequest(request, createTaskSchema);
-  if (!validation.success) {
-    return validation.error;
-  }
+  return requireParentMode(request, async (req) => {
+    // Validate request body
+    const validation = await validateRequest(req, createTaskSchema);
+    if (!validation.success) {
+      return validation.error;
+    }
 
-  try {
-    const taskData = {
-      ...validation.data,
-      is_active: true, // Set is_active to true by default
-    };
-    const task = await taskService.create(taskData);
-    return NextResponse.json(task, { status: 201 });
-  } catch (error) {
-    logger.error('Failed to create task', error);
-    return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
-  }
+    try {
+      const taskData = {
+        ...validation.data,
+        is_active: true, // Set is_active to true by default
+      };
+      const task = await taskService.create(taskData);
+      return NextResponse.json(task, { status: 201 });
+    } catch (error) {
+      logger.error('Failed to create task', error);
+      return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
+    }
+  });
 }
