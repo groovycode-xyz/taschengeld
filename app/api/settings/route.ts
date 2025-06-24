@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { settingsService } from '@/app/lib/services/settingsService';
 import { validateRequest } from '@/app/lib/validation/middleware';
-import { requireParentMode } from '@/app/lib/middleware/auth';
 import { updateSettingsSchema } from '@/app/lib/validation/schemas';
 import { logger } from '@/app/lib/logger';
 
@@ -18,22 +17,20 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  return requireParentMode(request, async (req) => {
-    // Validate request body
-    const validation = await validateRequest(req, updateSettingsSchema);
-    if (!validation.success) {
-      return validation.error;
-    }
+  // Validate request body
+  const validation = await validateRequest(request, updateSettingsSchema);
+  if (!validation.success) {
+    return validation.error;
+  }
 
-    try {
-      const { setting_key, setting_value } = validation.data;
+  try {
+    const { setting_key, setting_value } = validation.data;
 
-      await settingsService.updateSetting(setting_key, setting_value);
-      return NextResponse.json({ message: 'Setting updated successfully' });
-    } catch (error) {
-      logger.error('Error updating setting', error);
-      const message = error instanceof Error ? error.message : 'Failed to update setting';
-      return NextResponse.json({ error: message }, { status: 500 });
-    }
-  });
+    await settingsService.updateSetting(setting_key, setting_value);
+    return NextResponse.json({ message: 'Setting updated successfully' });
+  } catch (error) {
+    logger.error('Error updating setting', error);
+    const message = error instanceof Error ? error.message : 'Failed to update setting';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
