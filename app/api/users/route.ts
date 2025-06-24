@@ -13,29 +13,25 @@ export const GET = createApiHandler(async () => {
   return successResponse(users);
 });
 
-export async function POST(request: NextRequest) {
-  return requireParentMode(request, async (req) => {
-    return createApiHandler(async () => {
-      // Validate request body
-      const validation = await validateRequest(req, createUserSchema);
-      if (!validation.success) {
-        return validation.error;
-      }
+export const POST = createApiHandler(async (request: NextRequest) => {
+  // Validate request body
+  const validation = await validateRequest(request, createUserSchema);
+  if (!validation.success) {
+    return validation.error;
+  }
 
-      const { name } = validation.data;
+  const { name } = validation.data;
 
-      // Check for existing user with same name
-      const existingUser = await userService.findByName(name);
-      if (existingUser) {
-        throw new ConflictError('A user with this name already exists');
-      }
+  // Check for existing user with same name
+  const existingUser = await userService.findByName(name);
+  if (existingUser) {
+    throw new ConflictError('A user with this name already exists');
+  }
 
-      // If no duplicate, proceed with user creation
-      const newUser = await userService.createUser(validation.data);
-      return successResponse(newUser, 201);
-    })();
-  });
-}
+  // If no duplicate, proceed with user creation
+  const newUser = await userService.createUser(validation.data);
+  return successResponse(newUser, 201);
+});
 
 export async function PUT(request: NextRequest) {
   return requireParentMode(request, async (req) => {

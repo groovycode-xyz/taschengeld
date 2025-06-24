@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     try {
       const taskData = {
         ...validation.data,
-        is_active: true, // Set is_active to true by default
+        // Use is_active from request data (now properly validated)
       };
       const task = await taskService.create(taskData);
       return NextResponse.json(task, { status: 201 });
