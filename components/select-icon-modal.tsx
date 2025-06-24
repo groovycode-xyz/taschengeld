@@ -184,10 +184,12 @@ export function SelectIconModal({
                     : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
                 )}
               >
-                <IconComponent
-                  icon={icon}
-                  className={cn('h-8 w-8', currentIcon === icon && 'text-blue-600')}
-                />
+                <div className='flex items-center justify-center'>
+                  <IconComponent
+                    icon={icon}
+                    className={cn('h-8 w-8', currentIcon === icon && 'text-blue-600')}
+                  />
+                </div>
               </Button>
             ))}
           </div>
