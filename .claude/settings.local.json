@@ -4,7 +4,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git commit:*)",
-      "Bash(gh release list:*)"
+      "Bash(gh release list:*)",
+      "Bash(npm view:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }

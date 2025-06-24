@@ -24,6 +24,7 @@ export const createTaskSchema = z.object({
     .transform((val) => (val === '' ? null : val))
     .nullable()
     .optional(),
+  is_active: z.boolean().optional().default(true),
 });
 
 export const updateTaskSchema = createTaskSchema.partial();

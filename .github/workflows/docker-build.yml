@@ -34,9 +34,9 @@ jobs:
           echo "Checking commit size to prevent CI failures..."
           COMMIT_LINES=$(git show --stat ${{ github.sha }} | grep -E "file.*changed.*insertion.*deletion" | grep -oE '[0-9]+' | head -2 | paste -sd+ | bc || echo "0")
           MAX_LINES=10000
-          
+
           echo "Commit changes: approximately $COMMIT_LINES lines"
-          
+
           if [ "$COMMIT_LINES" -gt "$MAX_LINES" ]; then
             echo "❌ ERROR: Commit is too large ($COMMIT_LINES lines > $MAX_LINES limit)"
             echo "Large commits can break CI/CD. Please:"
@@ -45,7 +45,7 @@ jobs:
             echo "  3. Consider breaking large changes into smaller commits"
             exit 1
           fi
-          
+
           echo "✅ Commit size validation passed"
 
       - name: Set up Docker Buildx
@@ -101,10 +101,10 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           echo "Verifying Docker images were successfully pushed to registry..."
-          
+
           # Wait a moment for registry to update
           sleep 10
-          
+
           # Check if the latest tag exists
           if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest >/dev/null 2>&1; then
             echo "✅ Latest image verified on DockerHub"
@@ -112,7 +112,7 @@ jobs:
             echo "❌ ERROR: Latest image not found on DockerHub"
             exit 1
           fi
-          
+
           # Check if the version tag exists
           if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} >/dev/null 2>&1; then
             echo "✅ Version v${{ steps.version.outputs.VERSION }} image verified on DockerHub"
@@ -120,7 +120,7 @@ jobs:
             echo "❌ ERROR: Version v${{ steps.version.outputs.VERSION }} image not found on DockerHub"
             exit 1
           fi
-          
+
           echo "🎉 All Docker images successfully pushed and verified!"
 
       - name: Test Docker image
@@ -140,7 +140,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           echo "Testing Docker image startup with fresh database..."
-          
+
           # Create test environment
           cat > docker-compose.test.yml << 'EOF'
           version: '3.8'
@@ -173,10 +173,10 @@ jobs:
                 retries: 5
                 start_period: 10s
           EOF
-          
+
           # Start test environment
           docker-compose -f docker-compose.test.yml up -d
-          
+
           # Wait for application to be ready
           echo "Waiting for application to start..."
           max_attempts=24  # Reduced from 30 to 24 (2 minutes total)
@@ -190,14 +190,14 @@ jobs:
             echo "Attempt $attempt/$max_attempts - waiting for application..."
             sleep 5
           done
-          
+
           if [ $attempt -eq $max_attempts ]; then
             echo "❌ Application startup test failed - logs:"
             docker-compose -f docker-compose.test.yml logs app
             docker-compose -f docker-compose.test.yml down
             exit 1
           fi
-          
+
           # Verify API endpoints
           echo "Testing API endpoints..."
           if curl -s http://localhost:3003/api/health | grep -q '"status":"ok"'; then
@@ -208,18 +208,18 @@ jobs:
             docker-compose -f docker-compose.test.yml down
             exit 1
           fi
-          
+
           # Test version endpoint
           if curl -s http://localhost:3003/api/version | grep -q '"version"'; then
             echo "✅ Version endpoint working"
           else
             echo "❌ Version endpoint failed"
           fi
-          
+
           # Clean up
           docker-compose -f docker-compose.test.yml down
           rm -f docker-compose.test.yml
-          
+
           echo "🎉 Docker startup verification completed successfully!"
 
       - name: Update Docker Hub description
@@ -254,6 +254,6 @@ jobs:
           echo ""
           echo "📋 Quick manual fix:"
           echo "  gh workflow run release.yml --ref main"
-          
+
           # Set exit code to mark this as a warning, not failure
           exit 0

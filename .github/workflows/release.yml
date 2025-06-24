@@ -33,7 +33,7 @@ jobs:
       - name: Validate repository state
         run: |
           echo "Validating repository state for release..."
-          
+
           # Check for uncommitted large files
           LARGE_FILES=$(find . -name "*.log*" -size +1M 2>/dev/null | head -5)
           if [ -n "$LARGE_FILES" ]; then
@@ -41,13 +41,13 @@ jobs:
             echo "$LARGE_FILES"
             echo "These should be in .gitignore"
           fi
-          
+
           # Check .gitignore has required entries
           if ! grep -q "^logs/" .gitignore; then
             echo "❌ ERROR: .gitignore missing 'logs/' entry"
             exit 1
           fi
-          
+
           echo "✅ Repository state validation passed"
 
       - name: Set up Docker Buildx
@@ -124,7 +124,7 @@ jobs:
       - name: Verify release image
         run: |
           echo "Verifying release image availability..."
-          
+
           # Simple verification that images were pushed successfully
           if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }} >/dev/null 2>&1; then
             echo "✅ Release image v${{ steps.version.outputs.VERSION }} verified on DockerHub"
@@ -132,7 +132,7 @@ jobs:
             echo "❌ ERROR: Release image v${{ steps.version.outputs.VERSION }} not found on DockerHub"
             exit 1
           fi
-          
+
           if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest >/dev/null 2>&1; then
             echo "✅ Latest image verified on DockerHub"
           else

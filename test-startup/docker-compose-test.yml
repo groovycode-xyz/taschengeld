@@ -14,7 +14,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "3002:3000"
+      - '3002:3000'
   db:
     image: postgres:16-alpine
     environment:

@@ -566,6 +566,7 @@ curl -s http://localhost:3000/api/version
 **Issue**: Container restart loop with "relation does not exist" errors
 **Root Cause**: Database schema not created before data initialization
 **Solution**: Enhanced docker-entrypoint.sh (v1.0.7+) includes:
+
 - Schema validation before data insertion
 - Intelligent fallback to `prisma db push` when migrations fail
 - Better error diagnostics and retry logic
@@ -575,15 +576,17 @@ curl -s http://localhost:3000/api/version
 **Issue**: Docker builds failing with Prisma SIGTRAP errors during multi-architecture compilation
 **Root Cause**: Prisma client generation fails in Alpine Linux during build-time with platform-specific detection
 **Solution**: Runtime Prisma client generation (v1.0.9+):
+
 - Removed problematic build-time Prisma generation from Dockerfile.prod
 - Added `generate_prisma_client()` function to docker-entrypoint.sh
 - Prisma client now generates at container startup using native binaryTargets
 - Eliminates Alpine Linux compatibility issues with cross-platform builds
 
 **Key Changes (v1.0.9)**:
+
 ```dockerfile
 # OLD (problematic):
-RUN if [ "$(uname -m)" = "x86_64" ]; then 
+RUN if [ "$(uname -m)" = "x86_64" ]; then
   PRISMA_QUERY_ENGINE_BINARY_PLATFORM="linux-musl-openssl-3.0.x" npx prisma generate
 fi
 
@@ -592,12 +595,14 @@ fi
 ```
 
 **Benefits**:
+
 - ✅ Multi-architecture builds now succeed reliably
 - ✅ GitHub Actions CI/CD pipeline working
 - ✅ Both AMD64 and ARM64 images build successfully
 - ✅ No more SIGTRAP errors or build timeouts
 
 **Diagnostic Commands for Startup Issues**:
+
 ```bash
 # Check if image contains startup fixes (v1.0.7+)
 docker run --rm groovycodexyz/taschengeld:latest sh -c "grep -c 'schema validation' /app/scripts/initialize-data.js"
@@ -612,6 +617,7 @@ docker run --rm --network taschengeld_default \
 ```
 
 **Diagnostic Commands for Prisma Build Issues**:
+
 ```bash
 # Check if image contains runtime Prisma generation (v1.0.9+)
 docker run --rm groovycodexyz/taschengeld:latest sh -c "grep -c 'generate_prisma_client' docker-entrypoint.sh"
@@ -626,23 +632,27 @@ docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.prod -t tes
 ### CI/CD Pipeline Troubleshooting
 
 **GitHub Actions Not Triggering**:
+
 1. Check recent commits for large files: `git show --stat HEAD`
 2. Verify .gitignore contains `logs/` entry
 3. Check GitHub Actions page for failed workflows
 4. Manually trigger release: `gh workflow run release.yml --ref main`
 
 **Docker Images Not Updated**:
+
 1. Check GitHub Actions completion status
 2. Verify DockerHub credentials in repository secrets
 3. Check for failed builds in Actions tab
 4. Use build script manually: `./scripts/build-multiarch.sh --push`
 
 **Large Commit Prevention**:
+
 - GitHub Actions now validates commit size (<10k lines)
 - Automatic detection of large log files
 - Enhanced error reporting with troubleshooting steps
 
 **CI/CD Testing Issues (Fixed in v1.0.9)**:
+
 - GitHub Actions test step may fail with "Required environment variable DB_USER is not set"
 - This is expected behavior - the Docker image now properly validates environment variables
 - The build itself succeeds; only the testing phase reports this validation error
