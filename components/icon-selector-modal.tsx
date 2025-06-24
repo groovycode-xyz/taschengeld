@@ -62,19 +62,19 @@ export function IconSelectorModal({ isOpen, onClose, onSelectIcon }: IconSelecto
         <DialogHeader>
           <DialogTitle>Select an Icon</DialogTitle>
         </DialogHeader>
-        <div className='grid grid-cols-5 gap-4'>
+        <div className='grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 py-4'>
           {iconOptions.map((option) => (
             <Button
               key={option.name}
               variant='outline'
-              className='p-4 flex items-center justify-center h-16 w-16'
+              className='p-2 flex items-center justify-center h-16 w-16'
               onClick={() => {
                 onSelectIcon(option.name);
                 onClose();
               }}
               title={option.name}
             >
-              <div className='h-8 w-8'>{option.icon}</div>
+              <div className='h-8 w-8 flex items-center justify-center'>{option.icon}</div>
             </Button>
           ))}
         </div>
