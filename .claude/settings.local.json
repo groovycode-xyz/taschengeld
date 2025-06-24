@@ -6,7 +6,13 @@
       "Bash(git commit:*)",
       "Bash(gh release list:*)",
       "Bash(npm view:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(git merge-base:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }
