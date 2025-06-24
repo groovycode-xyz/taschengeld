@@ -253,12 +253,56 @@ npm run docker:cleanup:all     # Clean all Docker resources
 - Service pattern provides business logic layer
 - Type-safe queries with automatic TypeScript types
 
-### Security Model
+### Identity and Access Management (IAM) Model
 
-- PIN-based parent/child mode switching (no user authentication)
-- Parent mode: Full access to all features
-- Child mode: Limited to task completion and balance viewing
-- PIN stored in global settings
+Taschengeld implements a **family-friendly kiosk-style IAM model** designed for home network use, not enterprise security.
+
+#### Design Philosophy
+- **Family trust model**: Protects against accidents, not malicious users
+- **Kiosk-style operation**: Easy access for children with minimal barriers
+- **UI-based access control**: Mode switching controls visibility, not API access
+- **No traditional authentication**: No usernames, passwords, or user sessions
+
+#### Parent/Child Mode System
+**Purpose**: UI state control for age-appropriate interface complexity
+
+- **Parent Mode**: Full access to all features and settings
+- **Child Mode**: Simplified interface with limited navigation options
+  - Task completion and balance viewing only
+  - Hidden: User management, task management, payday, global settings
+  - Visible: Task completion page, piggy bank view, mode toggle
+
+#### Access Control Mechanics
+**Enforcement Conditions**: Protection only applies when BOTH conditions are met:
+1. `enforce_roles` setting is enabled (Global Settings → Access Control)
+2. `parent_mode_pin` is set (non-empty)
+
+**PIN Requirements**:
+- Plain text storage (appropriate for family context)  
+- Only required for Parent Mode access when conditions above are met
+- Global Settings access gated by same conditions
+- Simple prompt-based entry (browser `prompt()`)
+
+#### API Security Model
+**Important**: APIs have NO server-side authorization checks
+- All endpoints are publicly accessible within the network
+- Security is entirely UI-based (mode switching, navigation guards)
+- Family members trusted not to bypass UI via direct API calls
+- Appropriate for self-hosted home applications
+
+#### Current Limitations & Future Enhancements
+**Current**: Global mode state affects all devices/browsers equally  
+**Planned**: Device-specific access policies (see `feature/enhanced-access-control`)
+- Per-device PIN requirements
+- Device-specific mode defaults  
+- Global policy override option
+- Admin failsafe for PIN reset
+
+#### Implementation Notes
+- Mode state stored in React Context (`ModeProvider`)
+- Navigation guards in middleware and components
+- Settings integration via `SettingsContext`
+- UI component conditional rendering based on `hasFullAccess`
 
 ## Git & Branch Workflow
 
