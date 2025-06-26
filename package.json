@@ -17,7 +17,11 @@
     "dev:docker:clean": "docker compose -f docker-compose.dev.yml down -v && npm run dev:docker",
     "dev:docker:restart": "docker compose -f docker-compose.dev.yml down && docker compose -f docker-compose.dev.yml up --build",
     "dev:docker:stop": "docker compose -f docker-compose.dev.yml stop",
-    "dev:docker:start": "docker compose -f docker-compose.dev.yml start"
+    "dev:docker:start": "docker compose -f docker-compose.dev.yml start",
+    "branches": "./scripts/branch-tools.sh status",
+    "branches:desc": "./scripts/branch-tools.sh show-descriptions",
+    "branches:cleanup": "./scripts/branch-tools.sh cleanup",
+    "git:setup": "./scripts/setup-git-aliases.sh"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",
