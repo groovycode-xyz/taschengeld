@@ -120,8 +120,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                     <div
                       key={transaction.transaction_id}
                       className={`p-4 rounded-lg border ${
-                        transaction.transaction_type === 'deposit' ||
-                        transaction.transaction_type === 'payday'
+                        ['deposit', 'payday'].includes(transaction.transaction_type)
                           ? 'bg-green-50 border-green-200'
                           : 'bg-red-50 border-red-200'
                       }`}
@@ -143,14 +142,12 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                         </div>
                         <span
                           className={`font-semibold ${
-                            transaction.transaction_type === 'deposit' ||
-                            transaction.transaction_type === 'payday'
+                            ['deposit', 'payday'].includes(transaction.transaction_type)
                               ? 'text-green-600'
                               : 'text-red-600'
                           }`}
                         >
-                          {transaction.transaction_type === 'deposit' ||
-                          transaction.transaction_type === 'payday'
+                          {['deposit', 'payday'].includes(transaction.transaction_type)
                             ? '+'
                             : '-'}
                           <CurrencyDisplay

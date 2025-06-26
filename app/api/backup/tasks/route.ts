@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
-import { createApiHandler } from '@/app/lib/api-utils';
 import { BackupService } from '@/app/lib/services/backup-service';
+import { handleError } from '@/app/lib/error-handler';
 
-export const GET = createApiHandler(async () => {
+export async function GET(request: NextRequest) {
+  try {
   // Get only essential task data
   const tasks = await prisma.task.findMany({
     select: {
@@ -34,8 +35,11 @@ export const GET = createApiHandler(async () => {
   // Update backup tracking before returning data
   await BackupService.updateBackupTracking();
 
-  return NextResponse.json({
-    tasks,
-    completed_tasks: completedTasks,
-  });
-});
+    return NextResponse.json({
+      tasks,
+      completed_tasks: completedTasks,
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+}

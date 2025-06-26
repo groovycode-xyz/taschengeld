@@ -111,7 +111,7 @@ export const userService = {
       sound_url: result.sound_url,
       birthday: result.birthday.toISOString().split('T')[0],
       piggybank_account_id: result.piggybank_account_id,
-      created_at: result.created_at,
+      created_at: result.created_at?.toISOString() || new Date().toISOString(),
     };
   },
 

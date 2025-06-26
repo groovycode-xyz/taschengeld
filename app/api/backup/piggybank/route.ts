@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
-import { createApiHandler } from '@/app/lib/api-utils';
 import { BackupService } from '@/app/lib/services/backup-service';
+import { handleError } from '@/app/lib/error-handler';
 
-export const GET = createApiHandler(async () => {
+export async function GET(request: NextRequest) {
+  try {
   // Get accounts data with user information
   const accounts = await prisma.piggybankAccount.findMany({
     select: {
@@ -65,8 +66,11 @@ export const GET = createApiHandler(async () => {
   // Update backup tracking before returning data
   await BackupService.updateBackupTracking();
 
-  return NextResponse.json({
-    accounts: accountsData,
-    transactions: transactionsData,
-  });
-});
+    return NextResponse.json({
+      accounts: accountsData,
+      transactions: transactionsData,
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+}

@@ -379,8 +379,8 @@ export function Payday() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='all'>All</SelectItem>
-                {uniqueUsers.map((userName) => (
-                  <SelectItem key={userName} value={userName}>
+                {uniqueUsers.filter(Boolean).map((userName) => (
+                  <SelectItem key={userName} value={userName!}>
                     {userName}
                   </SelectItem>
                 ))}

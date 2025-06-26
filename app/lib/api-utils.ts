@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleError } from './error-handler';
 
-export type ApiHandler<T = unknown> = (
-  request: NextRequest,
-  context?: { params?: Record<string, string | string[]> }
-) => Promise<NextResponse<T>>;
-
 /**
  * Creates an API route handler with automatic error handling
+ * Compatible with both regular routes and dynamic routes with params
  */
-export function createApiHandler<T>(handler: ApiHandler<T>): ApiHandler<T> {
-  return async (request, context) => {
+export function createApiHandler<T>(
+  handler: (request: NextRequest, context?: any) => Promise<NextResponse<T>>
+) {
+  return async (request: NextRequest, context?: any) => {
     try {
       return await handler(request, context);
     } catch (error) {

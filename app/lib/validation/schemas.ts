@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const createUserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(50, 'Name must be less than 50 characters'),
   icon: z.string().min(1, 'Icon is required'),
-  sound_url: z.string().optional().nullable(),
+  sound_url: z.string().nullable().default(null),
   birthday: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Birthday must be in YYYY-MM-DD format'),
 });
 
@@ -45,7 +45,7 @@ export const updateCompletedTaskSchema = z.object({
 export const createTransactionSchema = z.object({
   user_id: z.number().int('User ID must be an integer').positive('User ID must be positive'),
   amount: z.number().finite('Amount must be a finite number'),
-  transaction_type: z.enum(['payday', 'withdrawal', 'deposit', 'initial'], {
+  transaction_type: z.enum(['payday', 'withdrawal', 'deposit'], {
     errorMap: () => ({ message: 'Invalid transaction type' }),
   }),
   description: z.string().optional().nullable(),
@@ -103,5 +103,5 @@ export const pinSchema = z
 
 // ID parameter schema for routes like /api/users/[id]
 export const idParamSchema = z.object({
-  id: z.string().regex(/^\d+$/, 'ID must be a number').transform(Number),
+  id: z.string().regex(/^\d+$/, 'ID must be a number'),
 });

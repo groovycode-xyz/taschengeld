@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
-    const user = await userService.getById(paramValidation.data.id);
+    const user = await userService.getById(parseInt(paramValidation.data.id, 10));
     if (user) {
       return NextResponse.json(user);
     } else {
@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
-    const updatedUser = await userService.update(paramValidation.data.id, bodyValidation.data);
+    const updatedUser = await userService.update(parseInt(paramValidation.data.id, 10), bodyValidation.data);
 
     if (!updatedUser) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -74,7 +74,7 @@ export async function DELETE(
   }
 
   try {
-    const success = await userService.delete(paramValidation.data.id);
+    const success = await userService.delete(parseInt(paramValidation.data.id, 10));
     if (success) {
       return NextResponse.json({ message: 'User deleted successfully' });
     } else {

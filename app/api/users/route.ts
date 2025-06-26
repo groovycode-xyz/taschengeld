@@ -28,7 +28,11 @@ export const POST = createApiHandler(async (request: NextRequest) => {
   }
 
   // If no duplicate, proceed with user creation
-  const newUser = await userService.createUser(validation.data);
+  const userData = {
+    ...validation.data,
+    sound_url: validation.data.sound_url ?? null
+  };
+  const newUser = await userService.createUser(userData);
   return successResponse(newUser, 201);
 });
 
@@ -44,7 +48,7 @@ export const PUT = createApiHandler(async (request: NextRequest) => {
   // Validate update data
   const validation = updateUserSchema.safeParse(updateData);
   if (!validation.success) {
-    throw new ValidationError('Validation failed', validation.error.errors);
+    throw new ValidationError('Validation failed');
   }
 
   const user = await userService.update(id, validation.data);
@@ -64,6 +68,6 @@ export const DELETE = createApiHandler(async (request: NextRequest) => {
     throw new ValidationError('Valid user ID is required');
   }
 
-  await userService.deleteUser(idValidation.data.id);
+  await userService.deleteUser(parseInt(idValidation.data.id, 10));
   return successResponse({ message: 'User deleted successfully' });
 });

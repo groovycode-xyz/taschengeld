@@ -7,7 +7,7 @@ import { logger } from '@/app/lib/logger';
 
 // Query parameter schema
 const transactionQuerySchema = z.object({
-  accountId: z.string().regex(/^\d+$/, 'Account ID must be a number').transform(Number),
+  accountId: z.string().regex(/^\d+$/, 'Account ID must be a number'),
 });
 
 // GET route to fetch transactions for a specific account
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const transactions = await piggyBankTransactionService.getTransactionsByAccountId(
-      validation.data.accountId
+      parseInt(validation.data.accountId, 10)
     );
     return NextResponse.json(transactions);
   } catch (error) {
@@ -40,7 +40,22 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const transaction = await piggyBankTransactionService.create(validation.data);
+    // Find the account for the user
+    const { piggyBankAccountService } = await import('@/app/lib/services/piggyBankAccountService');
+    const account = await piggyBankAccountService.getByUserId(validation.data.user_id);
+    if (!account) {
+      return NextResponse.json({ error: 'No account found for user' }, { status: 404 });
+    }
+
+    // Create transaction with account_id
+    const transactionData = {
+      account_id: account.account_id,
+      amount: validation.data.amount,
+      transaction_type: validation.data.transaction_type,
+      description: validation.data.description,
+    };
+
+    const transaction = await piggyBankTransactionService.create(transactionData);
     return NextResponse.json(transaction, { status: 201 });
   } catch (error) {
     logger.error('Failed to create transaction', error);

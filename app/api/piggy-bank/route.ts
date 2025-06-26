@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { piggyBankAccountService } from '@/app/lib/services/piggyBankAccountService';
 import { piggyBankTransactionService } from '@/app/lib/services/piggyBankTransactionService';
 import { createApiHandler, successResponse } from '@/app/lib/api-utils';
@@ -22,7 +22,7 @@ export const GET = createApiHandler(async () => {
 });
 
 // POST route to create a new transaction (deposit or withdrawal)
-export const POST = createApiHandler(async (request: Request) => {
+export const POST = createApiHandler(async (request: NextRequest) => {
   // Validate request body
   const validation = await validateRequest(request, createTransactionSchema);
   if (!validation.success) {
