@@ -16,6 +16,16 @@ export function Fireworks({ onComplete }: FireworksProps) {
       return Math.random() * (max - min) + min;
     };
 
+    // Ensure canvas has proper z-index by creating it with specific styling
+    const ensureCanvasZIndex = () => {
+      const canvases = document.querySelectorAll('canvas');
+      canvases.forEach(canvas => {
+        canvas.style.zIndex = '9999';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.position = 'fixed';
+      });
+    };
+
     const fireworks = () => {
       const timeLeft = animationEnd - Date.now();
 
@@ -35,7 +45,11 @@ export function Fireworks({ onComplete }: FireworksProps) {
           y: randomInRange(0.3, 0.7),
         },
         scalar: 0.7,
+        zIndex: 9999,
       });
+
+      // Ensure canvas styling after confetti creates it
+      setTimeout(ensureCanvasZIndex, 10);
 
       requestAnimationFrame(fireworks);
     };
