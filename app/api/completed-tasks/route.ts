@@ -126,17 +126,8 @@ export async function PATCH(request: NextRequest) {
           return { taskId, success: false, error: 'No piggy bank account found for user' };
         }
 
-        // Update payment status
+        // Update payment status (this automatically creates the piggy bank transaction)
         await completedTaskService.updatePaymentStatus(taskId, 'Paid');
-
-        // Create piggy bank transaction
-        await piggyBankTransactionService.create({
-          account_id: account.account_id,
-          amount: Number(completedTask.payout_value),
-          transaction_type: 'payday',
-          description: `Payday for task: ${completedTask.description || 'Unknown'}`,
-          completed_task_id: taskId,
-        });
 
         return { taskId, success: true };
       })
