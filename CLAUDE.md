@@ -123,6 +123,48 @@ git stash push -m "WIP message"             # Save uncommitted changes
 git stash pop                               # Restore saved changes
 ```
 
+### Branch Documentation System
+
+This project uses a comprehensive branch documentation system for professional development workflows:
+
+#### Quick Commands
+```bash
+npm run branches                # Show branch status and progress
+npm run branches:desc           # Display all branch descriptions
+npm run branches:cleanup        # Clean up merged branches
+npm run git:setup              # Install Git aliases for branch management
+```
+
+#### Documentation Files
+- **`BRANCHES.md`** - Central registry with detailed branch tracking, progress, and next steps
+- **Git descriptions** - Built-in Git branch descriptions for quick reference
+- **Branch tools** - Professional scripts in `/scripts/branch-tools.sh`
+
+#### Branch Documentation Best Practices
+```bash
+# Always document new branches immediately
+git checkout -b feature/my-feature
+git config branch.feature/my-feature.description "Brief purpose description"
+
+# Update BRANCHES.md with:
+# - Current progress and status  
+# - Technical details and testing notes
+# - Next steps and dependencies
+
+# Use descriptive branch names
+feature/svg-management-tool      # New functionality
+hotfix/docker-startup-fix        # Critical production fixes  
+refactor/icon-system-centralization  # Code improvements
+```
+
+#### For LLM Assistance
+When requesting help, always mention: **"Check BRANCHES.md and git branch descriptions for current context"**
+This provides LLMs with comprehensive information about:
+- What each branch does and why it exists
+- Current progress and next steps  
+- Technical implementation details
+- Testing requirements and dependencies
+
 #### Production Docker Build Process
 
 The production build uses a multi-stage Docker build with multi-architecture support (ARM64/AMD64) and automatic DockerHub integration:
@@ -309,8 +351,9 @@ npm run docker:cleanup:all     # Clean all Docker resources
 **Claude will ALWAYS check:**
 
 1. **Current Branch**: `git branch --show-current`
-2. **Uncommitted Changes**: `git status --porcelain`
-3. **Recent Activity**: `git log --oneline -3`
+2. **Branch Documentation**: `BRANCHES.md` and `git config branch.$(git branch --show-current).description`
+3. **Uncommitted Changes**: `git status --porcelain`
+4. **Recent Activity**: `git log --oneline -3`
 
 **Claude will ASK if unclear:**
 
@@ -370,8 +413,9 @@ git push origin feature/new-sidebar
 
 1. **Never make assumptions** - always verify actual state
 2. **Read before writing** - understand existing patterns first
-3. **Docker environment is truth** - if it works in Docker dev, it should work in production
-4. **Multi-architecture support** - ensure builds work on both ARM64 and AMD64
+3. **Document branches immediately** - update BRANCHES.md and set Git descriptions for all new branches
+4. **Docker environment is truth** - if it works in Docker dev, it should work in production
+5. **Multi-architecture support** - ensure builds work on both ARM64 and AMD64
 
 ## Key Features and Workflows
 
