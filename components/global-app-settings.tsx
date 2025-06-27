@@ -782,7 +782,7 @@ export function GlobalAppSettings() {
                   <Label>Enable English App Name</Label>
                   <p className='text-sm text-muted-foreground'>
                     Use "Pocket Money" for the app heading instead of "Taschengeld" (for those who
-                    don't want to struggle with learning one German word 😊)
+                    don&apos;t want to struggle with learning one German word 😊)
                   </p>
                 </div>
                 <div className='mt-4'>
@@ -1000,7 +1000,7 @@ export function GlobalAppSettings() {
                   <div>
                     <h3 className='text-base font-medium text-foreground mb-2'>Taschengeld</h3>
                     <p className='text-sm text-muted-foreground'>
-                      A family allowance tracker application for managing children's tasks and
+                      A family allowance tracker application for managing children&apos;s tasks and
                       pocket money
                     </p>
                   </div>

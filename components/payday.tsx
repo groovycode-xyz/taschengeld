@@ -60,7 +60,7 @@ const loadSettings = (): PaydaySettings => {
     if (saved) {
       return { ...getDefaultSettings(), ...JSON.parse(saved) };
     }
-  } catch (error) {
+  } catch (_error) {
     // If there's an error reading from localStorage, use defaults
   }
   return getDefaultSettings();
@@ -71,7 +71,7 @@ const saveSettings = (settings: PaydaySettings) => {
 
   try {
     localStorage.setItem(PAYDAY_SETTINGS_KEY, JSON.stringify(settings));
-  } catch (error) {
+  } catch (_error) {
     // If there's an error saving to localStorage, fail silently
   }
 };
@@ -140,7 +140,7 @@ export function Payday() {
       const data = await response.json();
       const unpaidTasks = data.filter((task: CompletedTask) => task.payment_status === 'Unpaid');
       setCompletedTasks(unpaidTasks);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load completed tasks');
     } finally {
       setIsLoading(false);

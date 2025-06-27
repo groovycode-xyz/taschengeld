@@ -51,7 +51,7 @@ export function WithdrawFundsModal({
     try {
       const audio = new Audio('/sounds/lose1.wav');
       await audio.play();
-    } catch (error) {
+    } catch (_error) {
       // Error playing lose sound
     }
   };
@@ -66,7 +66,7 @@ export function WithdrawFundsModal({
         await onWithdrawFunds(numAmount, comments, photo);
         await playLoseSound();
         onClose();
-      } catch (error) {
+      } catch (_error) {
         // Error withdrawing funds
       } finally {
         setIsSubmitting(false);

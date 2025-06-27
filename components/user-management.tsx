@@ -55,7 +55,7 @@ export function UserManagement() {
       setIsEditModalOpen(false);
       setEditingUser(null);
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       // Error updating user
     }
   };
@@ -74,7 +74,7 @@ export function UserManagement() {
       await refreshUsers();
       setIsEditModalOpen(false);
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       // Error deleting user
     }
   };

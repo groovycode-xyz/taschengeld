@@ -19,7 +19,7 @@ export function Fireworks({ onComplete }: FireworksProps) {
     // Ensure canvas has proper z-index by creating it with specific styling
     const ensureCanvasZIndex = () => {
       const canvases = document.querySelectorAll('canvas');
-      canvases.forEach(canvas => {
+      canvases.forEach((canvas) => {
         canvas.style.zIndex = '9999';
         canvas.style.pointerEvents = 'none';
         canvas.style.position = 'fixed';

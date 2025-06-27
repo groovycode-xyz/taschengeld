@@ -25,7 +25,7 @@ git config branch.feature/my-awesome-feature.description "Brief purpose descript
 # Update central registry
 # Edit BRANCHES.md to add your branch with:
 # - Purpose and goals
-# - Current progress  
+# - Current progress
 # - Testing requirements
 # - Next steps
 ```
@@ -128,11 +128,13 @@ npm run format        # Prettier formatting only
 ### Before Creating a PR
 
 1. **Update documentation**:
+
    - Mark your branch as complete in `BRANCHES.md`
    - Update any relevant documentation
    - Include screenshots for UI changes
 
 2. **Test thoroughly**:
+
    - Run `npm run check` (must pass)
    - Test in Docker environment
    - Verify responsive design on different screen sizes
@@ -146,23 +148,28 @@ npm run format        # Prettier formatting only
 ### PR Requirements
 
 #### Title Format
+
 ```
 feat: Add awesome new feature
-fix: Resolve critical Docker startup issue  
+fix: Resolve critical Docker startup issue
 docs: Update API documentation
 refactor: Improve icon system performance
 ```
 
 #### Description Template
+
 ```markdown
 ## Summary
+
 Brief description of what this PR does and why.
 
 ## Changes
+
 - List of specific changes made
 - Focus on the "what" not the "how"
 
 ## Testing
+
 - [ ] All existing tests pass
 - [ ] New functionality tested manually
 - [ ] Tested in Docker environment
@@ -170,12 +177,15 @@ Brief description of what this PR does and why.
 - [ ] Parent/child mode compatibility verified
 
 ## Screenshots
+
 [Include screenshots for UI changes]
 
 ## Breaking Changes
+
 [List any breaking changes or migration notes]
 
 ## Related Issues
+
 Closes #123
 ```
 

@@ -30,7 +30,7 @@ export const POST = createApiHandler(async (request: NextRequest) => {
   // If no duplicate, proceed with user creation
   const userData = {
     ...validation.data,
-    sound_url: validation.data.sound_url ?? null
+    sound_url: validation.data.sound_url ?? null,
   };
   const newUser = await userService.createUser(userData);
   return successResponse(newUser, 201);

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BackupService } from '@/app/lib/services/backup-service';
 import { handleError } from '@/app/lib/error-handler';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const status = await BackupService.getBackupStatus();
     return NextResponse.json(status);

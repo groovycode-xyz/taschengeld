@@ -44,7 +44,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
-    const updatedUser = await userService.update(parseInt(paramValidation.data.id, 10), bodyValidation.data);
+    const updatedUser = await userService.update(
+      parseInt(paramValidation.data.id, 10),
+      bodyValidation.data
+    );
 
     if (!updatedUser) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });

@@ -128,6 +128,7 @@ git stash pop                               # Restore saved changes
 This project uses a comprehensive branch documentation system for professional development workflows:
 
 #### Quick Commands
+
 ```bash
 npm run branches                # Show branch status and progress
 npm run branches:desc           # Display all branch descriptions
@@ -136,32 +137,36 @@ npm run git:setup              # Install Git aliases for branch management
 ```
 
 #### Documentation Files
+
 - **`BRANCHES.md`** - Central registry with detailed branch tracking, progress, and next steps
 - **Git descriptions** - Built-in Git branch descriptions for quick reference
 - **Branch tools** - Professional scripts in `/scripts/branch-tools.sh`
 
 #### Branch Documentation Best Practices
+
 ```bash
 # Always document new branches immediately
 git checkout -b feature/my-feature
 git config branch.feature/my-feature.description "Brief purpose description"
 
 # Update BRANCHES.md with:
-# - Current progress and status  
+# - Current progress and status
 # - Technical details and testing notes
 # - Next steps and dependencies
 
 # Use descriptive branch names
 feature/svg-management-tool      # New functionality
-hotfix/docker-startup-fix        # Critical production fixes  
+hotfix/docker-startup-fix        # Critical production fixes
 refactor/icon-system-centralization  # Code improvements
 ```
 
 #### For LLM Assistance
+
 When requesting help, always mention: **"Check BRANCHES.md and git branch descriptions for current context"**
 This provides LLMs with comprehensive information about:
+
 - What each branch does and why it exists
-- Current progress and next steps  
+- Current progress and next steps
 - Technical implementation details
 - Testing requirements and dependencies
 

@@ -62,7 +62,7 @@ export function TaskManagement() {
       }
       const data = await response.json();
       setTasks(data);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load tasks. Please try again later.');
     } finally {
       setIsLoading(false);
@@ -87,7 +87,7 @@ export function TaskManagement() {
       const task = await response.json();
       setTasks((prevTasks) => [...prevTasks, task]);
       setIsAddModalOpen(false);
-    } catch (error) {
+    } catch (_error) {
       setError('Failed to add task. Please try again.');
     }
   };
@@ -106,7 +106,7 @@ export function TaskManagement() {
       const task = await response.json();
       setTasks((prevTasks) => prevTasks.map((t) => (t.task_id === task.task_id ? task : t)));
       setIsEditModalOpen(false);
-    } catch (error) {
+    } catch (_error) {
       setError('Failed to update task. Please try again.');
     }
   };
@@ -134,7 +134,7 @@ export function TaskManagement() {
       setTasks((prevTasks) => prevTasks.filter((task) => task.task_id !== taskId));
       setIsEditModalOpen(false);
       setEditingTask(null);
-    } catch (error) {
+    } catch (_error) {
       setError(
         'Unable to delete this task. It may have unpaid completed entries that need to be processed first.'
       );

@@ -111,7 +111,7 @@ export function TaskCompletion() {
       await new Promise<void>((resolve) => {
         applauseAudio.addEventListener('ended', () => resolve());
       });
-    } catch (error) {
+    } catch (_error) {
       // Error playing applause sound
     } finally {
       setShowFireworks(false);
@@ -177,7 +177,7 @@ export function TaskCompletion() {
         setTimeout(() => {
           setIsProcessing(false);
         }, 100);
-      } catch (err) {
+      } catch (_err) {
         setError('Error creating completed task');
         setIsProcessing(false);
       }
@@ -201,7 +201,7 @@ export function TaskCompletion() {
         setCompletedTasks(completedTasks.filter((task) => task.c_task_id !== deleteTaskId));
         setIsDeleteDialogOpen(false);
         setDeleteTaskId(null);
-      } catch (err) {
+      } catch (_err) {
         setError('Error deleting completed task');
       }
     }
