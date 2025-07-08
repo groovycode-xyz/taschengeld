@@ -227,6 +227,7 @@ jobs:
 
       - name: Update Docker Hub description
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        continue-on-error: true
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -235,7 +236,7 @@ jobs:
           readme-filepath: ./README.md
 
       - name: Report build failure
-        if: failure() && github.event_name != 'pull_request'
+        if: failure() && github.event_name != 'pull_request' && (steps.docker_build.outcome == 'failure' || steps.version.outcome == 'failure')
         run: |
           echo "🚨 DOCKER BUILD FAILURE DETECTED 🚨"
           echo ""
