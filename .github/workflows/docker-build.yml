@@ -130,11 +130,14 @@ jobs:
           echo "Testing Docker image basic functionality..."
 
           # Test that the image contains expected files and Node.js
+          # The entrypoint now handles utility commands without requiring DB env vars
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-            sh -c "echo 'Testing image contents...' && \
-                   node --version && \
-                   ls -la /app && \
-                   echo 'Image validation passed!'"
+            node --version
+          
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            ls -la /app
+          
+          echo "✅ Image validation passed!"
 
       - name: Test Docker startup with database
         if: github.event_name != 'pull_request'

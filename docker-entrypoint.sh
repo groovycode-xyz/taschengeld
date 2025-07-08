@@ -206,7 +206,14 @@ for cmd in curl pg_isready npx node; do
     fi
 done
 
-# Validate environment
+# Check if we're running a utility command (not the server)
+# This allows commands like "node --version" or "ls" to run without database config
+if [ "$#" -gt 0 ] && [ "$1" != "node" ] || ([ "$1" = "node" ] && [ "$2" != "server.js" ]); then
+    echo "Running utility command: $@"
+    exec "$@"
+fi
+
+# Only validate environment and run database setup for server startup
 validate_env
 validate_db_url
 
