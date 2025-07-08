@@ -713,3 +713,47 @@ docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.prod -t tes
 - Automated CI/CD testing with fresh database startup verification
 - API endpoint testing included in build script
 - Focus on dev-prod parity rather than unit tests
+
+## GitHub Actions Build Failure Tracker
+
+**Last Updated**: 2025-07-08
+
+### ✅ RESOLVED: Primary Build Issue (2025-07-08)
+
+**Problem**: All GitHub Actions builds failing since ~June 24, 2025
+**Error**: "Error: Required environment variable DB_USER is not set"
+**Location**: "Test Docker image" step in docker-build.yml
+**Root Cause**: Docker entrypoint validates env vars for ANY command, not just server startup
+**Status**: ✅ **FIXED** - Build #16139974565 passed "Test Docker image" step successfully
+
+**Solution Implemented**: Modified docker-entrypoint.sh to detect utility commands vs server startup
+- Commands like `node --version` and `ls` now run without database validation
+- Server startup still requires full environment validation
+- GitHub Actions workflow updated with cleaner test commands
+
+### ⚠️ NEW: Secondary Build Issue (2025-07-08)
+
+**Problem**: Build failing in "Test Docker startup with database" step
+**Error**: `docker-compose: command not found` (exit code 127)
+**Location**: Line 37 of temp script in "Test Docker startup with database" step
+**Root Cause**: GitHub Actions Ubuntu runner missing docker-compose command
+**Impact**: Build progresses much further but fails in database testing phase
+**Build Time**: 24m 19s vs immediate failure before
+
+### Progress Summary
+
+**✅ Major Success**: 
+- "Test Docker image" step now passes ✅
+- Docker images build and push successfully ✅ 
+- Multi-architecture builds working ✅
+- Build runs 24+ minutes vs immediate failure ✅
+
+**🔧 Remaining Issue**: 
+- Missing `docker-compose` command in GitHub Actions runner
+- Need to install docker-compose or use `docker compose` (newer syntax)
+
+### Related Files
+
+- `.github/workflows/docker-build.yml`: Line 133-137 (failing test)
+- `docker-entrypoint.sh`: Line 10-18 (validate_env function), Line 210 (validation call)
+- `Dockerfile.prod`: Line 104 (ENTRYPOINT configuration)
