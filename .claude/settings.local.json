@@ -16,7 +16,15 @@
       "Bash(npm run dev:docker:restart:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(gh run view:*)",
+      "Bash(docker inspect:*)",
+      "Bash(git checkout:*)",
+      "Bash(git config:*)",
+      "Bash(npm run dev:docker:*)",
+      "Bash(docker compose:*)",
+      "Bash(curl:*)",
+      "Bash(cat:*)"
     ],
     "deny": []
   }

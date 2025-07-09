@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSettings } from './settings-context';
 
@@ -21,7 +21,12 @@ const ModeContext = createContext<ModeContextType | undefined>(undefined);
 
 export function ModeProvider({ children }: { children: React.ReactNode }) {
   const { settings, updateSetting, isLoading } = useSettings();
-  const [isParentMode, setIsParentMode] = useState(true);
+  const [isParentMode, setIsParentMode] = useState(() => {
+    // Initialize from localStorage for device-specific persistence
+    if (typeof window === 'undefined') return true;
+    const stored = localStorage.getItem('mode-preference');
+    return stored !== 'child'; // Default to parent mode if not explicitly child
+  });
   const router = useRouter();
 
   const hasFullAccess = !settings.enforce_roles || isParentMode;
@@ -44,10 +49,14 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
         }
       }
       setIsParentMode(true);
+      // Persist mode preference to localStorage
+      localStorage.setItem('mode-preference', 'parent');
       return true;
     } else {
       // Switching to Child mode - check current path and redirect if necessary
       setIsParentMode(false);
+      // Persist mode preference to localStorage
+      localStorage.setItem('mode-preference', 'child');
 
       // List of protected paths that require parent mode
       const protectedPaths = [
@@ -75,6 +84,18 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
   const setPin = async (pin: string | null) => {
     await updateSetting('parent_mode_pin', pin);
   };
+
+  // Sync with localStorage changes from other tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'mode-preference' && e.newValue !== null) {
+        setIsParentMode(e.newValue !== 'child');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const value: ModeContextType = {
     enforceRoles: settings.enforce_roles,
