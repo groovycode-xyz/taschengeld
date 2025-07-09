@@ -47,6 +47,108 @@ The application is optimized exclusively for desktop/laptop and tablet devices:
 - **Tablets (768-1023px)**: Collapsible sidebar, 48px touch targets, active states
 - **Not supported**: Mobile phones < 768px width
 
+## Multi-Branch Development with Worktrees
+
+**IMPORTANT**: This project uses Git worktrees for multi-branch development. When the user asks to start a new feature or work on a new branch, you should ALWAYS use the worktree system instead of regular git branches.
+
+### Starting New Features
+
+When the user says something like:
+- "I want to start a new feature"
+- "Let's work on a new branch"
+- "Help me implement [feature-name]"
+
+**Always follow this workflow:**
+
+1. **Create a worktree** instead of a regular branch:
+   ```bash
+   ./scripts/worktree-manager.sh [feature-name]
+   ```
+   
+   **Note**: If the `wt` alias is set up, you can also use: `wt [feature-name]`
+   
+2. **Explain what happened**:
+   - "I've created a new worktree for '[feature-name]'"
+   - "VS Code will open in the new worktree directory"
+   - "You can start a new Claude session in that window"
+
+3. **Let the user know the next steps**:
+   - "In the new VS Code window, start Claude and continue with the feature implementation"
+   - "Each worktree has its own .env and .claude settings"
+
+### Worktree Commands
+
+```bash
+wt [branch-name]              # Create new worktree (most common)
+wt [branch-name] main         # Create worktree from main branch
+wt --list                     # List all worktrees
+wt --clean                    # Clean up merged branches
+```
+
+### Examples
+
+**✅ Correct approach:**
+```bash
+# User: "I want to add a dark mode feature"
+wt dark-mode
+```
+
+**❌ Don't do this:**
+```bash
+# Don't use regular git branches
+git checkout -b feature/dark-mode
+```
+
+### Why Worktrees?
+
+- **Multi-tasking**: Multiple Claude sessions can work on different features simultaneously
+- **No conflicts**: Each worktree has its own working directory
+- **Isolated environments**: Separate .env files and configurations
+- **VS Code integration**: Automatic VS Code window opening
+
+### Continuing Work in New Worktree
+
+When VS Code opens in the new worktree, the user will:
+
+1. **Start a new Claude session** in the new VS Code window
+2. **Tell Claude the context**: "We're working on the [feature-name] branch"
+3. **Provide the feature requirements**: What needs to be implemented
+
+**Example user flow:**
+```
+User: "I want to add a dark mode feature"
+→ Claude runs: wt dark-mode
+→ VS Code opens in taschengeld-worktrees/dark-mode/
+→ User starts new Claude session
+→ User: "We're working on the dark-mode branch. I need to implement a dark mode toggle..."
+```
+
+### Important Notes
+
+- **Each worktree is independent**: Changes in one don't affect others
+- **Shared git history**: All worktrees share the same repository history
+- **Configuration copying**: .env, .claude, .vscode settings are automatically copied
+- **Docker support**: Each worktree can run its own Docker environment
+- **Automatic setup**: All permissions and settings are pre-configured in the new worktree
+
+## Quick Reference for Claude
+
+### When User Requests New Feature Development
+
+**Always use worktrees instead of regular branches:**
+
+1. **Run**: `./scripts/worktree-manager.sh [feature-name]` (or `wt [feature-name]` if alias is set up)
+2. **Explain**: "I've created a new worktree for '[feature-name]' and VS Code will open"
+3. **Guide**: "Start a new Claude session in the new window to continue"
+
+**Never use**: `git checkout -b [branch-name]`
+
+### Documentation Links
+
+- **Quick Start**: `scripts/QUICK_START.md`
+- **Full Documentation**: `scripts/WORKTREE_README.md`
+- **Setup Guide**: `scripts/setup-multitasking.sh`
+
 ## Common Commands
 
 ### Development
@@ -125,7 +227,7 @@ git stash pop                               # Restore saved changes
 
 ### Branch Documentation System
 
-This project uses a comprehensive branch documentation system for professional development workflows:
+This project uses a comprehensive branch documentation system with Git worktrees for professional development workflows:
 
 #### Quick Commands
 
@@ -145,9 +247,9 @@ npm run git:setup              # Install Git aliases for branch management
 #### Branch Documentation Best Practices
 
 ```bash
-# Always document new branches immediately
-git checkout -b feature/my-feature
-git config branch.feature/my-feature.description "Brief purpose description"
+# Always document new worktrees immediately
+wt my-feature
+git config branch.my-feature.description "Brief purpose description"
 
 # Update BRANCHES.md with:
 # - Current progress and status
@@ -155,9 +257,9 @@ git config branch.feature/my-feature.description "Brief purpose description"
 # - Next steps and dependencies
 
 # Use descriptive branch names
-feature/svg-management-tool      # New functionality
-hotfix/docker-startup-fix        # Critical production fixes
-refactor/icon-system-centralization  # Code improvements
+svg-management-tool              # New functionality
+docker-startup-fix               # Critical production fixes
+icon-system-centralization       # Code improvements
 ```
 
 #### For LLM Assistance
@@ -169,6 +271,8 @@ This provides LLMs with comprehensive information about:
 - Current progress and next steps
 - Technical implementation details
 - Testing requirements and dependencies
+
+**Note**: When working in worktrees, each worktree has its own copy of BRANCHES.md that can be updated independently.
 
 #### Production Docker Build Process
 
@@ -471,6 +575,39 @@ Version synchronization across all platforms (app, GitHub, DockerHub):
 - **GitHub**: Git tags and releases match version.txt
 - **DockerHub**: Images tagged with version from version.txt
 
+#### Automatic Version Management (NEW!)
+
+**Every push to main automatically increments the version!**
+
+The CI/CD pipeline now automatically handles versioning based on commit messages:
+
+- **Default**: Patch version increment (1.0.x)
+- **Minor increment**: Include `feat:` or `[minor]` in commit message
+- **Major increment**: Include `BREAKING CHANGE` or `[major]` in commit message
+
+**Examples:**
+```bash
+# Patch increment (1.0.1 → 1.0.2)
+git commit -m "fix: Update task completion logic"
+
+# Minor increment (1.0.2 → 1.1.0)
+git commit -m "feat: Add dark mode support"
+git commit -m "Add new export feature [minor]"
+
+# Major increment (1.0.2 → 2.0.0)
+git commit -m "refactor: Complete API overhaul [major]"
+git commit -m "BREAKING CHANGE: Remove legacy endpoints"
+```
+
+**Automated Workflow:**
+1. Push code to main branch
+2. Auto-version workflow increments version.txt
+3. Version-release workflow creates GitHub release
+4. Docker-build workflow builds and pushes images
+5. All automated - no manual steps required!
+
+#### Manual Version Management (Still Available)
+
 **Version Sync Commands:**
 
 ```bash
@@ -487,7 +624,7 @@ Version synchronization across all platforms (app, GitHub, DockerHub):
 ./scripts/build-multiarch.sh --increment [patch|minor|major] --push
 ```
 
-**Version Workflow:**
+**Manual Workflow:**
 
 1. `./scripts/version-sync.sh --increment patch --release`
 2. Updates `version.txt`, commits change, creates git tag

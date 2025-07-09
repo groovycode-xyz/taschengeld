@@ -8,6 +8,7 @@ on:
       - 'docs/theme-system-research.md'
       - 'docs/color-system/**'
       - '.archive/**'
+      - '.github/workflows/auto-version.yml'
   pull_request:
     branches: [main]
     paths-ignore:
