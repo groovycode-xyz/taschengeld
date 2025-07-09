@@ -3,12 +3,9 @@ name: Build and Push Docker Images
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - 'README.md'
-      - 'docs/theme-system-research.md'
-      - 'docs/color-system/**'
-      - '.archive/**'
-      - '.github/workflows/auto-version.yml'
+    paths:
+      - 'version.txt'  # Only trigger on version changes
+  workflow_dispatch:  # Allow manual triggering
   pull_request:
     branches: [main]
     paths-ignore:
