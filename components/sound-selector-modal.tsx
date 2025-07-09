@@ -47,7 +47,7 @@ export function SoundSelectorModal({
       }
       const data = await response.json();
       setSounds(data);
-    } catch (error) {
+    } catch (_error) {
       // Error fetching sounds
     }
   }, [type]);
@@ -61,7 +61,7 @@ export function SoundSelectorModal({
   const playSound = (sound: Sound) => {
     const basePath = type === 'task' ? '/sounds/tasks/' : '/sounds/users/';
     const audio = new Audio(`${basePath}${sound.name}${sound.extension}`);
-    audio.play().catch((error) => {
+    audio.play().catch((_error) => {
       // Error playing sound
     });
   };

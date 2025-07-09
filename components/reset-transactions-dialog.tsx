@@ -44,7 +44,7 @@ export function ResetTransactionsDialog({
         if (!response.ok) throw new Error('Failed to fetch accounts');
         const data = await response.json();
         setAccounts(data);
-      } catch (error) {
+      } catch (_error) {
         // Error fetching accounts
       } finally {
         setFetchLoading(false);

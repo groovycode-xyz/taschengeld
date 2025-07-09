@@ -8,10 +8,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   // Await params in Next.js 15
   const resolvedParams = await params;
 
-  // Validate ID parameter
-  const paramValidation = validateParams(resolvedParams, idParamSchema);
-  if (!paramValidation.success) {
-    return paramValidation.error;
+  // Parse and validate ID parameter
+  const id = parseInt(resolvedParams.id, 10);
+  if (isNaN(id) || id <= 0) {
+    return NextResponse.json({ error: 'Invalid ID parameter' }, { status: 400 });
   }
 
   try {
@@ -31,10 +31,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   // Await params in Next.js 15
   const resolvedParams = await params;
 
-  // Validate ID parameter
-  const paramValidation = validateParams(resolvedParams, idParamSchema);
-  if (!paramValidation.success) {
-    return paramValidation.error;
+  // Parse and validate ID parameter
+  const id = parseInt(resolvedParams.id, 10);
+  if (isNaN(id) || id <= 0) {
+    return NextResponse.json({ error: 'Invalid ID parameter' }, { status: 400 });
   }
 
   // Validate request body
@@ -63,10 +63,10 @@ export async function DELETE(
   // Await params in Next.js 15
   const resolvedParams = await params;
 
-  // Validate ID parameter
-  const paramValidation = validateParams(resolvedParams, idParamSchema);
-  if (!paramValidation.success) {
-    return paramValidation.error;
+  // Parse and validate ID parameter
+  const id = parseInt(resolvedParams.id, 10);
+  if (isNaN(id) || id <= 0) {
+    return NextResponse.json({ error: 'Invalid ID parameter' }, { status: 400 });
   }
 
   try {

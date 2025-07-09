@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { completedTaskService } from '@/app/lib/services/completedTaskService';
-import { createApiHandler, successResponse } from '@/app/lib/api-utils';
+import { successResponse } from '@/app/lib/api-utils';
 import { validateRequest } from '@/app/lib/validation/middleware';
+import { handleError } from '@/app/lib/error-handler';
 import { z } from 'zod';
 
-export const GET = createApiHandler(
-  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
     // Await params in Next.js 15
     const resolvedParams = await params;
 
@@ -14,16 +15,18 @@ export const GET = createApiHandler(
       return NextResponse.json({ error: 'Completed task not found' }, { status: 404 });
     }
     return successResponse(completedTask);
+  } catch (error) {
+    return handleError(error);
   }
-);
+}
 
 // Schema for updating payment status
 const updatePaymentStatusSchema = z.object({
   payment_status: z.enum(['Unpaid', 'Paid']),
 });
 
-export const PUT = createApiHandler(
-  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
     // Await params in Next.js 15
     const resolvedParams = await params;
 
@@ -42,11 +45,16 @@ export const PUT = createApiHandler(
     }
 
     return successResponse(updatedTask);
+  } catch (error) {
+    return handleError(error);
   }
-);
+}
 
-export const DELETE = createApiHandler(
-  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
     // Await params in Next.js 15
     const resolvedParams = await params;
 
@@ -55,5 +63,7 @@ export const DELETE = createApiHandler(
       return NextResponse.json({ error: 'Completed task not found' }, { status: 404 });
     }
     return successResponse({ message: 'Completed task deleted successfully' });
+  } catch (error) {
+    return handleError(error);
   }
-);
+}

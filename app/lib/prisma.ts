@@ -24,8 +24,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Log Prisma events in development
 if (process.env.NODE_ENV === 'development') {
-  // @ts-expect-error - Prisma $on event handler exists but types are not updated
-  prisma.$on('query', (e) => {
+  // @ts-ignore - Prisma $on event handler exists but types are not updated
+  prisma.$on('query', (e: any) => {
     logger.debug('Prisma Query', {
       query: e.query,
       params: e.params,
@@ -33,13 +33,13 @@ if (process.env.NODE_ENV === 'development') {
     });
   });
 
-  // @ts-expect-error - Prisma $on event handler exists but types are not updated
-  prisma.$on('error', (e) => {
+  // @ts-ignore - Prisma $on event handler exists but types are not updated
+  prisma.$on('error', (e: any) => {
     logger.error('Prisma Error', e);
   });
 
-  // @ts-expect-error - Prisma $on event handler exists but types are not updated
-  prisma.$on('warn', (e) => {
+  // @ts-ignore - Prisma $on event handler exists but types are not updated
+  prisma.$on('warn', (e: any) => {
     logger.warn('Prisma Warning', e);
   });
 }

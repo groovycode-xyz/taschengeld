@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { completedTaskService } from '@/app/lib/services/completedTaskService';
 import { CreateCompletedTaskInput } from '@/app/types/completedTask';
-import { piggyBankTransactionService } from '@/app/lib/services/piggyBankTransactionService';
 import { piggyBankAccountService } from '@/app/lib/services/piggyBankAccountService';
 import { validateRequest } from '@/app/lib/validation/middleware';
 import {

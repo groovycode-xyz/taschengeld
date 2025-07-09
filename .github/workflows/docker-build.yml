@@ -87,7 +87,6 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           labels: |
             org.opencontainers.image.title=Taschengeld
             org.opencontainers.image.description=Family allowance tracker application
@@ -130,11 +129,14 @@ jobs:
           echo "Testing Docker image basic functionality..."
 
           # Test that the image contains expected files and Node.js
+          # The entrypoint now handles utility commands without requiring DB env vars
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-            sh -c "echo 'Testing image contents...' && \
-                   node --version && \
-                   ls -la /app && \
-                   echo 'Image validation passed!'"
+            node --version
+          
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            ls -la /app
+          
+          echo "✅ Image validation passed!"
 
       - name: Test Docker startup with database
         if: github.event_name != 'pull_request'
@@ -175,7 +177,7 @@ jobs:
           EOF
 
           # Start test environment
-          docker-compose -f docker-compose.test.yml up -d
+          docker compose -f docker-compose.test.yml up -d
 
           # Wait for application to be ready
           echo "Waiting for application to start..."
@@ -193,8 +195,8 @@ jobs:
 
           if [ $attempt -eq $max_attempts ]; then
             echo "❌ Application startup test failed - logs:"
-            docker-compose -f docker-compose.test.yml logs app
-            docker-compose -f docker-compose.test.yml down
+            docker compose -f docker-compose.test.yml logs app
+            docker compose -f docker-compose.test.yml down
             exit 1
           fi
 
@@ -204,8 +206,8 @@ jobs:
             echo "✅ Health endpoint working"
           else
             echo "❌ Health endpoint failed"
-            docker-compose -f docker-compose.test.yml logs app
-            docker-compose -f docker-compose.test.yml down
+            docker compose -f docker-compose.test.yml logs app
+            docker compose -f docker-compose.test.yml down
             exit 1
           fi
 
@@ -217,13 +219,14 @@ jobs:
           fi
 
           # Clean up
-          docker-compose -f docker-compose.test.yml down
+          docker compose -f docker-compose.test.yml down
           rm -f docker-compose.test.yml
 
           echo "🎉 Docker startup verification completed successfully!"
 
       - name: Update Docker Hub description
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        continue-on-error: true
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -232,7 +235,7 @@ jobs:
           readme-filepath: ./README.md
 
       - name: Report build failure
-        if: failure() && github.event_name != 'pull_request'
+        if: failure() && github.event_name != 'pull_request' && (steps.docker_build.outcome == 'failure' || steps.version.outcome == 'failure')
         run: |
           echo "🚨 DOCKER BUILD FAILURE DETECTED 🚨"
           echo ""

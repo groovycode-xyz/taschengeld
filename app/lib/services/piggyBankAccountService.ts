@@ -16,46 +16,64 @@ export const piggyBankAccountService = {
         account_number: accountNumber,
         balance: 0,
       },
+      include: {
+        user: true,
+      },
     });
 
     return {
       account_id: account.account_id,
-      user_id: account.user_id,
+      user_id: account.user_id!,
       account_number: account.account_number,
-      balance: Number(account.balance),
-      created_at: account.created_at,
+      balance: account.balance.toString(),
+      created_at: account.created_at?.toISOString() || new Date().toISOString(),
+      user_name: account.user?.name || '',
+      user_icon: account.user?.icon || '',
+      birthday: account.user?.birthday.toISOString().split('T')[0] || '',
     };
   },
 
   async getByUserId(userId: number): Promise<PiggyBankAccount | null> {
     const account = await prisma.piggybankAccount.findFirst({
       where: { user_id: userId },
+      include: {
+        user: true,
+      },
     });
 
     if (!account) return null;
 
     return {
       account_id: account.account_id,
-      user_id: account.user_id,
+      user_id: account.user_id!,
       account_number: account.account_number,
-      balance: Number(account.balance),
-      created_at: account.created_at,
+      balance: account.balance.toString(),
+      created_at: account.created_at?.toISOString() || new Date().toISOString(),
+      user_name: account.user?.name || '',
+      user_icon: account.user?.icon || '',
+      birthday: account.user?.birthday.toISOString().split('T')[0] || '',
     };
   },
 
   async getById(accountId: number): Promise<PiggyBankAccount | null> {
     const account = await prisma.piggybankAccount.findUnique({
       where: { account_id: accountId },
+      include: {
+        user: true,
+      },
     });
 
     if (!account) return null;
 
     return {
       account_id: account.account_id,
-      user_id: account.user_id,
+      user_id: account.user_id!,
       account_number: account.account_number,
-      balance: Number(account.balance),
-      created_at: account.created_at,
+      balance: account.balance.toString(),
+      created_at: account.created_at?.toISOString() || new Date().toISOString(),
+      user_name: account.user?.name || '',
+      user_icon: account.user?.icon || '',
+      birthday: account.user?.birthday.toISOString().split('T')[0] || '',
     };
   },
 
@@ -77,14 +95,20 @@ export const piggyBankAccountService = {
     const account = await prisma.piggybankAccount.update({
       where: { account_id: accountId },
       data: updateData,
+      include: {
+        user: true,
+      },
     });
 
     return {
       account_id: account.account_id,
-      user_id: account.user_id,
+      user_id: account.user_id!,
       account_number: account.account_number,
-      balance: Number(account.balance),
-      created_at: account.created_at,
+      balance: account.balance.toString(),
+      created_at: account.created_at?.toISOString() || new Date().toISOString(),
+      user_name: account.user?.name || '',
+      user_icon: account.user?.icon || '',
+      birthday: account.user?.birthday.toISOString().split('T')[0] || '',
     };
   },
 
@@ -98,12 +122,13 @@ export const piggyBankAccountService = {
 
     return accounts.map((account) => ({
       account_id: account.account_id,
-      user_id: account.user_id,
+      user_id: account.user_id!,
       account_number: account.account_number,
-      balance: Number(account.balance),
-      created_at: account.created_at,
-      user_name: account.user?.name,
-      user_icon: account.user?.icon,
+      balance: account.balance.toString(),
+      created_at: account.created_at?.toISOString() || new Date().toISOString(),
+      user_name: account.user?.name || '',
+      user_icon: account.user?.icon || '',
+      birthday: account.user?.birthday.toISOString().split('T')[0] || '',
     }));
   },
 };

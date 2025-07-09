@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertTriangle, FileText, Users, PiggyBank, CheckSquare } from 'lucide-react';
+import { AlertTriangle, FileText, PiggyBank, CheckSquare } from 'lucide-react';
 
 interface RestoreConfirmDialogProps {
   isOpen: boolean;

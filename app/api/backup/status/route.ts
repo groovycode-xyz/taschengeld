@@ -1,23 +1,31 @@
-import { NextResponse } from 'next/server';
-import { createApiHandler } from '@/app/lib/api-utils';
+import { NextRequest, NextResponse } from 'next/server';
 import { BackupService } from '@/app/lib/services/backup-service';
+import { handleError } from '@/app/lib/error-handler';
 
-export const GET = createApiHandler(async () => {
-  const status = await BackupService.getBackupStatus();
-  return NextResponse.json(status);
-});
-
-export const PUT = createApiHandler(async (request) => {
-  const { threshold, enabled } = await request.json();
-
-  if (threshold !== undefined) {
-    await BackupService.updateReminderThreshold(threshold);
+export async function GET(_request: NextRequest) {
+  try {
+    const status = await BackupService.getBackupStatus();
+    return NextResponse.json(status);
+  } catch (error) {
+    return handleError(error);
   }
+}
 
-  if (enabled !== undefined) {
-    await BackupService.toggleReminder(enabled);
+export async function PUT(request: NextRequest) {
+  try {
+    const { threshold, enabled } = await request.json();
+
+    if (threshold !== undefined) {
+      await BackupService.updateReminderThreshold(threshold);
+    }
+
+    if (enabled !== undefined) {
+      await BackupService.toggleReminder(enabled);
+    }
+
+    const status = await BackupService.getBackupStatus();
+    return NextResponse.json(status);
+  } catch (error) {
+    return handleError(error);
   }
-
-  const status = await BackupService.getBackupStatus();
-  return NextResponse.json(status);
-});
+}

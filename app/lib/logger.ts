@@ -76,12 +76,12 @@ class Logger {
       const logDir = path.dirname(this.logFile);
       const files = fs
         .readdirSync(logDir)
-        .filter((file) => file.startsWith('app.log.'))
+        .filter((file: string) => file.startsWith('app.log.'))
         .sort()
         .reverse();
 
       // Keep only the 5 most recent rotated files
-      files.slice(5).forEach((file) => {
+      files.slice(5).forEach((file: string) => {
         fs.unlinkSync(path.join(logDir, file));
       });
     } catch {
@@ -143,7 +143,7 @@ class Logger {
         ? {
             message: error.message,
             stack: error.stack,
-            ...error,
+            name: error.name,
           }
         : error;
 

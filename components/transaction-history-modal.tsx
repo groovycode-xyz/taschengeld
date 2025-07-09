@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
@@ -66,24 +66,25 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (isOpen && user) {
-      fetchTransactions();
-    }
-  }, [isOpen, user]);
-
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
+    if (!user) return;
     try {
       const response = await fetch(`/api/piggy-bank/transactions?accountId=${user.account_id}`);
       if (!response.ok) throw new Error('Failed to fetch transactions');
       const data = await response.json();
       setTransactions(data);
-    } catch (error) {
+    } catch (_error) {
       // Error fetching transactions
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (isOpen && user) {
+      fetchTransactions();
+    }
+  }, [isOpen, user, fetchTransactions]);
 
   const groupedTransactions = groupTransactionsByWeek(transactions);
 
@@ -120,8 +121,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                     <div
                       key={transaction.transaction_id}
                       className={`p-4 rounded-lg border ${
-                        transaction.transaction_type === 'deposit' ||
-                        transaction.transaction_type === 'payday'
+                        ['deposit', 'payday'].includes(transaction.transaction_type)
                           ? 'bg-green-50 border-green-200'
                           : 'bg-red-50 border-red-200'
                       }`}
@@ -143,16 +143,12 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                         </div>
                         <span
                           className={`font-semibold ${
-                            transaction.transaction_type === 'deposit' ||
-                            transaction.transaction_type === 'payday'
+                            ['deposit', 'payday'].includes(transaction.transaction_type)
                               ? 'text-green-600'
                               : 'text-red-600'
                           }`}
                         >
-                          {transaction.transaction_type === 'deposit' ||
-                          transaction.transaction_type === 'payday'
-                            ? '+'
-                            : '-'}
+                          {['deposit', 'payday'].includes(transaction.transaction_type) ? '+' : '-'}
                           <CurrencyDisplay
                             value={Math.abs(parseFloat(transaction.amount))}
                             className='font-semibold'
