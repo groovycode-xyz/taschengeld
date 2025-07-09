@@ -75,6 +75,15 @@ jobs:
           VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $VERSION"
+          
+          # Check if version tag already exists on DockerHub to determine if this is a new release
+          if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v$VERSION >/dev/null 2>&1; then
+            echo "IS_NEW_RELEASE=false" >> $GITHUB_OUTPUT
+            echo "Version v$VERSION already exists on DockerHub"
+          else
+            echo "IS_NEW_RELEASE=true" >> $GITHUB_OUTPUT
+            echo "Version v$VERSION is new - will tag as stable"
+          fi
 
       - name: Build and push Docker image
         id: docker_build
@@ -87,6 +96,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.VERSION }}
+            ${{ steps.version.outputs.IS_NEW_RELEASE == 'true' && format('{0}/{1}:stable', env.REGISTRY, env.IMAGE_NAME) || '' }}
           labels: |
             org.opencontainers.image.title=Taschengeld
             org.opencontainers.image.description=Family allowance tracker application
