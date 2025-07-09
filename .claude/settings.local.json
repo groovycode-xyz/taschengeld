@@ -35,7 +35,11 @@
       "Bash(docker pull:*)",
       "Bash(./scripts/build-multiarch.sh:*)",
       "Bash(docker buildx build:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(git pull:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh api:*)"
     ],
     "deny": []
   }

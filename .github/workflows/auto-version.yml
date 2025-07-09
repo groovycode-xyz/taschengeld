@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  actions: write  # Required to trigger other workflows
 
 jobs:
   version-bump:
@@ -113,5 +114,12 @@ jobs:
         if: steps.check.outputs.skip != 'true'
         run: |
           echo "Version bumped to ${{ steps.version.outputs.new_version }}"
-          echo "The version-release workflow will automatically create a GitHub release"
-          echo "The docker-build workflow will automatically build and push new images"
+          echo "Triggering release workflow..."
+          
+          # Wait a moment for the commit to be fully processed
+          sleep 5
+          
+          # Explicitly trigger the version-release workflow
+          gh workflow run version-release.yml --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
