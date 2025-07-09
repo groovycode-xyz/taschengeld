@@ -815,6 +815,31 @@ docker inspect groovycodexyz/taschengeld:latest | grep -A 5 "org.opencontainers.
 docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.prod -t test-build .
 ```
 
+### Missing Migrations in Docker Image (FIXED v1.0.11)
+
+**Issue**: Container fails with "No migration found in prisma/migrations" error
+**Root Cause**: Docker COPY command not recursively copying migration subdirectories
+**Solution**: Explicitly copy migrations in Dockerfile.prod (v1.0.11+):
+
+```dockerfile
+# OLD (problematic):
+COPY prisma ./prisma/
+
+# NEW (working):
+COPY prisma/schema.prisma ./prisma/
+COPY prisma/migrations ./prisma/migrations/
+```
+
+**Diagnostic Commands**:
+
+```bash
+# Check if migrations are included in image
+docker run --rm groovycodexyz/taschengeld:latest ls -la /app/prisma/migrations/
+
+# Verify SQL files are present
+docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -name "*.sql"
+```
+
 ### CI/CD Pipeline Troubleshooting
 
 **GitHub Actions Not Triggering**:
