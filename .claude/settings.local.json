@@ -24,7 +24,22 @@
       "Bash(npm run dev:docker:*)",
       "Bash(docker compose:*)",
       "Bash(curl:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git stash:*)",
+      "Bash(chmod:*)",
+      "Bash(wt:*)",
+      "Bash(/Users/jamespace/Projects/taschengeld/scripts/worktree-manager.sh:*)",
+      "Bash(alias wt=\"/Users/jamespace/Projects/taschengeld/scripts/worktree-manager.sh\")",
+      "Bash(./scripts/worktree-manager.sh:*)",
+      "Bash(docker run:*)",
+      "Bash(docker pull:*)",
+      "Bash(./scripts/build-multiarch.sh:*)",
+      "Bash(docker buildx build:*)",
+      "Bash(docker build:*)",
+      "Bash(git pull:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh api:*)"
     ],
     "deny": []
   }
