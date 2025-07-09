@@ -30,7 +30,12 @@
       "Bash(wt:*)",
       "Bash(/Users/jamespace/Projects/taschengeld/scripts/worktree-manager.sh:*)",
       "Bash(alias wt=\"/Users/jamespace/Projects/taschengeld/scripts/worktree-manager.sh\")",
-      "Bash(./scripts/worktree-manager.sh:*)"
+      "Bash(./scripts/worktree-manager.sh:*)",
+      "Bash(docker run:*)",
+      "Bash(docker pull:*)",
+      "Bash(./scripts/build-multiarch.sh:*)",
+      "Bash(docker buildx build:*)",
+      "Bash(docker build:*)"
     ],
     "deny": []
   }

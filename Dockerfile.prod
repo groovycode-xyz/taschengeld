@@ -17,7 +17,9 @@ RUN apk add --no-cache \
 
 # Copy package files
 COPY package*.json ./
-COPY prisma ./prisma/
+# Copy Prisma schema and migrations explicitly to ensure subdirectories are included
+COPY prisma/schema.prisma ./prisma/
+COPY prisma/migrations ./prisma/migrations/
 
 # Install dependencies and sharp for image optimization
 RUN npm ci && npm install sharp

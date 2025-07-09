@@ -110,8 +110,15 @@ run_migrations() {
     echo "Prisma binary platform: $(ls -la /app/node_modules/.prisma/client/ 2>/dev/null | head -10)"
 
     # Check if migration files exist (excluding lock file)
-    if [ -z "$(ls -A /app/prisma/migrations 2>/dev/null | grep -v migration_lock.toml)" ]; then
-        echo "No migration files found, using schema push approach..."
+    echo "Checking for migration files in /app/prisma/migrations..."
+    migration_count=$(find /app/prisma/migrations -name "*.sql" 2>/dev/null | wc -l)
+    echo "Found $migration_count migration SQL files"
+    
+    if [ "$migration_count" -eq 0 ]; then
+        echo "WARNING: No migration SQL files found in /app/prisma/migrations"
+        echo "Directory contents:"
+        ls -la /app/prisma/migrations/ 2>/dev/null || echo "Migrations directory not found"
+        echo "Using schema push approach as fallback..."
         
         # Try prisma db push as fallback when no migrations exist
         if npx prisma db push --skip-generate 2>&1 | tee /tmp/schema_push.log; then
