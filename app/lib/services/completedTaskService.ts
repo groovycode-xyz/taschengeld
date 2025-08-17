@@ -111,7 +111,7 @@ export const completedTaskService = {
     };
   },
 
-  async updatePaymentStatus(id: number, status: string): Promise<CompletedTask | null> {
+  async updatePaymentStatus(id: number, status: string, customPayoutValue?: number): Promise<CompletedTask | null> {
     const validatedStatus = validatePaymentStatus(status);
 
     try {
@@ -128,11 +128,14 @@ export const completedTaskService = {
         return null;
       }
 
+      // Determine the actual payout value to use
+      const actualPayoutValue = customPayoutValue !== undefined ? customPayoutValue : existingTask.payout_value || 0;
+
       // If changing from Unpaid to Paid, we need to update the piggy bank
       if (
         existingTask.payment_status === 'Unpaid' &&
         validatedStatus === 'Paid' &&
-        existingTask.payout_value
+        actualPayoutValue > 0
       ) {
         // Use a transaction to ensure all operations succeed or fail together
         const [completedTask] = await prisma.$transaction(async (tx) => {
@@ -157,7 +160,7 @@ export const completedTaskService = {
               where: { account_id: account.account_id },
               data: {
                 balance: {
-                  increment: existingTask.payout_value || 0,
+                  increment: actualPayoutValue,
                 },
               },
             });
@@ -166,9 +169,9 @@ export const completedTaskService = {
             await tx.piggybankTransaction.create({
               data: {
                 account_id: account.account_id,
-                amount: existingTask.payout_value || 0,
+                amount: actualPayoutValue,
                 transaction_type: 'payday',
-                description: `Payment for: ${existingTask.task.title}`,
+                description: `Payment for: ${existingTask.task.title}${customPayoutValue !== undefined ? ` (custom amount)` : ''}`,
                 completed_task_id: existingTask.c_task_id,
                 transaction_date: existingTask.created_at, // Use task completion date
               },
