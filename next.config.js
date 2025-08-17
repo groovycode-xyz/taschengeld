@@ -47,7 +47,7 @@ const nextConfig = {
               "frame-ancestors 'none'",
               "form-action 'self'",
               "base-uri 'self'",
-              'upgrade-insecure-requests',
+              // 'upgrade-insecure-requests', // Commented out to allow HTTP-only deployments
             ].join('; '),
           },
           {
@@ -79,10 +79,12 @@ const nextConfig = {
               'gyroscope=()',
             ].join(', '),
           },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains',
-          },
+          // Commented out HSTS to allow HTTP-only deployments
+          // Uncomment if you're using HTTPS with proper SSL certificates
+          // {
+          //   key: 'Strict-Transport-Security',
+          //   value: 'max-age=31536000; includeSubDomains',
+          // },
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'off',
