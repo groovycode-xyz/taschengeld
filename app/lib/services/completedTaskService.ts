@@ -129,7 +129,7 @@ export const completedTaskService = {
       }
 
       // Determine the actual payout value to use
-      const actualPayoutValue = customPayoutValue !== undefined ? customPayoutValue : existingTask.payout_value || 0;
+      const actualPayoutValue = customPayoutValue !== undefined ? customPayoutValue : Number(existingTask.payout_value) || 0;
 
       // If changing from Unpaid to Paid, we need to update the piggy bank
       if (
