@@ -106,4 +106,14 @@ export const settingsService = {
       };
     }
   },
+
+  async getCelebrationEnabled(): Promise<boolean> {
+    const value = await this.getSetting('celebration_enabled');
+    // Default to true for backward compatibility
+    return value === null ? true : value === 'true';
+  },
+
+  async setCelebrationEnabled(enabled: boolean): Promise<void> {
+    await this.updateSetting('celebration_enabled', enabled.toString());
+  },
 };

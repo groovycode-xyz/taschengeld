@@ -18,15 +18,17 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Fireworks } from './fireworks';
+import { CSSConfetti } from './css-confetti';
 import { cn } from '@/lib/utils';
 import { useUsers } from '@/components/context/user-context';
 import { useMode } from '@/components/context/mode-context';
+import { useSettings } from '@/components/context/settings-context';
 import Link from 'next/link';
 
 export function TaskCompletion() {
   const { childUsers } = useUsers();
   const { hasFullAccess } = useMode();
+  const { settings } = useSettings();
   const [activeTasks, setActiveTasks] = useState<Task[]>([]);
   const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -101,7 +103,15 @@ export function TaskCompletion() {
   };
 
   const playCompletionCelebration = async () => {
+    // Check if celebrations are enabled in settings
+    if (!settings.celebration_enabled) {
+      console.log('Celebration disabled in settings');
+      return;
+    }
+    
+    console.log('Starting celebration - setting showFireworks to true');
     setShowFireworks(true);
+    
     try {
       let applauseAudio = new Audio('./sounds/applause.mp3');
       await applauseAudio.play().catch(() => {
@@ -112,8 +122,9 @@ export function TaskCompletion() {
         applauseAudio.addEventListener('ended', () => resolve());
       });
     } catch (_error) {
-      // Error playing applause sound
+      console.error('Error playing applause sound:', _error);
     } finally {
+      console.log('Celebration complete - setting showFireworks to false');
       setShowFireworks(false);
     }
   };
@@ -397,7 +408,7 @@ export function TaskCompletion() {
         </DialogContent>
       </Dialog>
 
-      {showFireworks && <Fireworks />}
+      {showFireworks && <CSSConfetti />}
     </div>
   );
 }

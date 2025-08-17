@@ -9,6 +9,7 @@ interface Settings {
   show_german_terms: boolean;
   default_currency: string | null;
   currency_format: string;
+  celebration_enabled: boolean;
 }
 
 interface SettingsContextType {
@@ -24,6 +25,7 @@ const defaultSettings: Settings = {
   show_german_terms: true,
   default_currency: null,
   currency_format: 'symbol',
+  celebration_enabled: true,
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -48,6 +50,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           data.show_german_terms === undefined ? true : data.show_german_terms === 'true',
         default_currency: data.default_currency || null,
         currency_format: data.currency_format || 'symbol',
+        celebration_enabled:
+          data.celebration_enabled === undefined ? true : data.celebration_enabled === 'true',
       });
     } catch (err) {
       logger.error('Failed to fetch settings', err);
@@ -77,7 +81,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
       // Update local state to match how we parse from server
       const updatedValue =
-        key === 'enforce_roles' || key === 'show_german_terms'
+        key === 'enforce_roles' || key === 'show_german_terms' || key === 'celebration_enabled'
           ? value === true || value === 'true'
           : value;
 

@@ -9,57 +9,81 @@ interface FireworksProps {
 
 export function Fireworks({ onComplete }: FireworksProps) {
   useEffect(() => {
+    console.log('Fireworks component mounted - starting confetti animation');
+    
+    // Use the default confetti (which creates its own canvas)
+    // but run multiple bursts for better visibility
     const duration = 2400;
     const animationEnd = Date.now() + duration;
+    const defaults = { 
+      startVelocity: 30, 
+      spread: 360, 
+      ticks: 60, 
+      zIndex: 999999,
+      disableForReducedMotion: false,
+      useWorker: false // Disable worker to avoid CSP issues
+    };
 
-    const randomInRange = (min: number, max: number) => {
+    function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
-    };
+    }
 
-    // Ensure canvas has proper z-index by creating it with specific styling
-    const ensureCanvasZIndex = () => {
-      const canvases = document.querySelectorAll('canvas');
-      canvases.forEach((canvas) => {
-        canvas.style.zIndex = '9999';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.position = 'fixed';
-      });
-    };
-
-    const fireworks = () => {
+    const interval = setInterval(function() {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
+        console.log('Fireworks animation complete');
+        clearInterval(interval);
         if (onComplete) onComplete();
         return;
       }
 
-      const particleCount = 30;
+      const particleCount = 50 * (timeLeft / duration);
 
+      // Since the library is loaded, create bursts from multiple origin points
       confetti({
+        ...defaults,
         particleCount,
-        startVelocity: 20,
-        spread: 180,
-        origin: {
-          x: randomInRange(0.3, 0.7),
-          y: randomInRange(0.3, 0.7),
-        },
-        scalar: 0.7,
-        zIndex: 9999,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
       });
+      
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+      });
+    }, 250);
 
-      // Ensure canvas styling after confetti creates it
-      setTimeout(ensureCanvasZIndex, 10);
+    // Also fire an immediate burst for instant feedback
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      zIndex: 999999,
+      useWorker: false // Disable worker to avoid CSP issues
+    });
 
-      requestAnimationFrame(fireworks);
-    };
-
-    fireworks();
-
+    // Cleanup
     return () => {
-      // Cleanup if needed
+      console.log('Fireworks component unmounting - cleaning up');
+      clearInterval(interval);
+      confetti.reset();
     };
   }, [onComplete]);
 
-  return null;
+  // Also render a div to ensure the component is in the DOM
+  return (
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 999999
+      }}
+      aria-hidden="true"
+    />
+  );
 }
