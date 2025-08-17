@@ -22,6 +22,7 @@ import {
   Save,
   Settings2,
   Shield,
+  Sparkles,
   Trash2,
   Upload,
 } from 'lucide-react';
@@ -149,6 +150,7 @@ export function GlobalAppSettings() {
   const [isRestoring, setIsRestoring] = useState(false);
   const { showGermanTerms, setShowGermanTerms } = useLanguage();
   const [loadingLanguage, setLoadingLanguage] = useState(false);
+  const [loadingCelebration, setLoadingCelebration] = useState(false);
   const [versionInfo, setVersionInfo] = useState<{
     version: string;
     environment: string;
@@ -592,6 +594,28 @@ export function GlobalAppSettings() {
     }
   };
 
+  const handleCelebrationToggle = async () => {
+    setLoadingCelebration(true);
+    const newState = !settings.celebration_enabled;
+
+    try {
+      await updateSetting('celebration_enabled', newState);
+      toast({
+        title: 'Celebration Setting Updated',
+        description: `Task completion celebrations are now ${newState ? 'enabled' : 'disabled'}.`,
+        variant: 'default',
+      });
+    } catch (error) {
+      toast({
+        title: 'Update Failed',
+        description: 'Failed to update celebration setting. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingCelebration(false);
+    }
+  };
+
   return (
     <div className='h-[calc(100vh-4rem)] flex flex-col bg-background'>
       {/* Fixed Header */}
@@ -791,6 +815,34 @@ export function GlobalAppSettings() {
                     checked={!showGermanTerms}
                     onCheckedChange={handleLanguageToggle}
                     disabled={loadingLanguage}
+                    className='data-[state=checked]:bg-primary'
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Experience Section */}
+          <section className='bg-card rounded-2xl p-8 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none border border-border transition-all duration-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:hover:shadow-none w-full'>
+            <div className='flex items-center gap-4 mb-8'>
+              <Sparkles className='h-6 w-6 text-foreground' />
+              <h2 className='text-xl font-medium text-foreground'>Experience</h2>
+            </div>
+
+            <div className='space-y-6'>
+              <div className='rounded-lg border p-4'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1 space-y-1'>
+                    <Label htmlFor='celebration-toggle'>Task Completion Celebration</Label>
+                    <p className='text-sm text-muted-foreground'>
+                      Show confetti animation and play sound effects when tasks are completed
+                    </p>
+                  </div>
+                  <Switch
+                    id='celebration-toggle'
+                    checked={settings.celebration_enabled}
+                    onCheckedChange={handleCelebrationToggle}
+                    disabled={loadingCelebration}
                     className='data-[state=checked]:bg-primary'
                   />
                 </div>
