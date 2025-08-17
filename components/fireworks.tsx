@@ -59,8 +59,7 @@ export function Fireworks({ onComplete }: FireworksProps) {
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-      zIndex: 999999,
-      useWorker: false // Disable worker to avoid CSP issues
+      zIndex: 999999
     });
 
     // Cleanup
