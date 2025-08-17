@@ -39,6 +39,11 @@ export const updateCompletedTaskSchema = z.object({
   payment_status: z.enum(['Paid', 'Unpaid'], {
     errorMap: () => ({ message: 'Payment status must be either Paid or Unpaid' }),
   }),
+  custom_payout_value: z
+    .number()
+    .min(0, 'Custom payout value must be 0 or greater')
+    .max(1000, 'Custom payout value must be less than 1000')
+    .optional(),
 });
 
 // Transaction schemas
@@ -78,6 +83,12 @@ export const paydaySchema = z.object({
   completedTaskIds: z
     .array(z.number().int('Task ID must be an integer').positive('Task ID must be positive'))
     .min(1, 'At least one task must be selected'),
+  customPayoutValues: z
+    .record(
+      z.string(), // task ID as string key
+      z.number().min(0, 'Custom payout value must be 0 or greater').max(1000, 'Custom payout value must be less than 1000')
+    )
+    .optional(),
 });
 
 // Bulk operations schemas

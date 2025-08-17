@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { CompletedTask } from '@/app/types/completedTask';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
 import {
   Dialog,
@@ -32,6 +33,10 @@ import {
   Trash2,
   Layers,
   Loader2,
+  Check,
+  X,
+  Pen,
+  Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -94,6 +99,12 @@ export function Payday() {
   } | null>(null);
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
+  // Editable payout values state
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editedPayoutValues, setEditedPayoutValues] = useState<{ [taskId: number]: number }>({});
+  const [payoutValidationErrors, setPayoutValidationErrors] = useState<{ [taskId: number]: string }>({});
+  const [editingStepValue, setEditingStepValue] = useState<number>(0.01);
+
   // Load settings from localStorage on mount
   useEffect(() => {
     const loaded = loadSettings();
@@ -129,6 +140,58 @@ export function Payday() {
     setSettings((prev) => ({ ...prev, groupBy: value }));
   };
 
+  // Payout editing functions
+  const getPayoutValue = (task: CompletedTask): number => {
+    return editedPayoutValues[task.c_task_id] ?? task.payout_value ?? 0;
+  };
+
+  const calculateStepValue = (value: number): number => {
+    // If value is 1 or greater, always increment by 1
+    if (value >= 1) {
+      return 1.00;
+    }
+    
+    // If value is less than 0.1, increment by 0.05
+    if (value < 0.1) {
+      return 0.05;
+    }
+    
+    // If value is between 0.1 and 0.99, increment by 0.1
+    return 0.10;
+  };
+
+  const startEditingPayout = (taskId: number, currentValue: number) => {
+    setEditingTaskId(taskId);
+    setEditedPayoutValues((prev) => ({ ...prev, [taskId]: currentValue }));
+    // Lock in the step value based on the initial value when editing starts
+    setEditingStepValue(calculateStepValue(currentValue));
+  };
+
+  const stopEditingPayout = () => {
+    setEditingTaskId(null);
+  };
+
+  const updatePayoutValue = (taskId: number, newValue: number) => {
+    // Clear any existing validation error
+    setPayoutValidationErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[taskId];
+      return newErrors;
+    });
+
+    // Validate the new value
+    if (isNaN(newValue) || newValue < 0) {
+      setPayoutValidationErrors((prev) => ({ ...prev, [taskId]: 'Value must be 0 or greater' }));
+      return;
+    }
+    if (newValue > 1000) {
+      setPayoutValidationErrors((prev) => ({ ...prev, [taskId]: 'Value must be 1000 or less' }));
+      return;
+    }
+
+    setEditedPayoutValues((prev) => ({ ...prev, [taskId]: newValue }));
+  };
+
   const fetchCompletedTasks = async () => {
     setIsLoading(true);
     setError(null);
@@ -152,6 +215,12 @@ export function Payday() {
     paymentStatus: 'Paid' | 'Unpaid',
     isRejection: boolean = false
   ) => {
+    // Check for validation errors before proceeding
+    if (!isRejection && payoutValidationErrors[cTaskId]) {
+      setError('Please fix validation errors before approving');
+      return;
+    }
+
     try {
       if (isRejection) {
         // For rejections, use DELETE endpoint
@@ -165,6 +234,7 @@ export function Payday() {
         }
       } else {
         // For approvals, use PUT endpoint
+        const customPayoutValue = editedPayoutValues[cTaskId];
         const response = await fetch(`/api/completed-tasks/${cTaskId}`, {
           method: 'PUT',
           headers: {
@@ -172,6 +242,7 @@ export function Payday() {
           },
           body: JSON.stringify({
             payment_status: paymentStatus,
+            custom_payout_value: customPayoutValue,
           }),
         });
 
@@ -200,6 +271,10 @@ export function Payday() {
   };
 
   const handleBulkActionClick = (actionType: 'approve' | 'reject') => {
+    // If currently editing, save it first
+    if (editingTaskId !== null) {
+      stopEditingPayout();
+    }
     setBulkActionType(actionType);
     setIsDialogOpen(true);
   };
@@ -212,6 +287,21 @@ export function Payday() {
       const tasksToProcess = [...selectedTasks];
 
       if (bulkActionType === 'approve') {
+        // Check for validation errors in selected tasks
+        const hasValidationErrors = tasksToProcess.some((taskId) => payoutValidationErrors[taskId]);
+        if (hasValidationErrors) {
+          setError('Please fix validation errors before approving tasks');
+          setIsBulkProcessing(false);
+          return;
+        }
+        // Prepare custom payout values for selected tasks
+        const customPayoutValues: { [key: string]: number } = {};
+        tasksToProcess.forEach((taskId) => {
+          if (editedPayoutValues[taskId] !== undefined) {
+            customPayoutValues[taskId.toString()] = editedPayoutValues[taskId];
+          }
+        });
+
         // Use the payday endpoint for bulk approval
         const response = await fetch('/api/completed-tasks', {
           method: 'PATCH',
@@ -220,6 +310,7 @@ export function Payday() {
           },
           body: JSON.stringify({
             completedTaskIds: tasksToProcess,
+            ...(Object.keys(customPayoutValues).length > 0 && { customPayoutValues }),
           }),
         });
 
@@ -298,6 +389,11 @@ export function Payday() {
 
   // Handle select all for a group
   const handleGroupSelectAll = (groupName: string, tasks: CompletedTask[]) => {
+    // If currently editing, save it first
+    if (editingTaskId !== null) {
+      stopEditingPayout();
+    }
+    
     const groupTaskIds = tasks.map((task) => task.c_task_id);
     const allSelected = groupTaskIds.every((id) => selectedTasks.includes(id));
 
@@ -441,6 +537,11 @@ export function Payday() {
                 filteredTasks.every((task) => selectedTasks.includes(task.c_task_id))
               }
               onCheckedChange={() => {
+                // If currently editing, save it first
+                if (editingTaskId !== null) {
+                  stopEditingPayout();
+                }
+                
                 const visibleTaskIds = filteredTasks.map((task) => task.c_task_id);
 
                 if (
@@ -505,7 +606,13 @@ export function Payday() {
                     <div key={task.c_task_id} className='flex items-center gap-3 group'>
                       <Checkbox
                         checked={selectedTasks.includes(task.c_task_id)}
-                        onCheckedChange={() => handleTaskSelect(task.c_task_id)}
+                        onCheckedChange={() => {
+                          // If currently editing, save it first
+                          if (editingTaskId !== null) {
+                            stopEditingPayout();
+                          }
+                          handleTaskSelect(task.c_task_id);
+                        }}
                         className='flex-shrink-0 ml-9 group-hover:shadow-lg transition-shadow'
                       />
                       <Card
@@ -514,7 +621,16 @@ export function Payday() {
                           'bg-card dark:bg-card',
                           selectedTasks.includes(task.c_task_id) && 'ring-2 ring-primary'
                         )}
-                        onClick={() => handleTaskSelect(task.c_task_id)}
+                        onClick={() => {
+                          // Only save edit if clicking on a different task
+                          if (editingTaskId !== null && editingTaskId !== task.c_task_id) {
+                            stopEditingPayout();
+                          }
+                          // Don't select/deselect if currently editing this task
+                          if (editingTaskId !== task.c_task_id) {
+                            handleTaskSelect(task.c_task_id);
+                          }
+                        }}
                       >
                         <CardContent className='flex items-center justify-between p-3'>
                           <SquareCheckBig className='h-6 w-6 mr-2 text-green-600 dark:text-green-400' />
@@ -580,6 +696,136 @@ export function Payday() {
                             </CardContent>
                           </Card>
 
+                          <Card
+                            className={cn(
+                              'flex-1 mx-2 shadow-sm relative',
+                              'bg-yellow-100/50 dark:bg-yellow-900/10'
+                            )}
+                          >
+                            <CardContent className='p-2'>
+                              {editingTaskId === task.c_task_id ? (
+                                <div className='flex items-center' onClick={(e) => e.stopPropagation()}>
+                                  <Banknote
+                                    className={cn('h-6 w-6 mr-2 flex-shrink-0', 'text-yellow-700 dark:text-yellow-300')}
+                                  />
+                                  <div className='flex items-center gap-1 flex-1'>
+                                    <Input
+                                      type='number'
+                                      step={editingStepValue}
+                                      min='0'
+                                      max='1000'
+                                      value={getPayoutValue(task)}
+                                      onClick={(e) => e.stopPropagation()}
+                                      onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (value === '') {
+                                          updatePayoutValue(task.c_task_id, 0);
+                                        } else {
+                                          const numValue = parseFloat(value);
+                                          if (!isNaN(numValue)) {
+                                            updatePayoutValue(task.c_task_id, numValue);
+                                          }
+                                        }
+                                      }}
+                                      className={cn(
+                                        'h-7 w-20 text-sm',
+                                        payoutValidationErrors[task.c_task_id]
+                                          ? 'border-red-300 focus:border-red-500'
+                                          : 'border-yellow-300 focus:border-yellow-500'
+                                      )}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                          e.preventDefault();
+                                          stopEditingPayout();
+                                        } else if (e.key === 'Escape') {
+                                          e.preventDefault();
+                                          stopEditingPayout();
+                                          // Reset to original value
+                                          setEditedPayoutValues((prev) => {
+                                            const newValues = { ...prev };
+                                            delete newValues[task.c_task_id];
+                                            return newValues;
+                                          });
+                                        }
+                                      }}
+                                      autoFocus
+                                      onFocus={(e) => e.target.select()}
+                                    />
+                                    <Button
+                                      size='sm'
+                                      variant='ghost'
+                                      className='text-green-600 hover:text-green-700 hover:bg-green-100 px-2'
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        stopEditingPayout();
+                                      }}
+                                      title='Save'
+                                    >
+                                      <Check className='h-4 w-4' />
+                                    </Button>
+                                    <Button
+                                      size='sm'
+                                      variant='ghost'
+                                      className='text-red-600 hover:text-red-700 hover:bg-red-100 px-2'
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        stopEditingPayout();
+                                        // Reset to original value
+                                        setEditedPayoutValues((prev) => {
+                                          const newValues = { ...prev };
+                                          delete newValues[task.c_task_id];
+                                          return newValues;
+                                        });
+                                        // Clear validation errors
+                                        setPayoutValidationErrors((prev) => {
+                                          const newErrors = { ...prev };
+                                          delete newErrors[task.c_task_id];
+                                          return newErrors;
+                                        });
+                                      }}
+                                      title='Cancel'
+                                    >
+                                      <X className='h-4 w-4' />
+                                    </Button>
+                                  </div>
+                                  {payoutValidationErrors[task.c_task_id] && (
+                                    <div className='absolute -bottom-5 left-8 text-xs text-red-600'>
+                                      {payoutValidationErrors[task.c_task_id]}
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <div className='flex items-center'>
+                                  <Banknote
+                                    className={cn('h-6 w-6 mr-2', 'text-yellow-700 dark:text-yellow-300')}
+                                  />
+                                  <span
+                                    className={cn(
+                                      'text-sm font-medium flex-1',
+                                      'text-yellow-900 dark:text-yellow-100'
+                                    )}
+                                  >
+                                    <CurrencyDisplay value={getPayoutValue(task)} />
+                                  </span>
+                                  <Button
+                                    size='sm'
+                                    variant='ghost'
+                                    className='text-yellow-600 hover:text-yellow-700 hover:bg-yellow-100 px-2'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      // Use the edited value if it exists, otherwise use the original
+                                      const currentValue = getPayoutValue(task);
+                                      startEditingPayout(task.c_task_id, currentValue);
+                                    }}
+                                    title='Edit payout value'
+                                  >
+                                    <Pen className='h-4 w-4' />
+                                  </Button>
+                                </div>
+                              )}
+                            </CardContent>
+                          </Card>
+
                           <Card className={cn('flex-1 ml-2 shadow-sm', 'bg-muted/50')}>
                             <CardContent className='p-2 text-center'>
                               <TimeSince date={task.created_at.toString()} />
@@ -593,6 +839,10 @@ export function Payday() {
                               className='text-green-600 hover:text-green-700 hover:bg-green-100 px-3'
                               onClick={(e) => {
                                 e.stopPropagation();
+                                // If currently editing this task, save the edit first
+                                if (editingTaskId === task.c_task_id) {
+                                  stopEditingPayout();
+                                }
                                 setConfirmActionTask({ id: task.c_task_id, action: 'approve' });
                               }}
                               title='Approve'
@@ -605,6 +855,10 @@ export function Payday() {
                               className='text-red-600 hover:text-red-700 hover:bg-red-100 px-3'
                               onClick={(e) => {
                                 e.stopPropagation();
+                                // If currently editing this task, save the edit first
+                                if (editingTaskId === task.c_task_id) {
+                                  stopEditingPayout();
+                                }
                                 setConfirmActionTask({ id: task.c_task_id, action: 'reject' });
                               }}
                               title='Reject'

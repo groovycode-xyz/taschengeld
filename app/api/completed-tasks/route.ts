@@ -43,10 +43,10 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     logger.debug('PUT /api/completed-tasks', { body });
 
-    const { c_task_id, payment_status } = body;
+    const { c_task_id, payment_status, custom_payout_value } = body;
 
     // Validate the update data
-    const validation = updateCompletedTaskSchema.safeParse({ payment_status });
+    const validation = updateCompletedTaskSchema.safeParse({ payment_status, custom_payout_value });
     if (!validation.success) {
       return NextResponse.json(
         {
@@ -65,7 +65,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Valid completed task ID is required' }, { status: 400 });
     }
 
-    const updatedTask = await completedTaskService.updatePaymentStatus(c_task_id, payment_status);
+    const updatedTask = await completedTaskService.updatePaymentStatus(c_task_id, payment_status, custom_payout_value);
 
     if (updatedTask) {
       return NextResponse.json(updatedTask);
@@ -109,7 +109,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const { completedTaskIds } = validation.data;
+    const { completedTaskIds, customPayoutValues } = validation.data;
 
     // Process payday for each completed task
     const results = await Promise.all(
@@ -125,8 +125,11 @@ export async function PATCH(request: NextRequest) {
           return { taskId, success: false, error: 'No piggy bank account found for user' };
         }
 
+        // Get custom payout value if provided
+        const customPayoutValue = customPayoutValues?.[taskId.toString()];
+
         // Update payment status (this automatically creates the piggy bank transaction)
-        await completedTaskService.updatePaymentStatus(taskId, 'Paid');
+        await completedTaskService.updatePaymentStatus(taskId, 'Paid', customPayoutValue);
 
         return { taskId, success: true };
       })
