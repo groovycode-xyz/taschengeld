@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'version.txt'  # Only trigger on version changes
+      - 'version.txt' # Only trigger on version changes
   pull_request:
     branches: [main]
     paths-ignore:
@@ -12,7 +12,7 @@ on:
       - 'docs/theme-system-research.md'
       - 'docs/color-system/**'
       - '.archive/**'
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch: # Allow manual triggering
 
 env:
   REGISTRY: docker.io
@@ -72,7 +72,7 @@ jobs:
           VERSION=$(cat version.txt 2>/dev/null || echo "1.0.0")
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $VERSION"
-          
+
           # Check if version tag already exists on DockerHub to determine if this is a new release
           if docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v$VERSION >/dev/null 2>&1; then
             echo "IS_NEW_RELEASE=false" >> $GITHUB_OUTPUT
@@ -139,10 +139,10 @@ jobs:
           # The entrypoint now handles utility commands without requiring DB env vars
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
             node --version
-          
+
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
             ls -la /app
-          
+
           echo "✅ Image validation passed!"
 
       - name: Test Docker startup with database

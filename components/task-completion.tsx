@@ -108,10 +108,10 @@ export function TaskCompletion() {
       console.log('Celebration disabled in settings');
       return;
     }
-    
+
     console.log('Starting celebration - setting showFireworks to true');
     setShowFireworks(true);
-    
+
     try {
       let applauseAudio = new Audio('./sounds/applause.mp3');
       await applauseAudio.play().catch(() => {

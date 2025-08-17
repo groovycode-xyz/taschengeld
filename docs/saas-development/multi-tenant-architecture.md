@@ -11,6 +11,7 @@ This document outlines the multi-tenant architecture strategy for transforming T
 ## Current Single-Tenant Architecture
 
 ### Database Schema (Current)
+
 ```sql
 -- Current tables without tenant isolation
 users (user_id, name, icon, birthday, ...)
@@ -22,6 +23,7 @@ app_settings (setting_id, setting_key, setting_value, ...)
 ```
 
 ### Application Architecture (Current)
+
 - **Single Database**: One PostgreSQL database per deployment
 - **No Tenant Concept**: Application assumes single family
 - **Global Settings**: App-wide configuration without isolation
@@ -32,18 +34,21 @@ app_settings (setting_id, setting_key, setting_value, ...)
 ### Tenant Isolation Approach
 
 #### Option 1: Shared Database with Tenant ID (Recommended)
+
 - **Approach**: Add `tenant_id` column to all tables
 - **Advantages**: Cost-effective, easier to maintain, shared infrastructure
 - **Disadvantages**: Risk of data leakage, complex queries
 - **Best For**: Our use case with thousands of small tenants
 
 #### Option 2: Database per Tenant
+
 - **Approach**: Separate database for each tenant
 - **Advantages**: Perfect isolation, easier backup/restore per tenant
 - **Disadvantages**: High cost, complex management, resource waste
 - **Best For**: Large enterprise customers (not our target)
 
 #### Option 3: Schema per Tenant
+
 - **Approach**: Separate schema within shared database
 - **Advantages**: Good isolation, shared infrastructure
 - **Disadvantages**: Complex connection management, limited scalability
@@ -192,17 +197,17 @@ export interface PlanLimits {
 export function withTenantContext(handler: ApiHandler) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const tenantContext = await resolveTenantContext(req);
-    
+
     if (!tenantContext) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-    
+
     // Set tenant context for database queries
     await setTenantContext(tenantContext.tenantId);
-    
+
     // Add tenant context to request
     req.tenantContext = tenantContext;
-    
+
     return handler(req, res);
   };
 }
@@ -214,20 +219,20 @@ async function resolveTenantContext(req: NextApiRequest): Promise<TenantContext 
   if (subdomain) {
     return await getTenantBySlug(subdomain);
   }
-  
+
   // Strategy 2: JWT token with tenant claim
   const token = extractToken(req);
   if (token) {
     const payload = verifyToken(token);
     return await getTenantById(payload.tenantId);
   }
-  
+
   // Strategy 3: API key with tenant association
   const apiKey = req.headers['x-api-key'];
   if (apiKey) {
     return await getTenantByApiKey(apiKey);
   }
-  
+
   return null;
 }
 ```
@@ -238,11 +243,11 @@ async function resolveTenantContext(req: NextApiRequest): Promise<TenantContext 
 // lib/services/base-service.ts
 export abstract class BaseService {
   protected tenantId: string;
-  
+
   constructor(tenantId: string) {
     this.tenantId = tenantId;
   }
-  
+
   protected async withTenantContext<T>(operation: () => Promise<T>): Promise<T> {
     // Set tenant context for this operation
     await prisma.$executeRaw`SET LOCAL app.current_tenant_id = ${this.tenantId}`;
@@ -255,18 +260,18 @@ export class UserService extends BaseService {
   async findAll(): Promise<User[]> {
     return this.withTenantContext(async () => {
       return await prisma.user.findMany({
-        where: { tenant_id: this.tenantId } // Explicit filter as backup
+        where: { tenant_id: this.tenantId }, // Explicit filter as backup
       });
     });
   }
-  
+
   async create(userData: CreateUserData): Promise<User> {
     return this.withTenantContext(async () => {
       return await prisma.user.create({
         data: {
           ...userData,
-          tenant_id: this.tenantId // Explicitly set tenant
-        }
+          tenant_id: this.tenantId, // Explicitly set tenant
+        },
       });
     });
   }
@@ -288,25 +293,25 @@ import { createUserService } from '@/lib/services/user-service';
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { tenantContext } = req;
   const userService = createUserService(tenantContext.tenantId);
-  
+
   switch (req.method) {
     case 'GET':
       const users = await userService.findAll();
       return res.json(users);
-      
+
     case 'POST':
       // Check plan limits before creation
       const currentUserCount = await userService.count();
       if (currentUserCount >= tenantContext.planLimits.maxUsers) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           error: 'User limit reached for current plan',
-          limit: tenantContext.planLimits.maxUsers
+          limit: tenantContext.planLimits.maxUsers,
         });
       }
-      
+
       const newUser = await userService.create(req.body);
       return res.status(201).json(newUser);
-      
+
     default:
       return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -343,36 +348,36 @@ export async function migrateDockerDeployment(dockerData: DockerUserData) {
         name: dockerData.familyName || 'Family',
         slug: generateUniqueSlug(dockerData.familyName),
         subscription_status: 'grandfathered',
-        subscription_plan: 'free_legacy'
-      }
+        subscription_plan: 'free_legacy',
+      },
     });
-    
+
     // 2. Create primary user account
     const primaryUser = await tx.userAccount.create({
       data: {
         email: dockerData.primaryEmail,
         tenant_id: tenant.id,
         role: 'parent',
-        is_primary: true
-      }
+        is_primary: true,
+      },
     });
-    
+
     // 3. Migrate family users
     for (const user of dockerData.users) {
       await tx.user.create({
         data: {
           ...user,
-          tenant_id: tenant.id
-        }
+          tenant_id: tenant.id,
+        },
       });
     }
-    
+
     // 4. Migrate tasks, completed tasks, etc.
     // ... similar pattern for all entities
-    
+
     return { tenant, primaryUser };
   });
-  
+
   return transaction;
 }
 ```
@@ -401,7 +406,7 @@ FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');
 
 -- Materialized views for analytics
 CREATE MATERIALIZED VIEW tenant_usage_summary AS
-SELECT 
+SELECT
     tenant_id,
     COUNT(DISTINCT user_id) as user_count,
     COUNT(DISTINCT task_id) as task_count,
@@ -429,25 +434,25 @@ import Redis from 'ioredis';
 
 export class TenantCache {
   private redis: Redis;
-  
+
   constructor() {
     this.redis = new Redis(process.env.REDIS_URL);
   }
-  
+
   async getTenantContext(tenantId: string): Promise<TenantContext | null> {
     const cached = await this.redis.get(`tenant:${tenantId}`);
     if (cached) {
       return JSON.parse(cached);
     }
-    
+
     const tenant = await this.fetchTenantFromDb(tenantId);
     if (tenant) {
       await this.redis.setex(`tenant:${tenantId}`, 3600, JSON.stringify(tenant));
     }
-    
+
     return tenant;
   }
-  
+
   async invalidateTenant(tenantId: string): Promise<void> {
     await this.redis.del(`tenant:${tenantId}`);
   }
@@ -468,20 +473,17 @@ export class TenantCache {
 ```typescript
 // lib/security/tenant-validator.ts
 export class TenantValidator {
-  static async validateTenantAccess(
-    userAccountId: string, 
-    tenantId: string
-  ): Promise<boolean> {
+  static async validateTenantAccess(userAccountId: string, tenantId: string): Promise<boolean> {
     const userAccount = await prisma.userAccount.findFirst({
       where: {
         id: userAccountId,
-        tenant_id: tenantId
-      }
+        tenant_id: tenantId,
+      },
     });
-    
+
     return !!userAccount;
   }
-  
+
   static async validateResourceAccess(
     tenantId: string,
     resourceType: string,
@@ -489,8 +491,9 @@ export class TenantValidator {
   ): Promise<boolean> {
     // Validate that resource belongs to tenant
     const query = `SELECT 1 FROM ${resourceType} WHERE id = $1 AND tenant_id = $2`;
-    const result = await prisma.$queryRaw`SELECT 1 FROM ${resourceType} WHERE id = ${resourceId} AND tenant_id = ${tenantId}`;
-    
+    const result =
+      await prisma.$queryRaw`SELECT 1 FROM ${resourceType} WHERE id = ${resourceId} AND tenant_id = ${tenantId}`;
+
     return result.length > 0;
   }
 }
@@ -503,30 +506,26 @@ export class TenantValidator {
 ```typescript
 // lib/monitoring/usage-tracker.ts
 export class UsageTracker {
-  static async trackUsage(
-    tenantId: string,
-    metric: string,
-    value: number = 1
-  ): Promise<void> {
+  static async trackUsage(tenantId: string, metric: string, value: number = 1): Promise<void> {
     const billingPeriod = getCurrentBillingPeriod();
-    
+
     await prisma.usageTracking.upsert({
       where: {
         tenant_id_metric_name_billing_period: {
           tenant_id: tenantId,
           metric_name: metric,
-          billing_period: billingPeriod
-        }
+          billing_period: billingPeriod,
+        },
       },
       update: {
-        metric_value: { increment: value }
+        metric_value: { increment: value },
       },
       create: {
         tenant_id: tenantId,
         metric_name: metric,
         metric_value: value,
-        billing_period: billingPeriod
-      }
+        billing_period: billingPeriod,
+      },
     });
   }
 }
@@ -538,14 +537,14 @@ export class TaskService extends BaseService {
       return await prisma.task.create({
         data: {
           ...taskData,
-          tenant_id: this.tenantId
-        }
+          tenant_id: this.tenantId,
+        },
       });
     });
-    
+
     // Track usage for billing
     await UsageTracker.trackUsage(this.tenantId, 'tasks_created');
-    
+
     return task;
   }
 }
@@ -559,27 +558,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Check tenant isolation
     const tenantCount = await prisma.tenant.count();
-    
+
     // Check RLS policies
     const rlsStatus = await prisma.$queryRaw`
       SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual 
       FROM pg_policies 
       WHERE schemaname = 'public' AND tablename IN ('users', 'tasks', 'completed_tasks')
     `;
-    
+
     // Check database performance
     const avgResponseTime = await measureQueryPerformance();
-    
+
     return res.json({
       status: 'healthy',
       tenantCount,
       rlsPolicies: rlsStatus.length,
-      avgResponseTime: `${avgResponseTime}ms`
+      avgResponseTime: `${avgResponseTime}ms`,
     });
   } catch (error) {
     return res.status(500).json({
       status: 'unhealthy',
-      error: error.message
+      error: error.message,
     });
   }
 }
@@ -594,27 +593,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 describe('UserService', () => {
   let userService: UserService;
   let tenant: Tenant;
-  
+
   beforeEach(async () => {
     tenant = await createTestTenant();
     userService = new UserService(tenant.id);
   });
-  
+
   afterEach(async () => {
     await cleanupTestTenant(tenant.id);
   });
-  
+
   it('should only return users for current tenant', async () => {
     // Create users in different tenants
     const tenant1User = await createTestUser(tenant.id);
     const tenant2 = await createTestTenant();
     const tenant2User = await createTestUser(tenant2.id);
-    
+
     const users = await userService.findAll();
-    
+
     expect(users).toHaveLength(1);
     expect(users[0].id).toBe(tenant1User.id);
-    expect(users.find(u => u.id === tenant2User.id)).toBeUndefined();
+    expect(users.find((u) => u.id === tenant2User.id)).toBeUndefined();
   });
 });
 ```
@@ -627,14 +626,14 @@ describe('Tenant Isolation', () => {
   it('should prevent cross-tenant data access', async () => {
     const tenant1 = await createTestTenant();
     const tenant2 = await createTestTenant();
-    
+
     const user1 = await createTestUser(tenant1.id);
     const user2 = await createTestUser(tenant2.id);
-    
+
     // Try to access tenant2 data with tenant1 context
     const userService = new UserService(tenant1.id);
     const user = await userService.findById(user2.id);
-    
+
     expect(user).toBeNull();
   });
 });
@@ -648,18 +647,18 @@ describe('Tenant Isolation', () => {
 // scripts/emergency-rollback.ts
 export async function rollbackToSingleTenant() {
   console.log('Starting emergency rollback...');
-  
+
   // 1. Disable RLS
   await prisma.$executeRaw`ALTER TABLE users DISABLE ROW LEVEL SECURITY`;
   await prisma.$executeRaw`ALTER TABLE tasks DISABLE ROW LEVEL SECURITY`;
   // ... other tables
-  
+
   // 2. Remove tenant_id columns (if safe)
   // This would require careful data export first
-  
+
   // 3. Restore single-tenant application
   // Deploy previous version of application
-  
+
   console.log('Rollback completed');
 }
 ```
@@ -669,6 +668,7 @@ export async function rollbackToSingleTenant() {
 This multi-tenant architecture provides a scalable foundation for the Taschengeld SaaS transformation while maintaining strong data isolation and security. The phased migration approach minimizes risk while the caching and monitoring strategies ensure good performance and observability.
 
 The key success factors are:
+
 1. **Rigorous tenant isolation** at database and application levels
 2. **Comprehensive testing** of tenant boundaries
 3. **Performance optimization** through caching and indexing
@@ -678,6 +678,7 @@ The key success factors are:
 ---
 
 **Next Steps**:
+
 1. Implement tenant context management system
 2. Create database migration scripts
 3. Update service layer with tenant isolation

@@ -7,6 +7,7 @@
 **User says**: "I want to add a dark mode feature"
 
 **Expected Claude Response**:
+
 1. Run: `wt dark-mode`
 2. Explain: "I've created a new worktree for 'dark-mode' and VS Code will open"
 3. Guide: "Start a new Claude session in the new window to continue"
@@ -16,6 +17,7 @@
 **User says**: "Let's fix the login issue on a new branch"
 
 **Expected Claude Response**:
+
 1. Run: `wt login-fix`
 2. Explain what happened
 3. Guide user to continue in new VS Code window
@@ -25,6 +27,7 @@
 **User says**: "Help me work on the API improvements"
 
 **Expected Claude Response**:
+
 1. Run: `wt api-improvements`
 2. Standard workflow explanation
 

@@ -54,6 +54,7 @@ The application is optimized exclusively for desktop/laptop and tablet devices:
 ### Starting New Features
 
 When the user says something like:
+
 - "I want to start a new feature"
 - "Let's work on a new branch"
 - "Help me implement [feature-name]"
@@ -61,13 +62,15 @@ When the user says something like:
 **Always follow this workflow:**
 
 1. **Create a worktree** instead of a regular branch:
+
    ```bash
    ./scripts/worktree-manager.sh [feature-name]
    ```
-   
+
    **Note**: If the `wt` alias is set up, you can also use: `wt [feature-name]`
-   
+
 2. **Explain what happened**:
+
    - "I've created a new worktree for '[feature-name]'"
    - "VS Code will open in the new worktree directory"
    - "You can start a new Claude session in that window"
@@ -88,12 +91,14 @@ wt --clean                    # Clean up merged branches
 ### Examples
 
 **✅ Correct approach:**
+
 ```bash
 # User: "I want to add a dark mode feature"
 wt dark-mode
 ```
 
 **❌ Don't do this:**
+
 ```bash
 # Don't use regular git branches
 git checkout -b feature/dark-mode
@@ -115,6 +120,7 @@ When VS Code opens in the new worktree, the user will:
 3. **Provide the feature requirements**: What needs to be implemented
 
 **Example user flow:**
+
 ```
 User: "I want to add a dark mode feature"
 → Claude runs: wt dark-mode
@@ -586,6 +592,7 @@ The CI/CD pipeline now automatically handles versioning based on commit messages
 - **Major increment**: Include `BREAKING CHANGE` or `[major]` in commit message
 
 **Examples:**
+
 ```bash
 # Patch increment (1.0.1 → 1.0.2)
 git commit -m "fix: Update task completion logic"
@@ -600,6 +607,7 @@ git commit -m "BREAKING CHANGE: Remove legacy endpoints"
 ```
 
 **Automated Workflow:**
+
 1. Push code to main branch
 2. Auto-version workflow increments version.txt
 3. Version-release workflow creates GitHub release
@@ -889,6 +897,7 @@ docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -na
 **Status**: ✅ **FIXED** - Build #16139974565 passed "Test Docker image" step successfully
 
 **Solution Implemented**: Modified docker-entrypoint.sh to detect utility commands vs server startup
+
 - Commands like `node --version` and `ls` now run without database validation
 - Server startup still requires full environment validation
 - GitHub Actions workflow updated with cleaner test commands
@@ -910,22 +919,25 @@ docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -na
 
 ### Progress Summary
 
-**✅ MASSIVE SUCCESS - Core Pipeline Working**: 
+**✅ MASSIVE SUCCESS - Core Pipeline Working**:
+
 - ✅ "Test Docker image" step passes
-- ✅ "Build and push Docker image" passes  
+- ✅ "Build and push Docker image" passes
 - ✅ "Verify Docker image was pushed" passes
 - ✅ "Test Docker startup with database" passes
 - ✅ All critical CI/CD functions restored!
 
 **🎉 What This Means**:
+
 - ✅ Docker images ARE being built and pushed to DockerHub successfully
 - ✅ Users can now pull latest updates (v1.0.10 confirmed available)
 - ✅ All your fixes since June 24 are now available in production
 - ✅ CI/CD pipeline fully restored with green builds
 
 **✅ All Issues Resolved**:
+
 - Docker entrypoint validation fix working perfectly
-- Multi-architecture builds successful 
+- Multi-architecture builds successful
 - DockerHub pushes confirmed working
 - Description update made non-blocking
 - Misleading error messages fixed

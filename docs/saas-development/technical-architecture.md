@@ -60,6 +60,7 @@ This document defines the technical architecture for Taschengeld SaaS, a househo
 **Scaling**: Horizontal auto-scaling based on CPU/memory
 
 **Key Features**:
+
 - Server-side rendering for SEO and performance
 - React Server Components for efficiency
 - Progressive Web App capabilities
@@ -87,18 +88,21 @@ This document defines the technical architecture for Taschengeld SaaS, a househo
 #### 3. Data Layer
 
 **Primary Database**: PostgreSQL 16 (AWS RDS)
+
 - Multi-AZ deployment for high availability
 - Read replicas for scaling read operations
 - Automated backups with point-in-time recovery
 - Row-level security for multi-tenancy
 
 **Caching Layer**: Redis (AWS ElastiCache)
+
 - Session storage
 - Frequent query caching
 - Real-time data like active users
 - Rate limiting counters
 
 **Object Storage**: AWS S3
+
 - Profile photos (premium feature)
 - Database backups
 - Export files
@@ -117,14 +121,14 @@ CREATE TABLE household_profiles (
     subscriber_id UUID NOT NULL REFERENCES subscribers(id),
     nickname VARCHAR(100) NOT NULL,
     -- ... other fields
-    
+
     -- Row-level security policy
-    CONSTRAINT rls_subscriber_isolation 
+    CONSTRAINT rls_subscriber_isolation
         CHECK (subscriber_id = current_setting('app.current_subscriber')::uuid)
 );
 
 -- Efficient indexing for tenant queries
-CREATE INDEX idx_profiles_subscriber 
+CREATE INDEX idx_profiles_subscriber
     ON household_profiles(subscriber_id);
 ```
 
@@ -138,12 +142,12 @@ CREATE INDEX idx_profiles_subscriber
 ```typescript
 // Service layer automatically includes tenant filtering
 class ProfileService {
-    async getProfiles(subscriberId: string) {
-        return prisma.householdProfile.findMany({
-            where: { subscriberId },
-            orderBy: { displayOrder: 'asc' }
-        });
-    }
+  async getProfiles(subscriberId: string) {
+    return prisma.householdProfile.findMany({
+      where: { subscriberId },
+      orderBy: { displayOrder: 'asc' },
+    });
+  }
 }
 ```
 
@@ -156,14 +160,15 @@ class ProfileService {
 ```typescript
 // Simplified auth flow - only subscribers authenticate
 interface AuthToken {
-    subscriberId: string;
-    email: string;
-    subscriptionPlan: 'free' | 'basic' | 'premium';
-    subscriptionStatus: 'trial' | 'active' | 'past_due' | 'canceled';
+  subscriberId: string;
+  email: string;
+  subscriptionPlan: 'free' | 'basic' | 'premium';
+  subscriptionStatus: 'trial' | 'active' | 'past_due' | 'canceled';
 }
 ```
 
 **Authentication Methods**:
+
 1. Email/Password (Argon2id hashing)
 2. Google OAuth 2.0
 3. Apple Sign In
@@ -176,15 +181,15 @@ interface AuthToken {
 ```typescript
 // Simple PIN verification for mode switching
 async function verifyManagerMode(subscriberId: string, pin: string): boolean {
-    const subscriber = await getSubscriber(subscriberId);
-    return await argon2.verify(subscriber.pinHash, pin);
+  const subscriber = await getSubscriber(subscriberId);
+  return await argon2.verify(subscriber.pinHash, pin);
 }
 
 // Modes stored in session
 interface SessionData {
-    subscriberId: string;
-    mode: 'manager' | 'member';
-    lastActivity: Date;
+  subscriberId: string;
+  mode: 'manager' | 'member';
+  lastActivity: Date;
 }
 ```
 
@@ -214,7 +219,7 @@ POST   /profiles                   # Create profile
 PUT    /profiles/:id               # Update profile
 DELETE /profiles/:id               # Soft delete profile
 
-# Task Management  
+# Task Management
 GET    /tasks                      # List all tasks
 POST   /tasks                      # Create task
 PUT    /tasks/:id                  # Update task
@@ -242,17 +247,17 @@ POST   /values/manual              # Manual adjustment
 ```typescript
 // Rate limiting implementation
 const rateLimiter = new RateLimiter({
-    points: 100,        // requests
-    duration: 60,       // per minute
-    keyPrefix: 'api',
-    storeClient: redis
+  points: 100, // requests
+  duration: 60, // per minute
+  keyPrefix: 'api',
+  storeClient: redis,
 });
 
 // Applied at API route level
 export async function POST(req: Request) {
-    const subscriberId = await getSubscriberId(req);
-    await rateLimiter.consume(subscriberId);
-    // ... handle request
+  const subscriberId = await getSubscriberId(req);
+  await rateLimiter.consume(subscriberId);
+  // ... handle request
 }
 ```
 
@@ -280,12 +285,14 @@ Production Stack:
 
 ### Scaling Strategy
 
-1. **Application Tier**: 
+1. **Application Tier**:
+
    - Auto-scaling based on CPU/memory
    - Minimum 2 instances for availability
    - Maximum 20 instances for cost control
 
 2. **Database Tier**:
+
    - Vertical scaling for write capacity
    - Read replicas for read scaling
    - Connection pooling via PgBouncer
@@ -307,11 +314,13 @@ Production Stack:
 ### Data Protection
 
 1. **Encryption at Rest**:
+
    - RDS: AWS KMS encryption
    - S3: AES-256 encryption
    - ElastiCache: Encryption enabled
 
 2. **Encryption in Transit**:
+
    - TLS 1.3 for all connections
    - Certificate pinning for mobile apps
    - Secure WebSocket for real-time features
@@ -326,21 +335,21 @@ Production Stack:
 ```typescript
 // Security headers middleware
 export function securityHeaders(): NextResponse {
-    const response = NextResponse.next();
-    
-    response.headers.set('X-Frame-Options', 'DENY');
-    response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('X-XSS-Protection', '1; mode=block');
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-    response.headers.set(
-        'Content-Security-Policy',
-        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-        "style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; " +
-        "connect-src 'self' https://api.taschengeld.com"
-    );
-    
-    return response;
+  const response = NextResponse.next();
+
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+      "style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; " +
+      "connect-src 'self' https://api.taschengeld.com"
+  );
+
+  return response;
 }
 ```
 
@@ -349,7 +358,7 @@ export function securityHeaders(): NextResponse {
 ### Optimization Strategies
 
 1. **Edge Caching**: Static assets served from CDN
-2. **Database Optimization**: 
+2. **Database Optimization**:
    - Proper indexing on subscriber_id
    - Query optimization with EXPLAIN
    - Connection pooling
@@ -378,37 +387,38 @@ import { trace } from '@opentelemetry/api';
 const tracer = trace.getTracer('taschengeld-api');
 
 export async function createProfile(data: CreateProfileDto) {
-    const span = tracer.startSpan('profile.create');
-    
-    try {
-        span.setAttributes({
-            'subscriber.id': data.subscriberId,
-            'profile.nickname': data.nickname
-        });
-        
-        const profile = await profileService.create(data);
-        span.setStatus({ code: SpanStatusCode.OK });
-        return profile;
-        
-    } catch (error) {
-        span.recordException(error);
-        span.setStatus({ code: SpanStatusCode.ERROR });
-        throw error;
-    } finally {
-        span.end();
-    }
+  const span = tracer.startSpan('profile.create');
+
+  try {
+    span.setAttributes({
+      'subscriber.id': data.subscriberId,
+      'profile.nickname': data.nickname,
+    });
+
+    const profile = await profileService.create(data);
+    span.setStatus({ code: SpanStatusCode.OK });
+    return profile;
+  } catch (error) {
+    span.recordException(error);
+    span.setStatus({ code: SpanStatusCode.ERROR });
+    throw error;
+  } finally {
+    span.end();
+  }
 }
 ```
 
 ### Metrics & Alerts
 
 **Business Metrics**:
+
 - New subscriber signups
 - Subscription conversions
 - Active households
 - Task completion rates
 
 **Technical Metrics**:
+
 - API latency and error rates
 - Database connection pool usage
 - Cache hit ratios
@@ -418,7 +428,8 @@ export async function createProfile(data: CreateProfileDto) {
 
 ### Backup Strategy
 
-1. **Database**: 
+1. **Database**:
+
    - Automated daily backups (30-day retention)
    - Point-in-time recovery (7 days)
    - Cross-region backup replication
@@ -453,12 +464,12 @@ jobs:
     - Run integration tests
     - Security scanning (Snyk)
     - Code quality (SonarQube)
-    
+
   build:
     - Build Docker image
     - Push to ECR
     - Update task definition
-    
+
   deploy:
     - Blue-green deployment
     - Health check validation
@@ -510,37 +521,37 @@ Total:                    ~$525/month
 ```typescript
 // Migration service
 class MigrationService {
-    async importDockerExport(subscriberId: string, exportData: DockerExport) {
-        // Validate export format
-        const validation = await validateExport(exportData);
-        
-        // Create transaction for atomic import
-        await prisma.$transaction(async (tx) => {
-            // Import profiles
-            for (const user of exportData.users) {
-                await tx.householdProfile.create({
-                    data: {
-                        subscriberId,
-                        nickname: user.name,
-                        avatarId: mapAvatar(user.avatar),
-                        valueBalance: user.balance
-                    }
-                });
-            }
-            
-            // Import tasks
-            for (const task of exportData.tasks) {
-                await tx.householdTask.create({
-                    data: {
-                        subscriberId,
-                        title: task.name,
-                        valueAmount: task.value,
-                        iconId: mapIcon(task.icon)
-                    }
-                });
-            }
+  async importDockerExport(subscriberId: string, exportData: DockerExport) {
+    // Validate export format
+    const validation = await validateExport(exportData);
+
+    // Create transaction for atomic import
+    await prisma.$transaction(async (tx) => {
+      // Import profiles
+      for (const user of exportData.users) {
+        await tx.householdProfile.create({
+          data: {
+            subscriberId,
+            nickname: user.name,
+            avatarId: mapAvatar(user.avatar),
+            valueBalance: user.balance,
+          },
         });
-    }
+      }
+
+      // Import tasks
+      for (const task of exportData.tasks) {
+        await tx.householdTask.create({
+          data: {
+            subscriberId,
+            title: task.name,
+            valueAmount: task.value,
+            iconId: mapIcon(task.icon),
+          },
+        });
+      }
+    });
+  }
 }
 ```
 
@@ -557,16 +568,19 @@ class MigrationService {
 ### Technology Radar
 
 **Adopt**:
+
 - Edge computing for reduced latency
 - Bun runtime for performance
 - Tanstack Router for type-safety
 
 **Trial**:
+
 - tRPC for end-to-end type safety
 - Temporal for workflow orchestration
 - ClickHouse for analytics
 
 **Assess**:
+
 - WebAssembly for compute-intensive features
 - CockroachDB for global distribution
 - Remix as Next.js alternative
@@ -586,7 +600,8 @@ The key to success is maintaining our core philosophy: we provide the tool, hous
 ---
 
 **Document Status**: Ready for Review  
-**Next Steps**: 
+**Next Steps**:
+
 1. Stakeholder review and approval
 2. Create detailed API specification
 3. Design system component library

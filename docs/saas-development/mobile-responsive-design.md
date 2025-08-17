@@ -11,6 +11,7 @@ This document outlines the mobile-first responsive design strategy for transform
 ## Current State Analysis
 
 ### Current Design Constraints
+
 - **Minimum Viewport**: 768px (iPad portrait and larger)
 - **Target Devices**: Desktop computers, tablets
 - **Navigation**: Always-visible sidebar on desktop, collapsible on tablets
@@ -18,6 +19,7 @@ This document outlines the mobile-first responsive design strategy for transform
 - **Interactions**: Hover effects, tooltips, keyboard navigation
 
 ### Current UI Components
+
 - **Sidebar Navigation**: Fixed width, icon + text labels
 - **Content Area**: Assumes wide viewport for multi-column layouts
 - **Modals**: Desktop-sized dialogs with fixed dimensions
@@ -31,12 +33,17 @@ This document outlines the mobile-first responsive design strategy for transform
 ```scss
 // New responsive breakpoints
 $breakpoints: (
-  xs: 320px,    // Small phones
-  sm: 480px,    // Large phones
-  md: 768px,    // Tablets (current minimum)
-  lg: 1024px,   // Small desktops
-  xl: 1280px,   // Large desktops
-  xxl: 1920px   // Ultra-wide displays
+  xs: 320px,
+  // Small phones
+  sm: 480px,
+  // Large phones
+  md: 768px,
+  // Tablets (current minimum)
+  lg: 1024px,
+  // Small desktops
+  xl: 1280px,
+  // Large desktops
+  xxl: 1920px, // Ultra-wide displays
 );
 
 // Media query mixins
@@ -52,6 +59,7 @@ $breakpoints: (
 #### Navigation System
 
 **Mobile (320px - 767px)**
+
 ```typescript
 // Bottom tab navigation for mobile
 const MobileNavigation = () => {
@@ -93,11 +101,12 @@ const MobileHeader = () => {
 ```
 
 **Tablet (768px - 1023px)**
+
 ```typescript
 // Collapsible sidebar with larger touch targets
 const TabletSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  
+
   return (
     <aside className={`${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300`}>
       <button
@@ -106,7 +115,7 @@ const TabletSidebar = () => {
       >
         <Icon name={isCollapsed ? 'chevron-right' : 'chevron-left'} size={20} />
       </button>
-      
+
       <nav className="mt-4">
         {navItems.map((item) => (
           <Link
@@ -125,6 +134,7 @@ const TabletSidebar = () => {
 ```
 
 **Desktop (1024px+)**
+
 ```typescript
 // Full sidebar with hover effects and tooltips
 const DesktopSidebar = () => {
@@ -133,7 +143,7 @@ const DesktopSidebar = () => {
       <div className="p-6 border-b">
         <Logo className="h-8" />
       </div>
-      
+
       <nav className="mt-6">
         {navItems.map((item) => (
           <Tooltip key={item.path} content={item.description}>
@@ -155,6 +165,7 @@ const DesktopSidebar = () => {
 #### Form Layouts
 
 **Mobile Forms**
+
 ```typescript
 // Single column, full-width inputs
 const MobileForm = () => {
@@ -162,21 +173,21 @@ const MobileForm = () => {
     <form className="p-4 space-y-4">
       <div className="space-y-2">
         <label className="block text-sm font-medium">Name</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           className="w-full h-12 px-3 border border-gray-300 rounded-md text-base"
         />
       </div>
-      
+
       <div className="space-y-2">
         <label className="block text-sm font-medium">Email</label>
-        <input 
-          type="email" 
+        <input
+          type="email"
           className="w-full h-12 px-3 border border-gray-300 rounded-md text-base"
         />
       </div>
-      
-      <button 
+
+      <button
         type="submit"
         className="w-full h-12 bg-blue-600 text-white rounded-md text-base font-medium active:bg-blue-700"
       >
@@ -188,6 +199,7 @@ const MobileForm = () => {
 ```
 
 **Tablet/Desktop Forms**
+
 ```typescript
 // Two-column layout with responsive grid
 const ResponsiveForm = () => {
@@ -196,23 +208,23 @@ const ResponsiveForm = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-2">Name</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="w-full h-10 px-3 border border-gray-300 rounded-md"
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium mb-2">Email</label>
-          <input 
-            type="email" 
+          <input
+            type="email"
             className="w-full h-10 px-3 border border-gray-300 rounded-md"
           />
         </div>
       </div>
-      
+
       <div className="flex justify-end">
-        <button 
+        <button
           type="submit"
           className="h-10 px-6 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
@@ -227,6 +239,7 @@ const ResponsiveForm = () => {
 #### Card Layouts
 
 **Mobile Cards**
+
 ```typescript
 // Single column, full-width cards
 const MobileCardGrid = ({ items }) => {
@@ -258,6 +271,7 @@ const MobileCardGrid = ({ items }) => {
 ```
 
 **Responsive Grid**
+
 ```typescript
 // Responsive grid that adapts to screen size
 const ResponsiveCardGrid = ({ items }) => {
@@ -289,6 +303,7 @@ const ResponsiveCardGrid = ({ items }) => {
 #### Modal Dialogs
 
 **Mobile Modals**
+
 ```typescript
 // Full-screen modal on mobile
 const MobileModal = ({ isOpen, onClose, title, children }) => {
@@ -307,7 +322,7 @@ const MobileModal = ({ isOpen, onClose, title, children }) => {
               </button>
             </div>
           </DialogHeader>
-          
+
           <div className="flex-1 overflow-y-auto">
             {children}
           </div>
@@ -319,6 +334,7 @@ const MobileModal = ({ isOpen, onClose, title, children }) => {
 ```
 
 **Responsive Modal**
+
 ```typescript
 // Responsive modal that adapts to screen size
 const ResponsiveModal = ({ isOpen, onClose, title, children }) => {
@@ -328,7 +344,7 @@ const ResponsiveModal = ({ isOpen, onClose, title, children }) => {
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        
+
         <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
           {children}
         </div>
@@ -347,7 +363,7 @@ const ResponsiveModal = ({ isOpen, onClose, title, children }) => {
 .touch-target {
   min-height: 44px; // iOS guideline
   min-width: 44px;
-  
+
   @include respond-to(sm) {
     min-height: 48px; // Android guideline
     min-width: 48px;
@@ -357,7 +373,7 @@ const ResponsiveModal = ({ isOpen, onClose, title, children }) => {
 // Touch-friendly spacing
 .touch-spacing {
   margin: 8px;
-  
+
   @include respond-to(sm) {
     margin: 12px;
   }
@@ -385,7 +401,7 @@ const useSwipeGesture = (onSwipeLeft?: () => void, onSwipeRight?: () => void) =>
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
@@ -434,7 +450,7 @@ const MobileAppShell = () => {
   return (
     <div className="pb-16"> {/* Account for bottom navigation */}
       <MobileHeader />
-      
+
       <main className="pt-14">
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
@@ -443,7 +459,7 @@ const MobileAppShell = () => {
           </Routes>
         </Suspense>
       </main>
-      
+
       <MobileNavigation />
     </div>
   );
@@ -485,25 +501,21 @@ const urlsToCache = [
   '/static/js/bundle.js',
   '/static/css/main.css',
   '/static/icons/icon-192x192.png',
-  '/static/icons/icon-512x512.png'
+  '/static/icons/icon-512x512.png',
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
+    caches.match(event.request).then((response) => {
+      if (response) {
+        return response;
+      }
+      return fetch(event.request);
+    })
   );
 });
 ```
@@ -551,7 +563,7 @@ export class NotificationManager {
   static async scheduleTaskReminder(task: Task, dueDate: Date): Promise<void> {
     if ('serviceWorker' in navigator && 'Notification' in window) {
       const registration = await navigator.serviceWorker.ready;
-      
+
       registration.showNotification('Task Reminder', {
         body: `Don't forget to complete: ${task.title}`,
         icon: '/static/icons/icon-192x192.png',
@@ -559,8 +571,8 @@ export class NotificationManager {
         data: { taskId: task.id, type: 'task_reminder' },
         actions: [
           { action: 'mark_complete', title: 'Mark Complete' },
-          { action: 'dismiss', title: 'Dismiss' }
-        ]
+          { action: 'dismiss', title: 'Dismiss' },
+        ],
       });
     }
   }
@@ -620,7 +632,7 @@ const useFocusManagement = () => {
       const firstFocusable = mobileMenuRef.current.querySelector(
         'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
       ) as HTMLElement;
-      
+
       if (firstFocusable) {
         firstFocusable.focus();
       }
@@ -637,7 +649,7 @@ const useFocusManagement = () => {
     isMobileMenuOpen,
     setIsMobileMenuOpen,
     mobileMenuRef,
-    trapFocus
+    trapFocus,
   };
 };
 ```
@@ -655,7 +667,7 @@ describe('Responsive Design', () => {
   it('should show mobile navigation on small screens', () => {
     resize(375, 667); // iPhone SE
     render(<App />);
-    
+
     expect(screen.getByRole('navigation')).toHaveClass('fixed bottom-0');
     expect(screen.queryByRole('complementary')).not.toBeInTheDocument(); // No sidebar
   });
@@ -663,7 +675,7 @@ describe('Responsive Design', () => {
   it('should show sidebar on desktop', () => {
     resize(1024, 768); // Desktop
     render(<App />);
-    
+
     expect(screen.getByRole('complementary')).toBeInTheDocument(); // Sidebar
     expect(screen.queryByRole('navigation')).not.toHaveClass('fixed bottom-0');
   });
@@ -680,13 +692,13 @@ describe('Touch Interactions', () => {
   it('should handle swipe gestures', () => {
     const onSwipeLeft = jest.fn();
     render(<TaskCard onSwipeLeft={onSwipeLeft} />);
-    
+
     const card = screen.getByTestId('task-card');
-    
+
     fireEvent.touchStart(card, { touches: [{ clientX: 100 }] });
     fireEvent.touchMove(card, { touches: [{ clientX: 50 }] });
     fireEvent.touchEnd(card);
-    
+
     expect(onSwipeLeft).toHaveBeenCalled();
   });
 });
@@ -695,24 +707,28 @@ describe('Touch Interactions', () => {
 ## Implementation Timeline
 
 ### Phase 1: Foundation (Weeks 1-2)
+
 - Set up responsive breakpoint system
 - Create mobile-first component library
 - Implement touch gesture utilities
 - Basic mobile navigation structure
 
 ### Phase 2: Core Components (Weeks 3-4)
+
 - Responsive form components
 - Mobile-optimized modals
 - Touch-friendly card layouts
 - Progressive image loading
 
 ### Phase 3: PWA Features (Weeks 5-6)
+
 - Service worker implementation
 - App manifest and installation
 - Push notification system
 - Offline functionality
 
 ### Phase 4: Testing & Optimization (Weeks 7-8)
+
 - Comprehensive responsive testing
 - Performance optimization
 - Accessibility audit
@@ -720,13 +736,13 @@ describe('Touch Interactions', () => {
 
 ## Device Testing Matrix
 
-| Device Category | Screen Size | Test Scenarios |
-|----------------|-------------|----------------|
-| Small Phone | 320px - 375px | Navigation, forms, readability |
-| Large Phone | 375px - 414px | Touch targets, gesture support |
-| Tablet Portrait | 768px - 834px | Sidebar behavior, layout switching |
-| Tablet Landscape | 1024px - 1112px | Multi-column layouts, hover states |
-| Desktop | 1280px+ | Full feature set, keyboard navigation |
+| Device Category  | Screen Size     | Test Scenarios                        |
+| ---------------- | --------------- | ------------------------------------- |
+| Small Phone      | 320px - 375px   | Navigation, forms, readability        |
+| Large Phone      | 375px - 414px   | Touch targets, gesture support        |
+| Tablet Portrait  | 768px - 834px   | Sidebar behavior, layout switching    |
+| Tablet Landscape | 1024px - 1112px | Multi-column layouts, hover states    |
+| Desktop          | 1280px+         | Full feature set, keyboard navigation |
 
 ## Conclusion
 
@@ -743,6 +759,7 @@ The implementation provides a solid foundation for both Phase 1 (SaaS web app) a
 ---
 
 **Next Steps**:
+
 1. Create responsive design system and component library
 2. Implement mobile navigation patterns
 3. Develop touch gesture utilities

@@ -111,7 +111,11 @@ export const completedTaskService = {
     };
   },
 
-  async updatePaymentStatus(id: number, status: string, customPayoutValue?: number): Promise<CompletedTask | null> {
+  async updatePaymentStatus(
+    id: number,
+    status: string,
+    customPayoutValue?: number
+  ): Promise<CompletedTask | null> {
     const validatedStatus = validatePaymentStatus(status);
 
     try {
@@ -129,7 +133,10 @@ export const completedTaskService = {
       }
 
       // Determine the actual payout value to use
-      const actualPayoutValue = customPayoutValue !== undefined ? customPayoutValue : Number(existingTask.payout_value) || 0;
+      const actualPayoutValue =
+        customPayoutValue !== undefined
+          ? customPayoutValue
+          : Number(existingTask.payout_value) || 0;
 
       // If changing from Unpaid to Paid, we need to update the piggy bank
       if (

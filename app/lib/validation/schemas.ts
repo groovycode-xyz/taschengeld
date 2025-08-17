@@ -86,7 +86,10 @@ export const paydaySchema = z.object({
   customPayoutValues: z
     .record(
       z.string(), // task ID as string key
-      z.number().min(0, 'Custom payout value must be 0 or greater').max(1000, 'Custom payout value must be less than 1000')
+      z
+        .number()
+        .min(0, 'Custom payout value must be 0 or greater')
+        .max(1000, 'Custom payout value must be less than 1000')
     )
     .optional(),
 });

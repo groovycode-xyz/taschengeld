@@ -24,9 +24,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-001: Subscriber Account Management
 
 **Priority**: P0  
-**Category**: Core Business Model  
+**Category**: Core Business Model
 
 #### FR-001.1: Subscriber Registration
+
 - **Requirement**: System shall allow users to create subscription accounts
 - **Acceptance Criteria**:
   - Email/password or OAuth registration
@@ -38,6 +39,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Revenue generation and access control
 
 #### FR-001.2: Subscription Management
+
 - **Requirement**: Subscribers shall manage their subscription and billing
 - **Acceptance Criteria**:
   - View current plan and usage
@@ -52,9 +54,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-002: Household Profile Management
 
 **Priority**: P0  
-**Category**: Core Functionality  
+**Category**: Core Functionality
 
 #### FR-002.1: Member Creation
+
 - **Requirement**: Subscribers shall create member profiles for their household
 - **Acceptance Criteria**:
   - Create members with nicknames (Dragon, Bunny, Mom, Sir Lancelot, etc.)
@@ -69,6 +72,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Household organization flexibility
 
 #### FR-002.2: Member Management
+
 - **Requirement**: Subscribers shall manage household members
 - **Acceptance Criteria**:
   - Edit member names and avatars
@@ -80,9 +84,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-003: Task Definition System
 
 **Priority**: P0  
-**Category**: Core Value Proposition  
+**Category**: Core Value Proposition
 
 #### FR-003.1: Task Creation
+
 - **Requirement**: System shall allow creation of household tasks
 - **Acceptance Criteria**:
   - Task title (required, e.g., "Feed the fish")
@@ -95,6 +100,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Structured responsibility tracking
 
 #### FR-003.2: Task Templates (Future/Low Priority)
+
 - **Status**: PARKED - Not in V1
 - **Requirement**: System may provide common task templates
 - **Rationale**: Focus on core task creation first
@@ -103,9 +109,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-004: Activity Recording System
 
 **Priority**: P0  
-**Category**: Core Interaction Model  
+**Category**: Core Interaction Model
 
 #### FR-004.1: Task Completion Recording
+
 - **Requirement**: System shall allow recording task completions
 - **Acceptance Criteria**:
   - Select a member and mark task complete
@@ -117,6 +124,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Engagement and tracking
 
 #### FR-004.2: Completion Review System
+
 - **Requirement**: System shall allow review of recorded completions
 - **Acceptance Criteria**:
   - View all pending completions
@@ -129,9 +137,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-005: Value Tracking System
 
 **Priority**: P0  
-**Category**: Motivation and Rewards  
+**Category**: Motivation and Rewards
 
 #### FR-005.1: Member Accounts
+
 - **Requirement**: Each member shall have a value tracking account
 - **Acceptance Criteria**:
   - Automatic account per member
@@ -143,6 +152,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Motivation and progress visualization
 
 #### FR-005.2: Value Transactions
+
 - **Requirement**: System shall record value changes
 - **Acceptance Criteria**:
   - Automatic deposits from approved tasks
@@ -155,9 +165,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-006: Access Control
 
 **Priority**: P0  
-**Category**: Household Privacy  
+**Category**: Household Privacy
 
 #### FR-006.1: PIN-Based Mode Switching
+
 - **Requirement**: System shall provide PIN-protected administrative mode
 - **Acceptance Criteria**:
   - Single PIN for manager access
@@ -171,9 +182,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-007: Language Neutrality
 
 **Priority**: P0  
-**Category**: Universal Usability  
+**Category**: Universal Usability
 
 #### FR-007.1: Role-Neutral Language
+
 - **Requirement**: System shall use neutral language avoiding family-specific terms
 - **Acceptance Criteria**:
   - No use of: parent, child, children, kids, family (in UI)
@@ -191,6 +203,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 **Tier**: Premium only
 
 #### FR-008.1: Customizable System Terms
+
 - **Requirement**: Premium subscribers shall customize all system terminology
 - **Acceptance Criteria**:
   - Settings page with terminology editor
@@ -208,9 +221,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### FR-009: Backup and Recovery
 
 **Priority**: P0  
-**Category**: Data Protection  
+**Category**: Data Protection
 
 #### FR-009.1: Automatic Backups
+
 - **Requirement**: System shall automatically backup all household data
 - **Acceptance Criteria**:
   - Automatic daily backups (all tiers)
@@ -221,6 +235,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Data security and user confidence
 
 #### FR-009.2: Point-in-Time Recovery
+
 - **Requirement**: Paid tiers shall offer backup restoration
 - **Acceptance Criteria**:
   - Basic: Restore from last 5 days
@@ -236,6 +251,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 **Tier**: Premium only
 
 #### FR-010.1: PDF Reports
+
 - **Requirement**: Premium subscribers shall generate reports
 - **Acceptance Criteria**:
   - Transaction history by member
@@ -255,9 +271,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### NFR-001: Simplicity and Accessibility
 
 **Priority**: P0  
-**Category**: User Experience  
+**Category**: User Experience
 
 #### NFR-001.1: Kiosk-Style Interface
+
 - **Requirement**: System shall function without login for household members
 - **Acceptance Criteria**:
   - No authentication required after subscriber login
@@ -269,9 +286,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### NFR-002: Multi-Tenant Architecture
 
 **Priority**: P0  
-**Category**: Technical Foundation  
+**Category**: Technical Foundation
 
 #### NFR-002.1: Household Isolation
+
 - **Requirement**: Each subscription shall be completely isolated
 - **Acceptance Criteria**:
   - No data leakage between households
@@ -284,9 +302,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### CR-001: Subscriber Data Protection
 
 **Priority**: P0  
-**Category**: Legal Compliance  
+**Category**: Legal Compliance
 
 #### CR-001.1: GDPR Compliance for Subscribers
+
 - **Requirement**: System shall protect subscriber (account holder) data
 - **Acceptance Criteria**:
   - Right to access subscriber data
@@ -297,6 +316,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - **Business Value**: Legal compliance
 
 #### CR-001.2: User-Generated Content
+
 - **Requirement**: System shall treat ALL household data as user-generated content
 - **Acceptance Criteria**:
   - Subscriber owns all data: members, tasks, values, etc.
@@ -311,9 +331,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### CR-002: Honest Marketing
 
 **Priority**: P0  
-**Category**: Regulatory Compliance  
+**Category**: Regulatory Compliance
 
 #### CR-002.1: Accurate Service Description
+
 - **Requirement**: Marketing shall accurately describe the service
 - **Acceptance Criteria**:
   - Describe as "household management tool"
@@ -327,12 +348,14 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### Core Entities
 
 1. **Subscriber Account**
+
    - Email (for login/billing)
    - Subscription status
    - Payment information
    - Settings (PIN, language, theme)
 
 2. **Household Members** (User-Generated Content)
+
    - Nickname (any creative name)
    - Avatar selection
    - Optional: Fun sound
@@ -340,6 +363,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
    - Account balance (value tracking)
 
 3. **Tasks** (User-Generated Content)
+
    - Title and description
    - Assigned value
    - Icon
@@ -353,6 +377,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
    - Optional: Photo proof (Premium)
 
 ### What We DON'T Track
+
 - Real names of household members
 - Ages of household members
 - Relationships between members
@@ -364,9 +389,10 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### MR-001: Simplified Migration
 
 **Priority**: P0  
-**Category**: User Transition  
+**Category**: User Transition
 
 #### MR-001.1: Docker User Migration
+
 - **Requirement**: System shall migrate existing Docker deployments
 - **Acceptance Criteria**:
   - One subscriber account per Docker instance
@@ -378,6 +404,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ## Key Simplifications from v1
 
 ### Removed Concepts
+
 1. ~~Parent/child account relationships~~
 2. ~~Age verification for members~~
 3. ~~Family member invitations~~
@@ -386,6 +413,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 6. ~~Real identity verification~~
 
 ### Simplified Concepts
+
 1. **Authentication**: Only for subscriber account
 2. **Members**: Just labels and avatars
 3. **Compliance**: Focus on subscriber data only
@@ -394,12 +422,14 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ## Success Metrics
 
 ### Business Metrics
+
 - Subscriber acquisition rate
 - Subscription conversion rate
 - Household engagement (members created, tasks completed)
 - Subscriber retention
 
 ### NOT Tracking
+
 - Ages of users
 - Family structures
 - Real vs. fictional members
@@ -410,6 +440,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ### Language Guidelines
 
 #### Always Use
+
 - "Manager" not "parent"
 - "Member" not "child"
 - "Members" not "children" or "kids"
@@ -421,16 +452,19 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - "Member Mode" not "child mode"
 
 #### Menu and Navigation
+
 - "Members" not "Family" (menu item)
 - "Member Management" not "Family Management"
 - "Add Member" not "Add Family Member"
 
 #### Settings and Features
+
 - "Enable access modes" not "Enforce parent/child roles"
 - "Manager PIN" not "Parent PIN"
 - "Access controls" not "Parental controls"
 
 ### Interface Design
+
 - Don't ask for ages or birthdates
 - Don't imply family relationships
 - Don't assume currency
@@ -444,6 +478,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 ## Document Control
 
 **Major Changes in v2.0**:
+
 - Reframed as household tool vs children's app
 - Removed complex identity management
 - Simplified compliance approach
@@ -451,6 +486,7 @@ Taschengeld is a **household management tool** that allows subscribers to track 
 - Adopted content vs data subject model
 
 **Updates in v2.1** (2025-07-09):
+
 - Added three-tier subscription model (Free/Basic/Premium)
 - Introduced terminology customization (Premium feature)
 - Changed "profiles" to "members" throughout

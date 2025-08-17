@@ -102,7 +102,9 @@ export function Payday() {
   // Editable payout values state
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
   const [editedPayoutValues, setEditedPayoutValues] = useState<{ [taskId: number]: number }>({});
-  const [payoutValidationErrors, setPayoutValidationErrors] = useState<{ [taskId: number]: string }>({});
+  const [payoutValidationErrors, setPayoutValidationErrors] = useState<{
+    [taskId: number]: string;
+  }>({});
   const [editingStepValue, setEditingStepValue] = useState<number>(0.01);
 
   // Load settings from localStorage on mount
@@ -148,16 +150,16 @@ export function Payday() {
   const calculateStepValue = (value: number): number => {
     // If value is 1 or greater, always increment by 1
     if (value >= 1) {
-      return 1.00;
+      return 1.0;
     }
-    
+
     // If value is less than 0.1, increment by 0.05
     if (value < 0.1) {
       return 0.05;
     }
-    
+
     // If value is between 0.1 and 0.99, increment by 0.1
-    return 0.10;
+    return 0.1;
   };
 
   const startEditingPayout = (taskId: number, currentValue: number) => {
@@ -393,7 +395,7 @@ export function Payday() {
     if (editingTaskId !== null) {
       stopEditingPayout();
     }
-    
+
     const groupTaskIds = tasks.map((task) => task.c_task_id);
     const allSelected = groupTaskIds.every((id) => selectedTasks.includes(id));
 
@@ -541,7 +543,7 @@ export function Payday() {
                 if (editingTaskId !== null) {
                   stopEditingPayout();
                 }
-                
+
                 const visibleTaskIds = filteredTasks.map((task) => task.c_task_id);
 
                 if (
@@ -704,9 +706,15 @@ export function Payday() {
                           >
                             <CardContent className='p-2'>
                               {editingTaskId === task.c_task_id ? (
-                                <div className='flex items-center' onClick={(e) => e.stopPropagation()}>
+                                <div
+                                  className='flex items-center'
+                                  onClick={(e) => e.stopPropagation()}
+                                >
                                   <Banknote
-                                    className={cn('h-6 w-6 mr-2 flex-shrink-0', 'text-yellow-700 dark:text-yellow-300')}
+                                    className={cn(
+                                      'h-6 w-6 mr-2 flex-shrink-0',
+                                      'text-yellow-700 dark:text-yellow-300'
+                                    )}
                                   />
                                   <div className='flex items-center gap-1 flex-1'>
                                     <Input
@@ -797,7 +805,10 @@ export function Payday() {
                               ) : (
                                 <div className='flex items-center'>
                                   <Banknote
-                                    className={cn('h-6 w-6 mr-2', 'text-yellow-700 dark:text-yellow-300')}
+                                    className={cn(
+                                      'h-6 w-6 mr-2',
+                                      'text-yellow-700 dark:text-yellow-300'
+                                    )}
                                   />
                                   <span
                                     className={cn(

@@ -14,6 +14,7 @@ This document outlines the regulatory compliance requirements and architectural 
 
 **Applies to**: All EU residents regardless of server location  
 **Key Requirements**:
+
 - Lawful basis for processing (consent for children)
 - Enhanced protection for children's data
 - Data subject rights (access, deletion, portability)
@@ -25,6 +26,7 @@ This document outlines the regulatory compliance requirements and architectural 
 
 **Applies to**: US children under 13  
 **Key Requirements**:
+
 - Verifiable parental consent before collecting data
 - Parents' right to review and delete children's data
 - No conditioning services on data collection
@@ -35,6 +37,7 @@ This document outlines the regulatory compliance requirements and architectural 
 
 **Applies to**: Swiss hosting and Swiss residents  
 **Key Requirements**:
+
 - Similar to GDPR but with Swiss-specific requirements
 - Data localization preferences
 - Enhanced security standards
@@ -43,6 +46,7 @@ This document outlines the regulatory compliance requirements and architectural 
 ### 4. Age of Digital Consent Variations
 
 **Global Variations**:
+
 - EU/GDPR: 16 (can be lowered to 13 by member states)
 - UK: 13
 - Brazil (LGPD): 18 (parental consent required)
@@ -81,7 +85,7 @@ interface DataResidencyConfig {
 class DataResidencyManager {
   static async determineDataLocation(userId: string): Promise<DataResidencyConfig> {
     const user = await this.getUserLocation(userId);
-    
+
     // Swiss-first approach with regional compliance
     if (user.country === 'CH') {
       return this.getSwissConfig();
@@ -136,7 +140,7 @@ CREATE TABLE consent_records (
     user_agent_hash VARCHAR(64),
     withdrawal_date TIMESTAMP,
     withdrawal_reason TEXT,
-    
+
     INDEX idx_consent_user (user_account_id, consent_type),
     INDEX idx_consent_child (child_profile_id, consent_type)
 );
@@ -151,7 +155,7 @@ CREATE TABLE data_access_log (
     action VARCHAR(50), -- 'read', 'write', 'delete'
     justification TEXT,
     ip_address_hash VARCHAR(64),
-    
+
     -- Partitioned by month for performance
     PRIMARY KEY (id, accessed_at)
 ) PARTITION BY RANGE (accessed_at);
@@ -241,7 +245,7 @@ const ConsentUI = {
     return (
       <div className="consent-dashboard">
         <h2>Privacy & Consent Settings</h2>
-        
+
         <section className="child-consents">
           <h3>Children's Privacy Settings</h3>
           {children.map(child => (
@@ -371,10 +375,7 @@ class FieldEncryption {
     };
   }
 
-  static async decryptField(
-    field: EncryptedField,
-    context: DecryptionContext
-  ): Promise<string> {
+  static async decryptField(field: EncryptedField, context: DecryptionContext): Promise<string> {
     // Audit sensitive data access
     await this.auditAccess(context.userId, context.reason);
 
@@ -407,7 +408,7 @@ class BreachDetectionSystem {
 
     // 2. Start 72-hour GDPR timer
     const notification = await this.prepareNotification(breach);
-    
+
     // 3. Notify authorities if required
     if (breach.riskScore > AUTHORITY_NOTIFICATION_THRESHOLD) {
       await this.notifyDataProtectionAuthorities(notification);
@@ -445,12 +446,12 @@ class AgeVerificationGateway {
 
   private static getJurisdictionRequirements(country: string): JurisdictionRequirements {
     const requirements = {
-      'US': { digitalConsentAge: 13, parentalConsentRequired: true },
-      'DE': { digitalConsentAge: 16, parentalConsentRequired: true },
-      'UK': { digitalConsentAge: 13, parentalConsentRequired: true },
-      'BR': { digitalConsentAge: 18, parentalConsentRequired: true },
-      'IN': { digitalConsentAge: 18, parentalConsentRequired: true },
-      'CH': { digitalConsentAge: 16, parentalConsentRequired: true },
+      US: { digitalConsentAge: 13, parentalConsentRequired: true },
+      DE: { digitalConsentAge: 16, parentalConsentRequired: true },
+      UK: { digitalConsentAge: 13, parentalConsentRequired: true },
+      BR: { digitalConsentAge: 18, parentalConsentRequired: true },
+      IN: { digitalConsentAge: 18, parentalConsentRequired: true },
+      CH: { digitalConsentAge: 16, parentalConsentRequired: true },
       // ... other countries
     };
 
@@ -490,18 +491,21 @@ class ComplianceDashboard {
 ## Implementation Priorities
 
 ### Phase 1: Foundation (Critical)
+
 1. **Age verification gateway** - Must be in place before any data collection
 2. **Consent management system** - Required for lawful processing
 3. **Encryption infrastructure** - Field-level encryption for PII
 4. **Basic DSR handling** - Manual process acceptable initially
 
 ### Phase 2: Automation (High Priority)
+
 1. **Automated DSR responses** - Scale requirement
 2. **Breach detection system** - 72-hour notification requirement
 3. **Consent preference center** - User self-service
 4. **Audit trail system** - Compliance evidence
 
 ### Phase 3: Enhancement (Medium Priority)
+
 1. **Multi-regional data residency** - Performance and compliance
 2. **Advanced parental controls** - Competitive advantage
 3. **Compliance reporting** - Regulatory relationships
@@ -598,7 +602,7 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
+    - Ingress
   # Whitelist specific services only
 
 ---
@@ -607,8 +611,8 @@ kind: Secret
 metadata:
   name: encryption-keys
   annotations:
-    vault.hashicorp.com/role: "taschengeld-app"
-    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: 'taschengeld-app'
+    vault.hashicorp.com/agent-inject: 'true'
 ```
 
 ### 4. Compliance Testing
@@ -639,13 +643,13 @@ describe('GDPR Compliance Tests', () => {
 
   test('Child account requires parental consent', async () => {
     const parentId = await createTestParent();
-    
+
     await expect(
       createChildAccount({ parentId, age: 10 })
     ).rejects.toThrow('Parental consent required');
 
     await provideParentalConsent(parentId);
-    
+
     const child = await createChildAccount({ parentId, age: 10 });
     expect(child).toBeDefined();
   });
@@ -657,14 +661,17 @@ describe('GDPR Compliance Tests', () => {
 ### Compliance Risks
 
 1. **Cross-border data transfers**
+
    - **Risk**: Swiss to US data transfers
    - **Mitigation**: Implement SCCs, use Swiss/EU data centers primarily
 
 2. **Age verification accuracy**
+
    - **Risk**: Children lying about age
    - **Mitigation**: Multi-step verification, parental involvement for features
 
 3. **Consent fatigue**
+
    - **Risk**: Users blindly accepting
    - **Mitigation**: Progressive consent, just-in-time requests
 
@@ -675,6 +682,7 @@ describe('GDPR Compliance Tests', () => {
 ## Compliance Checklist
 
 ### Pre-Launch Requirements
+
 - [ ] Privacy Policy (multi-language)
 - [ ] Terms of Service (child-appropriate versions)
 - [ ] Cookie Policy and consent banner
@@ -685,6 +693,7 @@ describe('GDPR Compliance Tests', () => {
 - [ ] Compliance audit trail system
 
 ### Ongoing Compliance
+
 - [ ] Monthly compliance metrics review
 - [ ] Quarterly privacy assessments
 - [ ] Annual security audits
@@ -708,6 +717,7 @@ These requirements significantly impact our architecture but provide a competiti
 ---
 
 **Next Steps**:
+
 1. Implement age verification gateway before any data collection
 2. Build consent management system with parent-child relationships
 3. Design privacy-first database schema with encryption
