@@ -21,8 +21,5 @@ export function FireworksPortal({ onComplete }: FireworksPortalProps) {
   }
 
   // Create a portal to render the Fireworks at the body level
-  return createPortal(
-    <Fireworks onComplete={onComplete} />,
-    document.body
-  );
+  return createPortal(<Fireworks onComplete={onComplete} />, document.body);
 }

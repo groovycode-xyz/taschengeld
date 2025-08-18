@@ -54,6 +54,7 @@ The application is optimized exclusively for desktop/laptop and tablet devices:
 ### Starting New Features
 
 When the user says something like:
+
 - "I want to start a new feature"
 - "Let's work on a new branch"
 - "Help me implement [feature-name]"
@@ -61,13 +62,15 @@ When the user says something like:
 **Always follow this workflow:**
 
 1. **Create a worktree** instead of a regular branch:
+
    ```bash
    ./scripts/worktree-manager.sh [feature-name]
    ```
-   
+
    **Note**: If the `wt` alias is set up, you can also use: `wt [feature-name]`
-   
+
 2. **Explain what happened**:
+
    - "I've created a new worktree for '[feature-name]'"
    - "VS Code will open in the new worktree directory"
    - "You can start a new Claude session in that window"
@@ -88,12 +91,14 @@ wt --clean                    # Clean up merged branches
 ### Examples
 
 **✅ Correct approach:**
+
 ```bash
 # User: "I want to add a dark mode feature"
 wt dark-mode
 ```
 
 **❌ Don't do this:**
+
 ```bash
 # Don't use regular git branches
 git checkout -b feature/dark-mode
@@ -115,6 +120,7 @@ When VS Code opens in the new worktree, the user will:
 3. **Provide the feature requirements**: What needs to be implemented
 
 **Example user flow:**
+
 ```
 User: "I want to add a dark mode feature"
 → Claude runs: wt dark-mode
@@ -154,7 +160,7 @@ User: "I want to add a dark mode feature"
 ### Development
 
 ```bash
-npm run dev                    # Start Next.js dev server (port 3000)
+npm run dev                    # Start Next.js dev server (port 3000 local)
 npm run dev:docker             # Start full stack in Docker (port 3300)
 npm run dev:docker:restart     # Restart Docker keeping database data
 npm run dev:docker:stop        # Stop Docker containers
@@ -195,7 +201,29 @@ docker compose -f docker-compose.dev.yml up -d
 npm run lint                   # Run Prettier and Next.js linting
 npm run format                 # Format code with Prettier
 npm run check                  # TypeScript check + lint + format
+npm run build:test              # Test production build locally (RECOMMENDED before merge)
 ```
+
+#### 🚨 **Pre-Merge Checklist**
+
+Before merging to `main` or creating pull requests:
+
+1. ✅ **Run local build validation**: `npm run build:test`
+2. ✅ **Test in development environment**: `npm run dev:docker`
+3. ✅ **Check for ESLint/TypeScript errors**: All warnings should be addressed
+4. ✅ **Verify functionality**: Test the actual feature/fix works as expected
+
+**Why?** This prevents CI/CD build failures and ensures production readiness.
+
+#### 🔧 **Build Validation Process**
+
+The project now includes **automatic build validation**:
+
+- **Pull Requests**: Automatically validates builds before merge
+- **Development Branch**: Validates builds on push
+- **Main Branch**: Full Docker build and deployment
+
+**Local Testing**: Always run `npm run build:test` to catch issues early - it runs the same checks as our CI/CD pipeline.
 
 ### Build and Deployment
 
@@ -568,100 +596,13 @@ NODE_ENV=development|production
 
 ### Version Management
 
-Version synchronization across all platforms (app, GitHub, DockerHub):
+**📚 For complete version management documentation, see [README_DEV.md - Version Management](README_DEV.md#version-management)**
+
+**Quick Reference:**
 
 - **Version Source**: `version.txt` (single source of truth)
-- **Application**: Reads from `version.txt` and displays in Global Settings
-- **GitHub**: Git tags and releases match version.txt
-- **DockerHub**: Images tagged with version from version.txt
-
-#### Automatic Version Management (NEW!)
-
-**Every push to main automatically increments the version!**
-
-The CI/CD pipeline now automatically handles versioning based on commit messages:
-
-- **Default**: Patch version increment (1.0.x)
-- **Minor increment**: Include `feat:` or `[minor]` in commit message
-- **Major increment**: Include `BREAKING CHANGE` or `[major]` in commit message
-
-**Examples:**
-```bash
-# Patch increment (1.0.1 → 1.0.2)
-git commit -m "fix: Update task completion logic"
-
-# Minor increment (1.0.2 → 1.1.0)
-git commit -m "feat: Add dark mode support"
-git commit -m "Add new export feature [minor]"
-
-# Major increment (1.0.2 → 2.0.0)
-git commit -m "refactor: Complete API overhaul [major]"
-git commit -m "BREAKING CHANGE: Remove legacy endpoints"
-```
-
-**Automated Workflow:**
-1. Push code to main branch
-2. Auto-version workflow increments version.txt
-3. Version-release workflow creates GitHub release
-4. Docker-build workflow builds and pushes images
-5. All automated - no manual steps required!
-
-#### Manual Version Management (Still Available)
-
-**Version Sync Commands:**
-
-```bash
-# Increment version and create release
-./scripts/version-sync.sh --increment patch --release
-
-# Just increment version (no release)
-./scripts/version-sync.sh --increment minor
-
-# Create release for current version
-./scripts/version-sync.sh --release
-
-# Alternative: Use build script (also increments version)
-./scripts/build-multiarch.sh --increment [patch|minor|major] --push
-```
-
-**Manual Workflow:**
-
-1. `./scripts/version-sync.sh --increment patch --release`
-2. Updates `version.txt`, commits change, creates git tag
-3. Creates GitHub release with Docker pull instructions
-4. GitHub Actions automatically builds and pushes versioned images to DockerHub
-5. Application displays updated version in Global Settings (after restart/rebuild)
-
-**Version Sync Script Features:**
-
-- Single command for complete version releases
-- Automatic git commit and tag creation
-- GitHub release creation with Docker instructions
-- Supports patch, minor, and major version increments
-- Can create releases for current version without incrementing
-
-**Checking Version Status:**
-
-```bash
-# Check current version
-cat version.txt
-
-# Check GitHub releases
-gh release list
-
-# Check git tags
-git tag -l
-
-# Check DockerHub images (after CI/CD completes)
-docker pull groovycodexyz/taschengeld:latest
-docker inspect groovycodexyz/taschengeld:latest | grep -A5 Labels
-
-# Check application version (in development)
-curl -s http://localhost:3300/api/version
-
-# Check application version (in production)
-curl -s http://localhost:8071/api/version
-```
+- **Automatic**: Every push to main increments version based on commit message
+- **Manual**: `./scripts/version-sync.sh --increment [patch|minor|major] --release`
 
 ## DockerHub Integration Setup
 
@@ -730,7 +671,7 @@ curl -s http://localhost:8071/api/version
    - **Prisma Generation Errors**: Ensure `binaryTargets` in schema.prisma includes `linux-musl-openssl-3.0.x`
    - **Missing Dependencies**: The production build includes `pg` module for initialization scripts
    - **Multi-arch Build Failures**: Verify Docker BuildKit is enabled and `multiarch` builder exists
-   - **Port Mapping**: Production containers expose port 3000 but may map to different external ports (e.g., 8071)
+   - **Port Mapping**: Production containers expose port 3000 internally but map to external port 8071 by default
 6. **DockerHub Integration Issues**:
    - **Authentication Failures**: Ensure `docker login` is completed for local builds or GitHub secrets are set
    - **Repository Not Found**: Create `groovycodexyz/taschengeld` repository on DockerHub before first push
@@ -876,6 +817,43 @@ docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -na
 - API endpoint testing included in build script
 - Focus on dev-prod parity rather than unit tests
 
+## CI/CD Best Practices & Lessons Learned
+
+**Last Updated**: 2025-08-18
+
+### 📚 **Key Lessons from Production Build Failures (August 2025)**
+
+#### **Root Cause: Development vs Production Environment Mismatch**
+**Date**: 2025-08-18  
+**Impact**: Docker builds failing due to ESLint configuration inconsistencies  
+
+**What Happened:**
+- Development environment: ESLint warnings are non-blocking
+- Production environment: ESLint warnings become build-stopping errors
+- Local development: Never tested production builds (`npm run dev` only)
+- CI/CD: Full production build with stricter validation
+
+**Contributing Factors:**
+1. **ESLint Configuration Drift**: Quote style and unused variable rules misaligned
+2. **Restrictive CI/CD Triggers**: Only triggered on `version.txt` changes
+3. **Missing Local Validation**: No step to test production builds locally
+4. **Late-Stage Discovery**: Issues only found during Docker build phase
+
+**Solutions Implemented:**
+1. ✅ **Added `build:test` Script**: Local production build validation
+2. ✅ **Updated CI/CD Triggers**: Now triggers on all main branch changes  
+3. ✅ **Added Build Validation Workflow**: PR-based build checks
+4. ✅ **Enhanced Documentation**: Pre-merge checklist and validation process
+5. ✅ **Fixed ESLint Configuration**: Aligned dev/prod behavior
+
+**Prevention Strategies:**
+- 🔧 **Environment Parity**: Ensure dev and prod behave identically
+- 🔧 **Early Detection**: Test production builds locally before deployment
+- 🔧 **Automated Validation**: PR builds catch issues before merge
+- 🔧 **Clear Documentation**: Standardized development workflow
+
+---
+
 ## GitHub Actions Build Failure Tracker
 
 **Last Updated**: 2025-07-08
@@ -889,6 +867,7 @@ docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -na
 **Status**: ✅ **FIXED** - Build #16139974565 passed "Test Docker image" step successfully
 
 **Solution Implemented**: Modified docker-entrypoint.sh to detect utility commands vs server startup
+
 - Commands like `node --version` and `ls` now run without database validation
 - Server startup still requires full environment validation
 - GitHub Actions workflow updated with cleaner test commands
@@ -910,22 +889,25 @@ docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -na
 
 ### Progress Summary
 
-**✅ MASSIVE SUCCESS - Core Pipeline Working**: 
+**✅ MASSIVE SUCCESS - Core Pipeline Working**:
+
 - ✅ "Test Docker image" step passes
-- ✅ "Build and push Docker image" passes  
+- ✅ "Build and push Docker image" passes
 - ✅ "Verify Docker image was pushed" passes
 - ✅ "Test Docker startup with database" passes
 - ✅ All critical CI/CD functions restored!
 
 **🎉 What This Means**:
+
 - ✅ Docker images ARE being built and pushed to DockerHub successfully
 - ✅ Users can now pull latest updates (v1.0.10 confirmed available)
 - ✅ All your fixes since June 24 are now available in production
 - ✅ CI/CD pipeline fully restored with green builds
 
 **✅ All Issues Resolved**:
+
 - Docker entrypoint validation fix working perfectly
-- Multi-architecture builds successful 
+- Multi-architecture builds successful
 - DockerHub pushes confirmed working
 - Description update made non-blocking
 - Misleading error messages fixed

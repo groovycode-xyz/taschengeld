@@ -21,6 +21,7 @@ This document defines the RESTful API specification for Taschengeld SaaS, a hous
 ## Base Configuration
 
 ### API Base URL
+
 ```
 Production:  https://api.taschengeld.com/v1
 Staging:     https://api-staging.taschengeld.com/v1
@@ -28,12 +29,14 @@ Development: http://localhost:3000/api/v1
 ```
 
 ### Request/Response Format
+
 - **Content-Type**: `application/json`
 - **Character Encoding**: UTF-8
 - **Date Format**: ISO 8601 (`2025-07-09T10:30:00Z`)
 - **Decimal Precision**: 2 decimal places for monetary values
 
 ### API Versioning
+
 - **Current Version**: v1
 - **Versioning Strategy**: URL path versioning (`/v1/`, `/v2/`)
 - **Deprecation Policy**: 12-month notice for breaking changes
@@ -59,6 +62,7 @@ interface AuthToken {
 ### Authentication Methods
 
 #### 1. Email/Password Authentication
+
 ```http
 POST /auth/login
 Content-Type: application/json
@@ -70,6 +74,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -88,12 +93,14 @@ Content-Type: application/json
 ```
 
 #### 2. OAuth Authentication
+
 ```http
 GET /auth/oauth/google
 GET /auth/oauth/apple
 ```
 
 #### 3. Magic Link Authentication
+
 ```http
 POST /auth/magic-link
 Content-Type: application/json
@@ -106,6 +113,7 @@ Content-Type: application/json
 ### Session Management
 
 #### JWT Token Structure
+
 ```javascript
 // Access Token (15 minutes)
 {
@@ -137,6 +145,7 @@ Content-Type: application/json
 ```
 
 #### Token Refresh
+
 ```http
 POST /auth/refresh
 Content-Type: application/json
@@ -161,6 +170,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -176,6 +186,7 @@ Authorization: Bearer <access_token>
 ### 1. Authentication Endpoints
 
 #### Register New Subscriber
+
 ```http
 POST /auth/register
 Content-Type: application/json
@@ -190,6 +201,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "success": true,
@@ -204,6 +216,7 @@ Content-Type: application/json
 ```
 
 #### Verify Email Address
+
 ```http
 POST /auth/verify-email
 Content-Type: application/json
@@ -214,6 +227,7 @@ Content-Type: application/json
 ```
 
 #### Request Password Reset
+
 ```http
 POST /auth/forgot-password
 Content-Type: application/json
@@ -224,6 +238,7 @@ Content-Type: application/json
 ```
 
 #### Reset Password
+
 ```http
 POST /auth/reset-password
 Content-Type: application/json
@@ -235,6 +250,7 @@ Content-Type: application/json
 ```
 
 #### Logout
+
 ```http
 POST /auth/logout
 Authorization: Bearer <access_token>
@@ -243,12 +259,14 @@ Authorization: Bearer <access_token>
 ### 2. Subscriber Management Endpoints
 
 #### Get Subscriber Profile
+
 ```http
 GET /subscriber/profile
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -270,6 +288,7 @@ Authorization: Bearer <access_token>
 ```
 
 #### Update Subscriber Profile
+
 ```http
 PUT /subscriber/profile
 Authorization: Bearer <access_token>
@@ -284,6 +303,7 @@ Content-Type: application/json
 ```
 
 #### Update PIN
+
 ```http
 PUT /subscriber/pin
 Authorization: Bearer <access_token>
@@ -296,12 +316,14 @@ Content-Type: application/json
 ```
 
 #### Get Subscription Status
+
 ```http
 GET /subscriber/subscription
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -332,6 +354,7 @@ Authorization: Bearer <access_token>
 ```
 
 #### Delete Account
+
 ```http
 DELETE /subscriber/account
 Authorization: Bearer <access_token>
@@ -346,12 +369,14 @@ Content-Type: application/json
 ### 3. Household Management Endpoints
 
 #### Get Household Settings
+
 ```http
 GET /household/settings
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -372,6 +397,7 @@ Authorization: Bearer <access_token>
 ```
 
 #### Update Household Settings
+
 ```http
 PUT /household/settings
 Authorization: Bearer <access_token>
@@ -392,12 +418,14 @@ Content-Type: application/json
 ### 4. Profile Management Endpoints
 
 #### List All Profiles
+
 ```http
 GET /profiles
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -408,7 +436,7 @@ Authorization: Bearer <access_token>
       "avatarId": "dragon_001",
       "soundId": "roar_001",
       "birthOrder": 1,
-      "valueBalance": 125.50,
+      "valueBalance": 125.5,
       "displayOrder": 1,
       "isActive": true,
       "createdAt": "2025-01-01T00:00:00Z"
@@ -429,6 +457,7 @@ Authorization: Bearer <access_token>
 ```
 
 #### Create New Profile
+
 ```http
 POST /profiles
 Authorization: Bearer <access_token>
@@ -444,6 +473,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "success": true,
@@ -453,7 +483,7 @@ Content-Type: application/json
     "avatarId": "knight_001",
     "soundId": "sword_001",
     "birthOrder": 3,
-    "valueBalance": 0.00,
+    "valueBalance": 0.0,
     "displayOrder": 3,
     "isActive": true,
     "createdAt": "2025-07-09T10:30:00Z"
@@ -462,12 +492,14 @@ Content-Type: application/json
 ```
 
 #### Get Profile Details
+
 ```http
 GET /profiles/{profileId}
 Authorization: Bearer <access_token>
 ```
 
 #### Update Profile
+
 ```http
 PUT /profiles/{profileId}
 Authorization: Bearer <access_token>
@@ -482,6 +514,7 @@ Content-Type: application/json
 ```
 
 #### Delete Profile (Soft Delete)
+
 ```http
 DELETE /profiles/{profileId}
 Authorization: Bearer <access_token>
@@ -490,6 +523,7 @@ Authorization: Bearer <access_token>
 ### 5. Task Management Endpoints
 
 #### List All Tasks
+
 ```http
 GET /tasks
 Authorization: Bearer <access_token>
@@ -500,6 +534,7 @@ Query Parameters:
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -510,7 +545,7 @@ Query Parameters:
         "title": "Feed the dragon",
         "description": "Give the dragon its daily food",
         "iconId": "food_001",
-        "valueAmount": 5.00,
+        "valueAmount": 5.0,
         "isActive": true,
         "displayOrder": 1,
         "createdAt": "2025-01-01T00:00:00Z"
@@ -520,7 +555,7 @@ Query Parameters:
         "title": "Polish armor",
         "description": "Keep the knight's armor shiny",
         "iconId": "armor_001",
-        "valueAmount": 3.50,
+        "valueAmount": 3.5,
         "isActive": true,
         "displayOrder": 2,
         "createdAt": "2025-01-02T00:00:00Z"
@@ -537,6 +572,7 @@ Query Parameters:
 ```
 
 #### Create New Task
+
 ```http
 POST /tasks
 Authorization: Bearer <access_token>
@@ -552,6 +588,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "success": true,
@@ -560,7 +597,7 @@ Content-Type: application/json
     "title": "Clean castle",
     "description": "Sweep the great hall",
     "iconId": "cleaning_001",
-    "valueAmount": 10.00,
+    "valueAmount": 10.0,
     "isActive": true,
     "displayOrder": 3,
     "createdAt": "2025-07-09T10:30:00Z"
@@ -569,6 +606,7 @@ Content-Type: application/json
 ```
 
 #### Update Task
+
 ```http
 PUT /tasks/{taskId}
 Authorization: Bearer <access_token>
@@ -583,6 +621,7 @@ Content-Type: application/json
 ```
 
 #### Delete Task (Soft Delete)
+
 ```http
 DELETE /tasks/{taskId}
 Authorization: Bearer <access_token>
@@ -591,6 +630,7 @@ Authorization: Bearer <access_token>
 ### 6. Activity Recording Endpoints
 
 #### Record Task Completion
+
 ```http
 POST /activities
 Authorization: Bearer <access_token>
@@ -604,6 +644,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "success": true,
@@ -612,7 +653,7 @@ Content-Type: application/json
     "profileId": "profile_001",
     "taskId": "task_001",
     "recordedAt": "2025-07-09T10:30:00Z",
-    "recordedValue": 5.00,
+    "recordedValue": 5.0,
     "reviewStatus": "pending",
     "photoUrl": "https://cdn.taschengeld.com/photos/activity_001.jpg"
   }
@@ -620,6 +661,7 @@ Content-Type: application/json
 ```
 
 #### List Pending Activities
+
 ```http
 GET /activities/pending
 Authorization: Bearer <access_token>
@@ -630,6 +672,7 @@ Query Parameters:
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -648,7 +691,7 @@ Query Parameters:
           "iconId": "food_001"
         },
         "recordedAt": "2025-07-09T10:30:00Z",
-        "recordedValue": 5.00,
+        "recordedValue": 5.0,
         "reviewStatus": "pending",
         "photoUrl": "https://cdn.taschengeld.com/photos/activity_001.jpg"
       }
@@ -664,6 +707,7 @@ Query Parameters:
 ```
 
 #### Review Activity
+
 ```http
 POST /activities/{activityId}/review
 Authorization: Bearer <access_token>
@@ -676,6 +720,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -690,6 +735,7 @@ Content-Type: application/json
 ```
 
 #### Bulk Review Activities
+
 ```http
 POST /activities/bulk-review
 Authorization: Bearer <access_token>
@@ -714,12 +760,14 @@ Content-Type: application/json
 ### 7. Value Tracking Endpoints
 
 #### Get All Profile Balances
+
 ```http
 GET /values/balances
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -729,7 +777,7 @@ Authorization: Bearer <access_token>
         "profileId": "profile_001",
         "nickname": "Dragon",
         "avatarId": "dragon_001",
-        "balance": 125.50,
+        "balance": 125.5,
         "lastTransaction": "2025-07-09T10:30:00Z"
       },
       {
@@ -746,6 +794,7 @@ Authorization: Bearer <access_token>
 ```
 
 #### Get Transaction History
+
 ```http
 GET /values/transactions
 Authorization: Bearer <access_token>
@@ -758,6 +807,7 @@ Query Parameters:
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -768,8 +818,8 @@ Query Parameters:
         "profileId": "profile_001",
         "profileNickname": "Dragon",
         "transactionType": "task_reward",
-        "amount": 5.00,
-        "balanceAfter": 125.50,
+        "amount": 5.0,
+        "balanceAfter": 125.5,
         "description": "Completed: Feed the dragon",
         "activityRecordId": "activity_001",
         "createdAt": "2025-07-09T10:35:00Z"
@@ -779,8 +829,8 @@ Query Parameters:
         "profileId": "profile_001",
         "profileNickname": "Dragon",
         "transactionType": "manual_withdraw",
-        "amount": -10.00,
-        "balanceAfter": 120.50,
+        "amount": -10.0,
+        "balanceAfter": 120.5,
         "description": "Bought toy dragon",
         "createdAt": "2025-07-08T14:20:00Z"
       }
@@ -796,6 +846,7 @@ Query Parameters:
 ```
 
 #### Create Manual Transaction
+
 ```http
 POST /values/manual
 Authorization: Bearer <access_token>
@@ -810,6 +861,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "success": true,
@@ -817,8 +869,8 @@ Content-Type: application/json
     "id": "tx_003",
     "profileId": "profile_001",
     "transactionType": "manual_deposit",
-    "amount": 15.00,
-    "balanceAfter": 140.50,
+    "amount": 15.0,
+    "balanceAfter": 140.5,
     "description": "Birthday gift",
     "createdAt": "2025-07-09T10:40:00Z"
   }
@@ -828,6 +880,7 @@ Content-Type: application/json
 ### 8. Asset Library Endpoints
 
 #### Get Avatar Library
+
 ```http
 GET /assets/avatars
 Authorization: Bearer <access_token>
@@ -837,6 +890,7 @@ Query Parameters:
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -864,18 +918,21 @@ Query Parameters:
 ```
 
 #### Get Icon Library
+
 ```http
 GET /assets/icons
 Authorization: Bearer <access_token>
 ```
 
 #### Get Sound Library
+
 ```http
 GET /assets/sounds
 Authorization: Bearer <access_token>
 ```
 
 #### Upload Custom Asset (Premium Only)
+
 ```http
 POST /assets/custom
 Authorization: Bearer <access_token>
@@ -891,6 +948,7 @@ Content-Type: multipart/form-data
 ### 9. Reporting Endpoints (Premium Only)
 
 #### Generate PDF Report
+
 ```http
 POST /reports/generate
 Authorization: Bearer <access_token>
@@ -905,6 +963,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -917,12 +976,14 @@ Content-Type: application/json
 ```
 
 #### Get Report Status
+
 ```http
 GET /reports/{reportId}/status
 Authorization: Bearer <access_token>
 ```
 
 #### Download Report
+
 ```http
 GET /reports/{reportId}/download
 Authorization: Bearer <access_token>
@@ -931,6 +992,7 @@ Authorization: Bearer <access_token>
 ### 10. Backup & Recovery Endpoints
 
 #### Create Backup (Manual)
+
 ```http
 POST /backup/create
 Authorization: Bearer <access_token>
@@ -943,12 +1005,14 @@ Content-Type: application/json
 ```
 
 #### List Available Backups
+
 ```http
 GET /backup/list
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -978,6 +1042,7 @@ Authorization: Bearer <access_token>
 ```
 
 #### Restore from Backup
+
 ```http
 POST /backup/{backupId}/restore
 Authorization: Bearer <access_token>
@@ -989,6 +1054,7 @@ Content-Type: application/json
 ```
 
 #### Export Data
+
 ```http
 GET /backup/export
 Authorization: Bearer <access_token>
@@ -999,11 +1065,13 @@ Query Parameters:
 ### 11. System Information Endpoints
 
 #### Get System Status
+
 ```http
 GET /system/status
 ```
 
 **Response (200 OK)**:
+
 ```json
 {
   "success": true,
@@ -1017,6 +1085,7 @@ GET /system/status
 ```
 
 #### Get Available Features
+
 ```http
 GET /system/features
 Authorization: Bearer <access_token>
@@ -1061,6 +1130,7 @@ All error responses follow a consistent format:
 ### Common Error Codes
 
 #### Authentication Errors
+
 - `AUTH_REQUIRED`: Authentication token required
 - `AUTH_INVALID`: Invalid authentication token
 - `AUTH_EXPIRED`: Authentication token expired
@@ -1069,12 +1139,14 @@ All error responses follow a consistent format:
 - `INVALID_CREDENTIALS`: Invalid email/password
 
 #### Authorization Errors
+
 - `INSUFFICIENT_PERMISSIONS`: Permission denied
 - `SUBSCRIPTION_REQUIRED`: Paid subscription required
 - `TIER_UPGRADE_REQUIRED`: Higher tier required
 - `FEATURE_NOT_AVAILABLE`: Feature not available in current tier
 
 #### Validation Errors
+
 - `VALIDATION_ERROR`: Request validation failed
 - `INVALID_FORMAT`: Invalid data format
 - `MISSING_REQUIRED_FIELD`: Required field missing
@@ -1082,12 +1154,14 @@ All error responses follow a consistent format:
 - `FIELD_TOO_SHORT`: Field below minimum length
 
 #### Resource Errors
+
 - `RESOURCE_NOT_FOUND`: Resource does not exist
 - `RESOURCE_ALREADY_EXISTS`: Resource already exists
 - `RESOURCE_LIMIT_EXCEEDED`: Subscription limit exceeded
 - `RESOURCE_CONFLICT`: Resource state conflict
 
 #### Business Logic Errors
+
 - `INSUFFICIENT_BALANCE`: Not enough value in account
 - `TASK_ALREADY_COMPLETED`: Task already completed today
 - `ACTIVITY_ALREADY_REVIEWED`: Activity already reviewed
@@ -1114,26 +1188,26 @@ const RATE_LIMITS: Record<SubscriptionTier, RateLimits> = {
     requests: {
       perMinute: 60,
       perHour: 1000,
-      perDay: 10000
+      perDay: 10000,
     },
-    burst: 10
+    burst: 10,
   },
   basic: {
     requests: {
       perMinute: 120,
       perHour: 2000,
-      perDay: 20000
+      perDay: 20000,
     },
-    burst: 20
+    burst: 20,
   },
   premium: {
     requests: {
       perMinute: 300,
       perHour: 5000,
-      perDay: 50000
+      perDay: 50000,
     },
-    burst: 50
-  }
+    burst: 50,
+  },
 };
 ```
 
@@ -1189,11 +1263,13 @@ interface TierLimits {
 ### Limit Enforcement Examples
 
 #### Creating a Profile
+
 ```http
 POST /profiles
 ```
 
 **Free tier reaching limit**:
+
 ```json
 {
   "success": false,
@@ -1211,6 +1287,7 @@ POST /profiles
 ```
 
 #### Uploading Photo (Premium Only)
+
 ```http
 POST /activities
 Content-Type: application/json
@@ -1221,6 +1298,7 @@ Content-Type: application/json
 ```
 
 **Basic tier attempting premium feature**:
+
 ```json
 {
   "success": false,
@@ -1257,6 +1335,7 @@ Content-Type: application/json
 ### Webhook Events
 
 #### Activity Completed
+
 ```json
 {
   "event": "activity.completed",
@@ -1267,12 +1346,13 @@ Content-Type: application/json
     "profileNickname": "Dragon",
     "taskId": "task_001",
     "taskTitle": "Feed the dragon",
-    "valueAmount": 5.00
+    "valueAmount": 5.0
   }
 }
 ```
 
 #### Activity Reviewed
+
 ```json
 {
   "event": "activity.reviewed",
@@ -1289,6 +1369,7 @@ Content-Type: application/json
 ### Webhook Security
 
 All webhook requests include:
+
 - `X-Taschengeld-Signature`: HMAC-SHA256 signature
 - `X-Taschengeld-Event`: Event type
 - `X-Taschengeld-Timestamp`: Request timestamp
@@ -1371,7 +1452,7 @@ const CreateProfileSchema = z.object({
   avatarId: z.string().min(1),
   soundId: z.string().optional(),
   birthOrder: z.number().int().min(1).max(20).optional(),
-  displayOrder: z.number().int().min(0).default(0)
+  displayOrder: z.number().int().min(0).default(0),
 });
 
 const CreateTaskSchema = z.object({
@@ -1379,13 +1460,13 @@ const CreateTaskSchema = z.object({
   description: z.string().max(1000).optional(),
   iconId: z.string().min(1),
   valueAmount: z.number().min(0).max(999999.99),
-  displayOrder: z.number().int().min(0).default(0)
+  displayOrder: z.number().int().min(0).default(0),
 });
 
 const RecordActivitySchema = z.object({
   profileId: z.string().uuid(),
   taskId: z.string().uuid(),
-  photo: z.string().optional() // Base64 encoded image
+  photo: z.string().optional(), // Base64 encoded image
 });
 ```
 
@@ -1451,9 +1532,9 @@ describe('Authentication', () => {
     const response = await api.post('/auth/register', {
       email: 'test@example.com',
       password: 'password123',
-      householdName: 'Test Family'
+      householdName: 'Test Family',
     });
-    
+
     expect(response.status).toBe(201);
     expect(response.data.success).toBe(true);
   });
@@ -1464,9 +1545,9 @@ describe('Tier Limits', () => {
   it('should enforce free tier member limit', async () => {
     // Create profile on free tier
     const response = await api.post('/profiles', {
-      nickname: 'Second Member'
+      nickname: 'Second Member',
     });
-    
+
     expect(response.status).toBe(400);
     expect(response.data.error.code).toBe('RESOURCE_LIMIT_EXCEEDED');
   });
@@ -1488,7 +1569,8 @@ The API enables households to track tasks, activities, and rewards in a structur
 ---
 
 **Document Status**: Complete  
-**Next Steps**: 
+**Next Steps**:
+
 1. Implementation of API endpoints
 2. SDK development for client applications
 3. Integration testing and performance optimization

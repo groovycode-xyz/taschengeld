@@ -50,7 +50,7 @@ docker compose -f docker-compose.dev.yml up --build
 
 ✅ Verify:
 
-- Application runs at http://localhost:3000
+- Application runs at http://localhost:3300
 - Database connection is successful
 - No architecture-related errors in logs
 
@@ -118,7 +118,7 @@ git push
 
 ```bash
 # Build and test both architectures locally
-./scripts/build-multiarch.sh --local --version 1.0.0
+./scripts/build-multiarch.sh --local --version 1.1.10
 
 # Test the builds
 docker compose -f docker-compose.yml up
@@ -138,15 +138,15 @@ When building production images, we follow semantic versioning (SemVer):
 
 1. **Version Tags**
 
-   - `v1.0.0` - Stable release version
+   - `v1.1.10` - Stable release version
    - `latest` - Most recent stable version
-   - `v1.0.0-arm64` - Architecture-specific (local testing)
-   - `v1.0.0-amd64` - Architecture-specific (local testing)
+   - `v1.1.10-arm64` - Architecture-specific (local testing)
+   - `v1.1.10-amd64` - Architecture-specific (local testing)
 
 2. **When to Version**
    - Major version (v2.0.0): Breaking changes
-   - Minor version (v1.1.0): New features
-   - Patch version (v1.0.1): Bug fixes
+   - Minor version (v1.2.0): New features
+   - Patch version (v1.1.11): Bug fixes
 
 ### Version Management
 
@@ -164,21 +164,21 @@ The project uses automated version management through the `version.txt` file and
 
    ```bash
    ./scripts/build-multiarch.sh --push --increment patch
-   # Example: 1.0.0 -> 1.0.1
+   # Example: 1.1.10 -> 1.1.11
    ```
 
    For new features (minor):
 
    ```bash
    ./scripts/build-multiarch.sh --push --increment minor
-   # Example: 1.0.0 -> 1.1.0
+   # Example: 1.1.10 -> 1.2.0
    ```
 
    For breaking changes (major):
 
    ```bash
    ./scripts/build-multiarch.sh --push --increment major
-   # Example: 1.0.0 -> 2.0.0
+   # Example: 1.1.10 -> 2.0.0
    ```
 
 3. **Manual Version Control** (if needed)
@@ -222,13 +222,13 @@ The project uses automated version management through the `version.txt` file and
 
 ```bash
 # Build and push multi-arch image with version tag
-./scripts/build-multiarch.sh --push --version 1.0.0
+./scripts/build-multiarch.sh --push --version 1.1.10
 ```
 
 ✅ Verify:
 
 - Both architecture variants pushed successfully
-- Version tags are correct (latest, v1.0.0)
+- Version tags are correct (latest, v1.1.10)
 - Image can be pulled and run on different architectures
 - Version number follows semantic versioning
 
@@ -809,7 +809,7 @@ Remember: The M1's ARM64 architecture requires explicit platform specifications,
    ```
 
 4. **Access Services**
-   - Web App: <http://localhost:21971>
+   - Web App: <http://localhost:3300>
    - Database: localhost:5432
 
 ### Database Management

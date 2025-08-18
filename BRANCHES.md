@@ -6,13 +6,12 @@ This file tracks all active development branches and their purposes.
 
 | Branch                            | Status         | Purpose                                             | Last Updated |
 | --------------------------------- | -------------- | --------------------------------------------------- | ------------ |
-| `development`                     | 🟢 Active      | Main development integration branch                 | 2025-06-26   |
+| `development`                     | 🟢 Active      | Main development integration branch                 | 2025-08-18   |
 | `savings`                         | ✅ Complete    | Dedicated savings accounts with goal tracking       | 2025-08-18   |
-| `feature/mode-persistence`        | 🟡 In Progress | Add localStorage persistence for parent/child mode  | 2025-07-09   |
 | `feature/svg-management-tool`     | 🟡 In Progress | Development-only SVG icon management interface      | 2025-06-26   |
 | `feature/icon-system-refactor`    | 🟡 In Progress | Centralized icon system with search/filtering       | 2025-06-26   |
 | `feature/enhanced-access-control` | 🟠 Planned     | Multi-device access policies and session management | 2025-06-26   |
-| `develop`                         | 🔴 DELETE ME   | Learning branch for Git tutorials                   | 2025-06-26   |
+| `saas-development`                | 🟡 In Progress | API specification and SaaS architecture planning    | 2025-08-18   |
 
 ## 📖 **Detailed Branch Information**
 
@@ -106,131 +105,47 @@ This file tracks all active development branches and their purposes.
 
 ---
 
-### `feature/mode-persistence`
+### `saas-development`
 
-**Purpose:** Add localStorage persistence for parent/child mode state  
-**Status:** 🟡 In Progress - Implementation complete, testing pending  
-**Description:** Implements device-local persistence of parent/child mode state using localStorage, ensuring mode preference persists across browser sessions.
-
-**Key Features:**
-- Device-local mode persistence (no cross-device sync)
-- Automatic restoration on page load
-- Cross-tab synchronization within same browser
-- Fallback to parent mode if no preference stored
+**Purpose:** API specification and SaaS architecture planning  
+**Status:** 🟡 In Progress - API design phase  
+**Description:** Comprehensive API documentation and planning for potential SaaS expansion of the Taschengeld platform.
 
 **Current Progress:**
-- ✅ localStorage initialization from stored preference
-- ✅ Mode changes saved to localStorage
-- ✅ Cross-tab storage event synchronization
-- 🟡 Manual testing in progress
-- ⏳ Production testing pending
 
-**Technical Details:**
-- Modified: `/components/context/mode-context.tsx`
-- Storage key: `mode-preference`
-- Values: `'parent'` or `'child'`
-- Default behavior: Parent mode if not set
-
-**Testing:**
-1. Set child mode → refresh browser → verify stays in child mode
-2. Set parent mode → refresh browser → verify stays in parent mode
-3. Open multiple tabs → change mode in one → verify sync
-4. Clear localStorage → verify defaults to parent mode
+- ✅ API specification document created
+- 🟡 Multi-tenant architecture planning
+- ⏳ Authentication system design pending
 
 **Next Steps:**
-1. Complete manual testing on all target devices
-2. Verify no conflicts with existing PIN system
-3. Test on actual iPad devices
-4. Merge to development branch
+
+1. Complete API endpoint documentation
+2. Design multi-tenant data isolation
+3. Plan migration path from single-family to multi-tenant
 
 ---
 
 ### `feature/svg-management-tool`
 
 **Purpose:** Build development-only SVG icon management interface  
-**Status:** 🟡 In Progress - Upload functionality implemented  
+**Status:** 🟠 On Hold - Awaiting icon system completion  
 **Description:** Creates a visual web interface for managing SVG icons without requiring code changes. Development environment only - never deployed to production.
 
-**Key Features:**
+**Dependencies:** Requires completion of `feature/icon-system-refactor`
 
-- Drag & drop SVG file upload with processing
-- Security scanning for malicious SVG content
-- Visual organization (user icons vs task icons)
-- Integration with existing icon registry system
-- Real-time preview and metadata extraction
-
-**Current Progress:**
-
-- ✅ Basic upload interface completed
-- ✅ File processing pipeline implemented
-- ✅ Security validation framework in place
-- 🟡 Icon organization UI in progress
-- ⏳ Registry integration pending
-
-**Technical Details:**
-
-- Location: `/app/dev-tools/svg-manager/`
-- API endpoints: `/api/dev-tools/icons/`
-- Access: Only available when `NODE_ENV=development`
-- Dependencies: Built on existing icon system foundation
-
-**Testing:**
-
-- Upload various SVG files and verify processing
-- Confirm security scanning catches malicious content
-- Test integration with icon selector components
-
-**Next Steps:**
-
-1. Complete icon categorization interface
-2. Implement registry update functionality
-3. Add bulk operations (move, delete, archive)
-4. Final testing and documentation
+**Next Steps:** Resume after icon system refactor is merged
 
 ---
 
 ### `feature/icon-system-refactor`
 
 **Purpose:** Centralized icon system with enhanced search and filtering  
-**Status:** 🟡 In Progress - Core system complete, integration ongoing  
+**Status:** 🟠 Paused - Awaiting design decisions  
 **Description:** Replaces scattered icon handling with centralized registry supporting 154+ icons, search, filtering, and categorization.
 
-**Key Features:**
+**Current Status:** Core functionality complete, integration decisions pending
 
-- Centralized icon registry with metadata
-- Enhanced IconSelector with search functionality
-- Category-based filtering (people, objects, activities, etc.)
-- Backward compatibility with existing components
-- Type-safe icon definitions and usage
-
-**Current Progress:**
-
-- ✅ Icon registry with 154 icons completed
-- ✅ Enhanced IconDisplay and IconSelector components
-- ✅ Search and filtering functionality
-- 🟡 Component integration in progress
-- ⏳ Documentation updates pending
-
-**Components Updated:**
-
-- User management modals (add/edit)
-- Task management modals (add/edit)
-- Icon selector throughout application
-- Withdraw funds modal
-
-**Testing:**
-
-- Verify all existing icons display correctly
-- Test search functionality with various keywords
-- Confirm category filtering works properly
-- Check backward compatibility
-
-**Next Steps:**
-
-1. Complete remaining component integrations
-2. Update documentation with new icon system
-3. Add icon usage analytics (optional)
-4. Performance testing with large icon sets
+**Next Steps:** Resume after current feature priorities are complete
 
 ---
 
@@ -277,28 +192,6 @@ This file tracks all active development branches and their purposes.
 
 ---
 
-### `develop` ⚠️ **SCHEDULED FOR DELETION**
-
-**Purpose:** Learning branch for Git workflow tutorials  
-**Status:** 🔴 Ready for deletion  
-**Description:** This branch was created for learning Git operations and contains the branch indicator feature work. The actual work has been properly committed and the branch is no longer needed.
-
-**Contents:**
-
-- Branch indicator feature (already committed to proper branch)
-- Git workflow learning exercises
-- Docker configuration updates
-
-**Action Required:**
-
-```bash
-# Delete this branch when ready:
-git branch -D develop
-```
-
-**Note:** All valuable work from this branch has been preserved in the proper feature branches.
-
----
 
 ## 🔄 **Branch Lifecycle Management**
 
@@ -348,21 +241,19 @@ git branch -D develop
 
 ## 📱 **Current Development Focus**
 
-**Primary:** SVG Management Tool (80% complete)  
-**Secondary:** Icon System Integration (90% complete)  
-**Tertiary:** Mode Persistence (95% complete)  
-**Planned:** Enhanced Access Control (design phase)
+**Primary:** SaaS Development (API specification phase)  
+**Secondary:** Enhanced Access Control (design phase)  
+**Completed:** Savings Goals Feature (100% complete)
+**On Hold:** Icon System Integration, SVG Management Tool
 
 **Immediate Priorities:**
 
-1. Complete SVG tool icon organization UI
-2. Finish icon system component integrations
-3. Complete mode persistence testing
-4. Delete learning branch `develop`
-5. Plan next major feature development
+1. Complete SaaS development API specification
+2. Design Enhanced Access Control implementation
+3. Review and update paused feature branches
 
 ---
 
 **Last Updated:** 2025-08-18  
-**Current Active Branches:** 6 (excluding main)  
-**Branches Ready for Cleanup:** 1 (`develop`)
+**Current Active Branches:** 5 (excluding main)  
+**Recent Changes:** Completed savings goals feature, cleaned up completed branches (`celebration-toggle`, `editable-payouts`)

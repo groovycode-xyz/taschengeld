@@ -7,22 +7,33 @@ interface CSSConfettiProps {
 }
 
 export function CSSConfetti({ onComplete }: CSSConfettiProps) {
-  const [particles, setParticles] = useState<Array<{
-    id: number;
-    color: string;
-    left: number;
-    delay: number;
-    duration: number;
-    rotation: number;
-  }>>([]);
+  const [particles, setParticles] = useState<
+    Array<{
+      id: number;
+      color: string;
+      left: number;
+      delay: number;
+      duration: number;
+      rotation: number;
+    }>
+  >([]);
 
   useEffect(() => {
     console.log('CSS Confetti component mounted - starting animation');
-    
+
     // Generate random particles
     const newParticles = [];
-    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
-    
+    const colors = [
+      '#ff0000',
+      '#00ff00',
+      '#0000ff',
+      '#ffff00',
+      '#ff00ff',
+      '#00ffff',
+      '#ffa500',
+      '#ff69b4',
+    ];
+
     for (let i = 0; i < 150; i++) {
       newParticles.push({
         id: i,
@@ -30,18 +41,18 @@ export function CSSConfetti({ onComplete }: CSSConfettiProps) {
         left: Math.random() * 100,
         delay: Math.random() * 0.5,
         duration: 2 + Math.random() * 1,
-        rotation: Math.random() * 360
+        rotation: Math.random() * 360,
       });
     }
-    
+
     setParticles(newParticles);
-    
+
     // Clean up after animation
     const timeout = setTimeout(() => {
       console.log('CSS Confetti animation complete');
       if (onComplete) onComplete();
     }, 2400);
-    
+
     return () => {
       console.log('CSS Confetti component unmounting');
       clearTimeout(timeout);
@@ -61,7 +72,7 @@ export function CSSConfetti({ onComplete }: CSSConfettiProps) {
             opacity: 0;
           }
         }
-        
+
         .confetti-container {
           position: fixed;
           top: 0;
@@ -72,7 +83,7 @@ export function CSSConfetti({ onComplete }: CSSConfettiProps) {
           pointer-events: none;
           z-index: 999999;
         }
-        
+
         .confetti-particle {
           position: absolute;
           width: 10px;
@@ -81,12 +92,12 @@ export function CSSConfetti({ onComplete }: CSSConfettiProps) {
           animation: confetti-fall linear forwards;
         }
       `}</style>
-      
-      <div className="confetti-container" aria-hidden="true">
+
+      <div className='confetti-container' aria-hidden='true'>
         {particles.map((particle) => (
           <div
             key={particle.id}
-            className="confetti-particle"
+            className='confetti-particle'
             style={{
               left: `${particle.left}%`,
               color: particle.color,

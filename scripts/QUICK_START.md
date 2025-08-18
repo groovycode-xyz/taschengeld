@@ -3,11 +3,13 @@
 ## 🚀 One-Time Setup
 
 Run the setup script:
+
 ```bash
 ./scripts/setup-multitasking.sh
 ```
 
 Then restart your terminal or run:
+
 ```bash
 source ~/.zshrc
 ```
@@ -15,17 +17,20 @@ source ~/.zshrc
 ## 💡 Basic Usage
 
 ### Create a new worktree:
+
 ```bash
 wt saas-development
 ```
 
 This will:
+
 - ✅ Create a new Git branch and worktree
 - ✅ Copy `.env`, `.claude`, and other config files
 - ✅ Open VS Code in the new worktree directory
 - ✅ Prompt for a branch description
 
 ### Start working:
+
 1. **In the new VS Code window** that opened:
 2. Open terminal
 3. Run: `claude`
@@ -33,19 +38,20 @@ This will:
 
 ## 🔧 Essential Commands
 
-| Command | Description |
-|---------|-------------|
-| `wt branch-name` | Create new worktree |
-| `wt --list` | List all worktrees |
-| `wt --clean` | Clean up merged branches |
-| `ports --show` | Check port usage |
-| `ports --kill 3300` | Kill process on port |
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `wt branch-name`    | Create new worktree      |
+| `wt --list`         | List all worktrees       |
+| `wt --clean`        | Clean up merged branches |
+| `ports --show`      | Check port usage         |
+| `ports --kill 3300` | Kill process on port     |
 
 ## 🏗️ Multi-LLM Workflow
 
 ### Perfect for your use case:
+
 1. **Terminal 1**: Keep current session on main branch
-2. **Terminal 2**: Run `wt saas-development` 
+2. **Terminal 2**: Run `wt saas-development`
 3. **Result**: Two independent VS Code windows
    - Main window: `main` branch
    - SaaS window: `saas-development` branch
@@ -64,6 +70,7 @@ This will:
 ## 🐳 Docker Development
 
 Each worktree runs Docker independently:
+
 - Same port (3300) but isolated containers
 - Separate databases
 - Independent environment variables

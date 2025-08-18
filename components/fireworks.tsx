@@ -10,25 +10,25 @@ interface FireworksProps {
 export function Fireworks({ onComplete }: FireworksProps) {
   useEffect(() => {
     console.log('Fireworks component mounted - starting confetti animation');
-    
+
     // Use the default confetti (which creates its own canvas)
     // but run multiple bursts for better visibility
     const duration = 2400;
     const animationEnd = Date.now() + duration;
-    const defaults = { 
-      startVelocity: 30, 
-      spread: 360, 
-      ticks: 60, 
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
       zIndex: 999999,
       disableForReducedMotion: false,
-      useWorker: false // Disable worker to avoid CSP issues
+      useWorker: false, // Disable worker to avoid CSP issues
     };
 
     function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
     }
 
-    const interval = setInterval(function() {
+    const interval = setInterval(function () {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
@@ -44,13 +44,13 @@ export function Fireworks({ onComplete }: FireworksProps) {
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
       });
-      
+
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
 
@@ -60,7 +60,6 @@ export function Fireworks({ onComplete }: FireworksProps) {
       spread: 70,
       origin: { y: 0.6 },
       zIndex: 999999,
-      useWorker: false // Disable worker to avoid CSP issues
     });
 
     // Cleanup
@@ -73,7 +72,7 @@ export function Fireworks({ onComplete }: FireworksProps) {
 
   // Also render a div to ensure the component is in the DOM
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         top: 0,
@@ -81,9 +80,9 @@ export function Fireworks({ onComplete }: FireworksProps) {
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: 999999
+        zIndex: 999999,
       }}
-      aria-hidden="true"
+      aria-hidden='true'
     />
   );
 }

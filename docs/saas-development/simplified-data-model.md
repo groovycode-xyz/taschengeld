@@ -21,24 +21,24 @@ CREATE TABLE subscribers (
     password_hash VARCHAR(255),
     created_at TIMESTAMP DEFAULT now(),
     last_login_at TIMESTAMP,
-    
+
     -- OAuth providers
     google_id VARCHAR(255) UNIQUE,
     apple_id VARCHAR(255) UNIQUE,
-    
+
     -- Subscription info
     stripe_customer_id VARCHAR(255) UNIQUE,
     subscription_status VARCHAR(50) DEFAULT 'trial', -- trial, active, past_due, canceled
     subscription_plan VARCHAR(50) DEFAULT 'free', -- free, basic, premium
     subscription_end_date TIMESTAMP,
-    
+
     -- Household settings
     household_name VARCHAR(255), -- "The Smith Family", "Dragons Den", etc.
     pin_hash VARCHAR(255), -- For mode switching
     locale VARCHAR(10) DEFAULT 'en', -- en, de
     theme VARCHAR(20) DEFAULT 'light', -- light, dark
     currency_display VARCHAR(10) DEFAULT '$', -- $, €, ❤️, 🌟, etc.
-    
+
     CONSTRAINT age_declaration CHECK (email_verified = true) -- Implies 18+ declaration
 );
 
@@ -68,7 +68,7 @@ CREATE TABLE household_profiles (
     display_order INTEGER DEFAULT 0,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT now(),
-    
+
     -- No age, no birthdate, no real name, no identity verification
     -- Birth order is just a sorting preference, not PII
     CONSTRAINT unique_nickname_per_household UNIQUE (subscriber_id, nickname)
@@ -93,17 +93,17 @@ CREATE TABLE activity_records (
     subscriber_id UUID NOT NULL REFERENCES subscribers(id) ON DELETE CASCADE,
     profile_id UUID NOT NULL REFERENCES household_profiles(id) ON DELETE CASCADE,
     task_id UUID NOT NULL REFERENCES household_tasks(id) ON DELETE CASCADE,
-    
+
     -- Recording
     recorded_at TIMESTAMP DEFAULT now(),
     recorded_value DECIMAL(15, 2) NOT NULL, -- Task value at time of completion
     photo_url VARCHAR(500), -- Premium feature
-    
+
     -- Review
     review_status VARCHAR(20) DEFAULT 'pending', -- pending, approved, rejected
     reviewed_at TIMESTAMP,
     review_note TEXT,
-    
+
     -- Value tracking
     transaction_id UUID -- Links to value transaction if approved
 );
@@ -113,15 +113,15 @@ CREATE TABLE value_transactions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     subscriber_id UUID NOT NULL REFERENCES subscribers(id) ON DELETE CASCADE,
     profile_id UUID NOT NULL REFERENCES household_profiles(id) ON DELETE CASCADE,
-    
+
     transaction_type VARCHAR(20) NOT NULL, -- task_reward, manual_deposit, manual_withdraw
     amount DECIMAL(15, 2) NOT NULL,
     balance_after DECIMAL(15, 2) NOT NULL,
     description TEXT,
-    
+
     -- Link to activity if applicable
     activity_record_id UUID REFERENCES activity_records(id),
-    
+
     created_at TIMESTAMP DEFAULT now()
 );
 ```
@@ -166,7 +166,8 @@ CREATE TABLE task_templates (
 
 ### What We Track
 
-1. **Subscriber Level**: 
+1. **Subscriber Level**:
+
    - Email and authentication (real identity)
    - Subscription and billing
    - Household settings
@@ -181,6 +182,7 @@ CREATE TABLE task_templates (
 ### What We DON'T Track
 
 1. **No Real Identities for Profiles**:
+
    - No real names required
    - No age information
    - No identity verification
@@ -195,6 +197,7 @@ CREATE TABLE task_templates (
 ### Privacy by Design
 
 1. **Subscriber Data** (Protected):
+
    - Email and authentication
    - Payment information
    - IP addresses (hashed)
@@ -209,12 +212,14 @@ CREATE TABLE task_templates (
 ## Migration from Complex Model
 
 ### Removed Tables
+
 - ~~`user_accounts`~~ - No separate family member accounts
 - ~~`family_memberships`~~ - No complex relationships
 - ~~`parental_consent`~~ - Not needed
 - ~~`age_verification`~~ - Not collected
 
 ### Simplified Tables
+
 - `users` → `household_profiles` (just creative profiles)
 - `tenants` → `subscribers` (the paying customer)
 - Complex permissions → Simple PIN for mode switching
@@ -230,7 +235,7 @@ POST   /api/auth/login        // Subscriber login
 GET    /api/subscriber/profile // Get subscriber info
 PUT    /api/subscriber/settings // Update household settings
 
-// Household Management (User Content)  
+// Household Management (User Content)
 GET    /api/household/profiles // List all profiles
 POST   /api/household/profiles // Create "Dragon" profile
 PUT    /api/household/profiles/:id // Update profile
@@ -261,22 +266,25 @@ POST   /api/values/manual      // Manual deposit/withdraw
 
 ## Benefits of This Model
 
-1. **Simplicity**: 
+1. **Simplicity**:
+
    - Fewer tables and relationships
    - Clearer mental model
    - Easier to explain to users
 
-2. **Privacy**: 
+2. **Privacy**:
+
    - Only subscriber is identifiable
    - Profiles are just labels
    - Reduced compliance burden
 
-3. **Flexibility**: 
+3. **Flexibility**:
+
    - Households can organize however they want
    - No forced structure
    - Creative freedom
 
-4. **Honesty**: 
+4. **Honesty**:
    - We don't pretend to know who's using it
    - We don't make assumptions
    - We provide tools, not rules
@@ -286,7 +294,8 @@ POST   /api/values/manual      // Manual deposit/withdraw
 This simplified data model reflects our core philosophy: Taschengeld is a household management tool that subscribers can use however they wish. We protect subscriber data while treating household profiles as creative content owned by the subscriber.
 
 The model is:
+
 - **Legally compliant** without complexity
-- **Flexible** for diverse household structures  
+- **Flexible** for diverse household structures
 - **Honest** about what we do and don't know
 - **Simple** to implement and maintain

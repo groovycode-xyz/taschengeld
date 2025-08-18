@@ -1,6 +1,6 @@
 {
   "name": "taschengeld",
-  "version": "1.0.7",
+  "version": "1.1.10",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "lint": "prettier --write . && next lint",
     "lint:dir": "next lint app components",
     "check": "tsc --noEmit && npm run lint:dir && npm run format",
+    "build:test": "npm run check && npm run build",
     "docker:cleanup": "scripts/docker-cleanup.sh",
     "docker:cleanup:all": "scripts/docker-cleanup.sh --all",
     "prebuild": "test \"$SKIP_CLEANUP\" = \"true\" || npm run docker:cleanup",

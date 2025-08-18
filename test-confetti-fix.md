@@ -12,21 +12,25 @@ The intermittent confetti visibility issue was caused by:
 ## Solution Implemented
 
 ### 1. Created dedicated canvas with proper z-index
+
 - Creates a specific canvas element for confetti
 - Sets z-index to 10000 (higher than any dialog/modal)
 - Positions it fixed covering the entire viewport
 
 ### 2. Used confetti.create() for better control
+
 - Creates a confetti instance bound to our specific canvas
 - Enables web worker for better performance
 - Enables resize handling
 
 ### 3. Added proper cleanup
+
 - Removes canvas element when component unmounts
 - Resets confetti instance to free memory
 - Prevents memory leaks
 
 ### 4. Created Portal component
+
 - Ensures Fireworks render at the body level
 - Prevents z-index stacking context issues
 - Guarantees confetti appears above all other elements

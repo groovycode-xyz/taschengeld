@@ -65,7 +65,11 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Valid completed task ID is required' }, { status: 400 });
     }
 
-    const updatedTask = await completedTaskService.updatePaymentStatus(c_task_id, payment_status, custom_payout_value);
+    const updatedTask = await completedTaskService.updatePaymentStatus(
+      c_task_id,
+      payment_status,
+      custom_payout_value
+    );
 
     if (updatedTask) {
       return NextResponse.json(updatedTask);

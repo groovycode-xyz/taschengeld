@@ -11,12 +11,14 @@ This document outlines the subscription model, pricing strategy, and billing imp
 ## Business Model Strategy
 
 ### Market Positioning
+
 - **Target Market**: Parents and families seeking allowance management solutions
 - **Value Proposition**: Simplified family financial education and task management
 - **Competitive Advantage**: Family-focused design with educational approach
 - **Market Size**: Families with children ages 4-16 in English/German speaking countries
 
 ### Revenue Strategy
+
 - **Primary Revenue**: Monthly/annual subscription fees
 - **Secondary Revenue**: Future premium features (analytics, integrations)
 - **Customer Acquisition**: Freemium model with generous free tier
@@ -25,9 +27,11 @@ This document outlines the subscription model, pricing strategy, and billing imp
 ## Subscription Tiers
 
 ### Free Tier - "Family Starter"
+
 **Price**: $0/month (Forever Free)
 
 **Limitations**:
+
 - 1 family
 - Up to 3 children
 - 10 active tasks maximum
@@ -36,6 +40,7 @@ This document outlines the subscription model, pricing strategy, and billing imp
 - Email support (48-hour response)
 
 **Features Included**:
+
 - Core task management
 - Basic allowance tracking
 - Simple piggy bank system
@@ -47,9 +52,11 @@ This document outlines the subscription model, pricing strategy, and billing imp
 **Target**: Single families wanting to try the system
 
 ### Basic Plan - "Family Pro"
+
 **Price**: $4.99/month or $49.99/year (17% discount)
 
 **Features**:
+
 - 1 family
 - Unlimited children
 - Unlimited tasks
@@ -66,9 +73,11 @@ This document outlines the subscription model, pricing strategy, and billing imp
 **Sweet Spot**: 3-5 children with active task management
 
 ### Premium Plan - "Family Enterprise"
+
 **Price**: $9.99/month or $99.99/year (17% discount)
 
 **Features**:
+
 - Multiple families (up to 3)
 - All Basic features
 - Advanced analytics and insights
@@ -85,9 +94,11 @@ This document outlines the subscription model, pricing strategy, and billing imp
 **Use Cases**: Grandparents managing multiple families, childcare centers
 
 ### Legacy Plan - "Docker Migration"
+
 **Price**: $0/month (Grandfathered)
 
 **Features**:
+
 - All Basic plan features
 - Permanent free access for existing Docker users
 - Migration support and assistance
@@ -100,17 +111,20 @@ This document outlines the subscription model, pricing strategy, and billing imp
 ## Pricing Psychology
 
 ### Psychological Pricing Factors
+
 - **$4.99 vs $5.00**: Uses charm pricing to appear more affordable
 - **Annual Discount**: 17% discount encourages longer commitment
 - **Family Context**: Pricing compared to other family subscriptions (Netflix, Spotify)
 - **Cost Per Child**: Basic plan costs ~$1.25/child/month for 4 children
 
 ### Value Anchoring
+
 - **Free Tier**: Makes paid tiers appear more valuable
 - **Premium Tier**: Makes Basic tier appear as the "sensible choice"
 - **Family Savings**: Position as alternative to cash allowance management
 
 ### Competitive Analysis
+
 ```
 Competitor Analysis:
 - Greenlight: $5.99/month (debit card focused)
@@ -397,7 +411,7 @@ export class UsageLimiter {
 
     // Check limit
     const allowed = currentUsage < limit;
-    
+
     if (allowed && action === 'increment') {
       await this.incrementUsage(tenantId, resource);
     }
@@ -405,10 +419,7 @@ export class UsageLimiter {
     return { allowed, currentUsage, limit };
   }
 
-  private static async getCurrentUsage(
-    tenantId: string,
-    resource: string
-  ): Promise<number> {
+  private static async getCurrentUsage(tenantId: string, resource: string): Promise<number> {
     switch (resource) {
       case 'children':
         return await prisma.user.count({
@@ -432,12 +443,9 @@ export class UsageLimiter {
     }
   }
 
-  private static async incrementUsage(
-    tenantId: string,
-    resource: string
-  ): Promise<void> {
+  private static async incrementUsage(tenantId: string, resource: string): Promise<void> {
     const billingPeriod = this.getCurrentBillingPeriod();
-    
+
     await prisma.usageTracking.upsert({
       where: {
         tenantId_metricName_billingPeriod: {
@@ -467,10 +475,7 @@ export class UsageLimiter {
 import { NextApiRequest, NextApiResponse } from 'next';
 import { stripe } from '@/lib/billing/stripe-config';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -517,7 +522,7 @@ export default async function handler(
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
   const subscriptionId = invoice.subscription as string;
-  
+
   await prisma.subscription.update({
     where: { stripeSubscriptionId: subscriptionId },
     data: {
@@ -541,7 +546,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
 
 async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
   const subscriptionId = invoice.subscription as string;
-  
+
   await prisma.subscription.update({
     where: { stripeSubscriptionId: subscriptionId },
     data: {
@@ -574,10 +579,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
 ```typescript
 // lib/billing/feature-gate.ts
 export class FeatureGate {
-  static async checkFeatureAccess(
-    tenantId: string,
-    feature: string
-  ): Promise<boolean> {
+  static async checkFeatureAccess(tenantId: string, feature: string): Promise<boolean> {
     const tenant = await prisma.tenant.findUnique({
       where: { id: tenantId },
       include: { subscription: true },
@@ -595,12 +597,9 @@ export class FeatureGate {
     return plan.features[feature] === true;
   }
 
-  static async requireFeature(
-    tenantId: string,
-    feature: string
-  ): Promise<void> {
+  static async requireFeature(tenantId: string, feature: string): Promise<void> {
     const hasAccess = await this.checkFeatureAccess(tenantId, feature);
-    
+
     if (!hasAccess) {
       throw new FeatureNotAvailableError(
         `Feature '${feature}' is not available in your current plan`
@@ -610,11 +609,14 @@ export class FeatureGate {
 }
 
 // Usage in API routes
-export default withAuth(async (req, res) => {
-  await FeatureGate.requireFeature(req.auth.tenantId, 'photoUploads');
-  
-  // Feature logic here
-}, { permission: Permission.COMPLETE_TASKS });
+export default withAuth(
+  async (req, res) => {
+    await FeatureGate.requireFeature(req.auth.tenantId, 'photoUploads');
+
+    // Feature logic here
+  },
+  { permission: Permission.COMPLETE_TASKS }
+);
 ```
 
 ### Frontend Feature Gates
@@ -652,7 +654,7 @@ const TaskForm = () => {
     <form>
       <input type="text" placeholder="Task title" />
       <input type="text" placeholder="Description" />
-      
+
       <FeatureGate
         feature="photoUploads"
         fallback={
@@ -663,7 +665,7 @@ const TaskForm = () => {
       >
         <input type="file" accept="image/*" />
       </FeatureGate>
-      
+
       <button type="submit">Create Task</button>
     </form>
   );
@@ -683,7 +685,7 @@ export const UpgradeFlow = ({ currentPlan, targetPlan }) => {
 
   const handleUpgrade = async () => {
     setIsProcessing(true);
-    
+
     try {
       // Create payment method
       const { paymentMethod } = await stripe.createPaymentMethod({
@@ -708,7 +710,7 @@ export const UpgradeFlow = ({ currentPlan, targetPlan }) => {
         const { error } = await stripe.confirmCardPayment(
           result.payment_intent.client_secret
         );
-        
+
         if (!error) {
           // Success
           showSuccessMessage();
@@ -729,7 +731,7 @@ export const UpgradeFlow = ({ currentPlan, targetPlan }) => {
   return (
     <div className="max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Upgrade to {targetPlan.name}</h2>
-      
+
       <div className="bg-blue-50 p-4 rounded-lg mb-6">
         <h3 className="font-semibold mb-2">You'll get:</h3>
         <ul className="space-y-1">
@@ -785,7 +787,7 @@ export const DowngradeFlow = ({ currentPlan, targetPlan }) => {
 
   const handleDowngrade = async () => {
     setIsProcessing(true);
-    
+
     try {
       const response = await fetch('/api/billing/change-plan', {
         method: 'POST',
@@ -810,7 +812,7 @@ export const DowngradeFlow = ({ currentPlan, targetPlan }) => {
   return (
     <div className="max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Downgrade to {targetPlan.name}</h2>
-      
+
       <div className="bg-amber-50 p-4 rounded-lg mb-6">
         <h3 className="font-semibold mb-2 text-amber-800">You'll lose:</h3>
         <ul className="space-y-1">
@@ -828,7 +830,7 @@ export const DowngradeFlow = ({ currentPlan, targetPlan }) => {
           <p className="text-gray-600">
             Are you sure you want to downgrade? This change will take effect at the end of your current billing period.
           </p>
-          
+
           <div className="flex space-x-4">
             <button
               onClick={() => setConfirmationStep(2)}
@@ -851,7 +853,7 @@ export const DowngradeFlow = ({ currentPlan, targetPlan }) => {
           <p className="text-gray-600">
             Your plan will be downgraded to <strong>{targetPlan.name}</strong> on your next billing date. You'll continue to have access to all features until then.
           </p>
-          
+
           <button
             onClick={handleDowngrade}
             disabled={isProcessing}
@@ -884,11 +886,47 @@ interface RevenueProjection {
 }
 
 const YEAR_1_PROJECTIONS: RevenueProjection[] = [
-  { month: 1, freeUsers: 100, basicUsers: 5, premiumUsers: 1, monthlyRevenue: 35, cumulativeRevenue: 35, churnRate: 0.02, conversionRate: 0.06 },
-  { month: 2, freeUsers: 250, basicUsers: 15, premiumUsers: 3, monthlyRevenue: 105, cumulativeRevenue: 140, churnRate: 0.03, conversionRate: 0.07 },
-  { month: 3, freeUsers: 500, basicUsers: 35, premiumUsers: 7, monthlyRevenue: 245, cumulativeRevenue: 385, churnRate: 0.04, conversionRate: 0.08 },
+  {
+    month: 1,
+    freeUsers: 100,
+    basicUsers: 5,
+    premiumUsers: 1,
+    monthlyRevenue: 35,
+    cumulativeRevenue: 35,
+    churnRate: 0.02,
+    conversionRate: 0.06,
+  },
+  {
+    month: 2,
+    freeUsers: 250,
+    basicUsers: 15,
+    premiumUsers: 3,
+    monthlyRevenue: 105,
+    cumulativeRevenue: 140,
+    churnRate: 0.03,
+    conversionRate: 0.07,
+  },
+  {
+    month: 3,
+    freeUsers: 500,
+    basicUsers: 35,
+    premiumUsers: 7,
+    monthlyRevenue: 245,
+    cumulativeRevenue: 385,
+    churnRate: 0.04,
+    conversionRate: 0.08,
+  },
   // ... continuing to month 12
-  { month: 12, freeUsers: 10000, basicUsers: 400, premiumUsers: 100, monthlyRevenue: 2996, cumulativeRevenue: 18000, churnRate: 0.08, conversionRate: 0.05 },
+  {
+    month: 12,
+    freeUsers: 10000,
+    basicUsers: 400,
+    premiumUsers: 100,
+    monthlyRevenue: 2996,
+    cumulativeRevenue: 18000,
+    churnRate: 0.08,
+    conversionRate: 0.05,
+  },
 ];
 
 // Key metrics
@@ -917,7 +955,7 @@ const GROWTH_PROJECTIONS = {
   year3: {
     totalUsers: 50000,
     paidUsers: 5000,
-    conversionRate: 0.10,
+    conversionRate: 0.1,
     monthlyRevenue: 31250,
     annualRevenue: 375000,
   },
@@ -927,24 +965,28 @@ const GROWTH_PROJECTIONS = {
 ## Implementation Timeline
 
 ### Phase 1: Core Billing (Weeks 1-2)
+
 - Stripe integration setup
 - Basic subscription management
 - Payment method handling
 - Webhook processing
 
 ### Phase 2: Usage Tracking (Weeks 3-4)
+
 - Usage limit enforcement
 - Feature gating implementation
 - Plan comparison and upgrade flows
 - Basic analytics dashboard
 
 ### Phase 3: Advanced Features (Weeks 5-6)
+
 - Proration handling
 - Tax calculation
 - Invoice customization
 - Dunning management
 
 ### Phase 4: Optimization (Weeks 7-8)
+
 - Conversion optimization
 - Churn reduction features
 - Revenue analytics
@@ -955,6 +997,7 @@ const GROWTH_PROJECTIONS = {
 ### Key Performance Indicators
 
 **Customer Metrics**:
+
 - Monthly Recurring Revenue (MRR)
 - Annual Recurring Revenue (ARR)
 - Customer Lifetime Value (CLV)
@@ -962,6 +1005,7 @@ const GROWTH_PROJECTIONS = {
 - Net Promoter Score (NPS)
 
 **Subscription Metrics**:
+
 - Free to paid conversion rate
 - Monthly churn rate
 - Revenue churn rate
@@ -969,6 +1013,7 @@ const GROWTH_PROJECTIONS = {
 - Downgrade rate
 
 **Usage Metrics**:
+
 - Daily/Monthly active users
 - Feature adoption rates
 - Support ticket volume
@@ -977,12 +1022,14 @@ const GROWTH_PROJECTIONS = {
 ### Revenue Targets
 
 **Year 1 Targets**:
+
 - MRR: $3,000 by month 12
 - ARR: $36,000 by end of year
 - Paid users: 500 (5% conversion)
 - Churn rate: <10% monthly
 
 **Year 2 Targets**:
+
 - MRR: $12,500 by month 24
 - ARR: $150,000 by end of year
 - Paid users: 2,000 (8% conversion)
@@ -993,24 +1040,29 @@ const GROWTH_PROJECTIONS = {
 ### Revenue Risks
 
 **High Churn Rate**:
+
 - Mitigation: Onboarding optimization, feature adoption tracking
 - Early warning: Engagement metrics, support ticket analysis
 
 **Low Conversion Rate**:
+
 - Mitigation: Freemium optimization, upgrade prompts, feature gating
 - Testing: A/B testing of pricing, features, and messaging
 
 **Payment Failures**:
+
 - Mitigation: Retry logic, payment method updates, grace periods
 - Recovery: Dunning emails, alternative payment methods
 
 ### Competitive Risks
 
 **Price Competition**:
+
 - Mitigation: Value-based pricing, unique features, customer loyalty
 - Response: Feature differentiation, customer success focus
 
 **Feature Parity**:
+
 - Mitigation: Continuous innovation, user feedback integration
 - Strategy: Focus on family-specific features and user experience
 
@@ -1019,6 +1071,7 @@ const GROWTH_PROJECTIONS = {
 The subscription model provides a sustainable revenue foundation for the Taschengeld SaaS transformation. The freemium approach with generous free tier enables user acquisition while the tiered pricing captures value from engaged families.
 
 Key success factors:
+
 1. **Generous Free Tier**: Enables user acquisition and product validation
 2. **Clear Value Proposition**: Each tier provides obvious benefits
 3. **Smooth Upgrade Path**: Easy progression from free to paid
@@ -1030,6 +1083,7 @@ The implementation provides flexibility for future pricing adjustments while mai
 ---
 
 **Next Steps**:
+
 1. Implement Stripe integration and basic subscription management
 2. Create usage tracking and feature gating system
 3. Develop upgrade/downgrade flows and billing interface

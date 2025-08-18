@@ -3,7 +3,7 @@
 **Document Version**: 1.0  
 **Date**: 2025-07-08  
 **Status**: Living Document  
-**Project**: Taschengeld SaaS Transformation  
+**Project**: Taschengeld SaaS Transformation
 
 ## Table of Contents
 
@@ -26,12 +26,14 @@ This document provides a comprehensive specification of all requirements for the
 ### Requirement Classification
 
 **Priority Levels**:
+
 - **P0 (Critical)**: Must have for MVP
 - **P1 (High)**: Should have for launch
 - **P2 (Medium)**: Nice to have for v1.0
 - **P3 (Low)**: Future consideration
 
 **Categories**:
+
 - **FR**: Functional Requirements
 - **NFR**: Non-Functional Requirements
 - **CR**: Compliance Requirements
@@ -47,9 +49,10 @@ This document provides a comprehensive specification of all requirements for the
 ### FR-001: User Account Management
 
 **Priority**: P0  
-**Category**: Core Authentication  
+**Category**: Core Authentication
 
 #### FR-001.1: Parent Account Creation
+
 - **Requirement**: System shall allow parents to create accounts using email/password or OAuth providers
 - **Acceptance Criteria**:
   - Email validation and uniqueness check
@@ -61,6 +64,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Enable user onboarding
 
 #### FR-001.2: Child Profile Management
+
 - **Requirement**: Parents shall be able to create and manage child profiles within their family
 - **Acceptance Criteria**:
   - Support for nickname (no real names required)
@@ -72,6 +76,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Core family functionality
 
 #### FR-001.3: Family Member Invitation
+
 - **Requirement**: Primary parents shall be able to invite secondary parents to family account
 - **Acceptance Criteria**:
   - Email invitation with secure token
@@ -85,9 +90,10 @@ This document provides a comprehensive specification of all requirements for the
 ### FR-002: Task Management System
 
 **Priority**: P0  
-**Category**: Core Functionality  
+**Category**: Core Functionality
 
 #### FR-002.1: Task Creation
+
 - **Requirement**: Parents shall be able to create tasks with titles, descriptions, and monetary values
 - **Acceptance Criteria**:
   - Task title (required, 100 char max)
@@ -100,6 +106,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Core value proposition
 
 #### FR-002.2: Task Assignment
+
 - **Requirement**: Parents shall be able to assign tasks to specific children or make available to all
 - **Acceptance Criteria**:
   - Individual child assignment
@@ -111,6 +118,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Personalized task distribution
 
 #### FR-002.3: Task Templates
+
 - **Requirement**: System shall provide common task templates for quick setup
 - **Acceptance Criteria**:
   - Pre-defined template library (cleaning, homework, chores)
@@ -124,9 +132,10 @@ This document provides a comprehensive specification of all requirements for the
 ### FR-003: Task Completion Flow
 
 **Priority**: P0  
-**Category**: Core User Experience  
+**Category**: Core User Experience
 
 #### FR-003.1: Child Task Completion
+
 - **Requirement**: Children shall be able to mark tasks as complete through simple interaction
 - **Acceptance Criteria**:
   - One-tap completion mechanism
@@ -138,6 +147,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Child engagement
 
 #### FR-003.2: Completion Evidence
+
 - **Requirement**: System shall optionally allow photo evidence of task completion (Premium feature)
 - **Acceptance Criteria**:
   - Photo capture from device camera
@@ -149,6 +159,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Premium feature differentiation
 
 #### FR-003.3: Parent Review System
+
 - **Requirement**: Parents shall review and approve/reject completed tasks
 - **Acceptance Criteria**:
   - Weekly payday dashboard
@@ -162,9 +173,10 @@ This document provides a comprehensive specification of all requirements for the
 ### FR-004: Piggy Bank System
 
 **Priority**: P0  
-**Category**: Financial Tracking  
+**Category**: Financial Tracking
 
 #### FR-004.1: Account Management
+
 - **Requirement**: System shall maintain individual savings accounts for each child
 - **Acceptance Criteria**:
   - Automatic account creation per child
@@ -176,6 +188,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Savings education
 
 #### FR-004.2: Transaction Processing
+
 - **Requirement**: System shall process earning and spending transactions
 - **Acceptance Criteria**:
   - Automatic deposits from approved tasks
@@ -187,6 +200,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Complete financial tracking
 
 #### FR-004.3: Transaction History
+
 - **Requirement**: Families shall view complete transaction history
 - **Acceptance Criteria**:
   - Chronological transaction list
@@ -200,9 +214,10 @@ This document provides a comprehensive specification of all requirements for the
 ### FR-005: Subscription Management
 
 **Priority**: P0  
-**Category**: Business Model  
+**Category**: Business Model
 
 #### FR-005.1: Plan Selection
+
 - **Requirement**: Users shall be able to view and select subscription plans
 - **Acceptance Criteria**:
   - Clear plan comparison table
@@ -214,6 +229,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Revenue generation
 
 #### FR-005.2: Payment Processing
+
 - **Requirement**: System shall process subscription payments securely
 - **Acceptance Criteria**:
   - Stripe payment integration
@@ -225,6 +241,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Revenue operations
 
 #### FR-005.3: Usage Limiting
+
 - **Requirement**: System shall enforce plan limits on feature usage
 - **Acceptance Criteria**:
   - Child count limits by plan
@@ -240,9 +257,10 @@ This document provides a comprehensive specification of all requirements for the
 ### NFR-001: Scalability
 
 **Priority**: P0  
-**Category**: System Architecture  
+**Category**: System Architecture
 
 #### NFR-001.1: User Scalability
+
 - **Requirement**: System shall support 10,000 concurrent users
 - **Acceptance Criteria**:
   - Load testing validates 10K concurrent sessions
@@ -252,6 +270,7 @@ This document provides a comprehensive specification of all requirements for the
   - Performance degradation < 10% at 80% capacity
 
 #### NFR-001.2: Data Scalability
+
 - **Requirement**: System shall handle 1TB+ of family data
 - **Acceptance Criteria**:
   - Database partitioning strategy
@@ -263,9 +282,10 @@ This document provides a comprehensive specification of all requirements for the
 ### NFR-002: Reliability
 
 **Priority**: P0  
-**Category**: System Availability  
+**Category**: System Availability
 
 #### NFR-002.1: Uptime Requirements
+
 - **Requirement**: System shall maintain 99.9% uptime
 - **Acceptance Criteria**:
   - Maximum 8.77 hours downtime per year
@@ -275,6 +295,7 @@ This document provides a comprehensive specification of all requirements for the
   - Incident response procedures
 
 #### NFR-002.2: Data Integrity
+
 - **Requirement**: System shall maintain 100% data integrity
 - **Acceptance Criteria**:
   - Zero data loss tolerance
@@ -286,9 +307,10 @@ This document provides a comprehensive specification of all requirements for the
 ### NFR-003: Maintainability
 
 **Priority**: P1  
-**Category**: Development Operations  
+**Category**: Development Operations
 
 #### NFR-003.1: Code Quality
+
 - **Requirement**: Codebase shall maintain high quality standards
 - **Acceptance Criteria**:
   - 90%+ test coverage
@@ -298,6 +320,7 @@ This document provides a comprehensive specification of all requirements for the
   - Code review requirements
 
 #### NFR-003.2: Deployment Automation
+
 - **Requirement**: System shall support automated deployment
 - **Acceptance Criteria**:
   - CI/CD pipeline for all environments
@@ -311,9 +334,10 @@ This document provides a comprehensive specification of all requirements for the
 ### CR-001: GDPR Compliance
 
 **Priority**: P0  
-**Category**: Data Protection  
+**Category**: Data Protection
 
 #### CR-001.1: Data Subject Rights
+
 - **Requirement**: System shall support all GDPR data subject rights
 - **Acceptance Criteria**:
   - Right to access (data export)
@@ -325,6 +349,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Legal compliance
 
 #### CR-001.2: Consent Management
+
 - **Requirement**: System shall manage consent according to GDPR requirements
 - **Acceptance Criteria**:
   - Explicit consent capture
@@ -338,9 +363,10 @@ This document provides a comprehensive specification of all requirements for the
 ### CR-002: COPPA Compliance
 
 **Priority**: P0  
-**Category**: Children's Privacy  
+**Category**: Children's Privacy
 
 #### CR-002.1: Parental Consent
+
 - **Requirement**: System shall obtain verifiable parental consent for children under 13
 - **Acceptance Criteria**:
   - Multiple verification methods
@@ -352,6 +378,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: US market access
 
 #### CR-002.2: Data Collection Limits
+
 - **Requirement**: System shall limit data collection for children
 - **Acceptance Criteria**:
   - Minimal data collection
@@ -367,9 +394,10 @@ This document provides a comprehensive specification of all requirements for the
 ### SR-001: Authentication Security
 
 **Priority**: P0  
-**Category**: Access Control  
+**Category**: Access Control
 
 #### SR-001.1: Multi-Factor Authentication
+
 - **Requirement**: System shall support MFA for parent accounts
 - **Acceptance Criteria**:
   - TOTP authenticator app support
@@ -381,6 +409,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Enhanced security
 
 #### SR-001.2: Session Management
+
 - **Requirement**: System shall implement secure session management
 - **Acceptance Criteria**:
   - Session token security
@@ -394,9 +423,10 @@ This document provides a comprehensive specification of all requirements for the
 ### SR-002: Data Protection
 
 **Priority**: P0  
-**Category**: Data Security  
+**Category**: Data Security
 
 #### SR-002.1: Encryption at Rest
+
 - **Requirement**: System shall encrypt all sensitive data at rest
 - **Acceptance Criteria**:
   - AES-256 encryption standard
@@ -408,6 +438,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Data protection
 
 #### SR-002.2: Encryption in Transit
+
 - **Requirement**: System shall encrypt all data in transit
 - **Acceptance Criteria**:
   - TLS 1.3 for all communications
@@ -423,9 +454,10 @@ This document provides a comprehensive specification of all requirements for the
 ### PR-001: Response Time Requirements
 
 **Priority**: P0  
-**Category**: User Experience  
+**Category**: User Experience
 
 #### PR-001.1: Page Load Performance
+
 - **Requirement**: Pages shall load within 2 seconds globally
 - **Acceptance Criteria**:
   - Core Web Vitals compliance
@@ -437,6 +469,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: User satisfaction
 
 #### PR-001.2: API Response Performance
+
 - **Requirement**: API endpoints shall respond within 500ms
 - **Acceptance Criteria**:
   - 95th percentile < 500ms
@@ -450,9 +483,10 @@ This document provides a comprehensive specification of all requirements for the
 ### PR-002: Mobile Performance
 
 **Priority**: P0  
-**Category**: Mobile Experience  
+**Category**: Mobile Experience
 
 #### PR-002.1: Mobile-Specific Performance
+
 - **Requirement**: Mobile experience shall meet mobile performance standards
 - **Acceptance Criteria**:
   - Mobile page speed score > 90
@@ -468,9 +502,10 @@ This document provides a comprehensive specification of all requirements for the
 ### UIR-001: Responsive Design
 
 **Priority**: P0  
-**Category**: User Experience  
+**Category**: User Experience
 
 #### UIR-001.1: Breakpoint Support
+
 - **Requirement**: Interface shall adapt to all device sizes
 - **Acceptance Criteria**:
   - Mobile: 320px - 767px
@@ -482,6 +517,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Universal device support
 
 #### UIR-001.2: Progressive Web App
+
 - **Requirement**: Application shall function as a PWA
 - **Acceptance Criteria**:
   - Service worker implementation
@@ -495,9 +531,10 @@ This document provides a comprehensive specification of all requirements for the
 ### UIR-002: Accessibility
 
 **Priority**: P1  
-**Category**: Inclusive Design  
+**Category**: Inclusive Design
 
 #### UIR-002.1: WCAG Compliance
+
 - **Requirement**: Interface shall meet WCAG 2.1 AA standards
 - **Acceptance Criteria**:
   - Screen reader compatibility
@@ -513,9 +550,10 @@ This document provides a comprehensive specification of all requirements for the
 ### IR-001: Payment Integration
 
 **Priority**: P0  
-**Category**: Business Operations  
+**Category**: Business Operations
 
 #### IR-001.1: Stripe Integration
+
 - **Requirement**: System shall integrate with Stripe for payment processing
 - **Acceptance Criteria**:
   - Subscription management
@@ -529,9 +567,10 @@ This document provides a comprehensive specification of all requirements for the
 ### IR-002: Communication Integration
 
 **Priority**: P1  
-**Category**: User Engagement  
+**Category**: User Engagement
 
 #### IR-002.1: Email Service Integration
+
 - **Requirement**: System shall integrate with email service provider
 - **Acceptance Criteria**:
   - Transactional emails
@@ -547,9 +586,10 @@ This document provides a comprehensive specification of all requirements for the
 ### DR-001: Data Model
 
 **Priority**: P0  
-**Category**: Data Architecture  
+**Category**: Data Architecture
 
 #### DR-001.1: Multi-Tenant Data Architecture
+
 - **Requirement**: Data model shall support multi-tenancy
 - **Acceptance Criteria**:
   - Tenant isolation
@@ -561,6 +601,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: Scalable architecture
 
 #### DR-001.2: Audit Trail
+
 - **Requirement**: System shall maintain comprehensive audit trails
 - **Acceptance Criteria**:
   - All data changes logged
@@ -574,9 +615,10 @@ This document provides a comprehensive specification of all requirements for the
 ### DR-002: Data Privacy
 
 **Priority**: P0  
-**Category**: Privacy Protection  
+**Category**: Privacy Protection
 
 #### DR-002.1: Data Minimization
+
 - **Requirement**: System shall collect minimal necessary data
 - **Acceptance Criteria**:
   - Purpose limitation
@@ -592,9 +634,10 @@ This document provides a comprehensive specification of all requirements for the
 ### MR-001: Docker User Migration
 
 **Priority**: P0  
-**Category**: User Transition  
+**Category**: User Transition
 
 #### MR-001.1: Data Migration Tools
+
 - **Requirement**: System shall provide tools for Docker user migration
 - **Acceptance Criteria**:
   - Automated data export from Docker
@@ -606,6 +649,7 @@ This document provides a comprehensive specification of all requirements for the
 - **Business Value**: User retention
 
 #### MR-001.2: Legacy User Support
+
 - **Requirement**: System shall support legacy Docker users
 - **Acceptance Criteria**:
   - Grandfathered pricing
@@ -620,37 +664,37 @@ This document provides a comprehensive specification of all requirements for the
 
 ### Business Objective Mapping
 
-| Business Objective | Related Requirements | Priority |
-|-------------------|---------------------|----------|
-| User Acquisition | FR-001, UIR-001, PR-001 | P0 |
-| Revenue Generation | FR-005, IR-001 | P0 |
-| User Retention | FR-002, FR-003, FR-004 | P0 |
-| Legal Compliance | CR-001, CR-002, SR-001, SR-002 | P0 |
-| Global Accessibility | UIR-001, PR-002 | P0 |
-| Data Protection | DR-002, SR-002 | P0 |
-| Platform Scalability | NFR-001, DR-001 | P0 |
-| User Migration | MR-001 | P0 |
+| Business Objective   | Related Requirements           | Priority |
+| -------------------- | ------------------------------ | -------- |
+| User Acquisition     | FR-001, UIR-001, PR-001        | P0       |
+| Revenue Generation   | FR-005, IR-001                 | P0       |
+| User Retention       | FR-002, FR-003, FR-004         | P0       |
+| Legal Compliance     | CR-001, CR-002, SR-001, SR-002 | P0       |
+| Global Accessibility | UIR-001, PR-002                | P0       |
+| Data Protection      | DR-002, SR-002                 | P0       |
+| Platform Scalability | NFR-001, DR-001                | P0       |
+| User Migration       | MR-001                         | P0       |
 
 ### Risk Mitigation Mapping
 
-| Risk | Mitigating Requirements | Impact |
-|------|------------------------|--------|
-| Data Breach | SR-001, SR-002, DR-002 | High |
-| Performance Issues | PR-001, PR-002, NFR-001 | High |
-| Compliance Violations | CR-001, CR-002 | Critical |
-| User Abandonment | UIR-001, UIR-002, PR-001 | High |
-| Technical Debt | NFR-003 | Medium |
-| Payment Issues | IR-001, FR-005 | High |
+| Risk                  | Mitigating Requirements  | Impact   |
+| --------------------- | ------------------------ | -------- |
+| Data Breach           | SR-001, SR-002, DR-002   | High     |
+| Performance Issues    | PR-001, PR-002, NFR-001  | High     |
+| Compliance Violations | CR-001, CR-002           | Critical |
+| User Abandonment      | UIR-001, UIR-002, PR-001 | High     |
+| Technical Debt        | NFR-003                  | Medium   |
+| Payment Issues        | IR-001, FR-005           | High     |
 
 ### Implementation Dependencies
 
-| Requirement Category | Dependencies | Timeline Impact |
-|---------------------|-------------|-----------------|
-| Multi-tenant Architecture | Database redesign, security framework | 2-3 months |
-| Mobile Responsive Design | UI/UX redesign, component library | 2-3 months |
-| Compliance Framework | Legal review, security audit | 1-2 months |
-| Payment Integration | Stripe setup, billing system | 1 month |
-| Migration Tools | Data pipeline, validation system | 1-2 months |
+| Requirement Category      | Dependencies                          | Timeline Impact |
+| ------------------------- | ------------------------------------- | --------------- |
+| Multi-tenant Architecture | Database redesign, security framework | 2-3 months      |
+| Mobile Responsive Design  | UI/UX redesign, component library     | 2-3 months      |
+| Compliance Framework      | Legal review, security audit          | 1-2 months      |
+| Payment Integration       | Stripe setup, billing system          | 1 month         |
+| Migration Tools           | Data pipeline, validation system      | 1-2 months      |
 
 ---
 
@@ -660,7 +704,7 @@ This document provides a comprehensive specification of all requirements for the
 **Technical Review**: Architecture Team  
 **Compliance Review**: Legal Team  
 **Last Updated**: 2025-07-08  
-**Next Review**: 2025-07-15  
+**Next Review**: 2025-07-15
 
 ### Approval Status
 

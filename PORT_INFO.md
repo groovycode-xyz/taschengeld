@@ -7,7 +7,7 @@
 
 ## Why Port 3300?
 
-Port 3300 is the standardized development port for this project to avoid conflicts with other development environments.
+Port 3300 is now hardcoded for this project to avoid conflicts with other development environments.
 
 ## How to Access
 
@@ -35,11 +35,13 @@ npm run dev:docker:clean
 ## Testing the Celebration Toggle
 
 Run the test script:
+
 ```bash
 ./test-celebration.sh
 ```
 
 Or manually test:
+
 1. Open http://localhost:3300 in a browser
 2. Navigate to Global Settings
 3. Find the "Experience" section
@@ -49,11 +51,12 @@ Or manually test:
 ## Configuration File
 
 The port is configured in `docker-compose.dev.yml`:
+
 ```yaml
 services:
   app:
     ports:
-      - '3300:3000'  # External:Internal
+      - '3300:3000' # External:Internal
 ```
 
 To change the port, edit this file and restart Docker.
