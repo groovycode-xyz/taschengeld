@@ -206,7 +206,7 @@ export function TaskCompletion() {
       setIsDeleting(true);
       try {
         console.log(`Attempting to delete completed task with ID: ${deleteTaskId}`);
-        
+
         const response = await fetch(`./api/completed-tasks/${deleteTaskId}`, {
           method: 'DELETE',
         });
@@ -219,16 +219,15 @@ export function TaskCompletion() {
         }
 
         console.log('Delete request successful, updating UI state');
-        
+
         // Use functional update to avoid race conditions
-        setCompletedTasks((prevTasks) => 
+        setCompletedTasks((prevTasks) =>
           prevTasks.filter((task) => task.c_task_id !== deleteTaskId)
         );
-        
+
         setIsDeleteDialogOpen(false);
         setDeleteTaskId(null);
         console.log('UI state updated successfully');
-        
       } catch (err) {
         console.error('Error deleting completed task:', err);
         const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -424,11 +423,7 @@ export function TaskCompletion() {
             <Button variant='outline' onClick={() => setIsDeleteDialogOpen(false)}>
               Cancel
             </Button>
-            <Button 
-              variant='destructive' 
-              onClick={confirmDeleteTask}
-              disabled={isDeleting}
-            >
+            <Button variant='destructive' onClick={confirmDeleteTask} disabled={isDeleting}>
               {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>

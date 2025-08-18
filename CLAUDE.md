@@ -204,6 +204,27 @@ npm run check                  # TypeScript check + lint + format
 npm run build:test              # Test production build locally (RECOMMENDED before merge)
 ```
 
+#### 🚨 **Pre-Merge Checklist**
+
+Before merging to `main` or creating pull requests:
+
+1. ✅ **Run local build validation**: `npm run build:test`
+2. ✅ **Test in development environment**: `npm run dev:docker`
+3. ✅ **Check for ESLint/TypeScript errors**: All warnings should be addressed
+4. ✅ **Verify functionality**: Test the actual feature/fix works as expected
+
+**Why?** This prevents CI/CD build failures and ensures production readiness.
+
+#### 🔧 **Build Validation Process**
+
+The project now includes **automatic build validation**:
+
+- **Pull Requests**: Automatically validates builds before merge
+- **Development Branch**: Validates builds on push
+- **Main Branch**: Full Docker build and deployment
+
+**Local Testing**: Always run `npm run build:test` to catch issues early - it runs the same checks as our CI/CD pipeline.
+
 ### Build and Deployment
 
 ```bash
@@ -884,6 +905,43 @@ docker run --rm groovycodexyz/taschengeld:latest find /app/prisma/migrations -na
 - Automated CI/CD testing with fresh database startup verification
 - API endpoint testing included in build script
 - Focus on dev-prod parity rather than unit tests
+
+## CI/CD Best Practices & Lessons Learned
+
+**Last Updated**: 2025-08-18
+
+### 📚 **Key Lessons from Production Build Failures (August 2025)**
+
+#### **Root Cause: Development vs Production Environment Mismatch**
+**Date**: 2025-08-18  
+**Impact**: Docker builds failing due to ESLint configuration inconsistencies  
+
+**What Happened:**
+- Development environment: ESLint warnings are non-blocking
+- Production environment: ESLint warnings become build-stopping errors
+- Local development: Never tested production builds (`npm run dev` only)
+- CI/CD: Full production build with stricter validation
+
+**Contributing Factors:**
+1. **ESLint Configuration Drift**: Quote style and unused variable rules misaligned
+2. **Restrictive CI/CD Triggers**: Only triggered on `version.txt` changes
+3. **Missing Local Validation**: No step to test production builds locally
+4. **Late-Stage Discovery**: Issues only found during Docker build phase
+
+**Solutions Implemented:**
+1. ✅ **Added `build:test` Script**: Local production build validation
+2. ✅ **Updated CI/CD Triggers**: Now triggers on all main branch changes  
+3. ✅ **Added Build Validation Workflow**: PR-based build checks
+4. ✅ **Enhanced Documentation**: Pre-merge checklist and validation process
+5. ✅ **Fixed ESLint Configuration**: Aligned dev/prod behavior
+
+**Prevention Strategies:**
+- 🔧 **Environment Parity**: Ensure dev and prod behave identically
+- 🔧 **Early Detection**: Test production builds locally before deployment
+- 🔧 **Automated Validation**: PR builds catch issues before merge
+- 🔧 **Clear Documentation**: Standardized development workflow
+
+---
 
 ## GitHub Actions Build Failure Tracker
 

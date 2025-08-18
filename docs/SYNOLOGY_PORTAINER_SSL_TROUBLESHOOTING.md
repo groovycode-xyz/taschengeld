@@ -1,7 +1,9 @@
 # Synology NAS + Portainer SSL/HTTPS Redirect Troubleshooting Guide
 
 ## Problem Description
+
 When running Taschengeld on a Synology NAS using Portainer, users may experience:
+
 - Automatic redirect from HTTP to HTTPS
 - SSL errors when trying to load the application
 - Failed resource loading with SSL connection errors
@@ -12,15 +14,19 @@ When running Taschengeld on a Synology NAS using Portainer, users may experience
 The HTTPS redirect can be caused by several factors:
 
 ### 1. **Synology DSM Reverse Proxy**
+
 Synology's DSM often has a built-in reverse proxy that automatically redirects HTTP to HTTPS.
 
 ### 2. **Portainer Settings**
+
 Portainer might be configured to force HTTPS for all containers.
 
 ### 3. **Browser Security Settings**
+
 Modern browsers may automatically upgrade HTTP to HTTPS if the domain was previously accessed via HTTPS.
 
 ### 4. **Docker Network Configuration**
+
 The Docker network in Synology might have security policies forcing HTTPS.
 
 ## Troubleshooting Steps
@@ -47,6 +53,7 @@ The Docker network in Synology might have security policies forcing HTTPS.
 In Portainer, modify your Taschengeld container with these settings:
 
 #### Environment Variables
+
 Add these environment variables to force HTTP:
 
 ```
@@ -57,14 +64,18 @@ NEXT_PUBLIC_VERCEL_URL=http://192.168.0.200:3000
 ```
 
 #### Port Configuration
+
 Ensure the port mapping is correct:
+
 - Container Port: `3000`
 - Host Port: `3000`
 - Protocol: `TCP`
 - NO SSL/TLS settings enabled
 
 #### Labels (Remove if Present)
+
 Remove any of these labels if they exist:
+
 - `traefik.*` labels
 - `nginx.*` labels
 - Any SSL/HTTPS redirect labels
@@ -74,12 +85,14 @@ Remove any of these labels if they exist:
 The browser might have cached HTTPS Strict Transport Security (HSTS) settings:
 
 #### Chrome/Edge:
+
 1. Open Developer Tools (F12)
 2. Go to Application → Clear Storage
 3. Clear all site data
 4. Try accessing `http://192.168.0.200:3000` in an Incognito/Private window
 
 #### Alternative Method:
+
 1. Navigate to `chrome://net-internals/#hsts` (Chrome) or `edge://net-internals/#hsts` (Edge)
 2. Under "Delete domain security policies"
 3. Enter `192.168.0.200` and click Delete
@@ -149,7 +162,7 @@ services:
   app:
     image: groovycodexyz/taschengeld:latest
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - DATABASE_URL=postgresql://postgres:yourpassword@db:5432/tgeld?schema=public
       - NODE_ENV=production
@@ -173,6 +186,7 @@ volumes:
 ```
 
 Deploy with:
+
 ```bash
 docker-compose up -d
 ```
@@ -182,11 +196,13 @@ docker-compose up -d
 If the above doesn't work, create an override configuration:
 
 1. **Create a custom network** without proxy:
+
 ```bash
 docker network create --driver bridge taschengeld_net
 ```
 
 2. **Run container with explicit HTTP only**:
+
 ```bash
 docker run -d \
   --name taschengeld \
@@ -203,12 +219,15 @@ docker run -d \
 ### Check What's Causing the Redirect
 
 1. **Use curl with verbose output**:
+
 ```bash
 curl -v -L http://192.168.0.200:3000
 ```
+
 Look for `Location:` headers showing HTTPS redirect
 
 2. **Check browser network tab**:
+
 - Open Developer Tools (F12)
 - Go to Network tab
 - Access http://192.168.0.200:3000
@@ -216,18 +235,19 @@ Look for `Location:` headers showing HTTPS redirect
 - Check response headers for redirect source
 
 3. **Check Synology Web Station**:
+
 - Ensure Web Station isn't intercepting port 3000
 - Disable Web Station if not needed
 
 ### Common Issues and Solutions
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Immediate HTTPS redirect | Synology DSM setting | Disable automatic HTTPS redirect in Security settings |
-| SSL certificate error | Browser cached HSTS | Clear HSTS settings for the IP address |
-| Port 3000 not accessible | Firewall blocking | Open port 3000 in Synology Firewall |
+| Issue                      | Cause                     | Solution                                              |
+| -------------------------- | ------------------------- | ----------------------------------------------------- |
+| Immediate HTTPS redirect   | Synology DSM setting      | Disable automatic HTTPS redirect in Security settings |
+| SSL certificate error      | Browser cached HSTS       | Clear HSTS settings for the IP address                |
+| Port 3000 not accessible   | Firewall blocking         | Open port 3000 in Synology Firewall                   |
 | Container keeps restarting | Database connection issue | Check DATABASE_URL and ensure DB container is running |
-| Resources fail to load | Mixed content blocking | Ensure all environment URLs use HTTP not HTTPS |
+| Resources fail to load     | Mixed content blocking    | Ensure all environment URLs use HTTP not HTTPS        |
 
 ## If All Else Fails
 
@@ -255,12 +275,14 @@ If this works, gradually add back your configuration.
 ## Contact Support
 
 If none of these solutions work:
+
 1. Collect container logs: `docker logs taschengeld > taschengeld.log`
 2. Note your Synology DSM version
 3. Note your Portainer version
 4. Create issue at: https://github.com/groovycode-xyz/taschengeld/issues
 
 Include:
+
 - The troubleshooting steps you tried
 - Screenshot of the error
 - Container logs

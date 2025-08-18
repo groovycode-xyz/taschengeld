@@ -3,14 +3,18 @@ name: Build and Push Docker Images
 on:
   push:
     branches: [main]
-    paths:
-      - 'version.txt' # Only trigger on version changes
+    # Removed restrictive path filter - trigger on any main branch changes
+    # This ensures build validation happens for all code changes
+    paths-ignore:
+      - '**.md'  # Ignore documentation changes
+      - 'docs/**'  # Ignore documentation directory
+      - '.archive/**'  # Ignore archived files
   pull_request:
     branches: [main]
+    # Enable build validation for all PRs
     paths-ignore:
-      - 'README.md'
-      - 'docs/theme-system-research.md'
-      - 'docs/color-system/**'
+      - '**.md'
+      - 'docs/**' 
       - '.archive/**'
   workflow_dispatch: # Allow manual triggering
 
