@@ -160,7 +160,7 @@ User: "I want to add a dark mode feature"
 ### Development
 
 ```bash
-npm run dev                    # Start Next.js dev server (port 3300)
+npm run dev                    # Start Next.js dev server (port 3000 local)
 npm run dev:docker             # Start full stack in Docker (port 3300)
 npm run dev:docker:restart     # Restart Docker keeping database data
 npm run dev:docker:stop        # Stop Docker containers
@@ -596,102 +596,13 @@ NODE_ENV=development|production
 
 ### Version Management
 
-Version synchronization across all platforms (app, GitHub, DockerHub):
+**📚 For complete version management documentation, see [README_DEV.md - Version Management](README_DEV.md#version-management)**
+
+**Quick Reference:**
 
 - **Version Source**: `version.txt` (single source of truth)
-- **Application**: Reads from `version.txt` and displays in Global Settings
-- **GitHub**: Git tags and releases match version.txt
-- **DockerHub**: Images tagged with version from version.txt
-
-#### Automatic Version Management (NEW!)
-
-**Every push to main automatically increments the version!**
-
-The CI/CD pipeline now automatically handles versioning based on commit messages:
-
-- **Default**: Patch version increment (1.0.x)
-- **Minor increment**: Include `feat:` or `[minor]` in commit message
-- **Major increment**: Include `BREAKING CHANGE` or `[major]` in commit message
-
-**Examples:**
-
-```bash
-# Patch increment (1.0.1 → 1.0.2)
-git commit -m "fix: Update task completion logic"
-
-# Minor increment (1.0.2 → 1.1.0)
-git commit -m "feat: Add dark mode support"
-git commit -m "Add new export feature [minor]"
-
-# Major increment (1.0.2 → 2.0.0)
-git commit -m "refactor: Complete API overhaul [major]"
-git commit -m "BREAKING CHANGE: Remove legacy endpoints"
-```
-
-**Automated Workflow:**
-
-1. Push code to main branch
-2. Auto-version workflow increments version.txt
-3. Version-release workflow creates GitHub release
-4. Docker-build workflow builds and pushes images
-5. All automated - no manual steps required!
-
-#### Manual Version Management (Still Available)
-
-**Version Sync Commands:**
-
-```bash
-# Increment version and create release
-./scripts/version-sync.sh --increment patch --release
-
-# Just increment version (no release)
-./scripts/version-sync.sh --increment minor
-
-# Create release for current version
-./scripts/version-sync.sh --release
-
-# Alternative: Use build script (also increments version)
-./scripts/build-multiarch.sh --increment [patch|minor|major] --push
-```
-
-**Manual Workflow:**
-
-1. `./scripts/version-sync.sh --increment patch --release`
-2. Updates `version.txt`, commits change, creates git tag
-3. Creates GitHub release with Docker pull instructions
-4. GitHub Actions automatically builds and pushes versioned images to DockerHub
-5. Application displays updated version in Global Settings (after restart/rebuild)
-
-**Version Sync Script Features:**
-
-- Single command for complete version releases
-- Automatic git commit and tag creation
-- GitHub release creation with Docker instructions
-- Supports patch, minor, and major version increments
-- Can create releases for current version without incrementing
-
-**Checking Version Status:**
-
-```bash
-# Check current version
-cat version.txt
-
-# Check GitHub releases
-gh release list
-
-# Check git tags
-git tag -l
-
-# Check DockerHub images (after CI/CD completes)
-docker pull groovycodexyz/taschengeld:latest
-docker inspect groovycodexyz/taschengeld:latest | grep -A5 Labels
-
-# Check application version (in development)
-curl -s http://localhost:3300/api/version
-
-# Check application version (in production)
-curl -s http://localhost:3300/api/version
-```
+- **Automatic**: Every push to main increments version based on commit message
+- **Manual**: `./scripts/version-sync.sh --increment [patch|minor|major] --release`
 
 ## DockerHub Integration Setup
 

@@ -34,7 +34,7 @@ docker compose up -d
 **Multi-Architecture Support:**
 
 - `docker pull groovycodexyz/taschengeld:latest` (AMD64 + ARM64)
-- `docker pull groovycodexyz/taschengeld:v1.0.5` (Specific version)
+- `docker pull groovycodexyz/taschengeld:v1.1.10` (Specific version)
 - `docker pull groovycodexyz/taschengeld:stable` (Latest stable release)
 
 **Supported Platforms:**
@@ -112,84 +112,13 @@ Taschengeld is optimized for desktop/laptop computers and tablets:
 
 The application is available as a multi-architecture Docker image supporting both ARM64 (e.g., Apple Silicon) and AMD64 (Intel/AMD) platforms. Docker will automatically select the correct version for your system.
 
-## Quick Start Guide
+For detailed installation instructions, see **[📖 Complete Installation Guide](INSTALLATION.md)**
 
-1. Create a new directory for Taschengeld:
+## Development
 
-   ```bash
-   mkdir tgeld && cd tgeld
-   mkdir -p ./data/postgres
-   ```
+For developers wanting to contribute or modify the application:
 
-2. Create `.env` file:
-
-   ```bash
-   # Copy this template and save as .env
-   POSTGRES_USER=postgres
-   POSTGRES_PASSWORD=your_secure_password  # Change this!
-   POSTGRES_DB=tgeld
-   DATABASE_URL=postgresql://postgres:your_secure_password@db:5432/tgeld?schema=public
-   POSTGRES_DATA_DIR=./data/postgres
-   ```
-
-   ⚠️ Replace `your_secure_password` with your chosen password in BOTH places
-   ⚠️ Password Requirements:
-
-   - Use only alphanumeric characters (a-z, A-Z, 0-9)
-   - Avoid special characters (!@#$%^&\*) as they may cause issues with the PostgreSQL connection string
-   - Example of a good password: TGeld2025DB
-
-3. Create `docker-compose.yml`:
-
-   ```yaml
-   services:
-     app:
-       image: groovycodexyz/taschengeld:latest
-       ports:
-         - '8071:3000' # Change 8071 if needed
-       environment:
-         - DATABASE_URL=${DATABASE_URL}
-       depends_on:
-         - db
-     db:
-       image: postgres:16-alpine
-       environment:
-         - POSTGRES_USER=${POSTGRES_USER}
-         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-         - POSTGRES_DB=${POSTGRES_DB}
-       volumes:
-         - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
-   ```
-
-4. Start the application:
-
-   ```bash
-   docker compose up -d
-   ```
-
-5. Access the application at `http://localhost:8071` (or your configured port)
-
-## Directory Structure
-
-After setup, your directory should look like this:
-
-```
-tgeld/
-├── data/
-│   └── postgres/          # Database files (created by PostgreSQL)
-│       └── [db files]     # Various PostgreSQL data files
-├── .env                   # Environment configuration
-└── docker-compose.yml     # Docker configuration
-
-Additional files created during use:
-├── backup.sql            # Database backup (if created)
-└── logs/                 # Log files (if enabled)
-```
-
-⚠️ Important Notes:
-
-- Never delete the `data/postgres` directory while the application is running
-- Always back up your data before major updates
+**📚 [Developer Guide](README_DEV.md)** - Complete development setup, Docker workflows, database migrations, and deployment procedures
 
 ## ⚠️ DATABASE DATA PERSISTENCE - CRITICAL
 
@@ -355,9 +284,6 @@ docker image prune -f
 - Check our [GitHub Issues](https://github.com/groovycode-xyz/taschengeld/issues)
 - Submit a new issue if you can't find a solution
 
-## For Developers
-
-If you're a developer wanting to contribute or modify the application, please see [README_DEV.md](README_DEV.md).
 
 ## License
 
