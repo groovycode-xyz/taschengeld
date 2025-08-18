@@ -4,7 +4,7 @@ services:
   app:
     image: groovycodexyz/taschengeld:latest
     ports:
-      - '3000:3000'
+      - '8071:3000'
     environment:
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD}@db:5432/${DB_DATABASE:-tgeld}?schema=public
       - DB_USER=${DB_USER:-postgres}

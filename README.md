@@ -16,7 +16,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-**Access your application**: http://localhost:3000
+**Access your application**: http://localhost:8071
 
 📖 **[Complete Installation Guide](INSTALLATION.md)**
 

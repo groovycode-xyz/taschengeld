@@ -664,14 +664,14 @@ NODE_ENV=development|production
 ### Common Issues
 
 1. **Database Connection**: Ensure PostgreSQL password is alphanumeric only
-2. **Port Conflicts**: Dev runs on 3001 (Docker) or 3000 (local), DB on 5433 (dev) or 5432 (prod)
+2. **Port Conflicts**: Dev runs on 3300 (Docker) or 3000 (local), DB on 5433 (dev) or 5432 (prod)
 3. **Build Failures**: Check Docker daemon is running and architecture matches
 4. **Migration Issues**: Run `npx prisma migrate dev` for development changes
 5. **Production Build Issues**:
    - **Prisma Generation Errors**: Ensure `binaryTargets` in schema.prisma includes `linux-musl-openssl-3.0.x`
    - **Missing Dependencies**: The production build includes `pg` module for initialization scripts
    - **Multi-arch Build Failures**: Verify Docker BuildKit is enabled and `multiarch` builder exists
-   - **Port Mapping**: Production containers expose port 3000 but may map to different external ports (e.g., 8071)
+   - **Port Mapping**: Production containers expose port 3000 internally but map to external port 8071 by default
 6. **DockerHub Integration Issues**:
    - **Authentication Failures**: Ensure `docker login` is completed for local builds or GitHub secrets are set
    - **Repository Not Found**: Create `groovycodexyz/taschengeld` repository on DockerHub before first push

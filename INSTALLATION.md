@@ -17,7 +17,7 @@ Before installing Taschengeld, ensure you have:
 
 - **RAM**: 4GB minimum, 8GB recommended
 - **Storage**: 2GB free space
-- **Ports**: 3000 (web interface) and 5432 (database) must be available
+- **Ports**: 8071 (web interface) and 5432 (database) must be available
 
 ### Supported Platforms
 
@@ -75,7 +75,7 @@ docker compose ps
 
 ### Step 5: Access Your Application
 
-Open your web browser and go to: **http://localhost:3000**
+Open your web browser and go to: **http://localhost:8071**
 
 ## 🔧 Management Commands
 
@@ -146,7 +146,7 @@ Your data is automatically saved in Docker volumes:
 docker compose logs app
 
 # Common issues:
-# 1. Port 3000 already in use
+# 1. Port 8071 already in use
 # 2. Database password contains special characters
 # 3. Insufficient system resources
 ```
@@ -164,7 +164,7 @@ docker compose exec db pg_isready -U postgres
 
 ### Port Conflicts
 
-If port 3000 is already in use, modify your `.env` file:
+If port 8071 is already in use, modify your `.env` file:
 
 ```env
 APP_PORT=8080
@@ -191,7 +191,7 @@ ports:
 - To allow family access from other devices on your network, bind to all interfaces:
   ```yaml
   ports:
-    - '0.0.0.0:3000:3000'
+    - '0.0.0.0:8071:3000'
   ```
 
 ### Data Privacy
