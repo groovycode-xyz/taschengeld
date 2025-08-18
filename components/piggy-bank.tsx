@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { IconComponent } from './icon-component';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
-import { Button } from '../components/ui/button';
+import { Button } from '@/components/ui/button';
 import { AddFundsModal } from './add-funds-modal';
 import { WithdrawFundsModal } from './withdraw-funds-modal';
 import { TransactionHistoryModal } from './transaction-history-modal';

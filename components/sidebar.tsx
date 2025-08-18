@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMode } from '@/components/context/mode-context';
-import { CheckSquare, HandCoins, PiggyBank, ListTodo, Users, SwitchCamera } from 'lucide-react';
+import { CheckSquare, HandCoins, PiggyBank, Target, ListTodo, Users, SwitchCamera } from 'lucide-react';
 
 export function Sidebar() {
   const { toggleParentMode, isParentMode, enforceRoles } = useMode();
@@ -35,6 +35,18 @@ export function Sidebar() {
           >
             <PiggyBank className='h-6 w-6 md:h-5 md:w-5' />
             <span className='text-base md:text-sm'>Piggy Bank</span>
+          </Link>
+
+          <Link
+            href='/savings'
+            className={`flex items-center space-x-3 px-3 py-4 md:py-3 rounded-lg border-2 transition-all touch-target ${
+              pathname === '/savings'
+                ? 'bg-primary/10 border-primary text-primary'
+                : 'border-border hover:bg-muted hover:border-muted-foreground/20 active:bg-muted/80'
+            }`}
+          >
+            <Target className='h-6 w-6 md:h-5 md:w-5' />
+            <span className='text-base md:text-sm'>Savings Goals</span>
           </Link>
 
           {(!enforceRoles || isParentMode) && (

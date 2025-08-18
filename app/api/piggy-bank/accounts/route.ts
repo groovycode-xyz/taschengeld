@@ -9,6 +9,7 @@ export const GET = createApiHandler(async () => {
   // Format response to match expected structure
   const formattedAccounts = accounts.map((account) => ({
     account_id: account.account_id,
+    user_id: account.user_id,
     user_name: account.user_name || 'Unknown',
     balance: account.balance,
   }));

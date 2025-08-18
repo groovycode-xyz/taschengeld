@@ -155,7 +155,7 @@ User: "I want to add a dark mode feature"
 
 ```bash
 npm run dev                    # Start Next.js dev server (port 3000)
-npm run dev:docker             # Start full stack in Docker (port 3001)
+npm run dev:docker             # Start full stack in Docker (port 3300)
 npm run dev:docker:restart     # Restart Docker keeping database data
 npm run dev:docker:stop        # Stop Docker containers
 npm run dev:docker:start       # Start existing Docker containers
@@ -657,10 +657,10 @@ docker pull groovycodexyz/taschengeld:latest
 docker inspect groovycodexyz/taschengeld:latest | grep -A5 Labels
 
 # Check application version (in development)
-curl -s http://localhost:3001/api/version
+curl -s http://localhost:3300/api/version
 
 # Check application version (in production)
-curl -s http://localhost:3000/api/version
+curl -s http://localhost:8071/api/version
 ```
 
 ## DockerHub Integration Setup
@@ -723,7 +723,7 @@ curl -s http://localhost:3000/api/version
 ### Common Issues
 
 1. **Database Connection**: Ensure PostgreSQL password is alphanumeric only
-2. **Port Conflicts**: Dev runs on 3001 (Docker) or 3000 (local), DB on 5433 (dev) or 5432 (prod)
+2. **Port Conflicts**: Dev runs on 3300 (Docker) or 3000 (local), DB on 5433 (dev) or 5432 (prod)
 3. **Build Failures**: Check Docker daemon is running and architecture matches
 4. **Migration Issues**: Run `npx prisma migrate dev` for development changes
 5. **Production Build Issues**:

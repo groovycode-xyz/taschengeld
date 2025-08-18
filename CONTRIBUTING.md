@@ -82,7 +82,7 @@ npm run dev
 
 ### Environment Configuration
 
-- **Development**: `npm run dev:docker` (port 3001)
+- **Development**: `npm run dev:docker` (port 3300)
 - **Local**: `npm run dev` (port 3000)
 - **Database**: PostgreSQL with alphanumeric passwords only
 

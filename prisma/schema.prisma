@@ -78,6 +78,36 @@ model Task {
   @@map("tasks")
 }
 
+model SavingsGoal {
+  goal_id             Int                      @id @default(autoincrement())
+  user_id             Int
+  title               String                   @db.VarChar(100)
+  description         String?                  @db.Text
+  icon_name           String                   @db.VarChar(50)
+  target_amount       Decimal                  @db.Decimal(15, 2)
+  current_balance     Decimal                  @default(0) @db.Decimal(15, 2)
+  is_active           Boolean                  @default(true)
+  created_at          DateTime?                @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?                @default(now()) @db.Timestamptz(6)
+  user                User                     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  transactions        SavingsGoalTransaction[]
+
+  @@map("savings_goals")
+}
+
+model SavingsGoalTransaction {
+  transaction_id     Int         @id @default(autoincrement())
+  goal_id            Int
+  amount             Decimal     @db.Decimal(15, 2)
+  transaction_type   String      @db.VarChar(20) // 'contribute', 'withdraw', 'purchase'
+  transaction_date   DateTime?   @default(now()) @db.Timestamptz(6)
+  description        String?     @db.Text
+  from_piggybank     Boolean     @default(false) // true if transferred from piggy bank
+  goal               SavingsGoal @relation(fields: [goal_id], references: [goal_id], onDelete: Cascade)
+
+  @@map("savings_goal_transactions")
+}
+
 model User {
   user_id              Int                @id @default(autoincrement())
   name                 String             @db.VarChar(100)
@@ -88,6 +118,7 @@ model User {
   sound_url           String?            @db.VarChar(255)
   completed_tasks     CompletedTask[]
   piggybank_accounts  PiggybankAccount[]
+  savings_goals       SavingsGoal[]
   linked_account      PiggybankAccount?  @relation("UserPiggybankAccount", fields: [piggybank_account_id], references: [account_id])
 
   @@map("users")

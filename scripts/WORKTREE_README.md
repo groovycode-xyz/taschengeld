@@ -105,13 +105,13 @@ wt feature/saas-development
 Each worktree can run Docker independently:
 ```bash
 # Main project
-npm run dev:docker      # Port 3001 (configured in docker-compose.dev.yml)
+npm run dev:docker      # Port 3300 (configured in docker-compose.dev.yml)
 
 # SaaS worktree
-npm run dev:docker      # Runs on same port 3001 but in isolated container
+npm run dev:docker      # Runs on same port 3300 but in isolated container
 ```
 
-**Note**: Docker development uses port 3001 by default. Each worktree runs in its own isolated Docker environment, so you can run multiple worktrees simultaneously without port conflicts.
+**Note**: Docker development uses port 3300 by default. Each worktree runs in its own isolated Docker environment, so you can run multiple worktrees simultaneously without port conflicts.
 
 ### Environment Variables
 Each worktree has its own `.env` file, so you can:

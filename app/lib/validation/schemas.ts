@@ -112,6 +112,52 @@ export const pinSchema = z
   .length(4, 'PIN must be exactly 4 digits')
   .regex(/^\d{4}$/, 'PIN must contain only numbers');
 
+// Savings Goal schemas
+export const createSavingsGoalSchema = z.object({
+  user_id: z.number().int('User ID must be an integer').positive('User ID must be positive'),
+  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
+  description: z.string().optional().nullable(),
+  icon_name: z.string().min(1, 'Icon is required'),
+  target_amount: z.number().positive('Target amount must be positive').max(10000, 'Target amount must be less than 10,000'),
+});
+
+export const updateSavingsGoalSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters').optional(),
+  description: z.string().nullable().optional(),
+  icon_name: z.string().min(1, 'Icon is required').optional(),
+  target_amount: z.number().positive('Target amount must be positive').max(10000, 'Target amount must be less than 10,000').optional(),
+  is_active: z.boolean().optional(),
+});
+
+export const savingsGoalTransactionSchema = z.object({
+  goal_id: z.number().int('Goal ID must be an integer').positive('Goal ID must be positive'),
+  amount: z.number().positive('Amount must be positive').max(10000, 'Amount must be less than 10,000'),
+  transaction_type: z.enum(['contribute', 'withdraw', 'purchase'], {
+    errorMap: () => ({ message: 'Transaction type must be contribute, withdraw, or purchase' }),
+  }),
+  description: z.string().optional().nullable(),
+  from_piggybank: z.boolean().optional().default(false),
+});
+
+export const contributeFromPiggyBankSchema = z.object({
+  goal_id: z.number().int('Goal ID must be an integer').positive('Goal ID must be positive'),
+  amount: z.number().positive('Amount must be positive').max(10000, 'Amount must be less than 10,000'),
+  piggybank_account_id: z.number().int('Account ID must be an integer').positive('Account ID must be positive'),
+  description: z.string().optional().nullable(),
+});
+
+export const withdrawToPiggyBankSchema = z.object({
+  goal_id: z.number().int('Goal ID must be an integer').positive('Goal ID must be positive'),
+  amount: z.number().positive('Amount must be positive').max(10000, 'Amount must be less than 10,000'),
+  piggybank_account_id: z.number().int('Account ID must be an integer').positive('Account ID must be positive'),
+  description: z.string().optional().nullable(),
+});
+
+export const purchaseFromGoalSchema = z.object({
+  goal_id: z.number().int('Goal ID must be an integer').positive('Goal ID must be positive'),
+  description: z.string().optional().nullable(),
+});
+
 // ID parameter schema for routes like /api/users/[id]
 export const idParamSchema = z.object({
   id: z.string().regex(/^\d+$/, 'ID must be a number'),
