@@ -2,7 +2,7 @@ export interface SavingsGoal {
   goal_id: number;
   user_id: number;
   title: string;
-  description?: string;
+  description?: string | null;
   icon_name: string;
   target_amount: string;
   current_balance: string;
@@ -17,14 +17,14 @@ export interface SavingsGoal {
 export interface SavingsGoalInput {
   user_id: number;
   title: string;
-  description?: string;
+  description?: string | null;
   icon_name: string;
   target_amount: number;
 }
 
 export interface SavingsGoalUpdate {
   title?: string;
-  description?: string;
+  description?: string | null;
   icon_name?: string;
   target_amount?: number;
   is_active?: boolean;
