@@ -123,4 +123,34 @@ export const piggyBankTransactionService = {
       }),
     ]);
   },
+
+  // Create transaction record only (no balance update) - for external services like savings goals
+  async createTransactionOnly(
+    input: CreateTransactionInput, 
+    tx?: Prisma.TransactionClient
+  ): Promise<PiggyBankTransaction> {
+    const client = tx || prisma;
+    
+    const transaction = await client.piggybankTransaction.create({
+      data: {
+        account_id: input.account_id,
+        amount: new Prisma.Decimal(input.amount),
+        transaction_type: input.transaction_type,
+        description: input.description,
+        photo: input.photo,
+        completed_task_id: input.completed_task_id,
+      },
+    });
+
+    return {
+      transaction_id: transaction.transaction_id,
+      account_id: transaction.account_id,
+      amount: Number(transaction.amount),
+      transaction_type: transaction.transaction_type as TransactionType,
+      transaction_date: transaction.transaction_date,
+      description: transaction.description,
+      photo: transaction.photo,
+      completed_task_id: transaction.completed_task_id,
+    };
+  },
 };

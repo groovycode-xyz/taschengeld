@@ -3,7 +3,7 @@
 echo "Testing Celebration Toggle Feature"
 echo "=================================="
 
-API_URL="http://localhost:3002/api"
+API_URL="http://localhost:3300/api"
 
 # Function to check current celebration setting
 check_celebration_status() {
@@ -37,7 +37,7 @@ check_celebration_status
 
 # Test 4: Verify UI endpoint
 echo -e "\n4. Verifying Global Settings page loads:"
-if curl -s http://localhost:3002/global-settings | grep -q "Task Completion Celebration"; then
+if curl -s http://localhost:3300/global-settings | grep -q "Task Completion Celebration"; then
     echo "✅ Celebration toggle is present in Global Settings"
 else
     echo "❌ Celebration toggle NOT found in Global Settings"
@@ -50,7 +50,7 @@ echo "- Settings can be toggled between true/false"
 echo "- UI component is present in Global Settings"
 echo ""
 echo "To fully test the feature:"
-echo "1. Open http://localhost:3002 in a browser"
+echo "1. Open http://localhost:3300 in a browser"
 echo "2. Navigate to Global Settings"
 echo "3. Toggle 'Task Completion Celebration' switch"
 echo "4. Go to Task Completion page"

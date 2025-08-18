@@ -5,7 +5,7 @@
 - **Application**: Port **3300** (http://localhost:3300)
 - **Database**: Port **5433** (PostgreSQL)
 
-## Why Port 3002?
+## Why Port 3300?
 
 Port 3300 is now hardcoded for this project to avoid conflicts with other development environments.
 

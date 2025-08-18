@@ -167,7 +167,7 @@ show_usage_examples() {
     echo "📊 Port Management:"
     echo "  • Check port usage:          ports --show"
     echo "  • Suggest port for worktree: ports --suggest feature-name"
-    echo "  • Kill process on port:      ports --kill 3001"
+    echo "  • Kill process on port:      ports --kill 3300"
     echo ""
     
     echo "🔧 Worktree Management:"
@@ -178,7 +178,7 @@ show_usage_examples() {
     
     echo "💡 Pro Tips:"
     echo "  • Use different desktop spaces for each worktree"
-    echo "  • Docker dev runs on port 3001 (configured in docker-compose.dev.yml)"
+    echo "  • Docker dev runs on port 3300 (configured in docker-compose.dev.yml)"
     echo "  • Each worktree gets its own .env and .claude settings"
     echo "  • Use npm run dev:docker:restart for safe database restarts"
     echo ""

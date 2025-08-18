@@ -44,7 +44,7 @@ This will:
 | `wt --list`         | List all worktrees       |
 | `wt --clean`        | Clean up merged branches |
 | `ports --show`      | Check port usage         |
-| `ports --kill 3001` | Kill process on port     |
+| `ports --kill 3300` | Kill process on port     |
 
 ## 🏗️ Multi-LLM Workflow
 
@@ -71,7 +71,7 @@ This will:
 
 Each worktree runs Docker independently:
 
-- Same port (3001) but isolated containers
+- Same port (3300) but isolated containers
 - Separate databases
 - Independent environment variables
 - No conflicts between worktrees
