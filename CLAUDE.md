@@ -201,6 +201,7 @@ docker compose -f docker-compose.dev.yml up -d
 npm run lint                   # Run Prettier and Next.js linting
 npm run format                 # Format code with Prettier
 npm run check                  # TypeScript check + lint + format
+npm run build:test              # Test production build locally (RECOMMENDED before merge)
 ```
 
 ### Build and Deployment
