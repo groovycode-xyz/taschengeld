@@ -168,7 +168,7 @@ jobs:
                 db:
                   condition: service_healthy
               ports:
-                - "3003:3000"
+                - "3300:3000"
             db:
               image: postgres:16-alpine
               environment:

@@ -43,7 +43,7 @@ The intermittent confetti visibility issue was caused by:
 
 ## Testing the Fix
 
-1. Open http://localhost:3002
+1. Open http://localhost:3300
 2. Ensure celebration toggle is ON in Global Settings
 3. Go to Task Completion
 4. Complete multiple tasks in succession

@@ -160,8 +160,8 @@ User: "I want to add a dark mode feature"
 ### Development
 
 ```bash
-npm run dev                    # Start Next.js dev server (port 3000)
-npm run dev:docker             # Start full stack in Docker (port 3001)
+npm run dev                    # Start Next.js dev server (port 3300)
+npm run dev:docker             # Start full stack in Docker (port 3300)
 npm run dev:docker:restart     # Restart Docker keeping database data
 npm run dev:docker:stop        # Stop Docker containers
 npm run dev:docker:start       # Start existing Docker containers
@@ -665,10 +665,10 @@ docker pull groovycodexyz/taschengeld:latest
 docker inspect groovycodexyz/taschengeld:latest | grep -A5 Labels
 
 # Check application version (in development)
-curl -s http://localhost:3001/api/version
+curl -s http://localhost:3300/api/version
 
 # Check application version (in production)
-curl -s http://localhost:3000/api/version
+curl -s http://localhost:3300/api/version
 ```
 
 ## DockerHub Integration Setup
