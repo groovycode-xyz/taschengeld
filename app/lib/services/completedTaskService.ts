@@ -240,14 +240,54 @@ export const completedTaskService = {
 
   async delete(id: number): Promise<boolean> {
     try {
+      logger.debug('Attempting to delete completed task', { c_task_id: id });
+      
+      // First check if the task exists
+      const existingTask = await prisma.completedTask.findUnique({
+        where: { c_task_id: id },
+        include: {
+          task: true,
+          user: true,
+        },
+      });
+
+      if (!existingTask) {
+        logger.warn('Attempted to delete non-existent completed task', { c_task_id: id });
+        return false;
+      }
+
+      logger.debug('Found completed task to delete', { 
+        c_task_id: id, 
+        task_title: existingTask.task.title,
+        user_name: existingTask.user.name,
+        payment_status: existingTask.payment_status 
+      });
+
+      // Check for related piggybank transactions before deleting
+      const relatedTransactions = await prisma.piggybankTransaction.findMany({
+        where: { completed_task_id: id },
+      });
+
+      if (relatedTransactions.length > 0) {
+        logger.warn('Cannot delete completed task with related transactions', { 
+          c_task_id: id, 
+          transaction_count: relatedTransactions.length 
+        });
+        throw new Error('Cannot delete completed task that has related piggy bank transactions. Please handle the transactions first.');
+      }
+
       await prisma.completedTask.delete({
         where: { c_task_id: id },
       });
+      
+      logger.info('Successfully deleted completed task', { c_task_id: id });
       return true;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        logger.warn('Completed task not found for deletion', { c_task_id: id });
         return false; // Not found
       }
+      logger.error('Error deleting completed task', { c_task_id: id, error });
       throw error;
     }
   },

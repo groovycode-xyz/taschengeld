@@ -39,6 +39,7 @@ export function TaskCompletion() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -201,19 +202,39 @@ export function TaskCompletion() {
   };
 
   const confirmDeleteTask = async () => {
-    if (deleteTaskId) {
+    if (deleteTaskId && !isDeleting) {
+      setIsDeleting(true);
       try {
+        console.log(`Attempting to delete completed task with ID: ${deleteTaskId}`);
+        
         const response = await fetch(`./api/completed-tasks/${deleteTaskId}`, {
           method: 'DELETE',
         });
 
-        if (!response.ok) throw new Error('Failed to delete completed task');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+          console.error('Delete request failed:', errorMessage);
+          throw new Error(errorMessage);
+        }
 
-        setCompletedTasks(completedTasks.filter((task) => task.c_task_id !== deleteTaskId));
+        console.log('Delete request successful, updating UI state');
+        
+        // Use functional update to avoid race conditions
+        setCompletedTasks((prevTasks) => 
+          prevTasks.filter((task) => task.c_task_id !== deleteTaskId)
+        );
+        
         setIsDeleteDialogOpen(false);
         setDeleteTaskId(null);
-      } catch (_err) {
-        setError('Error deleting completed task');
+        console.log('UI state updated successfully');
+        
+      } catch (err) {
+        console.error('Error deleting completed task:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        setError(`Error deleting completed task: ${errorMessage}`);
+      } finally {
+        setIsDeleting(false);
       }
     }
   };
@@ -370,6 +391,8 @@ export function TaskCompletion() {
                       size='icon'
                       onClick={() => handleDeleteTask(task.c_task_id)}
                       className='ml-2'
+                      disabled={isDeleting}
+                      title={isDeleting ? 'Deleting...' : 'Delete task'}
                     >
                       <Trash2 className='h-4 w-4' />
                     </Button>
@@ -401,8 +424,12 @@ export function TaskCompletion() {
             <Button variant='outline' onClick={() => setIsDeleteDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant='destructive' onClick={confirmDeleteTask}>
-              Delete
+            <Button 
+              variant='destructive' 
+              onClick={confirmDeleteTask}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>
