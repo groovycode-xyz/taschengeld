@@ -58,6 +58,7 @@ export const PUT = createApiHandler(async (request: NextRequest) => {
 export const DELETE = createApiHandler(async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const goalId = searchParams.get('goal_id');
+  const transferBalance = searchParams.get('transfer_balance') === 'true';
 
   if (!goalId) {
     throw new ValidationError('Goal ID is required');
@@ -68,6 +69,6 @@ export const DELETE = createApiHandler(async (request: NextRequest) => {
     throw new ValidationError('Invalid goal ID');
   }
 
-  await savingsGoalService.deleteGoal(goalIdNum);
+  await savingsGoalService.deleteGoalWithBalanceTransfer(goalIdNum, transferBalance);
   return successResponse({ message: 'Savings goal deleted successfully' });
 });

@@ -182,6 +182,70 @@ export const savingsGoalService = {
     });
   },
 
+  async deleteGoalWithBalanceTransfer(
+    goalId: number,
+    transferBalance: boolean = false
+  ): Promise<void> {
+    await prisma.$transaction(async (tx) => {
+      // Get the goal with user info first
+      const goal = await tx.savingsGoal.findUnique({
+        where: { goal_id: goalId },
+        include: { user: true },
+      });
+
+      if (!goal) {
+        throw new Error('Savings goal not found');
+      }
+
+      const currentBalance = parseFloat(goal.current_balance.toString());
+
+      // If there's a balance and user wants to transfer it
+      if (currentBalance > 0 && transferBalance) {
+        // Find the user's piggybank account
+        const piggybankAccount = await tx.piggybankAccount.findFirst({
+          where: { user_id: goal.user_id },
+        });
+
+        if (!piggybankAccount) {
+          throw new Error('User piggybank account not found');
+        }
+
+        // Transfer balance to piggybank
+        await tx.piggybankAccount.update({
+          where: { account_id: piggybankAccount.account_id },
+          data: { balance: { increment: currentBalance } },
+        });
+
+        // Create piggybank transaction record
+        await piggyBankTransactionService.createTransactionOnly(
+          {
+            account_id: piggybankAccount.account_id,
+            amount: currentBalance,
+            transaction_type: 'deposit',
+            description: `Transfer from deleted savings goal: ${goal.title}`,
+          },
+          tx
+        );
+
+        // Create final savings goal transaction record
+        await tx.savingsGoalTransaction.create({
+          data: {
+            goal_id: goalId,
+            amount: currentBalance,
+            transaction_type: 'withdraw',
+            description: 'Balance transferred to Piggy Bank before goal deletion',
+            from_piggybank: false,
+          },
+        });
+      }
+
+      // Delete the goal (transactions will be cascade deleted)
+      await tx.savingsGoal.delete({
+        where: { goal_id: goalId },
+      });
+    });
+  },
+
   async updateBalance(
     goalId: number,
     amount: number,
@@ -295,6 +359,16 @@ export const savingsGoalService = {
     description?: string
   ): Promise<{ goal: SavingsGoal; transaction: SavingsGoalTransaction }> {
     return await prisma.$transaction(async (tx) => {
+      // Get goal information first for transaction descriptions
+      const goal = await tx.savingsGoal.findUnique({
+        where: { goal_id: goalId },
+        include: { user: true },
+      });
+
+      if (!goal) {
+        throw new Error('Savings goal not found');
+      }
+
       // Update piggy bank balance (decrement)
       await tx.piggybankAccount.update({
         where: { account_id: piggybankAccountId },
@@ -310,7 +384,7 @@ export const savingsGoalService = {
           account_id: piggybankAccountId,
           amount: amount,
           transaction_type: 'withdrawal',
-          description: description ? `Savings goal: ${description}` : 'Transfer to Savings Goal',
+          description: description ? `Savings goal "${goal.title}": ${description}` : `Transfer to Savings Goal: ${goal.title}`,
         },
         tx
       );
@@ -354,6 +428,16 @@ export const savingsGoalService = {
     description?: string
   ): Promise<{ goal: SavingsGoal; transaction: SavingsGoalTransaction }> {
     return await prisma.$transaction(async (tx) => {
+      // Get goal information first for transaction descriptions
+      const goal = await tx.savingsGoal.findUnique({
+        where: { goal_id: goalId },
+        include: { user: true },
+      });
+
+      if (!goal) {
+        throw new Error('Savings goal not found');
+      }
+
       // Update savings goal balance (decrement)
       const updatedGoal = await this.updateBalance(goalId, amount, 'decrement', tx);
 
@@ -370,8 +454,8 @@ export const savingsGoalService = {
           amount: amount,
           transaction_type: 'deposit',
           description: description
-            ? `From savings goal: ${description}`
-            : 'Transfer from Savings Goal',
+            ? `From savings goal "${goal.title}": ${description}`
+            : `Transfer from Savings Goal: ${goal.title}`,
         },
         tx
       );
