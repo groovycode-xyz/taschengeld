@@ -75,8 +75,9 @@ git merge development
 
 ### Development
 ```bash
-npm run dev                   # Next.js dev server (port 3000)
-npm run dev:docker            # Full stack in Docker (port 3300)  
+npm run dev:local             # 🎯 RECOMMENDED: Auto-starts DB + dev server (port 3300)
+npm run dev                   # Next.js dev server (port 3300) - requires local DB
+npm run dev:docker            # Full stack in Docker (port 3300) - includes DB
 npm run dev:docker:restart    # Restart keeping database data
 npm run dev:docker:clean      # ⚠️ DANGER: Deletes ALL database data
 ```

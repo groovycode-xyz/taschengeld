@@ -41,8 +41,13 @@
       "Bash(gh workflow run:*)",
       "Bash(gh api:*)",
       "WebSearch",
-      "Bash(mv:*)"
+      "Bash(git worktree:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker system:*)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "/Users/jamespace/Projects/taschengeld-worktrees/savings"
+    ]
   }
 }
