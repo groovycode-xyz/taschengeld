@@ -22,7 +22,9 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import { SelectIconModal } from './select-icon-modal';
 import { IconComponent } from './icon-component';
-import { Target, User as UserIcon } from 'lucide-react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { CurrencyDisplay } from '@/components/ui/currency-display';
+import { Target, User as UserIcon, Trash2 } from 'lucide-react';
 import { SavingsGoal } from '@/app/types/savingsGoal';
 import { User } from '@/app/types/user';
 
@@ -30,6 +32,7 @@ interface CreateEditGoalModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (goalData: any) => Promise<void>;
+  onDelete?: (goalId: number, transferBalance: boolean) => Promise<void>;
   users: User[];
   mode: 'create' | 'edit';
   existingGoal?: SavingsGoal;
@@ -39,6 +42,7 @@ export function CreateEditGoalModal({
   isOpen,
   onClose,
   onSave,
+  onDelete,
   users,
   mode,
   existingGoal,
@@ -52,6 +56,9 @@ export function CreateEditGoalModal({
   const [isActive, setIsActive] = useState(true);
   const [isIconModalOpen, setIsIconModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isBalanceDialogOpen, setIsBalanceDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const defaultState = React.useMemo(
     () => ({
@@ -180,6 +187,70 @@ export function CreateEditGoalModal({
     onClose();
   };
 
+  const handleDeleteClick = () => {
+    if (!existingGoal) return;
+    
+    const currentBalance = parseFloat(existingGoal.current_balance);
+    
+    if (currentBalance > 0) {
+      setIsBalanceDialogOpen(true);
+    } else {
+      setIsDeleteConfirmOpen(true);
+    }
+  };
+
+  const handleDeleteWithoutTransfer = async () => {
+    if (!existingGoal || !onDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await onDelete(existingGoal.goal_id, false);
+      
+      addToast({
+        title: 'Success',
+        description: 'Goal deleted successfully!',
+      });
+      
+      handleClose();
+    } catch (error) {
+      addToast({
+        title: 'Error',
+        description: 'Failed to delete goal. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteConfirmOpen(false);
+      setIsBalanceDialogOpen(false);
+    }
+  };
+
+  const handleDeleteWithTransfer = async () => {
+    if (!existingGoal || !onDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await onDelete(existingGoal.goal_id, true);
+      
+      addToast({
+        title: 'Success',
+        description: 'Goal deleted and balance transferred to Piggy Bank!',
+      });
+      
+      handleClose();
+    } catch (error) {
+      addToast({
+        title: 'Error',
+        description: 'Failed to delete goal. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteConfirmOpen(false);
+      setIsBalanceDialogOpen(false);
+    }
+  };
+
   const selectedUser = users.find((user) => user.user_id.toString() === userId);
 
   return (
@@ -290,6 +361,18 @@ export function CreateEditGoalModal({
             )}
 
             <DialogFooter className='flex gap-2 sm:gap-0'>
+              {mode === 'edit' && onDelete && (
+                <Button 
+                  type='button' 
+                  variant='destructive' 
+                  onClick={handleDeleteClick}
+                  disabled={isSubmitting || isDeleting}
+                  className='mr-auto'
+                >
+                  <Trash2 className='h-4 w-4 mr-2' />
+                  {isDeleting ? 'Deleting...' : 'Delete Goal'}
+                </Button>
+              )}
               <Button type='button' variant='outline' onClick={handleClose}>
                 Cancel
               </Button>
@@ -314,6 +397,70 @@ export function CreateEditGoalModal({
         onSelectIcon={setIconName}
         currentIcon={iconName}
       />
+
+      {/* Simple Delete Confirmation (no balance) */}
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={handleDeleteWithoutTransfer}
+        title="Delete Savings Goal"
+        description="Are you sure you want to delete this goal? This action cannot be undone and will permanently delete the goal and all its transaction history."
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+
+      {/* Balance Transfer Dialog */}
+      <Dialog open={isBalanceDialogOpen} onOpenChange={() => setIsBalanceDialogOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Goal has Balance</DialogTitle>
+            <DialogDescription>
+              This goal has a current balance that needs to be handled before deletion.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className='space-y-4'>
+            <div className='p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800'>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm font-medium'>Current Balance:</span>
+                <CurrencyDisplay 
+                  value={parseFloat(existingGoal?.current_balance || '0')} 
+                  className='text-lg font-semibold text-orange-700 dark:text-orange-300'
+                />
+              </div>
+            </div>
+            
+            <p className='text-sm text-muted-foreground'>
+              What would you like to do with the balance in this goal?
+            </p>
+          </div>
+
+          <DialogFooter className='flex gap-2'>
+            <Button 
+              variant='outline' 
+              onClick={() => setIsBalanceDialogOpen(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button 
+              variant='destructive' 
+              onClick={handleDeleteWithoutTransfer}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete & Lose Balance'}
+            </Button>
+            <Button 
+              variant='default'
+              onClick={handleDeleteWithTransfer}
+              disabled={isDeleting}
+              className='bg-blue-600 hover:bg-blue-700'
+            >
+              {isDeleting ? 'Transferring...' : 'Transfer & Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
