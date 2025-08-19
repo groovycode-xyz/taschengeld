@@ -53,6 +53,7 @@ The Taschengeld project uses multi-architecture Docker builds with comprehensive
 ## Testing Process
 
 The build script includes comprehensive testing:
+
 - Database connectivity verification
 - Application health checks
 - API endpoint validation (settings, health, etc.)
@@ -70,6 +71,7 @@ The build script includes comprehensive testing:
 ### Automated Workflows
 
 1. **docker-build.yml**: Runs on every push to main and pull requests
+
    - Builds multi-architecture images
    - Runs comprehensive tests
    - Pushes to DockerHub on main branch
@@ -126,23 +128,27 @@ docker inspect groovycodexyz/taschengeld:latest | grep -A 5 "org.opencontainers.
 ### Initial DockerHub Setup
 
 1. **Create DockerHub Repository**:
+
    - Go to https://hub.docker.com/repositories/groovycodexyz
    - Create new repository named `taschengeld`
    - Set as public repository
    - Add description: "Family allowance tracker application"
 
 2. **Generate DockerHub Access Token**:
+
    - Go to DockerHub Account Settings → Security
    - Create new access token with read/write permissions
    - Save token securely (it won't be shown again)
 
 3. **Configure GitHub Secrets**:
+
    - Go to GitHub repository → Settings → Secrets and variables → Actions
    - Add repository secrets:
      - `DOCKERHUB_USERNAME`: Your DockerHub username (groovycodexyz)
      - `DOCKERHUB_TOKEN`: The access token from step 2
 
 4. **Local Development Setup**:
+
    ```bash
    # Login to DockerHub for local builds
    docker login

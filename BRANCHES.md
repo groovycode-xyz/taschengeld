@@ -14,9 +14,9 @@ This file tracks all active development branches and their purposes.
 
 ## 📚 **Archived/Completed Features**
 
-| Branch                            | Status              | Purpose                                             | Completed    |
-| --------------------------------- | ------------------- | --------------------------------------------------- | ------------ |
-| `savings`                         | 🎯 Merged to main   | Dedicated savings accounts with goal tracking       | 2025-08-19   |
+| Branch    | Status            | Purpose                                       | Completed  |
+| --------- | ----------------- | --------------------------------------------- | ---------- |
+| `savings` | 🎯 Merged to main | Dedicated savings accounts with goal tracking | 2025-08-19 |
 
 ## 📖 **Detailed Branch Information**
 

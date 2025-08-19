@@ -195,7 +195,7 @@ jobs:
           max_attempts=24  # Reduced from 30 to 24 (2 minutes total)
           attempt=0
           while [ $attempt -lt $max_attempts ]; do
-            if curl -s -f http://localhost:3003/api/health >/dev/null 2>&1; then
+            if curl -s -f http://localhost:3300/api/health >/dev/null 2>&1; then
               echo "✅ Application startup test passed!"
               break
             fi
@@ -213,7 +213,7 @@ jobs:
 
           # Verify API endpoints
           echo "Testing API endpoints..."
-          if curl -s http://localhost:3003/api/health | grep -q '"status":"ok"'; then
+          if curl -s http://localhost:3300/api/health | grep -q '"status":"ok"'; then
             echo "✅ Health endpoint working"
           else
             echo "❌ Health endpoint failed"
@@ -223,7 +223,7 @@ jobs:
           fi
 
           # Test version endpoint
-          if curl -s http://localhost:3003/api/version | grep -q '"version"'; then
+          if curl -s http://localhost:3300/api/version | grep -q '"version"'; then
             echo "✅ Version endpoint working"
           else
             echo "❌ Version endpoint failed"
