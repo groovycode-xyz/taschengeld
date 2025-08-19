@@ -41,16 +41,19 @@ function getWeekLabel(date: Date): string {
 }
 
 function groupTransactionsByWeek(transactions: SavingsGoalTransaction[]): GroupedTransactions[] {
-  const grouped = transactions.reduce((acc: { [key: string]: SavingsGoalTransaction[] }, transaction) => {
-    const date = new Date(transaction.transaction_date);
-    const weekLabel = getWeekLabel(date);
+  const grouped = transactions.reduce(
+    (acc: { [key: string]: SavingsGoalTransaction[] }, transaction) => {
+      const date = new Date(transaction.transaction_date);
+      const weekLabel = getWeekLabel(date);
 
-    if (!acc[weekLabel]) {
-      acc[weekLabel] = [];
-    }
-    acc[weekLabel].push(transaction);
-    return acc;
-  }, {});
+      if (!acc[weekLabel]) {
+        acc[weekLabel] = [];
+      }
+      acc[weekLabel].push(transaction);
+      return acc;
+    },
+    {}
+  );
 
   return Object.entries(grouped).map(([label, transactions]) => ({
     label,
@@ -61,13 +64,13 @@ function groupTransactionsByWeek(transactions: SavingsGoalTransaction[]): Groupe
 function getTransactionIcon(transaction: SavingsGoalTransaction) {
   switch (transaction.transaction_type) {
     case 'contribute':
-      return <TrendingUp className="h-4 w-4 text-green-600" />;
+      return <TrendingUp className='h-4 w-4 text-green-600' />;
     case 'withdraw':
-      return <TrendingDown className="h-4 w-4 text-blue-600" />;
+      return <TrendingDown className='h-4 w-4 text-blue-600' />;
     case 'purchase':
-      return <ShoppingCart className="h-4 w-4 text-orange-600" />;
+      return <ShoppingCart className='h-4 w-4 text-orange-600' />;
     default:
-      return <TrendingUp className="h-4 w-4 text-gray-600" />;
+      return <TrendingUp className='h-4 w-4 text-gray-600' />;
   }
 }
 
@@ -97,7 +100,11 @@ function getTransactionLabel(transaction: SavingsGoalTransaction): string {
   }
 }
 
-export function SavingsGoalTransactionModal({ isOpen, onClose, goal }: SavingsGoalTransactionModalProps) {
+export function SavingsGoalTransactionModal({
+  isOpen,
+  onClose,
+  goal,
+}: SavingsGoalTransactionModalProps) {
   const [transactions, setTransactions] = useState<SavingsGoalTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -136,8 +143,20 @@ export function SavingsGoalTransactionModal({ isOpen, onClose, goal }: SavingsGo
                 </DialogTitle>
                 <p className='text-sm text-gray-600 dark:text-gray-400'>{goal.title}</p>
                 <div className='flex items-center gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400'>
-                  <span>Balance: <CurrencyDisplay value={parseFloat(goal.current_balance)} className="font-medium" /></span>
-                  <span>Target: <CurrencyDisplay value={parseFloat(goal.target_amount)} className="font-medium" /></span>
+                  <span>
+                    Balance:{' '}
+                    <CurrencyDisplay
+                      value={parseFloat(goal.current_balance)}
+                      className='font-medium'
+                    />
+                  </span>
+                  <span>
+                    Target:{' '}
+                    <CurrencyDisplay
+                      value={parseFloat(goal.target_amount)}
+                      className='font-medium'
+                    />
+                  </span>
                 </div>
               </div>
             </div>
@@ -147,10 +166,15 @@ export function SavingsGoalTransactionModal({ isOpen, onClose, goal }: SavingsGo
         <ScrollArea className='flex-1 p-6'>
           <div className='space-y-6'>
             {isLoading ? (
-              <p className='text-center text-gray-500 dark:text-gray-400'>Loading transactions...</p>
+              <p className='text-center text-gray-500 dark:text-gray-400'>
+                Loading transactions...
+              </p>
             ) : transactions.length === 0 ? (
               <div className='text-center py-8'>
-                <IconComponent icon={goal.icon_name} className='h-12 w-12 mx-auto mb-3 text-gray-400' />
+                <IconComponent
+                  icon={goal.icon_name}
+                  className='h-12 w-12 mx-auto mb-3 text-gray-400'
+                />
                 <p className='text-gray-500 dark:text-gray-400'>No transactions yet</p>
                 <p className='text-sm text-gray-400 dark:text-gray-500'>
                   Contributions and withdrawals will appear here
@@ -171,9 +195,7 @@ export function SavingsGoalTransactionModal({ isOpen, onClose, goal }: SavingsGo
                     >
                       <div className='flex justify-between items-start'>
                         <div className='flex items-start gap-3 flex-1'>
-                          <div className='mt-0.5'>
-                            {getTransactionIcon(transaction)}
-                          </div>
+                          <div className='mt-0.5'>{getTransactionIcon(transaction)}</div>
                           <div className='space-y-1 flex-1'>
                             <div className='flex items-center gap-2'>
                               <span className='font-medium text-gray-900 dark:text-gray-100'>
@@ -191,13 +213,16 @@ export function SavingsGoalTransactionModal({ isOpen, onClose, goal }: SavingsGo
                               </p>
                             )}
                             <p className='text-xs text-gray-500 dark:text-gray-500'>
-                              {new Date(transaction.transaction_date).toLocaleDateString(undefined, {
-                                weekday: 'long',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
+                              {new Date(transaction.transaction_date).toLocaleDateString(
+                                undefined,
+                                {
+                                  weekday: 'long',
+                                  month: 'long',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                }
+                              )}
                             </p>
                           </div>
                         </div>
@@ -207,8 +232,8 @@ export function SavingsGoalTransactionModal({ isOpen, onClose, goal }: SavingsGo
                               transaction.transaction_type === 'contribute'
                                 ? 'text-green-600 dark:text-green-400'
                                 : transaction.transaction_type === 'withdraw'
-                                ? 'text-blue-600 dark:text-blue-400'
-                                : 'text-orange-600 dark:text-orange-400'
+                                  ? 'text-blue-600 dark:text-blue-400'
+                                  : 'text-orange-600 dark:text-orange-400'
                             }`}
                           >
                             {transaction.transaction_type === 'contribute' ? '+' : '−'}

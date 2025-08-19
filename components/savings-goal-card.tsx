@@ -59,7 +59,11 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
     }
   };
 
-  const handleContribute = async (amount: number, piggybankAccountId: number, description?: string) => {
+  const handleContribute = async (
+    amount: number,
+    piggybankAccountId: number,
+    description?: string
+  ) => {
     try {
       const response = await fetch(`/api/savings-goals/${goal.goal_id}/contribute`, {
         method: 'POST',
@@ -92,8 +96,8 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
     isPurchase?: boolean
   ) => {
     try {
-      const endpoint = isPurchase 
-        ? `/api/savings-goals/${goal.goal_id}/purchase` 
+      const endpoint = isPurchase
+        ? `/api/savings-goals/${goal.goal_id}/purchase`
         : `/api/savings-goals/${goal.goal_id}/withdraw`;
       const body = isPurchase
         ? { description }
@@ -142,25 +146,22 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
               )}
             />
             <div className='text-center space-y-2'>
-              <div className={cn(
-                'text-lg font-medium',
-                goal.is_active
-                  ? 'text-blue-900 dark:text-blue-100'
-                  : 'text-gray-700 dark:text-gray-300'
-              )}>
+              <div
+                className={cn(
+                  'text-lg font-medium',
+                  goal.is_active
+                    ? 'text-blue-900 dark:text-blue-100'
+                    : 'text-gray-700 dark:text-gray-300'
+                )}
+              >
                 {goal.title}
               </div>
               <div className='flex items-center justify-center gap-2 text-sm text-muted-foreground'>
-                <IconComponent
-                  icon={goal.user_icon}
-                  className='h-6 w-6'
-                />
+                <IconComponent icon={goal.user_icon} className='h-6 w-6' />
                 <span>{goal.user_name}</span>
               </div>
               {goal.description && (
-                <div className='text-sm text-muted-foreground'>
-                  {goal.description}
-                </div>
+                <div className='text-sm text-muted-foreground'>{goal.description}</div>
               )}
             </div>
           </CardTitle>
@@ -177,9 +178,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
               <div
                 className={cn(
                   'h-3 rounded-full transition-all duration-300',
-                  goal.is_active
-                    ? 'bg-blue-600 dark:bg-blue-500'
-                    : 'bg-gray-500 dark:bg-gray-400'
+                  goal.is_active ? 'bg-blue-600 dark:bg-blue-500' : 'bg-gray-500 dark:bg-gray-400'
                 )}
                 style={{ width: `${Math.min(progressPercentage, 100)}%` }}
               />

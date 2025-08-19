@@ -14,7 +14,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { IconComponent } from './icon-component';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
-import { TrendingDown, ShoppingCart, PiggyBank as PiggyBankIcon, AlertTriangle } from 'lucide-react';
+import {
+  TrendingDown,
+  ShoppingCart,
+  PiggyBank as PiggyBankIcon,
+  AlertTriangle,
+} from 'lucide-react';
 import { SavingsGoal } from '@/app/types/savingsGoal';
 import { User } from '@/app/types/user';
 import { PiggyBankAccount } from '@/app/types/piggyBankAccount';
@@ -32,13 +37,7 @@ interface WithdrawModalProps {
   users: User[];
 }
 
-export function WithdrawModal({
-  isOpen,
-  onClose,
-  onWithdraw,
-  goal,
-  users,
-}: WithdrawModalProps) {
+export function WithdrawModal({ isOpen, onClose, onWithdraw, goal, users }: WithdrawModalProps) {
   const { addToast } = useToast();
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -150,9 +149,10 @@ export function WithdrawModal({
 
       addToast({
         title: 'Success',
-        description: withdrawalType === 'purchase' 
-          ? 'Purchase completed successfully!' 
-          : 'Transfer completed successfully!',
+        description:
+          withdrawalType === 'purchase'
+            ? 'Purchase completed successfully!'
+            : 'Transfer completed successfully!',
       });
 
       resetForm();
@@ -196,11 +196,11 @@ export function WithdrawModal({
               <div className='flex items-start gap-3'>
                 <AlertTriangle className='h-5 w-5 text-orange-600 mt-0.5' />
                 <div className='space-y-2'>
-                  <div className='font-medium text-orange-900 dark:text-orange-100'>
-                    This will:
-                  </div>
+                  <div className='font-medium text-orange-900 dark:text-orange-100'>This will:</div>
                   <ul className='text-sm text-orange-800 dark:text-orange-200 space-y-1'>
-                    <li>• Use the entire goal balance (<CurrencyDisplay value={currentBalance} />)</li>
+                    <li>
+                      • Use the entire goal balance (<CurrencyDisplay value={currentBalance} />)
+                    </li>
                     <li>• Mark the goal as completed (inactive)</li>
                     <li>• This action cannot be undone</li>
                   </ul>
@@ -221,11 +221,7 @@ export function WithdrawModal({
           </div>
 
           <DialogFooter className='flex gap-2 sm:gap-0'>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() => setShowPurchaseConfirm(false)}
-            >
+            <Button type='button' variant='outline' onClick={() => setShowPurchaseConfirm(false)}>
               Cancel
             </Button>
             <Button
@@ -249,9 +245,7 @@ export function WithdrawModal({
             <TrendingDown className='h-5 w-5' />
             Withdraw from Goal
           </DialogTitle>
-          <DialogDescription>
-            Choose how to use your savings goal balance.
-          </DialogDescription>
+          <DialogDescription>Choose how to use your savings goal balance.</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className='space-y-4'>
@@ -276,7 +270,7 @@ export function WithdrawModal({
           {/* Withdrawal Type Selection */}
           <div className='space-y-3'>
             <Label>What would you like to do?</Label>
-            
+
             <div className='grid grid-cols-1 gap-3'>
               {/* Transfer Option */}
               <button
@@ -346,7 +340,9 @@ export function WithdrawModal({
           {/* Description */}
           <div className='space-y-2'>
             <Label htmlFor='description'>
-              {withdrawalType === 'purchase' ? 'Purchase Description (optional)' : 'Transfer Description (optional)'}
+              {withdrawalType === 'purchase'
+                ? 'Purchase Description (optional)'
+                : 'Transfer Description (optional)'}
             </Label>
             <Textarea
               id='description'
@@ -372,7 +368,10 @@ export function WithdrawModal({
                 </div>
                 <div>
                   <div className='text-muted-foreground'>Added to Piggy Bank</div>
-                  <CurrencyDisplay value={withdrawalAmount} className='font-semibold text-green-600' />
+                  <CurrencyDisplay
+                    value={withdrawalAmount}
+                    className='font-semibold text-green-600'
+                  />
                 </div>
               </div>
             </div>
@@ -399,8 +398,8 @@ export function WithdrawModal({
                   ? 'Processing...'
                   : 'Transferring...'
                 : withdrawalType === 'purchase'
-                ? 'Make Purchase'
-                : 'Transfer to Piggy Bank'}
+                  ? 'Make Purchase'
+                  : 'Transfer to Piggy Bank'}
             </Button>
           </DialogFooter>
         </form>
