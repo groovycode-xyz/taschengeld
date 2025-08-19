@@ -112,21 +112,35 @@ fi
 # Create GitHub release if requested
 if [ "$CREATE_RELEASE" = true ]; then
     log "INFO" "Creating GitHub release for v$CURRENT_VERSION"
+    log "INFO" "Generating intelligent release notes from git commits..."
     
-    gh release create "v$CURRENT_VERSION" \
-        --title "Release v$CURRENT_VERSION" \
-        --notes "$(cat <<EOF
+    # Generate intelligent release notes using our Python script
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    RELEASE_NOTES_SCRIPT="$SCRIPT_DIR/generate-release-notes.py"
+    
+    if [ -f "$RELEASE_NOTES_SCRIPT" ]; then
+        # Use Python script to generate smart release notes
+        RELEASE_NOTES=$(python3 "$RELEASE_NOTES_SCRIPT" "$CURRENT_VERSION" 2>/dev/null)
+        
+        if [ $? -eq 0 ] && [ -n "$RELEASE_NOTES" ]; then
+            log "SUCCESS" "Generated intelligent release notes based on commit analysis"
+        else
+            log "WARN" "Failed to generate intelligent notes, falling back to basic template"
+            RELEASE_NOTES="$(cat <<EOF
 ## 🚀 Release v$CURRENT_VERSION
 
-### Docker Images
+### 📝 Changes
+- Version maintenance and updates
+
+### 📦 Docker Images
 - \`docker pull groovycodexyz/taschengeld:v$CURRENT_VERSION\`
 - \`docker pull groovycodexyz/taschengeld:latest\`
 
-### Multi-Architecture Support
+### 🏗️ Multi-Architecture Support
 - ✅ linux/amd64 (Intel/AMD processors)
 - ✅ linux/arm64 (Apple Silicon, ARM processors)
 
-### Installation
+### 📥 Installation
 \`\`\`bash
 docker pull groovycodexyz/taschengeld:v$CURRENT_VERSION
 \`\`\`
@@ -136,7 +150,42 @@ For full setup instructions, see: https://taschengeld.groovycode.xyz
 ---
 🤖 Generated with [Claude Code](https://claude.ai/code)
 EOF
-)" \
+)"
+        fi
+    else
+        log "WARN" "Release notes generator not found at $RELEASE_NOTES_SCRIPT"
+        log "INFO" "Using basic release notes template"
+        RELEASE_NOTES="$(cat <<EOF
+## 🚀 Release v$CURRENT_VERSION
+
+### 📝 Changes
+- Version maintenance and updates
+
+### 📦 Docker Images
+- \`docker pull groovycodexyz/taschengeld:v$CURRENT_VERSION\`
+- \`docker pull groovycodexyz/taschengeld:latest\`
+
+### 🏗️ Multi-Architecture Support
+- ✅ linux/amd64 (Intel/AMD processors)
+- ✅ linux/arm64 (Apple Silicon, ARM processors)
+
+### 📥 Installation
+\`\`\`bash
+docker pull groovycodexyz/taschengeld:v$CURRENT_VERSION
+\`\`\`
+
+For full setup instructions, see: https://taschengeld.groovycode.xyz
+
+---
+🤖 Generated with [Claude Code](https://claude.ai/code)
+EOF
+)"
+    fi
+    
+    # Create the GitHub release with generated notes
+    gh release create "v$CURRENT_VERSION" \
+        --title "Release v$CURRENT_VERSION" \
+        --notes "$RELEASE_NOTES" \
         --latest
     
     log "SUCCESS" "Created GitHub release: https://github.com/groovycode-xyz/taschengeld/releases/tag/v$CURRENT_VERSION"
