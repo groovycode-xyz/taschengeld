@@ -384,7 +384,9 @@ export const savingsGoalService = {
           account_id: piggybankAccountId,
           amount: amount,
           transaction_type: 'withdrawal',
-          description: description ? `Savings goal "${goal.title}": ${description}` : `Transfer to Savings Goal: ${goal.title}`,
+          description: description
+            ? `Savings goal "${goal.title}": ${description}`
+            : `Transfer to Savings Goal: ${goal.title}`,
         },
         tx
       );

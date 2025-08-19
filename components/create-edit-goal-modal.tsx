@@ -189,9 +189,9 @@ export function CreateEditGoalModal({
 
   const handleDeleteClick = () => {
     if (!existingGoal) return;
-    
+
     const currentBalance = parseFloat(existingGoal.current_balance);
-    
+
     if (currentBalance > 0) {
       setIsBalanceDialogOpen(true);
     } else {
@@ -205,12 +205,12 @@ export function CreateEditGoalModal({
     setIsDeleting(true);
     try {
       await onDelete(existingGoal.goal_id, false);
-      
+
       addToast({
         title: 'Success',
         description: 'Goal deleted successfully!',
       });
-      
+
       handleClose();
     } catch (error) {
       addToast({
@@ -231,12 +231,12 @@ export function CreateEditGoalModal({
     setIsDeleting(true);
     try {
       await onDelete(existingGoal.goal_id, true);
-      
+
       addToast({
         title: 'Success',
         description: 'Goal deleted and balance transferred to Piggy Bank!',
       });
-      
+
       handleClose();
     } catch (error) {
       addToast({
@@ -362,9 +362,9 @@ export function CreateEditGoalModal({
 
             <DialogFooter className='flex gap-2 sm:gap-0'>
               {mode === 'edit' && onDelete && (
-                <Button 
-                  type='button' 
-                  variant='destructive' 
+                <Button
+                  type='button'
+                  variant='destructive'
                   onClick={handleDeleteClick}
                   disabled={isSubmitting || isDeleting}
                   className='mr-auto'
@@ -403,10 +403,10 @@ export function CreateEditGoalModal({
         isOpen={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}
         onConfirm={handleDeleteWithoutTransfer}
-        title="Delete Savings Goal"
-        description="Are you sure you want to delete this goal? This action cannot be undone and will permanently delete the goal and all its transaction history."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title='Delete Savings Goal'
+        description='Are you sure you want to delete this goal? This action cannot be undone and will permanently delete the goal and all its transaction history.'
+        confirmText='Delete'
+        cancelText='Cancel'
       />
 
       {/* Balance Transfer Dialog */}
@@ -418,39 +418,39 @@ export function CreateEditGoalModal({
               This goal has a current balance that needs to be handled before deletion.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className='space-y-4'>
             <div className='p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800'>
               <div className='flex items-center justify-between'>
                 <span className='text-sm font-medium'>Current Balance:</span>
-                <CurrencyDisplay 
-                  value={parseFloat(existingGoal?.current_balance || '0')} 
+                <CurrencyDisplay
+                  value={parseFloat(existingGoal?.current_balance || '0')}
                   className='text-lg font-semibold text-orange-700 dark:text-orange-300'
                 />
               </div>
             </div>
-            
+
             <p className='text-sm text-muted-foreground'>
               What would you like to do with the balance in this goal?
             </p>
           </div>
 
           <DialogFooter className='flex gap-2'>
-            <Button 
-              variant='outline' 
+            <Button
+              variant='outline'
               onClick={() => setIsBalanceDialogOpen(false)}
               disabled={isDeleting}
             >
               Cancel
             </Button>
-            <Button 
-              variant='destructive' 
+            <Button
+              variant='destructive'
               onClick={handleDeleteWithoutTransfer}
               disabled={isDeleting}
             >
               {isDeleting ? 'Deleting...' : 'Delete & Lose Balance'}
             </Button>
-            <Button 
+            <Button
               variant='default'
               onClick={handleDeleteWithTransfer}
               disabled={isDeleting}

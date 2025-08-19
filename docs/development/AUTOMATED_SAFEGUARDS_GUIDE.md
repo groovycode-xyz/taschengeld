@@ -24,6 +24,7 @@
 The Taschengeld project uses a comprehensive automated safeguards system to prevent build failures, deployment issues, and maintain code quality. This system provides multiple layers of protection from local development through to production deployment.
 
 **Key Benefits:**
+
 - ✅ Prevents TypeScript errors from reaching production
 - ✅ Ensures consistent code formatting across the team
 - ✅ Blocks broken builds from being deployed
@@ -40,13 +41,14 @@ In August 2025, during the savings goals feature implementation, we experienced 
 
 1. **Multiple failed Docker builds** due to uncaught TypeScript errors
 2. **Prettier formatting issues** not caught before commits
-3. **Skipped pre-merge validation** (human error in following ../../CLAUDE.md guidelines)  
+3. **Skipped pre-merge validation** (human error in following ../../CLAUDE.md guidelines)
 4. **Version mismatch** between GitHub releases (v1.3.4) and DockerHub (should sync automatically)
 5. **Production deployment delays** and hotfix requirements
 
 ### The Solution
 
 A multi-layer automated protection system that:
+
 - **Prevents issues locally** before they're committed
 - **Validates changes** before they reach main branch
 - **Ensures build success** before production deployment
@@ -78,9 +80,10 @@ A multi-layer automated protection system that:
 ```
 
 **Failure Points Eliminated:**
+
 - **Before Commit**: TypeScript errors, formatting issues
 - **Before Push**: Build failures
-- **Before Merge**: All validation failures  
+- **Before Merge**: All validation failures
 - **Before Deploy**: Docker build issues, runtime problems
 
 ---
@@ -103,6 +106,7 @@ Claude Code hooks run automatically when you use development tools, providing im
 ```
 
 **What You'll See:**
+
 ```
 🎨 Auto-formatting src/components/Button.tsx...
 ✅ Formatted src/components/Button.tsx
@@ -114,11 +118,13 @@ Claude Code hooks run automatically when you use development tools, providing im
 **Purpose**: Validates code quality before committing changes
 
 **Validation Steps:**
+
 1. **TypeScript Check**: `npx tsc --noEmit`
-2. **Code Formatting**: `npm run format` 
+2. **Code Formatting**: `npm run format`
 3. **Linting**: `npm run lint`
 
 **What You'll See:**
+
 ```
 🔍 Pre-commit validation...
 Running TypeScript check...
@@ -128,6 +134,7 @@ Running Linting...
 ```
 
 **If Issues Found:**
+
 ```
 ❌ TypeScript check failed!
 [Error details]
@@ -143,12 +150,14 @@ Running Linting...
 **Validation**: Runs `npm run build:test` (TypeScript + lint + format + build)
 
 **What You'll See:**
+
 ```
 🛡️  Protected branch push detected. Running build validation...
 ✅ Build validation passed!
 ```
 
 **If Build Fails:**
+
 ```
 ❌ Build validation failed!
 Error output: [Build errors]
@@ -172,7 +181,7 @@ Located in `.claude/settings.json`:
             "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/validate_push.py"
           },
           {
-            "type": "command", 
+            "type": "command",
             "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/pre_commit_check.py"
           }
         ]
@@ -203,6 +212,7 @@ Located in `.claude/settings.json`:
 **Purpose**: Comprehensive validation before merge
 
 **Steps:**
+
 1. **Setup**: Node.js 18, npm dependencies
 2. **Format Check**: `npm run format` + git diff validation
 3. **TypeScript Check**: `npx tsc --noEmit`
@@ -218,6 +228,7 @@ Located in `.claude/settings.json`:
 **Purpose**: Validates production builds
 
 **Steps:**
+
 1. TypeScript compilation check
 2. ESLint validation
 3. Prettier formatting check
@@ -229,6 +240,7 @@ Located in `.claude/settings.json`:
 **Purpose**: Multi-architecture Docker builds with comprehensive testing
 
 **Steps:**
+
 1. **Validation**: Commit size, dependencies
 2. **Build**: Multi-arch (AMD64/ARM64) Docker images
 3. **Testing**: Image validation, database connectivity, API health checks
@@ -247,7 +259,7 @@ git checkout development
 # 2. Make changes - auto-formatting happens automatically
 # Edit files with Claude or your editor
 
-# 3. Commit changes - pre-commit validation runs automatically  
+# 3. Commit changes - pre-commit validation runs automatically
 git commit -m "Add new feature"
 # 🔍 Pre-commit validation runs automatically
 
@@ -286,13 +298,13 @@ git push origin feature/new-feature
 
 ### What Happens Automatically
 
-| Action | Hook/Workflow | Validation |
-|--------|---------------|------------|
-| Edit file | Auto-format hook | Prettier formatting |
-| `git commit` | Pre-commit hook | TypeScript + lint + format |
-| `git push` to main/dev | Pre-push hook | `npm run build:test` |
-| Create PR | PR Validation | Full build validation |
-| Push to main | Docker Build | Multi-arch build + testing |
+| Action                 | Hook/Workflow    | Validation                 |
+| ---------------------- | ---------------- | -------------------------- |
+| Edit file              | Auto-format hook | Prettier formatting        |
+| `git commit`           | Pre-commit hook  | TypeScript + lint + format |
+| `git push` to main/dev | Pre-push hook    | `npm run build:test`       |
+| Create PR              | PR Validation    | Full build validation      |
+| Push to main           | Docker Build     | Multi-arch build + testing |
 
 ---
 
@@ -303,10 +315,12 @@ git push origin feature/new-feature
 #### 1. Hooks Not Running
 
 **Symptoms:**
+
 - No hook messages when committing/pushing
 - Formatting not happening automatically
 
 **Diagnostics:**
+
 ```bash
 # Check if settings.json exists and is valid
 cat .claude/settings.json | python3 -m json.tool
@@ -322,6 +336,7 @@ echo '{"tool_input":{"command":"git commit"}}' | python3 .claude/hooks/pre_commi
 ```
 
 **Solutions:**
+
 ```bash
 # Make hook scripts executable
 chmod +x .claude/hooks/*.py
@@ -333,6 +348,7 @@ chmod +x .claude/hooks/*.py
 #### 2. Pre-Commit Hook Failing
 
 **Symptoms:**
+
 ```
 ❌ TypeScript check failed!
 ❌ Code formatting failed!
@@ -340,6 +356,7 @@ chmod +x .claude/hooks/*.py
 ```
 
 **Solutions:**
+
 ```bash
 # Run checks manually to see detailed errors
 npx tsc --noEmit                # TypeScript check
@@ -356,12 +373,14 @@ npm run build:test              # Full validation
 #### 3. Pre-Push Hook Blocking
 
 **Symptoms:**
+
 ```
 ❌ Build validation failed!
 📋 Please fix the issues and run 'npm run build:test' locally before pushing.
 ```
 
 **Solutions:**
+
 ```bash
 # Run the exact same validation locally
 npm run build:test
@@ -380,11 +399,13 @@ npm run format                  # Fix formatting
 #### 4. CI/CD Workflows Failing
 
 **Symptoms:**
+
 - PR validation workflow fails
 - Docker build workflow fails
 - Red status checks on PRs
 
 **Diagnostics:**
+
 ```bash
 # Check GitHub Actions logs
 gh run list --branch main
@@ -400,17 +421,19 @@ npm run build:test              # Should match PR validation
 **Solutions:**
 
 **For PR Validation Failures:**
+
 ```bash
 # Run exact same steps as CI locally
 npm ci
 npm run format && git diff --exit-code
 npx tsc --noEmit
-npm run lint  
+npm run lint
 npm run build
 npx prisma generate
 ```
 
 **For Docker Build Failures:**
+
 ```bash
 # Test Docker build locally
 docker build -f Dockerfile.prod -t test-build .
@@ -428,11 +451,13 @@ git status
 #### 5. Version Synchronization Issues
 
 **Symptoms:**
+
 - GitHub releases ahead of DockerHub
 - Images not available on DockerHub
 - Version mismatches
 
 **Diagnostics:**
+
 ```bash
 # Check current version
 cat version.txt
@@ -448,6 +473,7 @@ gh run list --workflow=docker-build.yml
 ```
 
 **Solutions:**
+
 ```bash
 # Manual release trigger
 gh workflow run release.yml --ref main
@@ -462,13 +488,15 @@ gh run view [run-id] --log
 ### Environment Requirements
 
 **Required Tools:**
+
 - Python 3.x (for hook scripts)
-- Node.js 18+ (for build commands)  
+- Node.js 18+ (for build commands)
 - npm (for package management)
 - Git (for repository operations)
 - Docker (for local testing)
 
 **Verification Commands:**
+
 ```bash
 python3 --version          # Should show Python 3.x
 node --version             # Should show Node 18+
@@ -480,6 +508,7 @@ docker --version           # Should show Docker version
 ### Debug Mode
 
 **Enable Verbose Hook Output:**
+
 ```bash
 # Add debug flag to hook commands in .claude/settings.json
 # Modify command to include debug flag:
@@ -487,6 +516,7 @@ docker --version           # Should show Docker version
 ```
 
 **Manual Hook Testing:**
+
 ```bash
 # Test individual hooks
 cd /path/to/project
@@ -495,7 +525,7 @@ cd /path/to/project
 echo '{"tool_input":{"command":"git push origin main"}}' | \
 python3 .claude/hooks/validate_push.py
 
-# Test commit validation  
+# Test commit validation
 echo '{"tool_input":{"command":"git commit -m test"}}' | \
 python3 .claude/hooks/pre_commit_check.py
 
@@ -514,7 +544,7 @@ python3 .claude/hooks/auto_format.py
 .claude/
 ├── hooks/
 │   ├── validate_push.py      # Pre-push build validation
-│   ├── auto_format.py        # Post-edit auto-formatting  
+│   ├── auto_format.py        # Post-edit auto-formatting
 │   ├── pre_commit_check.py   # Pre-commit validation
 │   └── README.md            # Hook documentation
 ├── pr-review-prompt.md      # PR review template
@@ -542,20 +572,24 @@ python3 .claude/hooks/auto_format.py
 ### Environment Variables
 
 **For Local Development:**
+
 - `CLAUDE_PROJECT_DIR`: Set automatically by Claude Code
 - `SKIP_ENV_VALIDATION`: Set to "true" for build testing without DB
 
 **For GitHub Actions:**
+
 - `DOCKERHUB_USERNAME`: DockerHub account username
 - `DOCKERHUB_TOKEN`: DockerHub access token
 
 ### Branch Strategy
 
 **Protected Branches:**
+
 - `main`: Production releases, triggers Docker builds
 - `development`: Daily development, safe for experimentation
 
 **Hook Behavior:**
+
 - Pre-push validation only on `main`/`development` branches
 - Pre-commit validation on all branches
 - Auto-formatting on all file edits
@@ -567,6 +601,7 @@ python3 .claude/hooks/auto_format.py
 ### Manual Testing
 
 **Test Hook Scripts:**
+
 ```bash
 # 1. Test auto-format hook
 echo '{"tool_input":{"file_path":"test.json"}}' > test_format.json
@@ -574,26 +609,28 @@ echo '{"test":"value"}' > test.json
 python3 .claude/hooks/auto_format.py < test_format.json
 # Should show: "🎨 Auto-formatting test.json..." "✅ Formatted test.json"
 
-# 2. Test pre-commit hook  
+# 2. Test pre-commit hook
 echo '{"tool_input":{"command":"git commit -m test"}}' | \
 python3 .claude/hooks/pre_commit_check.py
 # Should run TypeScript, formatting, and linting checks
 
 # 3. Test pre-push hook
 echo '{"tool_input":{"command":"git push origin main"}}' | \
-python3 .claude/hooks/validate_push.py  
+python3 .claude/hooks/validate_push.py
 # Should run npm run build:test
 ```
 
 **Test Build Commands:**
+
 ```bash
 # Test the commands hooks rely on
 npm run build:test             # Full validation (used by pre-push)
-npm run check                  # TypeScript + lint + format (used by pre-commit)  
+npm run check                  # TypeScript + lint + format (used by pre-commit)
 npm run format                 # Prettier formatting (used by auto-format)
 ```
 
 **Test CI/CD Locally:**
+
 ```bash
 # Test PR validation steps
 npm ci
@@ -612,6 +649,7 @@ npx prisma generate
 **Create Test Scenarios:**
 
 **1. Test TypeScript Error Prevention:**
+
 ```typescript
 // Add intentional TypeScript error to a file
 const x: string = 123; // Type error
@@ -623,15 +661,18 @@ git commit -m "test commit"
 ```
 
 **2. Test Formatting Auto-Fix:**
+
 ```javascript
 // Create poorly formatted file
-const   x={a:1,b:2};let y=   3;
+const x = { a: 1, b: 2 };
+let y = 3;
 
 // Edit with Claude - should auto-format
 // Expected: File automatically formatted by auto_format hook
 ```
 
 **3. Test Build Failure Prevention:**
+
 ```bash
 # Break the build (e.g., syntax error)
 # Try to push to main
@@ -640,6 +681,7 @@ git push origin main
 ```
 
 **4. Test PR Protection:**
+
 ```bash
 # Create PR with issues
 git checkout -b test-branch
@@ -653,16 +695,19 @@ git push origin test-branch
 The system is working correctly when:
 
 ✅ **Local Protection:**
+
 - Files are auto-formatted after edits
 - Commits are blocked when TypeScript/lint errors exist
 - Pushes to main/development are blocked when builds fail
 
-✅ **CI/CD Protection:**  
+✅ **CI/CD Protection:**
+
 - PRs fail validation when code quality issues exist
 - Docker builds succeed consistently
 - Images are pushed to DockerHub with correct versions
 
 ✅ **Developer Experience:**
+
 - Clear error messages with actionable fixes
 - Hooks don't interfere with normal development
 - Fast feedback loops for issue resolution
@@ -674,10 +719,11 @@ The system is working correctly when:
 ### Regular Maintenance
 
 **Monthly Checks:**
+
 ```bash
 # 1. Verify hook scripts are working
 python3 .claude/hooks/validate_push.py --test
-python3 .claude/hooks/auto_format.py --test  
+python3 .claude/hooks/auto_format.py --test
 python3 .claude/hooks/pre_commit_check.py --test
 
 # 2. Update dependencies
@@ -691,14 +737,16 @@ docker manifest inspect groovycodexyz/taschengeld:latest
 ```
 
 **Quarterly Reviews:**
+
 - Review hook effectiveness metrics
-- Update troubleshooting documentation  
+- Update troubleshooting documentation
 - Check for new Claude Code hook features
 - Evaluate if additional safeguards are needed
 
 ### Updating the System
 
 **When Adding New Validation Rules:**
+
 ```bash
 # 1. Update hook scripts in .claude/hooks/
 # 2. Test changes manually
@@ -707,6 +755,7 @@ docker manifest inspect groovycodexyz/taschengeld:latest
 ```
 
 **When Modifying Workflows:**
+
 ```bash
 # 1. Edit .github/workflows/*.yml files
 # 2. Test with draft PRs
@@ -717,12 +766,14 @@ docker manifest inspect groovycodexyz/taschengeld:latest
 ### Monitoring Success
 
 **Key Metrics to Track:**
+
 - **Build Failure Rate**: Should approach 0% on main branch
 - **TypeScript Errors in Production**: Should be 0
 - **Formatting Issues**: Should be automatically resolved
 - **Version Synchronization**: GitHub and DockerHub should stay aligned
 
 **Success Indicators:**
+
 - No failed Docker builds on main branch
 - No formatting-related commits
 - No hotfixes required for TypeScript errors
@@ -735,7 +786,7 @@ docker manifest inspect groovycodexyz/taschengeld:latest
 The Automated Safeguards System provides comprehensive protection against the build failures and deployment issues that previously affected the Taschengeld project. By implementing multiple layers of validation from local development through production deployment, we ensure:
 
 - **Quality**: Code quality is maintained automatically
-- **Reliability**: Builds consistently succeed  
+- **Reliability**: Builds consistently succeed
 - **Efficiency**: Issues are caught early in the development cycle
 - **Confidence**: Developers can push changes knowing they'll work in production
 
@@ -744,8 +795,9 @@ This system eliminates human error from the development process while maintainin
 ---
 
 **For Support:**
+
 - Check this guide's troubleshooting section
-- Review GitHub Actions logs for CI/CD issues  
+- Review GitHub Actions logs for CI/CD issues
 - Test hooks manually using the provided commands
 - Refer to ../../CLAUDE.md for project-specific guidelines
 
