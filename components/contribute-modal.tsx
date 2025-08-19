@@ -252,9 +252,7 @@ export function ContributeModal({
                 </div>
               </div>
               {newBalance >= targetAmount && (
-                <div className='text-green-600 font-medium text-sm'>
-                  🎉 Goal will be completed!
-                </div>
+                <div className='text-green-600 font-medium text-sm'>🎉 Goal will be completed!</div>
               )}
             </div>
           )}
@@ -265,7 +263,9 @@ export function ContributeModal({
             </Button>
             <Button
               type='submit'
-              disabled={isSubmitting || !piggybankAccount || parseFloat(piggybankAccount.balance) === 0}
+              disabled={
+                isSubmitting || !piggybankAccount || parseFloat(piggybankAccount.balance) === 0
+              }
             >
               {isSubmitting ? 'Contributing...' : 'Contribute'}
             </Button>

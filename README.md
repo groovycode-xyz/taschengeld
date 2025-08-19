@@ -284,7 +284,6 @@ docker image prune -f
 - Check our [GitHub Issues](https://github.com/groovycode-xyz/taschengeld/issues)
 - Submit a new issue if you can't find a solution
 
-
 ## License
 
 MIT License - See LICENSE file for details

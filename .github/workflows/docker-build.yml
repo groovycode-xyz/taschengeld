@@ -6,15 +6,15 @@ on:
     # Removed restrictive path filter - trigger on any main branch changes
     # This ensures build validation happens for all code changes
     paths-ignore:
-      - '**.md'  # Ignore documentation changes
-      - 'docs/**'  # Ignore documentation directory
-      - '.archive/**'  # Ignore archived files
+      - '**.md' # Ignore documentation changes
+      - 'docs/**' # Ignore documentation directory
+      - '.archive/**' # Ignore archived files
   pull_request:
     branches: [main]
     # Enable build validation for all PRs
     paths-ignore:
       - '**.md'
-      - 'docs/**' 
+      - 'docs/**'
       - '.archive/**'
   workflow_dispatch: # Allow manual triggering
 
