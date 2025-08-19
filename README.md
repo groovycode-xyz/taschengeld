@@ -34,7 +34,7 @@ docker compose up -d
 **Multi-Architecture Support:**
 
 - `docker pull groovycodexyz/taschengeld:latest` (AMD64 + ARM64)
-- `docker pull groovycodexyz/taschengeld:v1.1.10` (Specific version)
+- `docker pull groovycodexyz/taschengeld:v1.3.4` (Specific version)
 - `docker pull groovycodexyz/taschengeld:stable` (Latest stable release)
 
 **Supported Platforms:**

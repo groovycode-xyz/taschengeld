@@ -41,7 +41,7 @@ In August 2025, during the savings goals feature implementation, we experienced 
 1. **Multiple failed Docker builds** due to uncaught TypeScript errors
 2. **Prettier formatting issues** not caught before commits
 3. **Skipped pre-merge validation** (human error in following ../../CLAUDE.md guidelines)  
-4. **Version mismatch** between GitHub releases (v1.3.2) and DockerHub (stuck at v1.1.11)
+4. **Version mismatch** between GitHub releases (v1.3.4) and DockerHub (should sync automatically)
 5. **Production deployment delays** and hotfix requirements
 
 ### The Solution
