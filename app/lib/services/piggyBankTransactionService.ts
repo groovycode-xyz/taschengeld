@@ -126,11 +126,11 @@ export const piggyBankTransactionService = {
 
   // Create transaction record only (no balance update) - for external services like savings goals
   async createTransactionOnly(
-    input: CreateTransactionInput, 
+    input: CreateTransactionInput,
     tx?: Prisma.TransactionClient
   ): Promise<PiggyBankTransaction> {
     const client = tx || prisma;
-    
+
     const transaction = await client.piggybankTransaction.create({
       data: {
         account_id: input.account_id,

@@ -3,7 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useMode } from '@/components/context/mode-context';
@@ -21,7 +27,7 @@ export function Savings() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isCreateGoalModalOpen, setIsCreateGoalModalOpen] = useState(false);
-  
+
   // Filter and sort state
   const [statusFilter, setStatusFilter] = useState<string>('all'); // 'all', 'active', 'inactive'
   const [selectedUser, setSelectedUser] = useState<string>('all');
@@ -88,31 +94,37 @@ export function Savings() {
   // Filter and sort logic
   const filteredAndSortedGoals = React.useMemo(() => {
     let filtered = [...goals];
-    
+
     // Filter by active/inactive status
     if (statusFilter === 'active') {
-      filtered = filtered.filter(goal => goal.is_active);
+      filtered = filtered.filter((goal) => goal.is_active);
     } else if (statusFilter === 'inactive') {
-      filtered = filtered.filter(goal => !goal.is_active);
+      filtered = filtered.filter((goal) => !goal.is_active);
     }
     // 'all' shows both active and inactive
-    
+
     // Filter by user
     if (selectedUser !== 'all') {
-      filtered = filtered.filter(goal => goal.user_id.toString() === selectedUser);
+      filtered = filtered.filter((goal) => goal.user_id.toString() === selectedUser);
     }
-    
+
     // Sort goals
     filtered.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortBy) {
         case 'name':
           comparison = a.title.localeCompare(b.title);
           break;
         case 'progress':
-          const aProgress = Math.min((parseFloat(a.current_balance) / parseFloat(a.target_amount)) * 100, 100);
-          const bProgress = Math.min((parseFloat(b.current_balance) / parseFloat(b.target_amount)) * 100, 100);
+          const aProgress = Math.min(
+            (parseFloat(a.current_balance) / parseFloat(a.target_amount)) * 100,
+            100
+          );
+          const bProgress = Math.min(
+            (parseFloat(b.current_balance) / parseFloat(b.target_amount)) * 100,
+            100
+          );
           comparison = aProgress - bProgress;
           break;
         case 'user':
@@ -124,17 +136,17 @@ export function Savings() {
         default:
           return 0;
       }
-      
+
       // Apply sort order
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-    
+
     return filtered;
   }, [goals, statusFilter, selectedUser, sortBy, sortOrder]);
 
-  const activeGoals = filteredAndSortedGoals.filter(goal => goal.is_active);
-  const inactiveGoals = filteredAndSortedGoals.filter(goal => !goal.is_active);
-  
+  const activeGoals = filteredAndSortedGoals.filter((goal) => goal.is_active);
+  const inactiveGoals = filteredAndSortedGoals.filter((goal) => !goal.is_active);
+
   // Clear filters function
   const clearFilters = () => {
     setStatusFilter('all');
@@ -142,8 +154,9 @@ export function Savings() {
     setSortBy('name');
     setSortOrder('asc');
   };
-  
-  const hasActiveFilters = statusFilter !== 'all' || selectedUser !== 'all' || sortBy !== 'name' || sortOrder !== 'asc';
+
+  const hasActiveFilters =
+    statusFilter !== 'all' || selectedUser !== 'all' || sortBy !== 'name' || sortOrder !== 'asc';
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -273,15 +286,13 @@ export function Savings() {
         ) : filteredAndSortedGoals.length === 0 ? (
           <div className='flex flex-col items-center justify-center h-64 text-center'>
             <Filter className='h-16 w-16 text-muted-foreground mb-4' />
-            <h2 className='text-xl font-medium text-foreground mb-2'>No Goals Match Your Filters</h2>
+            <h2 className='text-xl font-medium text-foreground mb-2'>
+              No Goals Match Your Filters
+            </h2>
             <p className='text-muted-foreground mb-6'>
               Try adjusting your filters to see more savings goals.
             </p>
-            <Button
-              variant='outline'
-              onClick={clearFilters}
-              className='flex items-center gap-2'
-            >
+            <Button variant='outline' onClick={clearFilters} className='flex items-center gap-2'>
               <X className='h-4 w-4' />
               Clear All Filters
             </Button>

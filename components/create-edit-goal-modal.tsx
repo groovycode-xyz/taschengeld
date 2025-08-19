@@ -11,7 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import { SelectIconModal } from './select-icon-modal';
@@ -134,7 +140,7 @@ export function CreateEditGoalModal({
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    
+
     try {
       const goalData: any = {
         title: title.trim(),
@@ -150,7 +156,7 @@ export function CreateEditGoalModal({
       }
 
       await onSave(goalData);
-      
+
       addToast({
         title: 'Success',
         description: `Goal ${mode === 'create' ? 'created' : 'updated'} successfully!`,
@@ -174,7 +180,7 @@ export function CreateEditGoalModal({
     onClose();
   };
 
-  const selectedUser = users.find(user => user.user_id.toString() === userId);
+  const selectedUser = users.find((user) => user.user_id.toString() === userId);
 
   return (
     <>
@@ -279,10 +285,7 @@ export function CreateEditGoalModal({
                     Inactive goals cannot receive contributions
                   </div>
                 </div>
-                <Switch
-                  checked={isActive}
-                  onCheckedChange={setIsActive}
-                />
+                <Switch checked={isActive} onCheckedChange={setIsActive} />
               </div>
             )}
 
@@ -296,8 +299,8 @@ export function CreateEditGoalModal({
                     ? 'Creating...'
                     : 'Updating...'
                   : mode === 'create'
-                  ? 'Create Goal'
-                  : 'Update Goal'}
+                    ? 'Create Goal'
+                    : 'Update Goal'}
               </Button>
             </DialogFooter>
           </form>

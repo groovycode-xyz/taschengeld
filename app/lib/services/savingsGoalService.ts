@@ -1,6 +1,9 @@
 import { prisma } from '@/app/lib/prisma';
 import { SavingsGoal, SavingsGoalInput, SavingsGoalUpdate } from '@/app/types/savingsGoal';
-import { SavingsGoalTransaction, SavingsGoalTransactionInput } from '@/app/types/savingsGoalTransaction';
+import {
+  SavingsGoalTransaction,
+  SavingsGoalTransactionInput,
+} from '@/app/types/savingsGoalTransaction';
 import { piggyBankTransactionService } from './piggyBankTransactionService';
 import { Prisma } from '@prisma/client';
 
@@ -22,7 +25,8 @@ export const savingsGoalService = {
 
     const targetAmount = parseFloat(goal.target_amount.toString());
     const currentBalance = parseFloat(goal.current_balance.toString());
-    const progressPercentage = targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
+    const progressPercentage =
+      targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
 
     return {
       goal_id: goal.goal_id,
@@ -53,7 +57,8 @@ export const savingsGoalService = {
 
     const targetAmount = parseFloat(goal.target_amount.toString());
     const currentBalance = parseFloat(goal.current_balance.toString());
-    const progressPercentage = targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
+    const progressPercentage =
+      targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
 
     return {
       goal_id: goal.goal_id,
@@ -84,7 +89,8 @@ export const savingsGoalService = {
     return goals.map((goal) => {
       const targetAmount = parseFloat(goal.target_amount.toString());
       const currentBalance = parseFloat(goal.current_balance.toString());
-      const progressPercentage = targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
+      const progressPercentage =
+        targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
 
       return {
         goal_id: goal.goal_id,
@@ -115,7 +121,8 @@ export const savingsGoalService = {
     return goals.map((goal) => {
       const targetAmount = parseFloat(goal.target_amount.toString());
       const currentBalance = parseFloat(goal.current_balance.toString());
-      const progressPercentage = targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
+      const progressPercentage =
+        targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
 
       return {
         goal_id: goal.goal_id,
@@ -149,7 +156,8 @@ export const savingsGoalService = {
 
     const targetAmount = parseFloat(goal.target_amount.toString());
     const currentBalance = parseFloat(goal.current_balance.toString());
-    const progressPercentage = targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
+    const progressPercentage =
+      targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
 
     return {
       goal_id: goal.goal_id,
@@ -181,21 +189,21 @@ export const savingsGoalService = {
     tx?: Prisma.TransactionClient
   ): Promise<SavingsGoal> {
     const db = tx || prisma;
-    
+
     let updateData: Prisma.SavingsGoalUpdateInput;
 
     if (operation === 'set') {
-      updateData = { 
+      updateData = {
         current_balance: amount,
         updated_at: new Date(),
       };
     } else if (operation === 'increment') {
-      updateData = { 
+      updateData = {
         current_balance: { increment: amount },
         updated_at: new Date(),
       };
     } else {
-      updateData = { 
+      updateData = {
         current_balance: { decrement: amount },
         updated_at: new Date(),
       };
@@ -211,7 +219,8 @@ export const savingsGoalService = {
 
     const targetAmount = parseFloat(goal.target_amount.toString());
     const currentBalance = parseFloat(goal.current_balance.toString());
-    const progressPercentage = targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
+    const progressPercentage =
+      targetAmount > 0 ? Math.min((currentBalance / targetAmount) * 100, 100) : 0;
 
     return {
       goal_id: goal.goal_id,
@@ -296,12 +305,15 @@ export const savingsGoalService = {
       const updatedGoal = await this.updateBalance(goalId, amount, 'increment', tx);
 
       // Create piggy bank transaction record
-      await piggyBankTransactionService.createTransactionOnly({
-        account_id: piggybankAccountId,
-        amount: amount,
-        transaction_type: 'withdrawal',
-        description: description ? `Savings goal: ${description}` : 'Transfer to Savings Goal',
-      }, tx);
+      await piggyBankTransactionService.createTransactionOnly(
+        {
+          account_id: piggybankAccountId,
+          amount: amount,
+          transaction_type: 'withdrawal',
+          description: description ? `Savings goal: ${description}` : 'Transfer to Savings Goal',
+        },
+        tx
+      );
 
       // Create transaction record
       const transaction = await tx.savingsGoalTransaction.create({
@@ -352,12 +364,17 @@ export const savingsGoalService = {
       });
 
       // Create piggy bank transaction record
-      await piggyBankTransactionService.createTransactionOnly({
-        account_id: piggybankAccountId,
-        amount: amount,
-        transaction_type: 'deposit',
-        description: description ? `From savings goal: ${description}` : 'Transfer from Savings Goal',
-      }, tx);
+      await piggyBankTransactionService.createTransactionOnly(
+        {
+          account_id: piggybankAccountId,
+          amount: amount,
+          transaction_type: 'deposit',
+          description: description
+            ? `From savings goal: ${description}`
+            : 'Transfer from Savings Goal',
+        },
+        tx
+      );
 
       // Create transaction record
       const transaction = await tx.savingsGoalTransaction.create({
