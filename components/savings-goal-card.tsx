@@ -59,6 +59,33 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
     }
   };
 
+  const handleDeleteGoal = async (goalId: number, transferBalance: boolean) => {
+    try {
+      const params = new URLSearchParams({
+        goal_id: goalId.toString(),
+        transfer_balance: transferBalance.toString(),
+      });
+
+      const response = await fetch(`/api/savings-goals?${params}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete savings goal');
+      }
+
+      setIsEditModalOpen(false);
+      onUpdate();
+    } catch (error) {
+      // Re-throw error so modal can handle it
+      throw error;
+    }
+  };
+
   const handleContribute = async (
     amount: number,
     piggybankAccountId: number,
@@ -283,6 +310,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onSave={handleUpdateGoal}
+        onDelete={handleDeleteGoal}
         users={users}
         mode='edit'
         existingGoal={goal}
