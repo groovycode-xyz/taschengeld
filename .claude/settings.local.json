@@ -40,7 +40,8 @@
       "Bash(gh run list:*)",
       "Bash(gh workflow run:*)",
       "Bash(gh api:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(mv:*)"
     ],
     "deny": []
   }
