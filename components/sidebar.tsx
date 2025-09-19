@@ -11,6 +11,7 @@ import {
   ListTodo,
   Users,
   SwitchCamera,
+  BarChart3,
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -58,19 +59,33 @@ export function Sidebar() {
           </Link>
 
           {(!enforceRoles || isParentMode) && (
-            <>
-              <Link
-                href='/payday'
-                className={`flex items-center space-x-3 px-3 py-4 md:py-3 rounded-lg border-2 transition-all touch-target ${
-                  pathname === '/payday'
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'border-border hover:bg-muted hover:border-muted-foreground/20 active:bg-muted/80'
-                }`}
-              >
-                <HandCoins className='h-6 w-6 md:h-5 md:w-5' />
-                <span className='text-base md:text-sm'>Payday</span>
-              </Link>
+            <Link
+              href='/payday'
+              className={`flex items-center space-x-3 px-3 py-4 md:py-3 rounded-lg border-2 transition-all touch-target ${
+                pathname === '/payday'
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'border-border hover:bg-muted hover:border-muted-foreground/20 active:bg-muted/80'
+              }`}
+            >
+              <HandCoins className='h-6 w-6 md:h-5 md:w-5' />
+              <span className='text-base md:text-sm'>Payday</span>
+            </Link>
+          )}
 
+          <Link
+            href='/reports'
+            className={`flex items-center space-x-3 px-3 py-4 md:py-3 rounded-lg border-2 transition-all touch-target ${
+              pathname === '/reports'
+                ? 'bg-primary/10 border-primary text-primary'
+                : 'border-border hover:bg-muted hover:border-muted-foreground/20 active:bg-muted/80'
+            }`}
+          >
+            <BarChart3 className='h-6 w-6 md:h-5 md:w-5' />
+            <span className='text-base md:text-sm'>Reports</span>
+          </Link>
+
+          {(!enforceRoles || isParentMode) && (
+            <>
               <Link
                 href='/task-management'
                 className={`flex items-center space-x-3 px-3 py-4 md:py-3 rounded-lg border-2 transition-all touch-target ${

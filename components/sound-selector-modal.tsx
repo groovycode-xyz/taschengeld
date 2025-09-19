@@ -78,7 +78,7 @@ export function SoundSelectorModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleCancel}>
-      <DialogContent className='bg-white border-none shadow-lg max-h-[80vh] flex flex-col'>
+      <DialogContent className='border-none shadow-lg max-h-[80vh] flex flex-col'>
         <DialogHeader className='flex-shrink-0'>
           <DialogTitle>Select a Sound</DialogTitle>
         </DialogHeader>
