@@ -7,71 +7,85 @@ This guide helps write commit messages that generate better automated release no
 The intelligent release notes generator analyzes commit messages to categorize and describe features. Use these patterns for best results:
 
 ### ✨ New Features
+
 ```
 feat: Add user profile management
-feat(savings): Implement goal deletion with balance transfer  
+feat(savings): Implement goal deletion with balance transfer
 add: New expense tracking functionality
 implement: Dark mode theme switching
 ```
+
 **Result:** Appears in "✨ New Features" section
 
-### 🔧 Bug Fixes  
+### 🔧 Bug Fixes
+
 ```
 fix: Resolve database connection timeout issue
 fix(api): Correct savings goal calculation error
 bugfix: Fix memory leak in transaction processing
 ```
+
 **Result:** Appears in "🔧 Bug Fixes" section
 
 ### 🎨 UI/UX Improvements
+
 ```
 ui: Update savings goal card design
 ux: Improve navigation flow for child users
-update: Enhance button styling and interactions  
+update: Enhance button styling and interactions
 improve: Better responsive layout for tablets
 ```
+
 **Result:** Appears in "🎨 UI/UX Improvements" section
 
 ### 🐳 Infrastructure & Docker
+
 ```
 docker: Fix port mapping consistency (3300:3300)
 ci: Add automated testing pipeline
 build: Optimize Docker image size
 infrastructure: Update deployment scripts
 ```
+
 **Result:** Appears in "🐳 Infrastructure" section
 
 ### ⚡ Performance
+
 ```
 perf: Optimize database query performance
 optimize: Reduce bundle size by 30%
 improve: Speed up transaction processing
 ```
+
 **Result:** Appears in "⚡ Performance" section
 
 ### 📚 Documentation
+
 ```
 docs: Update API documentation
 add: Contributing guidelines for developers
 update: README with new installation steps
 ```
+
 **Result:** Appears in "📚 Documentation" section
 
 ## Best Practices
 
 ### ✅ Good Examples
+
 ```bash
 # Clear, action-oriented, user benefit obvious
 feat: Add savings goal deletion with balance transfer options
-fix: Resolve "Failed to load savings goals" database error  
+fix: Resolve "Failed to load savings goals" database error
 ui: Enhance delete confirmation dialog with balance options
 docker: Fix development port mapping for consistent access
 ```
 
 ### ❌ Avoid These
+
 ```bash
 # Too technical, no user benefit clear
-refactor: Extract savingsGoalService methods  
+refactor: Extract savingsGoalService methods
 chore: Update dependencies
 wip: Working on delete feature
 misc: Various changes
@@ -80,24 +94,28 @@ misc: Various changes
 ## How It Becomes Release Notes
 
 **Your Commit:**
+
 ```
 feat(savings): Add goal deletion with balance transfer options
 ```
 
 **Becomes:**
+
 ```
 ✨ New Features
 - **Add goal deletion with balance transfer options**
 ```
 
 **Your Commit:**
-```  
+
+```
 fix: Resolve database connection timeout in savings page
 ```
 
 **Becomes:**
+
 ```
-🔧 Bug Fixes  
+🔧 Bug Fixes
 - **Fixed issue with database connection timeout in savings page**
 ```
 
@@ -114,17 +132,17 @@ fix: Resolve database connection timeout in savings page
 ```bash
 # Working on savings goal deletion feature
 git commit -m "feat(savings): Add delete goal button to edit modal"
-git commit -m "feat(savings): Implement balance transfer confirmation dialog"  
+git commit -m "feat(savings): Implement balance transfer confirmation dialog"
 git commit -m "feat(api): Add DELETE endpoint with transfer_balance parameter"
 git commit -m "ui: Enhance goal card with delete confirmation workflow"
 
 # When you release, these become:
 # ✨ New Features
 # - **Add delete goal button to edit modal**
-# - **Implement balance transfer confirmation dialog** 
+# - **Implement balance transfer confirmation dialog**
 # - **Add DELETE endpoint with transfer_balance parameter**
-# 
-# 🎨 UI/UX Improvements  
+#
+# 🎨 UI/UX Improvements
 # - **Enhanced goal card with delete confirmation workflow**
 ```
 

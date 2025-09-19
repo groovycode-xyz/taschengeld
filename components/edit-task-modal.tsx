@@ -109,7 +109,9 @@ export function EditTaskModal({
                     onChange={(e) => setTitle(e.target.value)}
                     required
                   />
-                  <p className='text-sm text-muted-foreground mt-1'>Recommend using 3 or fewer words</p>
+                  <p className='text-sm text-muted-foreground mt-1'>
+                    Recommend using 3 or fewer words
+                  </p>
                 </div>
                 <div>
                   <Label htmlFor='description'>Description</Label>

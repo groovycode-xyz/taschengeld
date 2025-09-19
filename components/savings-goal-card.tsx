@@ -167,18 +167,14 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
               icon={goal.icon_name}
               className={cn(
                 'h-16 w-16',
-                goal.is_active
-                  ? 'text-blue-700 dark:text-blue-300'
-                  : 'text-muted-foreground'
+                goal.is_active ? 'text-blue-700 dark:text-blue-300' : 'text-muted-foreground'
               )}
             />
             <div className='text-center space-y-2'>
               <div
                 className={cn(
                   'text-lg font-medium',
-                  goal.is_active
-                    ? 'text-blue-900 dark:text-blue-100'
-                    : 'text-foreground'
+                  goal.is_active ? 'text-blue-900 dark:text-blue-100' : 'text-foreground'
                 )}
               >
                 {goal.title}
@@ -220,9 +216,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
                 value={currentBalance}
                 className={cn(
                   'text-lg font-semibold',
-                  goal.is_active
-                    ? 'text-blue-700 dark:text-blue-300'
-                    : 'text-muted-foreground'
+                  goal.is_active ? 'text-blue-700 dark:text-blue-300' : 'text-muted-foreground'
                 )}
               />
             </div>

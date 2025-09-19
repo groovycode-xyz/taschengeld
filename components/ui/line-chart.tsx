@@ -14,12 +14,7 @@ interface LineChartProps {
   color?: string;
 }
 
-export function LineChart({
-  data,
-  width = 600,
-  height = 300,
-  color = '#3b82f6',
-}: LineChartProps) {
+export function LineChart({ data, width = 600, height = 300, color = '#3b82f6' }: LineChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -54,8 +49,8 @@ export function LineChart({
     const range = maxBalance - minBalance || 1;
 
     // Calculate nice scale values
-    let yMin = minBalance < 0 ? Math.floor(minBalance / 10) * 10 : 0;
-    let yMax = Math.ceil(maxBalance / 10) * 10 || 10;
+    const yMin = minBalance < 0 ? Math.floor(minBalance / 10) * 10 : 0;
+    const yMax = Math.ceil(maxBalance / 10) * 10 || 10;
 
     // Draw axes
     ctx.strokeStyle = '#ddd';
@@ -90,11 +85,7 @@ export function LineChart({
       ctx.stroke();
 
       // Draw label
-      ctx.fillText(
-        value.toFixed(0),
-        padding - 8,
-        y + 3
-      );
+      ctx.fillText(value.toFixed(0), padding - 8, y + 3);
     }
 
     // Draw the line
@@ -134,8 +125,10 @@ export function LineChart({
       ctx.stroke();
 
       // Show value on hover-like points (first, last, and notable changes)
-      const showValue = index === 0 || index === data.length - 1 ||
-                       (index > 0 && Math.abs(data[index].balance - data[index - 1].balance) > range * 0.1);
+      const showValue =
+        index === 0 ||
+        index === data.length - 1 ||
+        (index > 0 && Math.abs(data[index].balance - data[index - 1].balance) > range * 0.1);
 
       if (showValue && data.length <= 20) {
         ctx.fillStyle = '#333';

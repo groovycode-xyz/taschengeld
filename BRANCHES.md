@@ -14,8 +14,8 @@ This file tracks all active development branches and their purposes.
 
 ## 📚 **Archived/Completed Features**
 
-| Branch            | Status            | Purpose                                          | Completed  |
-| ----------------- | ----------------- | ------------------------------------------------ | ---------- |
+| Branch            | Status            | Purpose                                         | Completed  |
+| ----------------- | ----------------- | ----------------------------------------------- | ---------- |
 | `feature/reports` | 🎯 Merged to main | Transaction history reports with visualizations | 2025-09-19 |
 | `savings`         | 🎯 Merged to main | Dedicated savings accounts with goal tracking   | 2025-08-19 |
 

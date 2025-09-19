@@ -166,9 +166,7 @@ export function SavingsGoalTransactionModal({
         <ScrollArea className='flex-1 p-6'>
           <div className='space-y-6'>
             {isLoading ? (
-              <p className='text-center text-muted-foreground'>
-                Loading transactions...
-              </p>
+              <p className='text-center text-muted-foreground'>Loading transactions...</p>
             ) : transactions.length === 0 ? (
               <div className='text-center py-8'>
                 <IconComponent

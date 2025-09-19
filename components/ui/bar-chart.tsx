@@ -102,11 +102,7 @@ export function BarChart({
         ctx.fillStyle = '#fff';
         ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(
-          item.earned.toFixed(2),
-          x + barWidth / 2,
-          earnedY + earnedHeight - 5
-        );
+        ctx.fillText(item.earned.toFixed(2), x + barWidth / 2, earnedY + earnedHeight - 5);
       }
 
       const spentHeight = (item.spent / scaleMax) * chartHeight;
@@ -127,9 +123,11 @@ export function BarChart({
       }
 
       // Show date labels for first, last, and some middle items
-      const showLabel = index === 0 || index === data.length - 1 ||
-                       (data.length <= 7) ||
-                       (index % Math.max(1, Math.floor(data.length / 5)) === 0);
+      const showLabel =
+        index === 0 ||
+        index === data.length - 1 ||
+        data.length <= 7 ||
+        index % Math.max(1, Math.floor(data.length / 5)) === 0;
 
       if (showLabel) {
         ctx.fillStyle = '#666';
@@ -160,7 +158,7 @@ export function BarChart({
     ctx.textAlign = 'right';
 
     for (let i = 0; i <= scaleSteps; i++) {
-      const value = (i * stepSize);
+      const value = i * stepSize;
       const y = height - padding - (i / scaleSteps) * chartHeight;
 
       // Draw tick mark
@@ -179,11 +177,7 @@ export function BarChart({
         label = value.toFixed(0);
       }
 
-      ctx.fillText(
-        label,
-        padding - 8,
-        y + 3
-      );
+      ctx.fillText(label, padding - 8, y + 3);
     }
 
     // Draw "All Time" label

@@ -1,7 +1,14 @@
 import { prisma } from '@/app/lib/prisma';
 import { Prisma } from '@prisma/client';
 
-export type TimePeriod = 'all' | 'today' | 'this-week' | 'last-week' | 'this-month' | 'last-month' | 'ytd';
+export type TimePeriod =
+  | 'all'
+  | 'today'
+  | 'this-week'
+  | 'last-week'
+  | 'this-month'
+  | 'last-month'
+  | 'ytd';
 
 export interface TransactionSummary {
   period: string;
@@ -39,7 +46,7 @@ export const reportsService = {
       case 'today':
         return {
           start: today,
-          end: new Date(today.getTime() + 24 * 60 * 60 * 1000)
+          end: new Date(today.getTime() + 24 * 60 * 60 * 1000),
         };
 
       case 'this-week': {
@@ -63,7 +70,7 @@ export const reportsService = {
       case 'this-month':
         return {
           start: new Date(now.getFullYear(), now.getMonth(), 1),
-          end: null
+          end: null,
         };
 
       case 'last-month': {
@@ -75,7 +82,7 @@ export const reportsService = {
       case 'ytd':
         return {
           start: new Date(now.getFullYear(), 0, 1),
-          end: null
+          end: null,
         };
 
       case 'all':
@@ -182,8 +189,11 @@ export const reportsService = {
       }
     });
 
-    const currentBalance = currentAccountBalance !== undefined ? Number(currentAccountBalance) : totalEarned - totalSpent;
-    const savingsRate = totalEarned > 0 ? ((currentBalance / totalEarned) * 100) : 0;
+    const currentBalance =
+      currentAccountBalance !== undefined
+        ? Number(currentAccountBalance)
+        : totalEarned - totalSpent;
+    const savingsRate = totalEarned > 0 ? (currentBalance / totalEarned) * 100 : 0;
 
     return {
       totalEarned,
@@ -209,7 +219,7 @@ export const reportsService = {
 
     // For filtered periods, savings rate is based on the period's activity
     const periodNet = totalEarned - totalSpent;
-    const savingsRate = totalEarned > 0 ? ((periodNet / totalEarned) * 100) : 0;
+    const savingsRate = totalEarned > 0 ? (periodNet / totalEarned) * 100 : 0;
 
     return {
       totalEarned,
@@ -219,7 +229,9 @@ export const reportsService = {
     };
   },
 
-  async getAllUsersTransactionReports(period: TimePeriod = 'all'): Promise<UserTransactionReport[]> {
+  async getAllUsersTransactionReports(
+    period: TimePeriod = 'all'
+  ): Promise<UserTransactionReport[]> {
     const dateRange = this.getDateRangeFilter(period);
 
     const whereClause: any = {};
@@ -262,9 +274,10 @@ export const reportsService = {
       // but still show the actual current balance
       const transactions = this.aggregateTransactionsByPeriod(allTransactions);
       const balanceHistory = this.calculateBalanceHistory(allTransactions);
-      const stats = period === 'all'
-        ? this.calculateStats(allTransactions, currentAccountBalance)
-        : this.calculateStatsForPeriod(allTransactions, currentAccountBalance);
+      const stats =
+        period === 'all'
+          ? this.calculateStats(allTransactions, currentAccountBalance)
+          : this.calculateStatsForPeriod(allTransactions, currentAccountBalance);
 
       reports.push({
         user_id: user.user_id,
