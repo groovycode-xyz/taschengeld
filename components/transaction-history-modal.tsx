@@ -97,7 +97,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
               <IconComponent icon={user.user_icon} className='h-8 w-8' />
               <div>
                 <DialogTitle>Transaction History</DialogTitle>
-                <p className='text-sm text-gray-500'>{user.user_name}</p>
+                <p className='text-sm text-muted-foreground'>{user.user_name}</p>
               </div>
             </div>
           </DialogHeader>
@@ -106,14 +106,14 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
         <ScrollArea className='flex-1 p-6'>
           <div className='space-y-6'>
             {isLoading ? (
-              <p className='text-center text-gray-500'>Loading transactions...</p>
+              <p className='text-center text-muted-foreground'>Loading transactions...</p>
             ) : transactions.length === 0 ? (
-              <p className='text-center text-gray-500'>No transactions found</p>
+              <p className='text-center text-muted-foreground'>No transactions found</p>
             ) : (
               groupedTransactions.map((group) => (
                 <div key={group.label} className='space-y-3'>
-                  <div className='sticky top-0 bg-white py-2'>
-                    <h3 className='text-sm font-medium text-gray-500 border-b pb-2'>
+                  <div className='sticky top-0 bg-background py-2'>
+                    <h3 className='text-sm font-medium text-muted-foreground border-b pb-2'>
                       {group.label}
                     </h3>
                   </div>
@@ -131,7 +131,7 @@ export function TransactionHistoryModal({ isOpen, onClose, user }: TransactionHi
                           <p className='font-medium'>
                             {transaction.task_title || transaction.description}
                           </p>
-                          <p className='text-sm text-gray-600'>
+                          <p className='text-sm text-muted-foreground'>
                             {new Date(transaction.transaction_date).toLocaleDateString(undefined, {
                               weekday: 'long',
                               month: 'long',

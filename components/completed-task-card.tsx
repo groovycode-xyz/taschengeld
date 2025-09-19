@@ -144,7 +144,7 @@ export function CompletedTaskCard({
 
       {/* Approve Dialog */}
       <Dialog open={isApproveDialogOpen} onOpenChange={setIsApproveDialogOpen}>
-        <DialogContent className='bg-white'>
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Approve Payment</DialogTitle>
             <DialogDescription>
@@ -168,7 +168,7 @@ export function CompletedTaskCard({
 
       {/* Reject Dialog */}
       <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
-        <DialogContent className='bg-white'>
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Reject Task</DialogTitle>
             <DialogDescription>

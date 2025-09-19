@@ -156,7 +156,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
         className={cn(
           goal.is_active
             ? 'bg-blue-100/50 hover:bg-blue-200/50 dark:bg-blue-900/10 dark:hover:bg-blue-800/20'
-            : 'bg-gray-100/50 hover:bg-gray-200/50 dark:bg-gray-900/10 dark:hover:bg-gray-800/20',
+            : 'bg-muted/50 hover:bg-muted',
           'transition-all duration-200 shadow-md',
           !goal.is_active && 'opacity-75'
         )}
@@ -169,7 +169,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
                 'h-16 w-16',
                 goal.is_active
                   ? 'text-blue-700 dark:text-blue-300'
-                  : 'text-gray-600 dark:text-gray-400'
+                  : 'text-muted-foreground'
               )}
             />
             <div className='text-center space-y-2'>
@@ -178,7 +178,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
                   'text-lg font-medium',
                   goal.is_active
                     ? 'text-blue-900 dark:text-blue-100'
-                    : 'text-gray-700 dark:text-gray-300'
+                    : 'text-foreground'
                 )}
               >
                 {goal.title}
@@ -201,11 +201,11 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
               <span className='text-muted-foreground'>Progress</span>
               <span className='font-medium'>{progressPercentage.toFixed(1)}%</span>
             </div>
-            <div className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3'>
+            <div className='w-full bg-muted rounded-full h-3'>
               <div
                 className={cn(
                   'h-3 rounded-full transition-all duration-300',
-                  goal.is_active ? 'bg-blue-600 dark:bg-blue-500' : 'bg-gray-500 dark:bg-gray-400'
+                  goal.is_active ? 'bg-blue-600 dark:bg-blue-500' : 'bg-muted-foreground'
                 )}
                 style={{ width: `${Math.min(progressPercentage, 100)}%` }}
               />
@@ -222,7 +222,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
                   'text-lg font-semibold',
                   goal.is_active
                     ? 'text-blue-700 dark:text-blue-300'
-                    : 'text-gray-600 dark:text-gray-400'
+                    : 'text-muted-foreground'
                 )}
               />
             </div>
@@ -296,7 +296,7 @@ export function SavingsGoalCard({ goal, onUpdate, users }: SavingsGoalCardProps)
           {/* Goal Status Badge */}
           {!goal.is_active && (
             <div className='pt-2'>
-              <div className='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'>
+              <div className='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground'>
                 <ShoppingCart className='h-3 w-3 mr-1' />
                 Completed
               </div>

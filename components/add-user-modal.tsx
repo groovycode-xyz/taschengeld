@@ -155,7 +155,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser, user, onUserAdded }: 
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
-          className='bg-white border-none shadow-lg sm:max-w-[425px]'
+          className='border-none shadow-lg sm:max-w-[425px]'
           aria-describedby='add-user-description'
         >
           <DialogHeader>
