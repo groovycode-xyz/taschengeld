@@ -85,7 +85,7 @@ USER nextjs
 
 # Add application and database healthchecks with improved configuration
 HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:3000/api/health || exit 1
+    CMD curl -f http://0.0.0.0:3000/api/health || exit 1
 
 # Set production environment variables
 ENV NODE_ENV=production

@@ -70,7 +70,7 @@ function getTransactionIcon(transaction: SavingsGoalTransaction) {
     case 'purchase':
       return <ShoppingCart className='h-4 w-4 text-orange-600' />;
     default:
-      return <TrendingUp className='h-4 w-4 text-gray-600' />;
+      return <TrendingUp className='h-4 w-4 text-muted-foreground' />;
   }
 }
 
@@ -83,7 +83,7 @@ function getTransactionStyle(transaction: SavingsGoalTransaction) {
     case 'purchase':
       return 'bg-orange-50 border-orange-200 dark:bg-orange-950/20 dark:border-orange-800';
     default:
-      return 'bg-gray-50 border-gray-200 dark:bg-gray-950/20 dark:border-gray-800';
+      return 'bg-muted/20 border-border';
   }
 }
 
@@ -133,16 +133,16 @@ export function SavingsGoalTransactionModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='max-w-2xl h-[80vh] flex flex-col p-0'>
-        <div className='px-6 py-4 border-b border-gray-200 dark:border-gray-700'>
+        <div className='px-6 py-4 border-b border-border'>
           <DialogHeader>
             <div className='flex items-center gap-3'>
               <IconComponent icon={goal.icon_name} className='h-8 w-8 text-blue-600' />
               <div>
-                <DialogTitle className='text-xl font-semibold text-gray-900 dark:text-gray-100'>
+                <DialogTitle className='text-xl font-semibold text-foreground'>
                   Transaction History
                 </DialogTitle>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>{goal.title}</p>
-                <div className='flex items-center gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-muted-foreground'>{goal.title}</p>
+                <div className='flex items-center gap-4 mt-1 text-sm text-muted-foreground'>
                   <span>
                     Balance:{' '}
                     <CurrencyDisplay
@@ -166,25 +166,25 @@ export function SavingsGoalTransactionModal({
         <ScrollArea className='flex-1 p-6'>
           <div className='space-y-6'>
             {isLoading ? (
-              <p className='text-center text-gray-500 dark:text-gray-400'>
+              <p className='text-center text-muted-foreground'>
                 Loading transactions...
               </p>
             ) : transactions.length === 0 ? (
               <div className='text-center py-8'>
                 <IconComponent
                   icon={goal.icon_name}
-                  className='h-12 w-12 mx-auto mb-3 text-gray-400'
+                  className='h-12 w-12 mx-auto mb-3 text-muted-foreground'
                 />
-                <p className='text-gray-500 dark:text-gray-400'>No transactions yet</p>
-                <p className='text-sm text-gray-400 dark:text-gray-500'>
+                <p className='text-muted-foreground'>No transactions yet</p>
+                <p className='text-sm text-muted-foreground'>
                   Contributions and withdrawals will appear here
                 </p>
               </div>
             ) : (
               groupedTransactions.map((group) => (
                 <div key={group.label} className='space-y-3'>
-                  <div className='sticky top-0 bg-white dark:bg-gray-950 py-2 z-10'>
-                    <h3 className='text-sm font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2'>
+                  <div className='sticky top-0 bg-background py-2 z-10'>
+                    <h3 className='text-sm font-medium text-muted-foreground border-b border-border pb-2'>
                       {group.label}
                     </h3>
                   </div>
@@ -198,21 +198,21 @@ export function SavingsGoalTransactionModal({
                           <div className='mt-0.5'>{getTransactionIcon(transaction)}</div>
                           <div className='space-y-1 flex-1'>
                             <div className='flex items-center gap-2'>
-                              <span className='font-medium text-gray-900 dark:text-gray-100'>
+                              <span className='font-medium text-foreground'>
                                 {getTransactionLabel(transaction)}
                               </span>
                               {transaction.from_piggybank !== null && (
-                                <span className='text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'>
+                                <span className='text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground'>
                                   {transaction.from_piggybank ? 'From Piggy Bank' : 'To Piggy Bank'}
                                 </span>
                               )}
                             </div>
                             {transaction.description && (
-                              <p className='text-sm text-gray-600 dark:text-gray-400'>
+                              <p className='text-sm text-muted-foreground'>
                                 {transaction.description}
                               </p>
                             )}
-                            <p className='text-xs text-gray-500 dark:text-gray-500'>
+                            <p className='text-xs text-muted-foreground'>
                               {new Date(transaction.transaction_date).toLocaleDateString(
                                 undefined,
                                 {

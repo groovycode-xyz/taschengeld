@@ -22,6 +22,12 @@ This document contains resolved issues and historical troubleshooting informatio
 **Issue**: Database schema out of sync  
 **Solution**: Run `npx prisma migrate dev` for development changes
 
+### Docker Health Check Issues
+
+**Issue**: Container stuck in "health: starting" status  
+**Root Cause**: Health check tries to connect to `http://localhost:3000/api/health` but Next.js binds to container's internal IP  
+**Solution**: Disable health check in docker-compose.yml with `healthcheck: disable: true`
+
 ### Git Workflow Issues
 
 - **Unexpected Builds**: Check if working on main branch (triggers CI/CD) vs development branch

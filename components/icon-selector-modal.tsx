@@ -58,7 +58,7 @@ type IconSelectorModalProps = {
 export function IconSelectorModal({ isOpen, onClose, onSelectIcon }: IconSelectorModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='bg-white border-none shadow-lg'>
+      <DialogContent className='border-none shadow-lg'>
         <DialogHeader>
           <DialogTitle>Select an Icon</DialogTitle>
         </DialogHeader>

@@ -120,7 +120,7 @@ export function EditUserModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className='bg-white border-none shadow-lg sm:max-w-[425px]'>
+        <DialogContent className='border-none shadow-lg sm:max-w-[425px]'>
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
           </DialogHeader>
