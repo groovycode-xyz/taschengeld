@@ -14,9 +14,10 @@ This file tracks all active development branches and their purposes.
 
 ## 📚 **Archived/Completed Features**
 
-| Branch    | Status            | Purpose                                       | Completed  |
-| --------- | ----------------- | --------------------------------------------- | ---------- |
-| `savings` | 🎯 Merged to main | Dedicated savings accounts with goal tracking | 2025-08-19 |
+| Branch            | Status            | Purpose                                          | Completed  |
+| ----------------- | ----------------- | ------------------------------------------------ | ---------- |
+| `feature/reports` | 🎯 Merged to main | Transaction history reports with visualizations | 2025-09-19 |
+| `savings`         | 🎯 Merged to main | Dedicated savings accounts with goal tracking   | 2025-08-19 |
 
 ## 📖 **Detailed Branch Information**
 
@@ -168,7 +169,7 @@ This file tracks all active development branches and their purposes.
 **Primary:** SaaS Development (API specification phase)  
 **Secondary:** Enhanced Access Control (design phase)  
 **On Hold:** Icon System Integration, SVG Management Tool
-**Recently Completed:** Savings Goals Feature (merged 2025-08-19)
+**Recently Completed:** Reports Feature (merged 2025-09-19)
 
 **Immediate Priorities:**
 
@@ -178,6 +179,6 @@ This file tracks all active development branches and their purposes.
 
 ---
 
-**Last Updated:** 2025-08-19  
-**Current Active Branches:** 4 (excluding main)  
-**Recent Changes:** Merged savings goals feature to main, cleaned up worktree, archived completed branch
+**Last Updated:** 2025-09-19
+**Current Active Branches:** 4 (excluding main)
+**Recent Changes:** Merged Reports feature to main (v1.5.0), added transaction visualizations with earned vs spent charts
